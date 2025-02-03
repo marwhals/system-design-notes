@@ -1,0 +1,1 @@
+This is a place for me to store notes as I learn about different approaches to system design as I encounter/learn about them

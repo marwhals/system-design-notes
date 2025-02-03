@@ -1,0 +1,57 @@
+# Compiled files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.fdb_latexmk
+*.log
+*.toc
+*.out
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+
+# Temporary files
+*.bak
+*.dvi
+*.lof
+*.lot
+*.gz
+*.pdfsync
+*.synctex
+*.tmp
+*.spl
+
+# Editor backup files
+*~
+*.swp
+*.swo
+
+# LaTeX intermediate and output files
+*.pdf
+*.ps
+*.dvi
+*.xdv
+
+# Build directories
+_build/
+output/
+auxil/
+
+# TeXShop specific files
+*.texshop
+
+# TeXworks specific files
+*.pdftex
+*.synctex(busy)
+
+# VSCode specific
+.vscode/
+*.code-workspace
+
+# Overleaf specific
+output-cache/
+
+# Custom additions (if needed)

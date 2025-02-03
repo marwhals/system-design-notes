@@ -1,0 +1,118 @@
+%! Author = Marjan
+%! Date = 02/02/2025
+% Preamble
+\documentclass[a4paper, 11pt]{book}
+
+% Packages
+\usepackage{amsmath}    % For math symbols and equations
+\usepackage{graphicx}   % For including graphics
+\usepackage{geometry}   % For adjusting page layout
+\usepackage{fancyhdr}   % For custom headers/footers
+\usepackage{hyperref}   % For hyperlinks
+\usepackage{listings}   % For code listing
+\usepackage{lipsum}     % For placeholder text (to test layout)
+\usepackage{helvet} % Helvetica as a sans-serif font alternative
+\renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
+
+% Set page margins (A4 paper)
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+
+% Set up the header
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{System Design Notes}
+\fancyhead[C]{Your Name}
+\fancyhead[R]{\thepage}
+
+% Document
+\begin{document}
+
+\part{Introduction to System Design}
+
+
+\chapter{Design Patterns}
+\section{Creational Patterns}
+\subsection{Singleton Pattern}
+\subsubsection{Implementation of Singleton in Java}
+\paragraph{Code Example}
+Here’s a code snippet that demonstrates the Singleton Pattern.
+
+
+% Title Page
+    \begin{titlepage}
+        \centering
+        \vspace*{2in}
+        \Huge \textbf{System Design Notes}
+        \vfill
+        \Large Your Name
+        \vfill
+        \Large Date: \today
+    \end{titlepage}
+
+    \newpage
+
+% Table of Contents
+    \tableofcontents
+    \newpage
+
+% Section 1: Introduction
+
+
+    \section{Introduction}
+    \lipsum[1] % Replace this with actual text or notes
+
+% Section 2: High-Level System Design
+
+
+    \section{High-Level System Design}
+    \lipsum[2]
+
+% Subsection: Components
+
+    \subsection{Components}
+    \lipsum[3]
+
+% Subsection: Design Patterns
+
+    \subsection{Design Patterns}
+    \lipsum[4]
+
+% Section 3: Detailed Design
+
+
+    \section{Detailed Design}
+    \lipsum[5]
+
+% Section 4: Performance and Scalability
+
+
+    \section{Performance and Scalability}
+    \lipsum[6]
+
+% Section 5: Conclusion
+
+
+    \section{Conclusion}
+    \lipsum[7]
+
+    \newpage
+
+% Example of including a code snippet
+
+
+    \section{Code Example}
+    \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
+public class SimpleCache {
+    private Map<String, String> cache = new HashMap<>();
+
+    public String get(String key) {
+        return cache.get(key);
+    }
+
+    public void put(String key, String value) {
+        cache.put(key, value);
+    }
+}
+    \end{lstlisting}
+
+\end{document}
