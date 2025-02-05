@@ -27,17 +27,6 @@
 % Document
 \begin{document}
 
-\part{Introduction to System Design}
-
-
-\chapter{Design Patterns}
-\section{Creational Patterns}
-\subsection{Singleton Pattern}
-\subsubsection{Implementation of Singleton in Java}
-\paragraph{Code Example}
-Here’s a code snippet that demonstrates the Singleton Pattern.
-
-
 % Title Page
     \begin{titlepage}
         \centering
@@ -59,7 +48,15 @@ Here’s a code snippet that demonstrates the Singleton Pattern.
 
 
     \section{Introduction}
+
+    \paragraph{Motivations: Why should I care}
+    Drivers - Performance, Scalability, Fault Tolerance.
+    How to measure.....latency, throughput, cost
+    Consider SLA,SLO and SLI
+
+    \subsection{Gathering System Requirements}
     \lipsum[1] % Replace this with actual text or notes
+
 
 % Section 2: High-Level System Design
 
@@ -67,15 +64,79 @@ Here’s a code snippet that demonstrates the Singleton Pattern.
     \section{High-Level System Design}
     \lipsum[2]
 
+    \subsection{N-Tier}
+
+    \subsection{Microservices}
+
+    \subsection{Event-Driven Architecture}
+
+    \subsection{Big Data}
+
+    \subsubsection{Batch}
+
+    \subsubsection{Streaming}
+
 % Subsection: Components
 
-    \subsection{Components}
+
+    \section{Components}
     \lipsum[3]
+
+    \subsection{Load balancing}
+
+    \subsection{Message Brokers}
+
+    \subsubsection{Kafka}
+
+    \subsection{API Design}
+
+    \subsubsection{REST}
+
+    \subsubsection{GraphQL}
+
+    \subsubsection{RPC}
+
+    \subsection{Data Storage}
+
+    \subsubsection{CDN}
 
 % Subsection: Design Patterns
 
     \subsection{Design Patterns}
     \lipsum[4]
+    \subsubsection{Scalability}
+    \paragraph{Load Balancing}
+    \paragraph{Pipes and filters}
+    \paragraph{Scatter and Gather}
+    \subsubsection{Microservices specific}
+    \paragraph{Execution orchestrator}
+    \paragraph{Choreography}
+    
+    \subsubsection{Extensibility}
+
+    \paragraph{Sidecar}
+
+    \paragraph{Adapters}
+
+    \paragraph{Frontends for Backends}
+
+    \subsubsection{Availablility, error handling and recovery}
+
+    \paragraph{Rate Limiting}
+
+    \paragraph{Retry Pattern}
+
+    \paragraph{Circuit breaker}
+
+    \paragraph{Dead Letter Queue}
+
+    \subsection{Data intensive applications patterns}
+    \subsubsection{Map Reduce}
+    \subsubsection{Saga}
+    \subsubsection{Transactional Outbox}
+    \subsubsection{Materialised View Pattern}
+    \subsubsection{CQRS}
+    \subsubsection{Event Sourcing}
 
 % Section 3: Detailed Design
 
@@ -91,6 +152,16 @@ Here’s a code snippet that demonstrates the Singleton Pattern.
 
 % Section 5: Conclusion
 
+
+    \section{Distributed Systems}
+    \subsection{Clusters}
+    \subsection{Storage}
+    \subsection{Deployments}
+
+    \lipsum[7]
+
+    \section{Basic security}
+    \lipsum[7]
 
     \section{Conclusion}
     \lipsum[7]
