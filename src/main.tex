@@ -40,14 +40,20 @@
 
     \newpage
 
-% Table of Contents
     \tableofcontents
     \newpage
 
-% Section 1: Introduction
-
-
     \section{Introduction}
+
+    \subsection{OSI Model}
+    Very useful when operating on different levels of abstraction in a system
+    \paragraph{Level 1} - Physical
+    \paragraph{Level 2} - Data link
+    \paragraph{Level 3} - Network
+    \paragraph{Level 4} - Transport
+    \paragraph{Level 5} - Session
+    \paragraph{Level 6} - Presentation
+    \paragraph{Level 7} - Application
 
     \paragraph{Motivations: Why should I care}
     Drivers - Performance, Scalability, Fault Tolerance.
@@ -55,11 +61,7 @@
     Consider SLA,SLO and SLI
 
     \subsection{Gathering System Requirements}
-    \lipsum[1] % Replace this with actual text or notes
-
-
-% Section 2: High-Level System Design
-
+    \lipsum[1]
 
     \section{High-Level System Design}
     \lipsum[2]
@@ -75,9 +77,6 @@
     \subsubsection{Batch}
 
     \subsubsection{Streaming}
-
-% Subsection: Components
-
 
     \section{Components}
     \lipsum[3]
@@ -99,8 +98,6 @@
     \subsection{Data Storage}
 
     \subsubsection{CDN}
-
-% Subsection: Design Patterns
 
     \subsection{Design Patterns}
     \lipsum[4]
@@ -138,25 +135,42 @@
     \subsubsection{CQRS}
     \subsubsection{Event Sourcing}
 
-% Section 3: Detailed Design
-
-
     \section{Detailed Design}
     \lipsum[5]
 
-% Section 4: Performance and Scalability
-
+    \subsection{Caching}
+    Redis
+    \subsection{Queues}
+    Kafka
+    \subsection{Protocols}
+    \subsubsection{TCP}
+    \subsubsection{UDP}
+    \subsection{Threads and Concurrency}
+    \paragraph{Actor model and Akka}
+    Java low level and higher level
+    \paragraph{Functional}
+    Scala.....
+    \paragraph{Application level}
+    Scaling via instances
+    \subsection{Databases}
+    \paragraph{NoSQL}
+    MongoDB.....graph databases
+    \paragraph{SQL}
+    \subsection{Networks}
 
     \section{Performance and Scalability}
     \lipsum[6]
-
-% Section 5: Conclusion
-
+    \subsection{Testing}
+    \paragraph{Gatling}
+    \paragraph{Code performance}
+    Hmmmm maybe JVM specific here
 
     \section{Distributed Systems}
     \subsection{Clusters}
+    Kubernetes
     \subsection{Storage}
     \subsection{Deployments}
+    Docker, Jenkins
 
     \lipsum[7]
 
