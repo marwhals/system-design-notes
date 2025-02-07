@@ -43,16 +43,24 @@
     \tableofcontents
     \newpage
 
+
     \section{Introduction}
 
     \subsection{OSI Model}
     Very useful when operating on different levels of abstraction in a system
+
     \paragraph{Level 1} - Physical
+
     \paragraph{Level 2} - Data link
+
     \paragraph{Level 3} - Network
+
     \paragraph{Level 4} - Transport
+
     \paragraph{Level 5} - Session
+
     \paragraph{Level 6} - Presentation
+
     \paragraph{Level 7} - Application
 
     \paragraph{Motivations: Why should I care}
@@ -61,6 +69,7 @@
     Consider SLA,SLO and SLI
 
     \subsection{Gathering System Requirements}
+
     \paragraph{Requirements} - Description of what we needs to be built.
     Very different when approached from a system level.
     Higher scope allows for freedom of tools and also requries a higher level of abstraction.
@@ -77,16 +86,20 @@
     Reputation and brand
 
     \paragraph{Type of Requirements AKA Architectural Drivers}
+
     \paragraph{}
     Features of the System - Functional Requirements - Describe the system behaviour i.e what the system must do - Tied to the object of the system
     This doesn't determine the architecture
+
     \paragraph{}
     Quality Attributes - Non-functional requirements
     System properties - Scalability, Availability, Reliability, Security, Performance etc
     This does dictate the architecture
+
     \paragraph{}
     System Constraints - Limitations and boundaries
     Examples - Time Constraints and Deadlines, Financial Constraints, Staffing Constraints
+
 
     \section{High-Level System Design}
     \lipsum[2]
@@ -97,11 +110,74 @@
 
     \subsection{Event-Driven Architecture}
 
-    \subsection{Big Data}
+    \subsection{Big Data Architeciture}
+
+    \paragraph{Terminology} - Data sets which are too big or too complex or are produced at too fast that exceed the capacity of a traditional application.
+    Characteristics are typically volume, variety, rate/velocity.
+    This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
+    Can also be used to find anomalies, analysing logs.
 
     \subsubsection{Batch}
+    requires the storage of incoming data in a distributed database or a distributed files system. Data is never modified, it is only added to the end.
+    Key principal is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
+    The schedule can be adadpted for the users/clients needs.
+    Each time a batch processing job runs in can process new data and produce and up to date view of all the current data.
+    This can be can be stored in a well structured and indexed dataabse that can be queried to get insights.
+    Could analyse recent data or the whole data set.
 
-    \subsubsection{Streaming}
+    This data is not processed in real time.
+
+    Note: This data can be used to create a Machine learning model.
+
+    Batch processing provides the user with high availability, no downtime for users the old data view is still available.
+
+    Batch processing is more efficient vs processing each piece of data individually. Also higher tolerance towards human error, with regards to bad code/ deployment issues.
+    Batch processing can be used to perform complex data analysis of large data sets.....
+
+    \paragraph{Drawbacks}
+    Long delay between data coming in and the result we get from the processing job.
+    The view is not real time which can be an issue in some use cases (Trading, 24/7 systems etc).
+    Forces users to wait a long time before they can act on the insights from the system.
+    May not know that the data is not in real time.
+
+    \subsubsection{Real time processing / Streaming}
+    Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
+    After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
+    ó
+
+    \paragraph{Pros}
+    Can respond to data immediately
+
+    \paragraph{Cons}
+    Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
+    Hard to data fusion in real time, at different time points or analysing historic data. Only limited to recent data for predictions.
+
+    \subsubsection{Lambda architecture}
+    May need processes of both strategies. Lambda architecutre takes advantages of both.
+    Aims to find the balaance between fault tolerance and comprhensive analysis of the data from batch processing and the low latency that we get from real time.
+
+    In this architecture the infrastructure is divided in to three layers, btach, speed, and serving layer.
+
+    Data that enters the system is dispatcehd into both the batch layer and the speed layer simulataneouly.
+    The purpose of the batch layer is to manage out data set and be the system of records. The data in our master set is immutable and new data is appended, never modifed.
+    This data is usually on a distributed files system, optimised for for storign big files containing massive amountds of data.
+    The second purpose of the batch layer is to pre computer our batch views.
+    Every time we run out batch processing job, it processes all the data that we have in out master data set. Once the processing is cimplete it indexes and store the data in a read only database.
+    Typically this overrides the exusting pre computedd viewsthat we created the previous time we ran the processing job.
+    Note: The batch layer aims at perfect accuracy and operates on the entire data set.
+
+    \paragraph{Speed Layer}
+    Data is sent to this layer in paralell.
+    Real time stratgey is used here. All the data goes into a queue or a messdage broker and is thien pickedup as it arrives by the processing job.
+    Processing job analyses the new even and adds the processed even to the real time view ready for querying.
+    This layer compensiates for the latency in the batch layer.
+    Unlike the batch layer it only operates on the most recent data and doesn't attempt to provied a cimplete view or make any data corrections.
+
+    This layer exists between the last time a batch was run and the present moment/recent data.
+
+    \paragraph{Serving layer}
+    The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
+
 
     \section{Components}
     \lipsum[3]
@@ -126,14 +202,21 @@
 
     \subsection{Design Patterns}
     \lipsum[4]
+
     \subsubsection{Scalability}
+
     \paragraph{Load Balancing}
+
     \paragraph{Pipes and filters}
+
     \paragraph{Scatter and Gather}
+
     \subsubsection{Microservices specific}
+
     \paragraph{Execution orchestrator}
+
     \paragraph{Choreography}
-    
+
     \subsubsection{Extensibility}
 
     \paragraph{Sidecar}
@@ -153,54 +236,83 @@
     \paragraph{Dead Letter Queue}
 
     \subsection{Data intensive applications patterns}
+
     \subsubsection{Map Reduce}
+
     \subsubsection{Saga}
+
     \subsubsection{Transactional Outbox}
+
     \subsubsection{Materialised View Pattern}
+
     \subsubsection{CQRS}
+
     \subsubsection{Event Sourcing}
+
 
     \section{Detailed Design}
     \lipsum[5]
 
     \subsection{Caching}
     Redis
+
     \subsection{Queues}
     Kafka
+
     \subsection{Protocols}
+
     \subsubsection{TCP}
+
     \subsubsection{UDP}
+
     \subsection{Threads and Concurrency}
+
     \paragraph{Actor model and Akka}
     Java low level and higher level
+
     \paragraph{Functional}
     Scala.....
+
     \paragraph{Application level}
     Scaling via instances
+
     \subsection{Databases}
+
     \paragraph{NoSQL}
     MongoDB.....graph databases
+
     \paragraph{SQL}
+
     \subsection{Networks}
+
 
     \section{Performance and Scalability}
     \lipsum[6]
+
     \subsection{Testing}
+
     \paragraph{Gatling}
+
     \paragraph{Code performance}
     Hmmmm maybe JVM specific here
 
+
     \section{Distributed Systems}
+
     \subsection{Clusters}
     Kubernetes
+
     \subsection{Storage}
+
     \subsection{Deployments}
     Docker, Jenkins
 
     \lipsum[7]
 
+
     \section{Basic security}
     \lipsum[7]
+
 
     \section{Conclusion}
     \lipsum[7]
