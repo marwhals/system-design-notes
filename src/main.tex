@@ -300,11 +300,89 @@
     When that is no longer working for the use case, then move to micro services.
 
     \paragraph{Conclusion}
+
     The benefits of microservices architecture.
     Higher organisational and operation scalability, better performance, faster development, better security.
     Best practices are required to realise these advantages and are only really applicable to systems and organisations of a certain size.
 
     \subsection{Event-Driven Architecture}
+    \paragraph{Motivation}
+    If microservice A want to communicate with Microservice B, then not only does it require awareness of service B, it also needs to know how to call what API microservice B provides and how to call it at run time.
+    Also microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
+    Microservice A has a dependency on microservice B.
+
+    \paragraph
+    In an event driven architecture, instead of direct messages that issue commands or request that ask for data, we have only events.
+    An event is an immutable statement of a fact or a change.
+    In an Event-Driven architecture we have three components.
+    Sending side - We have event emitters, which are also referred to as producers.
+    Receiving side - We have event consumers
+    And inbetween we have the event channel (a message broker), Kafka?
+    \paragraph{Advantages}
+    When we use the Event-Driven Architecture style with microservices we can get a lot of benefits.
+    Now the dependency between Microservice A and B is removed.
+    Microservice A doesn't need to know anything about the existence of microservice B
+    And once microservice A produces the event, it doesn't need to wait for any response from any consumer.
+    Because services don't need to know about each other's existence or API and all the messages are exchanged completely asynchronously, we can decouple microservices more effectively.
+    This results in higher scalability.
+    More services or integrations can be added to to the system without making any changes.
+    Horizontal and organisational scalability is achieved via EDA.
+    This architecture also allows us to analyse streams of data, detect patterns and act up on them in real time.
+
+    \paragraph{Further advantages}
+    When all events that occur in a system are stored in a message broker, in addition to data analysis an very powerful architecture pattern can be implemented.
+    This is called event sourcing.
+    By using event sourcing events can be replayed to identify the current state of a system rather than saving the state in a database.
+    Because events are immutable we never modifying them.
+    We simply append new events to the log as they come.
+    Using event sourcing we can store events for as long as we want.
+    Querying can be made faster by adding snapshot events.
+
+    \paragraph{CQRS}
+    Another architectural pattern that can be implemented as a result of EDA
+    Command query responsibilty segregation.
+    This solves two problems.
+
+    First problem is optimizing a database that has a high read and update operations.
+    In this scenario concurrent operations to the same record or tables contend with each other making the system slow.
+    Additionally if we use a distributed database, generally we can optimise it for one type of operation at the expense of teh other.
+    (Cap theorem?)
+    Ad-hoc solution - We can optimise one operation at the expense of the other when an application is read/write heavy.
+    However when the both operations are equally important we have a problem.
+    CQRS achitectural pattern allows us to separate Update and Read operations into separate databases, sitting behind seprate services.
+    In this case service A would take all the update operationss and perform them in their own database, where it optimially stores the data for such updates.
+    Additionally every time an update operation is performed if publishes an event into a message broker.
+    Meanwhile service B will subscribe to those update events and applies those changes in its own read otimised database and now all read operations will go to service B.
+    Both update and read operations can go to separate services without any contention/interference.
+
+    Further, the data can be optimised for each type of operation.
+
+
+    The second problem that CQRS helps solve is joining multiple tables that are located in seprate databases that belong to two differnt microservices.
+    Prior to monoliths all data was in one table. If that was a relational databse all the records could be joined and then analysed.
+    Post microservices, this is not the case assuming that best practice has been followed. Joins are harder now.
+    Requests need to be sent to each service separately which is slower.
+    This data needs to be combined programattically becasue now we potentially have differnt types of databases.
+    Some of these databases may not even be relational.
+
+
+    CQRS solves this problem. Every time there is a change of data in a services database, those services would publish those changes as an event to which other services subscribe to.
+    The other service will store what is called a materialized view of the joined read-to-query data from both service A and service B in its own read-only database.
+    Whenever we need to get a join view we can just send a request to the joining service rather than send a request to two services.
+
+    \paragraph{summary of EDA}
+    When combined with microservices this allows for decoupling of services potentially allowing for horizontal and organiszation scalability.
+    Event driven architecture allows us to analyse and respond to large streams of data in real time.
+
+    \paragraph{Pattern within EDA}
+    Event sourcing - allows for the auditing and storage of the current state of a business entity by only appending events and replaying them when needed.
+    CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
+    This allows for the efficient joining of data from separate services.
+
+
+
+
+
 
     \subsection{Big Data Architeciture}
 
