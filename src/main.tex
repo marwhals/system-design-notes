@@ -246,6 +246,64 @@
 
     \subsection{Microservices}
 
+    \paragraph{Motivations}
+    The size and complexity of the code base has grown, troubleshooting and adding new features.
+    building, testing and even loading code into the IDE is now cumbersome.
+    Organizationally, we now have problems.
+    More developers leads to more merge conflicts, longer, larger and less productive meetings.
+    At this point microservices should be considered.
+
+    \paragraph{Microservices}
+    Organises business logic as collection of loosely coupled and independently deployed services.
+    Each service is owned by a small team and has a narrow scope of responsibility.
+
+    \paragraph{Advantages}
+    Codebases are now \textit{smaller} .
+    Development is a lot easier and faster along with deployment and testing.
+    Simply because there are less things.
+    Code is easier to reason about and features can be added faster.
+    New developers can become productive faster.
+    Regarding performance and scalability, each microservice becomes less CPU intensive and takes less memory and can now run much more smoothly on commodity hardware (cloud).
+    Can scala horizontally by adding more instances of low-end computers.
+    Organizationally, the advantages are each service can be independently developed, maintained and deployed by a separate small team.
+    This can lead to high throughput from the organisation as a whole.
+    Each team can be autonomous with regard to tech stack, release schedule or process they want to follow.
+    Better security in the form of fault isolation, i.e if one service starts crashing its easier to isolate and solve.
+
+    \paragraph{Note} - Organisations can move to this architecture too quickly, without considering two factors.
+    First - theoretically can achieve all those benefits from migrating to microservices, but they don't just happen and this can easily end up as a big ball of mud
+    Second - microservices come with a fair amount of overhead and challenges.
+
+    \paragraph{Pre microservices}
+    To achieve full organisational decoupling so that each team can operate independently, services need to be logically seprated in way that every changed in the system can happen only in one service.
+    This is to avoid involving multiple teams.
+    If a change requires multiple teams then not much is gained from this migration.
+
+    \paragraph{Microservices best practices}
+    Single responsibility principle - each microservice needs to be responsible for one business cpabilyt domain resource or action.
+    Monolithic API gateway can be decomposed into multiple microservices, making them more lightweight and specialised.
+    Second practice is to make sure there is no coupling between different services, and this can be achieved by having a differnt database for each service.
+    Note: If two services share a database then every single schema or document structure change will result in complext coordination between teams.
+    If each service has its own DB then it just becomes an implementation detail that can be easily updated or replaced completly without implacting the rest of the system.
+
+    \paragraph{Splitting the data}
+    When splitting a monolithic database the data has to be split in a way that each microservice can be completely independent and fully capable of doing its work while minimising the need to call other services.
+    Data duplication is expected and is normal in this scenario.
+    Duplication is a tradeoff here and an overhead of using this architecture.
+
+    Following best practices will help achieve a positive outcome when moving to microservices.
+
+    \paragraph{Practical note}
+    Microservices brings in additional complexity and overhead.
+    This only brings business value when the system reaches a certain size and the organisation is of a certain scale.
+    Start with a monolith approach first.
+    When that is no longer working for the use case, then move to micro services.
+
+    \paragraph{Conclusion}
+    The benefits of microservices architecture.
+    Higher organisational and operation scalability, better performance, faster development, better security.
+    Best practices are required to realise these advantages and are only really applicable to systems and organisations of a certain size.
+
     \subsection{Event-Driven Architecture}
 
     \subsection{Big Data Architeciture}
@@ -281,7 +339,6 @@
     \subsubsection{Real time processing / Streaming}
     Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
     After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
-    ó
 
     \paragraph{Pros}
     Can respond to data immediately
@@ -291,8 +348,9 @@
     Hard to data fusion in real time, at different time points or analysing historic data. Only limited to recent data for predictions.
 
     \subsubsection{Lambda architecture}
-    May need processes of both strategies. Lambda architecutre takes advantages of both.
-    Aims to find the balaance between fault tolerance and comprhensive analysis of the data from batch processing and the low latency that we get from real time.
+    May need processes of both strategies.
+    Lambda architecutre takes advantages of both.
+    Aims to find the balance between fault tolerance and comprehensive analysis of the data from batch processing and the low latency that we get from real time.
 
     In this architecture the infrastructure is divided in to three layers, btach, speed, and serving layer.
 
@@ -318,7 +376,6 @@
 
 
     \section{Components}
-    \lipsum[3]
 
     \subsection{Load balancing}
 
@@ -339,7 +396,6 @@
     \subsubsection{CDN}
 
     \subsection{Design Patterns}
-    \lipsum[4]
 
     \subsubsection{Scalability}
 
