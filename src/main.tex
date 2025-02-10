@@ -63,6 +63,9 @@
 
     \paragraph{Level 7} - Application
 
+    \subsection{C4 Model}
+    Very useful for handling differnt levels of abstraction
+
     \paragraph{Motivations: Why should I care}
     Drivers - Performance, Scalability, Fault Tolerance.
     How to measure.....latency, throughput, cost
@@ -102,7 +105,41 @@
 
 
     \section{High-Level System Design}
-    \lipsum[2]
+    \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
+    Versus design patterns which are just about organising code within a single application.
+    Software architectural patterns are "blueprints" for solutions that involve multiple software components.
+    The purpose is to avoid repeating mistakes and anti-patterns for large scale systems.
+
+
+    \paragraph{Business incentives for this approach} - One - Save time and resources for devs and the organisation
+    when building a solution on a similar scale. Use already tested development practices rather than reinvent the wheel,
+    something completely new can potentially take up a lot of resources.
+
+    \paragraph
+    Two - Using an existing architecture avoids the \textit{big ball of mud}. The lack of structure on the system.
+    In this scenario every service talks to every other service, services are tightly coupled, information is global or duplicated
+    and there is no clear scope or responsibility for any of the components.
+
+    \paragraph
+    This situation can happen due to rapid growth of the company or a lack of architecture in general.
+
+    \paragraph
+    In this situation a system can be hard to develop, maintain and scale which in turn can lead to the failure of business objectives.
+
+    \paragraph
+    Third motivation - Other developers and architects can continue working on the system and can easily carry on and stick to the same architecture.
+    Everyone will know the pattern that is being followed and understand what should and should not be done when adding to the system.
+
+    \paragraph
+    These are just guidelines.
+    Architecture is best defined per use case / unique situation.
+    As systems evolve certain patterns that were appropriate to the system in the past may not make sense anymore.
+    This is normal.
+    At this point some restructuring would need to be done and a migration to a different architecture pattern should be considered.
+
+    \paragraph
+    Motivations for patterns - many companies have already been through these migrations before so best practices can be adopted to make those migrations quickly and safely.
+
 
     \subsection{N-Tier}
 
@@ -163,7 +200,7 @@
     This data is usually on a distributed files system, optimised for for storign big files containing massive amountds of data.
     The second purpose of the batch layer is to pre computer our batch views.
     Every time we run out batch processing job, it processes all the data that we have in out master data set. Once the processing is cimplete it indexes and store the data in a read only database.
-    Typically this overrides the exusting pre computedd viewsthat we created the previous time we ran the processing job.
+    Typically, this overrides the exusting pre computedd views that we created the previous time we ran the processing job.
     Note: The batch layer aims at perfect accuracy and operates on the entire data set.
 
     \paragraph{Speed Layer}
@@ -249,7 +286,6 @@
 
     \subsubsection{Event Sourcing}
 
-
     \section{Detailed Design}
     \lipsum[5]
 
@@ -285,9 +321,7 @@
 
     \subsection{Networks}
 
-
     \section{Performance and Scalability}
-    \lipsum[6]
 
     \subsection{Testing}
 
@@ -295,7 +329,6 @@
 
     \paragraph{Code performance}
     Hmmmm maybe JVM specific here
-
 
     \section{Distributed Systems}
 
@@ -307,20 +340,13 @@
     \subsection{Deployments}
     Docker, Jenkins
 
-    \lipsum[7]
-
-
     \section{Basic security}
-    \lipsum[7]
-
 
     \section{Conclusion}
-    \lipsum[7]
 
     \newpage
 
 % Example of including a code snippet
-
 
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
