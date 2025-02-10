@@ -45,7 +45,7 @@
     \newpage
 
 
-    \section{Introduction}
+    \chapter{Introduction}
 
     \subsection{OSI Model}
     Very useful when operating on different levels of abstraction in a system
@@ -105,7 +105,7 @@
     Examples - Time Constraints and Deadlines, Financial Constraints, Staffing Constraints
 
 
-    \section{High-Level System Design}
+    \chapter{High-Level System Design}
 
     \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
     Versus design patterns which are just about organising code within a single application.
@@ -379,19 +379,14 @@
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
-
-
-
-
-
-    \subsection{Big Data Architeciture}
+    \chapter{Big Data Architeciture}
 
     \paragraph{Terminology} - Data sets which are too big or too complex or are produced at too fast that exceed the capacity of a traditional application.
     Characteristics are typically volume, variety, rate/velocity.
     This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
     Can also be used to find anomalies, analysing logs.
 
-    \subsubsection{Batch}
+    \section{Batch}
     requires the storage of incoming data in a distributed database or a distributed files system. Data is never modified, it is only added to the end.
     Key principal is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
     The schedule can be adadpted for the users/clients needs.
@@ -414,7 +409,7 @@
     Forces users to wait a long time before they can act on the insights from the system.
     May not know that the data is not in real time.
 
-    \subsubsection{Real time processing / Streaming}
+    \section{Real time processing / Streaming}
     Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
     After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
 
@@ -425,7 +420,7 @@
     Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
     Hard to data fusion in real time, at different time points or analysing historic data. Only limited to recent data for predictions.
 
-    \subsubsection{Lambda architecture}
+    \section{Lambda architecture}
     May need processes of both strategies.
     Lambda architecutre takes advantages of both.
     Aims to find the balance between fault tolerance and comprehensive analysis of the data from batch processing and the low latency that we get from real time.
@@ -453,7 +448,7 @@
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
 
 
-    \section{Components}
+    \chapter{Components}
 
     \subsection{Load balancing}
 
@@ -523,7 +518,6 @@
 
 
     \section{Detailed Design}
-    \lipsum[5]
 
     \subsection{Caching}
     Redis
@@ -548,7 +542,7 @@
     \paragraph{Application level}
     Scaling via instances
 
-    \subsection{Databases}
+    \chapter{Databases}
 
     \paragraph{NoSQL}
     MongoDB.....graph databases
@@ -578,18 +572,14 @@
     \subsection{Deployments}
     Docker, Jenkins
 
+    \chapter{Basic security}
 
-    \section{Basic security}
-
-
-    \section{Useful resources}
+    \chapter{Useful resources}
     Add useful resources here
 
     \newpage
 
 % Example of including a code snippet
-
-
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
 public class SimpleCache {
