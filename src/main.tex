@@ -11,7 +11,8 @@
 \usepackage{hyperref}   % For hyperlinks
 \usepackage{listings}   % For code listing
 \usepackage{lipsum}     % For placeholder text (to test layout)
-\usepackage{helvet} % Helvetica as a sans-serif font alternative
+\usepackage{helvet}
+\usepackage{arydshln} % Helvetica as a sans-serif font alternative
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -64,7 +65,7 @@
     \paragraph{Level 7} - Application
 
     \subsection{C4 Model}
-    Very useful for handling differnt levels of abstraction
+    Very useful for handling different levels of abstraction
 
     \paragraph{Motivations: Why should I care}
     Drivers - Performance, Scalability, Fault Tolerance.
@@ -105,18 +106,20 @@
 
 
     \section{High-Level System Design}
+
     \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
     Versus design patterns which are just about organising code within a single application.
-    Software architectural patterns are "blueprints" for solutions that involve multiple software components.
-    The purpose is to avoid repeating mistakes and anti-patterns for large scale systems.
-
+    Software architectural patterns are \quote{blueprints} for solutions that involve multiple software components.
+    The purpose is to avoid repeating mistakes and antipatterns for large scale systems.
 
     \paragraph{Business incentives for this approach} - One - Save time and resources for devs and the organisation
-    when building a solution on a similar scale. Use already tested development practices rather than reinvent the wheel,
+    when building a solution on a similar scale.
+    Use already tested development practices rather than reinvent the wheel,
     something completely new can potentially take up a lot of resources.
 
     \paragraph
-    Two - Using an existing architecture avoids the \textit{big ball of mud}. The lack of structure on the system.
+    Two - Using an existing architecture avoids the \textit{big ball of mud}.
+    The lack of structure on the system.
     In this scenario every service talks to every other service, services are tightly coupled, information is global or duplicated
     and there is no clear scope or responsibility for any of the components.
 
@@ -140,8 +143,106 @@
     \paragraph
     Motivations for patterns - many companies have already been through these migrations before so best practices can be adopted to make those migrations quickly and safely.
 
+    \subsection{N/Multi-Tier Architecture}
 
-    \subsection{N-Tier}
+    \paragraph{Intro}
+    Organise the system into multiple physical and logical tiers.
+    Logical separation limits the scope of responsibility.
+    Physical tier allows each tier to be deployed, upgraded, scaled separately by different teams.
+
+    \paragraph{}
+    Note: Multi-tier and Multilayer are two different concepts.
+    Multi layered architecture usually refers to the internal sepration inside a single application into multiple logical layers or modules.
+    Even if the application is logically seprated into multiple layers at runtime it will run as a single unit and will be considered a single tier.
+
+    Multi-tier architecture - applications on each tier run physically run on different infrastructure.
+
+    \paragraph{}
+    Benefits of logical and physical separation-Allows us to develop update and scale each tier independently.
+    Restrictions in this architectural pattern.
+
+    \paragraph{}
+    First restriction is that each pair of applications that belong to adjacent tiers communicate with each other using the Client-server model.
+    REST etc.
+    Second restriction - discourages communication that skips through tiers.
+    This keeps the tiers loosely coupled with each other allowing for easy changes between tiers withouth effecting the entire system.
+
+    \paragraph{Three tier - Common variation}
+    \hrule
+    Top level contains UI aka presentation tier.
+    Display information and take user input through a GUI.
+    No business logic normally, this tier usually runs in the client browser. I.e JavaScript etc.
+    The code here should be assumed to be visibile and accesible to the user. Bad place for business logic doing so is considered an anti-pattern.
+    \hrule
+    Application Tier / Business Tier/ Logic Tier.
+    Provides the logic gathered from functional requirements.
+    Responsible for processing the presentation tier and applying the relevant business logic to it.
+    \hrule
+    Data tier, this tier is responsible for storage and persistence of user and business-specific data.
+    Tier may include files on a local file system or a database.
+
+    \paragraph{Why so popular?}
+    Fits a large number of use cases.
+    A lot of web based services fit this model, shops, news sites etc etc.
+    Very easy to scale horizontally to take large traffic volumes and handle more data.
+
+    \paragraph{How does it scale}
+    The presentation tier runs on a users device so it scales by itself....get a better phone / computer etc.
+    \hrule
+    Application Tier - if it is kept stateless, application instances can be kept behind a load balancer and run as many instances as we need.
+    \hrule
+    Database / Persistence tier - can be easily scaled if a well established distributed data base is used. DB scala - replication, partioning, sharding etc.
+
+    \hrule
+    This architectural pattern is very easy to maintain and develop because all the logic is concentrated in one place; the application tier.
+    Most backend development should happen in the application tier.
+
+    No need to worry about integration of different code bases, services or projects.
+
+    \paragraph{Weaknesses of this pattern}
+
+    Major drawback, the monolithic structure of the logic tier. Business logic should not be placed in the presentation or data tier.
+    Issue is all the business logic is concentrated in a single user code base that runs as a single runtime unit.
+    The implications of this, each instance of the application becomes too CPU intensive and will consume too much memory.
+    This makes the appilication too slow and less responsive.
+    This can especially be a problem with memory managed/ GC language like Java and C\# (maybe add go to this list)
+    As a result applications can have longer and more frequent garbage collections.
+    This can lead to requring an upgrade of the computer the application is running on.
+    Vertical scaling is both expensive and limited.
+
+    \paragraph{}
+    The second impact of the monolithic application tier is low development velocity.
+    More complex code base makes it harder to develop maintian and reason about the code.
+    Hiring more developers to solve this problem will not solve the problem/ add value.
+    Why?
+    Because more concurrent developers will simply cause more merge conflicts and higher overhead.
+
+    \paragraph{}
+    Mitigation: Could split the code into modules based on logic.
+    The modules will be somewhat tightly coupled since we can release new versions of those modules only when the applications has been upgraded.
+    I.e the organisational scalability of the Three-tier architecture is limited.
+    Best when the code base is relatively small and not that complicated and will be maintained by a small team of developers.
+
+    \paragraph{Examples}
+    Early startups, well established companies that fit the criteria above.
+
+    \paragraph{Variations of the Multi-Tier Architecture}
+    One Tier
+    Two tier - Business logic and presentation tier is combined.
+    Think mobile or desktop application.
+    Data tier handles persistence.
+
+    \hrule
+    More complexity - four tier.
+    Between the presentation tier and the business logic tier.
+    Between this tier functionality that does not belong in either can be seprated.
+    Could introduce API Gateway tier that handles security,caching, data formats etc when communicating between different systems.
+
+    \hrule
+    More than four tiers is rare since they do not usually provide more value and simply adds more performance overhead.
+    The source of this overhead comes from not being able to bypass tiers so as to avoid tight coupling.
+    Every request would have to pass through multiple services which can increase response time/latency.
+    Rarely a request would have to do so much travelling.
 
     \subsection{Microservices}
 
@@ -286,6 +387,7 @@
 
     \subsubsection{Event Sourcing}
 
+
     \section{Detailed Design}
     \lipsum[5]
 
@@ -321,6 +423,7 @@
 
     \subsection{Networks}
 
+
     \section{Performance and Scalability}
 
     \subsection{Testing}
@@ -329,6 +432,7 @@
 
     \paragraph{Code performance}
     Hmmmm maybe JVM specific here
+
 
     \section{Distributed Systems}
 
@@ -340,13 +444,17 @@
     \subsection{Deployments}
     Docker, Jenkins
 
+
     \section{Basic security}
 
-    \section{Conclusion}
+
+    \section{Useful resources}
+    Add useful resources here
 
     \newpage
 
 % Example of including a code snippet
+
 
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
