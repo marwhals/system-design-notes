@@ -47,8 +47,10 @@
 
     \chapter{Introduction}
 
+
     \section{Goals of this document}
     The goal of this document is to collate information that I think is useful in the area of software architecture.
+
 
     \section{OSI Model}
     Very useful when operating on different levels of abstraction in a system
@@ -67,6 +69,7 @@
 
     \paragraph{Level 7} - Application
 
+
     \section{C4 Model}
     Very useful for handling different levels of abstraction
 
@@ -76,7 +79,10 @@
     Consider SLA,SLO and SLI.
     Easier to code more complex stuff......
 
+
     \chapter{Gathering requirements}
+
+
     \section{Gathering System Requirements}
 
     \paragraph{Requirements} - Description of what we needs to be built.
@@ -94,6 +100,7 @@
     Contracts and financial obligations.
     Reputation and brand
 
+
     \section{Type of Requirements AKA Architectural Drivers}
 
     \paragraph{}
@@ -109,6 +116,67 @@
     System Constraints - Limitations and boundaries
     Examples - Time Constraints and Deadlines, Financial Constraints, Staffing Constraints
 
+
+    \chapter{Quality attributes in large scale systems}
+
+
+    \section{Performance}
+
+
+    \section{Scalability}
+
+
+    \section{Availability}
+
+
+    \section{Fault tolerance}
+
+
+    \section{SLA. SLO, SLI}
+
+
+    \chapter{API Design}
+
+
+    \section{Relevance}
+
+
+    \section{RPC}
+    Does gRPC fit in here?
+
+
+    \section{REST}
+
+
+    \section{GraphQL}
+
+
+    \chapter{Large Scale Systems Architectural Building Blocks}
+
+
+    \section{DNS, Load Balancing}
+
+
+    \section{Message Brokers}
+    Kafka.....
+
+
+    \section{API Gateways}
+
+
+    \section{CDN Solutions and cloud}
+
+    \chapter{Data storage at less trivial scale}
+
+    \section{Relational Databases and ACID Transactions}
+
+    \section{Non-Relational Databases}
+
+    \section{Techniques to improve performance, availability and scalbilty of databases}
+
+    \section{CAP Theorem}
+
+    \section{Scalable unstructured data storage}
 
     \chapter{High-Level System Design}
 
@@ -311,6 +379,7 @@
     Best practices are required to realise these advantages and are only really applicable to systems and organisations of a certain size.
 
     \subsection{Event-Driven Architecture}
+
     \paragraph{Motivation}
     If microservice A want to communicate with Microservice B, then not only does it require awareness of service B, it also needs to know how to call what API microservice B provides and how to call it at run time.
     Also microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
@@ -323,6 +392,7 @@
     Sending side - We have event emitters, which are also referred to as producers.
     Receiving side - We have event consumers
     And inbetween we have the event channel (a message broker), Kafka?
+
     \paragraph{Advantages}
     When we use the Event-Driven Architecture style with microservices we can get a lot of benefits.
     Now the dependency between Microservice A and B is removed.
@@ -384,12 +454,14 @@
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
+
     \chapter{Big Data Architeciture}
 
     \paragraph{Terminology} - Data sets which are too big or too complex or are produced at too fast that exceed the capacity of a traditional application.
     Characteristics are typically volume, variety, rate/velocity.
     This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
     Can also be used to find anomalies, analysing logs.
+
 
     \section{Batch}
     requires the storage of incoming data in a distributed database or a distributed files system. Data is never modified, it is only added to the end.
@@ -414,6 +486,7 @@
     Forces users to wait a long time before they can act on the insights from the system.
     May not know that the data is not in real time.
 
+
     \section{Real time processing / Streaming}
     Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
     After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
@@ -424,6 +497,7 @@
     \paragraph{Cons}
     Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
     Hard to data fusion in real time, at different time points or analysing historic data. Only limited to recent data for predictions.
+
 
     \section{Lambda architecture}
     May need processes of both strategies.
@@ -547,6 +621,7 @@
     \paragraph{Application level}
     Scaling via instances
 
+
     \chapter{Databases}
 
     \paragraph{NoSQL}
@@ -573,11 +648,24 @@
     Kubernetes
 
     \subsection{Storage}
+    
+    \chapter{Performance}
+    \chapter{Scalability}
+    \chapter{Reliability}
 
-    \subsection{Deployments}
+    \chapter{Tech stacks}
+    \chapter{Deployments}
     Docker, Jenkins
 
-    \chapter{Basic security}
+
+    \chapter{System design security concerns}
+    \section{Introduction}
+    Cover security from a system design point of view.
+    \section{Network security}
+    \section{Encryption}
+    \section{Digital signatures}
+    \section{Authentication}
+
 
     \chapter{Useful resources}
     Add useful resources here
@@ -585,6 +673,8 @@
     \newpage
 
 % Example of including a code snippet
+
+
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
 public class SimpleCache {
