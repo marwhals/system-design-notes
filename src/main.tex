@@ -461,6 +461,28 @@
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
+    \chapter{Microservices in depth}
+    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decopuling.
+    Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
+    Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
+    Solution, organise business logic as loosely coupled deployable independently deployable services.
+    Each service is owned by a small team and has narrow scope of responsibility.
+    Now we have organisational scalability, building is faster, less burden on the developer, each binary is smaller in size.
+    Testing and reasoning is easier, onboarding is faster and this development velocity is faster.
+    Hardware demands are easier since commodity hardware can now be used due to less CPU and memory usage.
+    Flexible tool choice for development teams.
+    Refactoring is easier.
+    Higher system stability, the damage caused by a bug etc is much smaller since each service is deployed separately.
+
+    \paragraph{Barriers to implementing microservices}
+    Method calls have now become network calls between different computers bringing in latency issues.
+    In distributed systems each component is unreliable.
+    Althogh testing is faster no guarantee all the services will work when deployed together.
+    This can lead to complicated integration tests than can impact prodictivity.
+    Would be hard to understand which team owns the integration tests.
+    Fixing bugs and troubleshooting performance is much harder in microservies
+    Incorrect scope identification for a service can also cause additional organiszatoinal overhead.
+    Could lead to duplicated effort.
 
     \chapter{Big Data Architeciture}
 
