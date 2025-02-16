@@ -12,7 +12,8 @@
 \usepackage{listings}   % For code listing
 \usepackage{lipsum}     % For placeholder text (to test layout)
 \usepackage{helvet}
-\usepackage{arydshln} % Helvetica as a sans-serif font alternative
+\usepackage{arydshln}
+\usepackage{wasysym} % Helvetica as a sans-serif font alternative
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -81,7 +82,68 @@
 
 
     \chapter{Gathering requirements}
+    Asking is a user is not practice.
+    A better and more methodical way of gethering requires ments of the desired system is through use cases and user flows.
+    A use cases are a particular scenario/ situation in whcih the system is used to achieve a userss goal.
+    A user flow is a more detailed step by step graphical representation of a use case.
 
+
+    \section{Gathering functional requriements}
+    In a formal way.
+    First we need to identify all the actors or users in out system otherwise relevant usecases may not be caught.
+    Second step is to describe all the possible use cases or sceanarios in which an actor can use our system.
+    Finally the third step is to take each use case and expand it through a flow of events or interactions between the actor and the system.
+    In each interaction we cature the action and take a note of the data that flows with it to and from the system.
+
+    Multiple ways to represent this, one way is a sequence diagram which is a part of UML. Standard for viaualising system design.
+
+
+    \section{Non functional requirements}
+    These requirements have an effect on the software achitecture.
+
+
+    \section{Why redesign}
+    System is functionally correct but speed, scalabilty, maintence or security is too hard for reasons like number of users or data volume.
+    System is functionally the same after redesign.
+    Right achitexture from the start is important
+    Quality measures are used to measure how well the system performs and correlate with the architecture.
+    Quality attributes have to be measurable and testable and this must be consistent.
+
+    Something to note is that no single architecture can provide all the quality attributes. Certain attributes contradict each other.
+    Some combinations are hard/ impoissble to achieve. Tradeoffs are needed.
+
+    Third important consideration of the system is feasiblilty of the quality attributes.
+    Architect needs to ensure that the system is deliverable and what the client is asking for.
+    Client could actually ask for something that is not technical or not technically possible.
+    I.e expesive or not feasible. An example could be unrealistic latency expectations.
+    Before approving a requirement, conslulting with a domain expert to ensure that the requirement can actually be delivered.
+
+%    Three important quality attributes when desigining a system
+    \begin{list}
+        \item Testability and measurablility
+        \item Make tradeoffs between quality attributes over others
+        \item Feasibility of quality attributes
+    \end{list}
+
+    \section{System constraints}
+    Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
+    Quality attributes will lead to tradeoffs and this is normal.
+    System constraints are refered to as \quote{pillars} of an architecture.
+    System constraints provide a starting point since the are usually non-negotiable and the rest of the system has to be designed around it.
+
+    Three types
+
+    \begin{list}
+        \item Technical - Being locked to hardware, cloud vendors etc, must be on prem, etc.
+        \item Legal - Geography, different rules in different countries where the system resides.
+        \item Business - Limited budgest, strict deadlines.
+    \end{list}
+
+    Once constraints are identified consider non negotiable constraitns and self-imposed constraints that can be removed.
+    Once a set of constriants have been agreed it is hard to move away from them.
+    If further in the project timeline it is found that some of those constraints were not really constraints, then the architecture will not make sense in the future.
+    Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
+    Need to avoid tight coupling with certain components or constraints to allow for change otherwise whole system could be rearchitected.
 
     \section{Gathering System Requirements}
 
@@ -121,6 +183,7 @@
 
 
     \section{Performance}
+
 
 
     \section{Scalability}
@@ -461,9 +524,12 @@
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
-
+    \include{microservices}
 %   Consider combining this with the other microservices section
+
+
     \chapter{Microservices in depth}
+
     \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decopuling.
     Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
     Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
@@ -485,6 +551,7 @@
     Fixing bugs and troubleshooting performance is much harder in microservies
     Incorrect scope identification for a service can also cause additional organiszatoinal overhead.
     Could lead to duplicated effort.
+
 
     \chapter{Big Data Architeciture}
 
