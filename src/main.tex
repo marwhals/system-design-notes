@@ -672,6 +672,23 @@ Set of architectural constraints and best practice for web APIs. It is just a st
     To prevent a load balancer from being a single point of failur, we can refister all the addresses with the GSLB DNS service or any other DNS service.
     This allows clients to get a list of all the load balancers and either pick one or send their request randomly.
 
+    \subsection{Load Balancing Solutions}
+    \begin{itemize}
+        \item - HAProxy
+        \item - NGINX
+        \item - AWS - Application (Layer 7), Network (Layer 4), Gateway Load Balanacer, Classic Load balancer (Layer 7 and 4)
+        \item - GCP %TODO add later
+        \item - Azure %TODO add later
+    \end{itemize}
+
+    \subsection{GSLB Solutions}
+    \begin{itemize}
+        \item - Amazon Route 53
+        \item - AWS Global Accelerator
+        \item - GCP stuff
+        \item - Azure stuff
+    \end{itemize}
+
     \section{Message Brokers}
 
     \section{API Gateways}
