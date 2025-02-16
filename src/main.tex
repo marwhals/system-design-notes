@@ -241,6 +241,28 @@
 
 
     \section{Availability}
+    Bad availabilty - Business loses money, bad things happen on important systems.
+    Availability is either the fraction of time the probability that our service is operationally funtional and accessible to the user.
+    That time that out system is operationally functional and acessible to the user is often referred to as the up time of the system.
+    The time out sytem is unavailble is referred to as downtime.
+    Availabilty is measured as a percentage representing the ration between the up time and the enture time out system is running.
+    This is the totoal sum of uptime and downtime of the system.
+    Availabillty is measured in percentages.
+    Other metrics are Mtbf and Mttr.
+
+    Mtbf - the mean time between failures, represents the average time out system is operational.
+    This is useful when dealing with multiple pieces of hardware. Most stuff is on the cloud and this avialable upfront.
+
+    mTOR - mean time for recovery - the average time it takes to detect and recover from a failure, which is the average down time of our system.
+    Until failure is recovered from the system is essentially non-operational.
+
+    Availabilty of a system is the mtbf divided by the sum of mtbf and mttr.
+    Use formula to estimate availabilty.
+%    Add equation
+    Note: If we mimimise the average time to detect and recover from a failure theortically all the wy to 0 we can essentially achieve 100\%
+    availabilty regardless of the average time between failures.
+    This is not practical but detectability and fast recovery has a positive impact on availabilty.
+
 
 
     \section{Fault tolerance}
