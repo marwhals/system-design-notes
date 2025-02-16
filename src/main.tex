@@ -125,6 +125,7 @@
         \item Feasibility of quality attributes
     \end{list}
 
+
     \section{System constraints}
     Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
     Quality attributes will lead to tradeoffs and this is normal.
@@ -144,6 +145,7 @@
     If further in the project timeline it is found that some of those constraints were not really constraints, then the architecture will not make sense in the future.
     Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
     Need to avoid tight coupling with certain components or constraints to allow for change otherwise whole system could be rearchitected.
+
 
     \section{Gathering System Requirements}
 
@@ -183,7 +185,7 @@
 
 
     \section{Performance}
-Some performance metrics
+    Some performance metrics
     Response time - Tiem between client sending a request and recieve a response
     Two parts, the processing time with code and databases applying business logic.
     And the \quote{waiting} time. The duration of time that the request or response inacitvely spends in the system.
@@ -204,7 +206,38 @@ Some performance metrics
     This is the point in the performance graph where the performance is starting to get significantly worse as the load increases.
     Usually this means a resource is fully utilised, could be hardware resource etc or a software queue.
 
+
     \section{Scalability}
+    Load and traffic patterns never stay the same. Seasonal, time etc.
+    Scalability is a measure of a systems abilty to handle a growing amount of work in an easy and cost effective way by adding resources to the system
+    Optimistic scenario is linear scalabilty but in practice this is hard to acheieve.
+    Three ways to scale
+    \begin{List}
+        \item Horizontal scaling - Add more units of the resources that we have like multiple computers.
+        Spread the load.
+        No limit to scala. Can easily add an remove systems as required.
+        Provides fault tolerance and high availablity straight away.
+        Not every application can support this and will require code changes.
+        Changes will usually be once.
+        Groups of instances require more coordination and is complex.
+        \item Vertical Scaling - add more CPU, higher bandwidth etc.
+        Upgrade a computer.
+        No code changes required.
+        This has a limit and can easily reached on a global / internet system. Easy to do with a cloud provider.
+        This can centralise the system and fail to proivide fault tolerance and availability.
+        \item Organisational scaling - Add more engineers.
+        Before a certain point, the more engineers, the more work gets done, the more productivity is increased.
+        Eventually we get less when we add too many.
+        Meetings become more frequent and crowded.
+        Code and merge conflicts.
+        Code base will grow too large, harder for new engineers to learn the code base.
+        Testing becomes hard and slow since there is no isolation, a minor change can break everything.
+        Releases become risky since they include many changes.
+        This impacts team scalabilty and engineering velocity.
+    \end{List}
+    One solution is to seprate code into seperate services which theier own code base and tech stack, release schedule etc.
+
+    These scalabilty solutions are orthogonal to each other.
 
 
     \section{Availability}
