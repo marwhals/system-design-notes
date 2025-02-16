@@ -91,32 +91,34 @@
     \section{Gathering functional requriements}
     In a formal way.
     First we need to identify all the actors or users in out system otherwise relevant usecases may not be caught.
-    Second step is to describe all the possible use cases or sceanarios in which an actor can use our system.
-    Finally the third step is to take each use case and expand it through a flow of events or interactions between the actor and the system.
-    In each interaction we cature the action and take a note of the data that flows with it to and from the system.
+    Second step is to describe all the possible use cases or scenarios in which an actor can use our system.
+    Finally, the third step is to take each use case and expand it through a flow of events or interactions between the actor and the system.
+    In each interaction we capture the action and take a note of the data that flows with it to and from the system.
 
     Multiple ways to represent this, one way is a sequence diagram which is a part of UML. Standard for viaualising system design.
 
 
     \section{Non functional requirements}
-    These requirements have an effect on the software achitecture.
+    These requirements have an effect on the software architecture.
 
 
     \section{Why redesign}
-    System is functionally correct but speed, scalabilty, maintence or security is too hard for reasons like number of users or data volume.
+    System is functionally correct but speed, scalability, maintenance or security is too hard for reasons like number of users or data volume.
     System is functionally the same after redesign.
-    Right achitexture from the start is important
+    Right architecture from the start is important
     Quality measures are used to measure how well the system performs and correlate with the architecture.
     Quality attributes have to be measurable and testable and this must be consistent.
 
     Something to note is that no single architecture can provide all the quality attributes. Certain attributes contradict each other.
-    Some combinations are hard/ impoissble to achieve. Tradeoffs are needed.
+    Some combinations are hard/ impossible to achieve.
+    Tradeoffs are needed.
 
-    Third important consideration of the system is feasiblilty of the quality attributes.
+    Third important consideration of the system is feasibility of the quality attributes.
     Architect needs to ensure that the system is deliverable and what the client is asking for.
     Client could actually ask for something that is not technical or not technically possible.
-    I.e expesive or not feasible. An example could be unrealistic latency expectations.
-    Before approving a requirement, conslulting with a domain expert to ensure that the requirement can actually be delivered.
+    I.e expensive or not feasible.
+    An example could be unrealistic latency expectations.
+    Before approving a requirement, consulting with a domain expert to ensure that the requirement can actually be delivered.
 
 %    Three important quality attributes when desigining a system
     \begin{itemize}
@@ -130,18 +132,18 @@
     Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
     Quality attributes will lead to tradeoffs and this is normal.
     System constraints are refered to as \quote{pillars} of an architecture.
-    System constraints provide a starting point since the are usually non-negotiable and the rest of the system has to be designed around it.
+    System constraints provide a starting point since they are usually non-negotiable and the rest of the system has to be designed around it.
 
     Three types
 
     \begin{itemize}
         \item Technical - Being locked to hardware, cloud vendors etc, must be on prem, etc.
         \item Legal - Geography, different rules in different countries where the system resides.
-        \item Business - Limited budgest, strict deadlines.
+        \item Business - Limited budget, strict deadlines.
     \end{itemize}
 
-    Once constraints are identified consider non negotiable constraitns and self-imposed constraints that can be removed.
-    Once a set of constriants have been agreed it is hard to move away from them.
+    Once constraints are identified consider non-negotiable constrains and self-imposed constraints that can be removed.
+    Once a set of constraints have been agreed it is hard to move away from them.
     If further in the project timeline it is found that some of those constraints were not really constraints, then the architecture will not make sense in the future.
     Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
     Need to avoid tight coupling with certain components or constraints to allow for change otherwise whole system could be rearchitected.
@@ -159,11 +161,10 @@
 
     \paragraph{Importance} - Simply build something and then fix it, wrong requirements etc, easy to fix?
     Large scale systems (i.e at this level) are big projects that cannot be changed easily.
-    Many engineers invovled and many hours.
+    Many engineers involved and many hours.
     Hardware and Software costs.
     Contracts and financial obligations.
     Reputation and brand
-
 
     \section{Type of Requirements AKA Architectural Drivers}
 
@@ -183,12 +184,12 @@
 
     \chapter{Quality attributes in large scale systems}
 
-
     \section{Performance}
     Some performance metrics
-    Response time - Tiem between client sending a request and recieve a response
+    Response time - Time between client sending a request and receive a response
     Two parts, the processing time with code and databases applying business logic.
-    And the \quote{waiting} time. The duration of time that the request or response inacitvely spends in the system.
+    And the \quote{waiting} time.
+    The duration of time that the request or response inacitvely spends in the system.
     This time is usually spend in transit in the physical network or in software queues waiting to be handled or reach its destination.
     Waiting time is also known as latency.
 
@@ -199,8 +200,9 @@
 
     \subsection{Measuring}
     Consider the end to end response time.
-    COnsider the distribution of response times and set a measure around it. Use a histogram, chart etc, statistics etc.
-    Especialy consider tail latency, the resposnes that take the most time in comparison to the rest of the values.
+    Consider the distribution of response times and set a measure around it.
+    Use a histogram, chart etc, statistics etc.
+    Especially consider tail latency, the responses that take the most time in comparison to the rest of the values.
     This tail latency needs to be as short as possible.
     Another consideration is the performance degradation point and how fast or steep the degradation is.
     This is the point in the performance graph where the performance is starting to get significantly worse as the load increases.
@@ -208,15 +210,17 @@
 
 
     \section{Scalability}
-    Load and traffic patterns never stay the same. Seasonal, time etc.
-    Scalability is a measure of a systems abilty to handle a growing amount of work in an easy and cost effective way by adding resources to the system
-    Optimistic scenario is linear scalabilty but in practice this is hard to acheieve.
+    Load and traffic patterns never stay the same.
+    Seasonal, time etc.
+    Scalability is a measure of a systems ability to handle a growing amount of work in an easy and cost effective way by adding resources to the system
+    Optimistic scenario is linear scalability but in practice this is hard to acheieve.
     Three ways to scale
     \begin{itemize}
         \item Horizontal scaling - Add more units of the resources that we have like multiple computers.
         Spread the load.
-        No limit to scala. Can easily add an remove systems as required.
-        Provides fault tolerance and high availablity straight away.
+        No limit to scala.
+        Can easily add and remove systems as required.
+        Provides fault tolerance and high availability straight away.
         Not every application can support this and will require code changes.
         Changes will usually be once.
         Groups of instances require more coordination and is complex.
@@ -233,21 +237,21 @@
         Code base will grow too large, harder for new engineers to learn the code base.
         Testing becomes hard and slow since there is no isolation, a minor change can break everything.
         Releases become risky since they include many changes.
-        This impacts team scalabilty and engineering velocity.
+        This impacts team scalability and engineering velocity.
     \end{itemize}
-    One solution is to seprate code into seperate services which theier own code base and tech stack, release schedule etc.
+    One solution is to separate code into separate services which their own code base and tech stack, release schedule etc.
 
-    These scalabilty solutions are orthogonal to each other.
+    These scalability solutions are orthogonal to each other.
 
 
     \section{Availability}
-    Bad availabilty - Business loses money, bad things happen on important systems.
-    Availability is either the fraction of time the probability that our service is operationally funtional and accessible to the user.
-    That time that out system is operationally functional and acessible to the user is often referred to as the up time of the system.
-    The time out sytem is unavailble is referred to as downtime.
-    Availabilty is measured as a percentage representing the ration between the up time and the enture time out system is running.
-    This is the totoal sum of uptime and downtime of the system.
-    Availabillty is measured in percentages.
+    Bad availability - Business loses money, bad things happen on important systems.
+    Availability is either the fraction of time the probability that our service is operationally functional and accessible to the user.
+    That time that out system is operationally functional and accessible to the user is often referred to as the uptime of the system.
+    The time-out system is unavailable is referred to as downtime.
+    Availability is measured as a percentage representing the ration between the uptime and the ensure time out system is running.
+    This is the total sum of uptime and downtime of the system.
+    Availability is measured in percentages.
     Other metrics are Mtbf and Mttr.
 
     Mtbf - the mean time between failures, represents the average time out system is operational.
@@ -256,12 +260,12 @@
     mTOR - mean time for recovery - the average time it takes to detect and recover from a failure, which is the average down time of our system.
     Until failure is recovered from the system is essentially non-operational.
 
-    Availabilty of a system is the mtbf divided by the sum of mtbf and mttr.
-    Use formula to estimate availabilty.
+    Availability of a system is the mtbf divided by the sum of mtbf and mttr.
+    Use formula to estimate availability.
 %    Add equation
-    Note: If we mimimise the average time to detect and recover from a failure theortically all the wy to 0 we can essentially achieve 100\%
-    availabilty regardless of the average time between failures.
-    This is not practical but detectability and fast recovery has a positive impact on availabilty.
+    Note: If we minimise the average time to detect and recover from a failure theoretically all the wy to 0 we can essentially achieve 100\%
+    availability regardless of the average time between failures.
+    This is not practical but detectability and fast recovery has a positive impact on availability.
 
 
     \section{Fault tolerance and high availabilty}
@@ -284,7 +288,7 @@
 
     \paragraph{}
     Active-active architecture - Requestions fo to all the replicas, replacement is available immediately.
-    This allows for horizontal scalability but also coordingation between all the replicas since they are taking requestis.
+    This allows for horizontal scalability but also coordination between all the replicas since they are taking requests.
     Not easy to keep in sync and has additional overhead.
 
     \paragraph{}
@@ -296,10 +300,10 @@
     To achieve this we need a monitoring service to monitor the health of our instances via health check messages.
     Alternatively can listen to periodic messags called heartbeats, that should come periodically from healthy instances.
 
-    In either strategy if monitorign service does not hear from the for a predefined duration of time, it can assume that the server is no longer avaiable.
+    In either strategy if monitoring service does not hear from the for a predefined duration of time, it can assume that the server is no longer avaiable.
     Can lead to false positives.
-    Doesn't need to be to be perfect, as long as their are not false negatives.
-    False negatives mean that the moinitorign service failed since it didn't detect it.
+    Doesn't need to be perfect, as long as there are not false negatives.
+    False negatives mean that the monitoring service failed since it didn't detect it.
 
     Monitoring service can be more complex
     Can monitor for certain conditions, can collect data like number of exceptions, latency etc.
@@ -482,9 +486,11 @@
     \paragraph{Three tier - Common variation}
     \hrule
     Top level contains UI aka presentation tier.
-    Display information and take user input through a GUI.
-    No business logic normally, this tier usually runs in the client browser. I.e JavaScript etc.
-    The code here should be assumed to be visibile and accesible to the user. Bad place for business logic doing so is considered an anti-pattern.
+    Display information and take user input through a GUI\@.
+    No business logic normally, this tier usually runs in the client browser.
+    I.e. JavaScript etc.
+    The code here should be assumed to be visible and accessible to the user.
+    Bad place for business logic doing so is considered an anti-pattern.
     \hrule
     Application Tier / Business Tier/ Logic Tier.
     Provides the logic gathered from functional requirements.
@@ -513,13 +519,14 @@
 
     \paragraph{Weaknesses of this pattern}
 
-    Major drawback, the monolithic structure of the logic tier. Business logic should not be placed in the presentation or data tier.
+    Major drawback, the monolithic structure of the logic tier.
+    Business logic should not be placed in the presentation or data tier.
     Issue is all the business logic is concentrated in a single user code base that runs as a single runtime unit.
     The implications of this, each instance of the application becomes too CPU intensive and will consume too much memory.
-    This makes the appilication too slow and less responsive.
+    This makes the application too slow and less responsive.
     This can especially be a problem with memory managed/ GC language like Java and C\# (maybe add go to this list)
     As a result applications can have longer and more frequent garbage collections.
-    This can lead to requring an upgrade of the computer the application is running on.
+    This can lead to requiring an upgrade of the computer the application is running on.
     Vertical scaling is both expensive and limited.
 
     \paragraph{}
@@ -572,7 +579,7 @@
     \paragraph{Advantages}
     Codebases are now \textit{smaller} .
     Development is a lot easier and faster along with deployment and testing.
-    Simply because there are less things.
+    Simply because there are fewer things.
     Code is easier to reason about and features can be added faster.
     New developers can become productive faster.
     Regarding performance and scalability, each microservice becomes less CPU intensive and takes less memory and can now run much more smoothly on commodity hardware (cloud).
@@ -621,8 +628,8 @@
 
     \paragraph{Motivation}
     If microservice A want to communicate with Microservice B, then not only does it require awareness of service B, it also needs to know how to call what API microservice B provides and how to call it at run time.
-    Also microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
-    Microservice A has a dependency on microservice B.
+    Also, microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
+    Microservice A has a dependency on microservice B\@.
 
     \paragraph
     In an event driven architecture, instead of direct messages that issue commands or request that ask for data, we have only events.
@@ -647,40 +654,43 @@
     When all events that occur in a system are stored in a message broker, in addition to data analysis an very powerful architecture pattern can be implemented.
     This is called event sourcing.
     By using event sourcing events can be replayed to identify the current state of a system rather than saving the state in a database.
-    Because events are immutable we never modifying them.
+    Because events are immutable we're never modifying them.
     We simply append new events to the log as they come.
     Using event sourcing we can store events for as long as we want.
     Querying can be made faster by adding snapshot events.
 
     \paragraph{CQRS}
     Another architectural pattern that can be implemented as a result of EDA
-    Command query responsibilty segregation.
+    Command query responsibility segregation.
     This solves two problems.
 
     First problem is optimizing a database that has a high read and update operations.
     In this scenario concurrent operations to the same record or tables contend with each other making the system slow.
-    Additionally if we use a distributed database, generally we can optimise it for one type of operation at the expense of teh other.
+    Additionally, if we use a distributed database, generally we can optimize it for one type of operation at the expense of teh other.
     (Cap theorem?)
-    Ad-hoc solution - We can optimise one operation at the expense of the other when an application is read/write heavy.
-    However when the both operations are equally important we have a problem.
-    CQRS achitectural pattern allows us to separate Update and Read operations into separate databases, sitting behind seprate services.
-    In this case service A would take all the update operationss and perform them in their own database, where it optimially stores the data for such updates.
-    Additionally every time an update operation is performed if publishes an event into a message broker.
-    Meanwhile service B will subscribe to those update events and applies those changes in its own read otimised database and now all read operations will go to service B.
+    Ad-hoc solution - We can optimize one operation at the expense of the other when an application is read/write heavy.
+    However, when the both operations are equally important we have a problem.
+    CQRS architectural pattern allows us to separate Update and Read operations into separate databases, sitting behind separate services.
+    In this case service A would take all the update operations and perform them in their own database, where it optimally stores the data for such updates.
+    Additionally, every time an update operation is performed if publishes an event into a message broker.
+    Meanwhile, service B will subscribe to those update events and applies those changes in its own read optimised database and now all read operations will go to service B.
     Both update and read operations can go to separate services without any contention/interference.
 
-    Further, the data can be optimised for each type of operation.
+    Further, the data can be optimized for each type of operation.
 
 
-    The second problem that CQRS helps solve is joining multiple tables that are located in seprate databases that belong to two differnt microservices.
-    Prior to monoliths all data was in one table. If that was a relational databse all the records could be joined and then analysed.
-    Post microservices, this is not the case assuming that best practice has been followed. Joins are harder now.
+    The second problem that CQRS helps solve is joining multiple tables that are located in separate databases that belong to two different microservices.
+    Prior to monoliths all data was in one table.
+    If that was a relational database all the records could be joined and then analysed.
+    Post microservices, this is not the case assuming that best practice has been followed.
+    Joins are harder now.
     Requests need to be sent to each service separately which is slower.
-    This data needs to be combined programattically becasue now we potentially have differnt types of databases.
+    This data needs to be combined programmatically because now we potentially have different types of databases.
     Some of these databases may not even be relational.
 
 
-    CQRS solves this problem. Every time there is a change of data in a services database, those services would publish those changes as an event to which other services subscribe to.
+    CQRS solves this problem.
+    Every time there is a change of data in a services database, those services would publish those changes as an event to which other services subscribe to.
     The other service will store what is called a materialized view of the joined read-to-query data from both service A and service B in its own read-only database.
     Whenever we need to get a join view we can just send a request to the joining service rather than send a request to two services.
 
@@ -731,11 +741,12 @@
 
 
     \section{Batch}
-    requires the storage of incoming data in a distributed database or a distributed files system. Data is never modified, it is only added to the end.
+    requires the storage of incoming data in a distributed database or a distributed files system.
+    Data is never modified, it is only added to the end.
     Key principal is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
-    The schedule can be adadpted for the users/clients needs.
-    Each time a batch processing job runs in can process new data and produce and up to date view of all the current data.
-    This can be can be stored in a well structured and indexed dataabse that can be queried to get insights.
+    The schedule can be adapted for the users/clients needs.
+    Each time a batch processing job runs in can process new data and produce and up-to-date view of all the current data.
+    This can be stored in a well-structured and indexed database that can be queried to get insights.
     Could analyse recent data or the whole data set.
 
     This data is not processed in real time.
@@ -768,31 +779,32 @@
 
     \section{Lambda architecture}
     May need processes of both strategies.
-    Lambda architecutre takes advantages of both.
+    Lambda architecture takes advantages of both.
     Aims to find the balance between fault tolerance and comprehensive analysis of the data from batch processing and the low latency that we get from real time.
 
-    In this architecture the infrastructure is divided in to three layers, btach, speed, and serving layer.
+    In this architecture the infrastructure is divided into three layers, batch, speed, and serving layer.
 
-    Data that enters the system is dispatcehd into both the batch layer and the speed layer simulataneouly.
-    The purpose of the batch layer is to manage out data set and be the system of records. The data in our master set is immutable and new data is appended, never modifed.
-    This data is usually on a distributed files system, optimised for for storign big files containing massive amountds of data.
+    Data that enters the system is dispatched into both the batch layer and the speed layer simultaneously.
+    The purpose of the batch layer is to manage out data set and be the system of records.
+    The data in our master set is immutable and new data is appended, never modified.
+    This data is usually on a distributed files system, optimized for storing big files containing massive amountds of data.
     The second purpose of the batch layer is to pre computer our batch views.
     Every time we run out batch processing job, it processes all the data that we have in out master data set. Once the processing is cimplete it indexes and store the data in a read only database.
-    Typically, this overrides the exusting pre computedd views that we created the previous time we ran the processing job.
+    Typically, this overrides the existing pre computed views that we created the previous time we ran the processing job.
     Note: The batch layer aims at perfect accuracy and operates on the entire data set.
 
     \paragraph{Speed Layer}
-    Data is sent to this layer in paralell.
-    Real time stratgey is used here. All the data goes into a queue or a messdage broker and is thien pickedup as it arrives by the processing job.
+    Data is sent to this layer in parallel.
+    Real time strategy is used here.
+    All the data goes into a queue or a message broker and is then picked up as it arrives by the processing job.
     Processing job analyses the new even and adds the processed even to the real time view ready for querying.
-    This layer compensiates for the latency in the batch layer.
+    This layer compensates for the latency in the batch layer.
     Unlike the batch layer it only operates on the most recent data and doesn't attempt to provied a cimplete view or make any data corrections.
 
     This layer exists between the last time a batch was run and the present moment/recent data.
 
     \paragraph{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
-
 
     \chapter{Components}
 
@@ -856,7 +868,7 @@
 
     \subsubsection{Transactional Outbox}
 
-    \subsubsection{Materialised View Pattern}
+    \subsubsection{Materialized View Pattern}
 
     \subsubsection{CQRS}
 
