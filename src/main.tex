@@ -119,11 +119,11 @@
     Before approving a requirement, conslulting with a domain expert to ensure that the requirement can actually be delivered.
 
 %    Three important quality attributes when desigining a system
-    \begin{list}
+    \begin{itemize}
         \item Testability and measurablility
         \item Make tradeoffs between quality attributes over others
         \item Feasibility of quality attributes
-    \end{list}
+    \end{itemize}
 
 
     \section{System constraints}
@@ -134,11 +134,11 @@
 
     Three types
 
-    \begin{list}
+    \begin{itemize}
         \item Technical - Being locked to hardware, cloud vendors etc, must be on prem, etc.
         \item Legal - Geography, different rules in different countries where the system resides.
         \item Business - Limited budgest, strict deadlines.
-    \end{list}
+    \end{itemize}
 
     Once constraints are identified consider non negotiable constraitns and self-imposed constraints that can be removed.
     Once a set of constriants have been agreed it is hard to move away from them.
@@ -212,7 +212,7 @@
     Scalability is a measure of a systems abilty to handle a growing amount of work in an easy and cost effective way by adding resources to the system
     Optimistic scenario is linear scalabilty but in practice this is hard to acheieve.
     Three ways to scale
-    \begin{List}
+    \begin{itemize}
         \item Horizontal scaling - Add more units of the resources that we have like multiple computers.
         Spread the load.
         No limit to scala. Can easily add an remove systems as required.
@@ -234,7 +234,7 @@
         Testing becomes hard and slow since there is no isolation, a minor change can break everything.
         Releases become risky since they include many changes.
         This impacts team scalabilty and engineering velocity.
-    \end{List}
+    \end{itemize}
     One solution is to seprate code into seperate services which theier own code base and tech stack, release schedule etc.
 
     These scalabilty solutions are orthogonal to each other.
@@ -289,7 +289,7 @@
 
     \paragraph{}
     Active-passive - one primary instance, passive instances take periodic snapshots.
-    Lose abilty to scale out system, all the requests go to one machine.
+    Lose ability to scale out system, all the requests go to one machine.
     Implementation is a lot easier, one instance is the most up to date, the rest or followers.
 
     Second tactic for fault tolerance - failure isolation and detection
@@ -302,7 +302,7 @@
     False negatives mean that the moinitorign service failed since it didn't detect it.
 
     Monitoring service can be more complex
-    Can mointor for certain conditions, can collect data like number of exceptions, latency etc.
+    Can monitor for certain conditions, can collect data like number of exceptions, latency etc.
 
     \subsection{Failure recovery}
     Third tactic for fault tolerance.
@@ -310,7 +310,8 @@
     Once we detect the and isolate the faulty instance or server serveral actions can be taken.
     Stop sending any traffic or workload to that host.
     Attempt to restart it with the assumption that the problem will be fixed after a restart.
-    Perform a rollback. i.e go to a previous version that was stable and correct. Useful for deploying updates.
+    Perform a rollback.
+    i.e go to a previous version that was stable and correct. Useful for deploying updates.
 
 
     \section{SLA. SLO, SLI}
@@ -318,12 +319,12 @@
 
     \subsection{SLA}
     An agreement between the service provider and clients/users with regards to quality attributes like availabilty, performance and data durabilty and the time it takes to respond to failures.
-    Includes penalities if those agreements are breached.
+    Includes penalties if those agreements are breached.
 
-    Example penalities include: Refunds and service credits.
+    Example penalties include: Refunds and service credits.
 
     Usually exists for external paying users but sometimes for free users.
-    Ocassionally for internal users but the penalties are minor if they exists.
+    Occasionally for internal users but the penalties are minor if they exists.
     Free services don't usually publish SLAs.
 
     If other users rely on the service then it is important that they know the SLAs.
@@ -337,15 +338,16 @@
     SLOs are within a SLA.
 
     \subsection{SLI}
-    Service level indicator - A quantative measure of a SLO using a monitoring system. Logs could be used to calculate this.
+    Service level indicator - A quantitative measure of a SLO using a monitoring system. Logs could be used to calculate this.
     Once calculated this can be compared to the SL Objectives.
 
     \subsection{}
     SLA are usually created by business and legal teams.
-    SLOs are defined by the acrchitects and software engineers as well as the indicators.
+    SLOs are defined by the architects and software engineers as well as the indicators.
 
     \paragraph{Considerations}
-    Think about the metrics the user cares about. Dont measure everythign.
+    Think about the metrics the user cares about.
+    Don't measure everything.
     Define service level objectives around those metrics.
     From the SLO we can consider SL indicators to track the SLOs.
 
@@ -356,12 +358,12 @@
     Another - set realistic goals and allow room for error.
     Save costs and deal with unexpected issues.
     Commit to less than what can be provided.
-    Important for external SLAs especially to avoid penalities.
-    Interanlly these goals can be more agreesive.
+    Important for external SLAs especially to avoid penalties.
+    Internally these goals can be more aggressive.
 
     Another consideration, create a recovery plan when SLIs are indicating that SLOs are not being met.
     I.e - decide what to do if they system is down for long periods of time, performance degradation or bugs.
-    This plan could include automatic alerts, automatic failovers, rollbacks, restarts, etc and handbooks for certain situations.
+    This plan could include automatic alerts, automatic fail overs, rollbacks, restarts, etc and handbooks for certain situations.
     This avoids having to improvise in an emergency.
 
 
