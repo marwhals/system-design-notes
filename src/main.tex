@@ -735,6 +735,70 @@ Set of architectural constraints and best practice for web APIs. It is just a st
     \end{itemize}
 
     \section{API Gateway}
+    The problem being solved.....split the monolith in separate services....now there is a lot of service duplication and performance overhead.
+    Each separate service needs to implement its own secuirty, authorisation, authentication etc....
+    To solve this decouple the client application from the internal organisation of the system and simplify out external API.
+    This can be done via another abstractoin called the API Gateway.
+    An API Gateway is an API management service tha tsites betwen the client and the collection of backend services.
+    API Gateway follows a software architectural pattern called API composition.
+
+    In this pattern, we compose all all the different APIs of our services that we want to expose externally into a single API.
+    This single API can be called by applications, by sending requests to one service. This vs sending multiple requests to different services to achieve a task.
+
+    Provides an abstraction between the client and the rest of our system.
+
+    \subsection{Pros}
+    Allows for internal changes easily for API consumers.
+    Can consolidate security issues into one place.....the API gateway.
+    Bad requests get stopped at the gateway.
+    Can allow a user to perform different operations depending on his permissions and role.
+    Can implement rate limiting at the API Gateway to stop DDOS
+
+    Can also improve performance of the system by saving a lot of overhead.
+    Only have to do certain actions once.
+    Can stop the user from making multiple requests to different places.
+    This is request routing.
+    With an API gateway the client makes a single request and all the backend services will have their responses aggreagatesd into a single response.
+
+    Another performance gain is from caching certain responses for particular requests.
+    Avoid making request to the backend systems.
+
+    Another gain is monitoring and alerting is easier.
+    By adding monitoring logic into the API gateway real time information can be gained on the traffic and load of they system..
+    Can create alerts based on traffic variations.
+    Improves observability and availability.
+
+    Also allows for protocol translation from one place.
+    Send JSON but work with RPC internally etc.
+    Could communicate with legacy services the support older protocols.
+    Some systems maybe reluctant to change this.
+    Instead different API formats can be catered for at the API Gateway.
+    I.e read some external format and translate it for the internal system.
+
+    \subsection{Best practices and anti patterns}
+    Do not include business logic here. Main purpose is API composition and routing of requests to different services.
+    Those services are the ervices that make the business decisions and perform the actual tasks.
+    If you add business logic to it that service will end up doing all the work. I.e a single service.
+    In turn this will become an unmanagable amount of code.
+    One of the problems we want to solve by splitting a service into multiple services.
+
+    Next consideration, is that since all trafic goes through it, the API gateway may become a single point of failure.
+    This can be solved by adding multiple instances of the API gateway service and placing them behind a load balancer.
+    This solves scalabily, availablility and performance aspect.
+
+    Another thing to consider is deployment. A bad release/ bug can crash the APi gateway service and the entire system can become unavailable to clients.
+    Human error needs to avoided and deployments require thought.
+
+    Additional latency is added as well since there is another service that request must go through before performing business actions.
+    Avoiding the API gateways is an antipattern that should be avoided even though it may optimise the request processing.
+
+    \subsection{API Gateway Solutions}
+    \begin{itemize}
+        \item Netflix Zuul (Open Source)
+        \item Amazon API gateway
+        \item GCP - Apigee , Google Cloud plateform API Gateway
+        \item Azure
+    \end{itemize}
 
     \section{CDN Solutions and cloud}
 
