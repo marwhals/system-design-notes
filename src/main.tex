@@ -264,8 +264,51 @@
     This is not practical but detectability and fast recovery has a positive impact on availabilty.
 
 
+    \section{Fault tolerance and high availabilty}
+    Three categories of failures.
+    Human error, software errors like garbage collections and hardware failures.
 
-    \section{Fault tolerance}
+    Best way to achieve high availability in our system is through fault tolerance.
+    This enables the sytem to remain operational and available to the users despite failures within one or multiple components.
+    When failure happen fault tolerance will allow the system to continue operating at the same level of performance or reduced performance.
+    But it will preveitn the system from being entirely unavailable.
+
+    Fault tolerance revolves around three major tactics.
+    Failure prevention, failure detection and isolation and recovery.
+
+    First thing to stop a system going down is to eliminate any single point of failure in our system.
+    Best way to do this is through replication and redundancy.
+    Replicas, spatial redundancy and time redundancy.
+
+    Two strategies for redundancy and replication.
+    \paragraph{}
+    Active-active architecture - Requestions fo to all the replicas, replacement is available immediately.
+    This allows for horizontal scalability but also coordingation between all the replicas since they are taking requestis.
+    Not easy to keep in sync and has additional overhead.
+    \paragraph{}
+    Active-passive - one primary instance, passive instances take periodic snapshots.
+    Lose abilty to scale out system, all the requests go to one machine.
+    Implementation is a lot easier, one instance is the most up to date, the rest or followers.
+
+    Second tactic for fault tolerance - failure isolation and detection
+    To achieve this we need a monitoring service to monitor the health of our instances via health check messages.
+    Alternatively can listen to periodic messags called heartbeats, that should come periodically from healthy instances.
+
+    In either strategy if monitorign service does not hear from the for a predefined duration of time, it can assume that the server is no longer avaiable.
+    Can lead to false positives.
+    Doesn't need to be to be perfect, as long as their are not false negatives.
+    False negatives mean that the moinitorign service failed since it didn't detect it.
+
+    Monitoring service can be more complex
+    Can mointor for certain conditions, can collect data like number of exceptions, latency etc.
+
+    \subsection{Failure recovery}
+    Third tactic for fault tolerance.
+    If we can detect and recover from each failure faster than the user can notice then our system will have high availability.
+    Once we detect the and isolate the faulty instance or server serveral actions can be taken.
+    Stop sending any traffic or workload to that host.
+    Attempt to restart it with the assumption that the problem will be fixed after a restart.
+    Perform a rollback. i.e go to a previous version that was stable and correct. Useful for deploying updates.
 
 
     \section{SLA. SLO, SLI}
