@@ -518,8 +518,71 @@
         \item Java Remote Method Invocation (RMI)
     \end{itemize}
 
-    \section{REST}
+    \section{Representational State Transfer - REST}
+Set of architectural constraints and best practice for web APIs. It is just a style allowing,making it easier to keep quality attributes.
+    A RESTful API meets a certain traits.
+    More resource orientated. Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
+    In a REST api a client requests a named resource and the server responds wi the current state of that resource.
+    Usually done using HTTP. The resource can be implemented in a completely different way, only a representation is sent.
+    Resource is just an abstraction.
+    Interface is more dynamic, actions are no statically defined like in RPC.
+    This is through a concept called HATEOS - hypermedia as the enginer of the application state.
+    This is achieved by accompanying a state representation repsone to the client with hyper mediat links.
+    The client can follow these links ad progress its interal state.
 
+    \subsection{Achieving quality attributes}
+    Important requirement of a system that provides RESTful API is that the server is stateless and does not maintain any session information about the client.
+    Each message should be served by the server in isolation withouth any information about previous requests.
+    This allows for high availabilty and scalability.
+    If there is no session information high groups of servers can be used and the load can be spread. Client will no notice.
+    Cacheability - Important requirement. This means the server either implicitly or explicitly defines each response as cacheable or non-cacheable.
+    Allows the client to elimiate the potential round trip to the server and back if they response is cached somewhere closer to the client.
+    This will also reduce system load.
+
+    \subsection{Resources in RESTful APIs}
+    Each resource is named and addressed usingn a URI.
+    Resources are organised in a hierachy where each resource is either a simple resource or a collection resource.
+    The hierachy is represented using forware slashes.
+    A simple resource has a state and optionally can contain sub resorces.
+    A colletion resource is a special resource that contains a list of resources of the same type.
+
+    \subsubsection{Naming resources - best practices}
+    Use nouns only. Provides distinction between actions and the resources the actions will be take on.
+    Make a distinction between collection resources, and simple resources using plural and singular.
+    Use clear and meaningful names. This will make the API easier to use for developers, and avoid mistakes and incorrect usages.
+    Final practice. Use Unique, URL friendly names for resource identifiers for usage via the web.
+
+    \subsection{Methods and operations}
+    REST API limits the number of methods we can perform on each resource to a few predefined options.
+    Creating, Updating, Deleting and getting the current state.
+    When the resource is a collection resource, getting its state usually means getting a list of its sub-resources.
+
+    Since RESTapis are commonly implemented using HTTP the operations are mapped to HTTP methods as follows.
+
+    \begin{itemize}
+        \item POST - Create an existing resource.
+        \item PUT - Update an existing resource.
+        \item DELETE - Delete an existing resource.
+        \item GET - Get the state of an existing resource.
+    \end{itemize}
+
+    Additional can be defined but the situation is un common.
+
+    \subsection{HTTP Semantics}
+    Guarantees from HTTP semantics.
+    GET is considered safe i.e it will not change the state of the resource.
+    GET, PUT, DELETE are idempotent. i.e same result if you apply those operations multiple times.
+    GETs are considered cacheable by default while responses to POST requests can be made cacheable by setting the approprite HTTP headers sent as part of the response to the client.
+    This feature allows us to conform to the cachabilty requirements of a REST API.
+    When the client needs to send additional information to the system via a POST or PUT command JSON can be used. XML is also usable.
+
+    \subsection{Step to creating a RESTful API}
+    \begin{itemize}
+        \item - Identify entities in a system to serve as resources
+        \item - Mapping the entities to URIs and organising the hierachy of resources based on their relationships
+        \item - Choose a repsentation for each resource. Can use JSON for this and include links for HATEOS
+        \item - Final step - assign HTTP methods to actions.
+    \item \end{itemize}
 
     \section{GraphQL}
 
