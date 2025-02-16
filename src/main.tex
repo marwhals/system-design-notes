@@ -183,8 +183,26 @@
 
 
     \section{Performance}
+Some performance metrics
+    Response time - Tiem between client sending a request and recieve a response
+    Two parts, the processing time with code and databases applying business logic.
+    And the \quote{waiting} time. The duration of time that the request or response inacitvely spends in the system.
+    This time is usually spend in transit in the physical network or in software queues waiting to be handled or reach its destination.
+    Waiting time is also known as latency.
 
+    Response time can also be called end to end latency and is an importnat metric.
 
+    Another important metric is throughput, which is the amount of data a system can process in a given interval of time.
+    The more per unit of time the higher the throughput.
+
+    \subsection{Measuring}
+    Consider the end to end response time.
+    COnsider the distribution of response times and set a measure around it. Use a histogram, chart etc, statistics etc.
+    Especialy consider tail latency, the resposnes that take the most time in comparison to the rest of the values.
+    This tail latency needs to be as short as possible.
+    Another consideration is the performance degradation point and how fast or steep the degradation is.
+    This is the point in the performance graph where the performance is starting to get significantly worse as the load increases.
+    Usually this means a resource is fully utilised, could be hardware resource etc or a software queue.
 
     \section{Scalability}
 
