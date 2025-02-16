@@ -690,8 +690,51 @@ Set of architectural constraints and best practice for web APIs. It is just a st
     \end{itemize}
 
     \section{Message Brokers}
+    A building block for asynchronous architectures.
 
-    \section{API Gateways}
+    \subsection{Drawbacks of synchronous communitcation}
+    Both applications that establish communication have to be healthy and have to remain healthy while the transaction is completed.
+    Easy when the messages are short.
+    Becomes more complex with larger messages.
+    There is no leeway in the system to absorb spike in traffic or load.
+    Horizontal scalaing is not an option since a transaction/ processing may take a long time on the system.
+    The solution to this is to use a message broker.
+
+    \subsection{What is a message broker}
+    A queue data structure to store messages between senders and recievers.
+    Used internally in a system, not to be exposed/interacted with by a user/client.
+    Can provide additional functionality in addition to storing a buffering messages.
+    Can perform message routing, transformation validation and even load balancing.
+    Unlike load balancers, mesage queues decouple senders from recievers by providing their own communication protocols and APIs.
+    They are a fundemntal building block in any kind of asynchronous software architecture.
+
+    When we have two servieces communicating with eaach otehr via message broker, the sender doesn't have to wait for confirmation from the reciever after it sends the message.
+    The reciver doesn't even have to be available to recieve the message when the message is sent.
+    Very useful in breaking a service into multiple services.
+    Another important benefit that message servies provide is buffering of messages to absorb traffic spikes.
+
+    Many message brokers additionally off the published subscribe pattern, where multiple services can publish messages to a particular channel and multiple services can subscribe to that channel and get notrified when a new event is published.
+    This makes it very easy to add services that bring in additional functionality, with out modifying the system.
+
+    \subsection{Quality attributes from adding a message queue}
+    Adds fault tolerance, since it allows different services to communicate with one another while some may be unavailable temporarily.
+    Message brokers prevent messages from being lost, a characteristic of a fault tolerant system.
+    This in turn helps provide higher availability for our users.
+    Since a message broker can queue up messages when there is a traffic spike, it allows our suystem to scala to high traffic withouth modifying the system.
+
+    \paragraph{Drawbacks}
+    Performance - Introduces latency through the indirect communication between services. Not much of an issue in most systems.
+
+\subsection{Message broker solutions}
+    \begin{itemize}
+        \item Kafka
+        \item RabitMQ
+        \item AWS SQS
+        \item GCP
+        \item Azure %TODO add more info...?
+    \end{itemize}
+
+    \section{API Gateway}
 
     \section{CDN Solutions and cloud}
 
