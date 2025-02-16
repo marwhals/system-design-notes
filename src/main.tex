@@ -448,14 +448,68 @@
     \paragraph{}
     APIs can be defined in any way but some best practices have emerged.
 
+    \section{Remote Procedure Calls - RPC}
+    Ability to call a client application to execute a sub routing on a remote server.
+    Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
+    This feature is called local transparancy. Remote or local looks the same.
+    Some RPC frameworks allow for multiple programming languages so applications written in different languages can communicate.
 
+    \subsection{How it works}
+    API as well as the data types that are used in the API methods are devlaared using a special interface description language.
+    This is framework / implementation specific. Effectively a schema or the communication between a remote client and a server in the system.
+    After this definition using the specialised language, a code generation tool or special compiler can be used to generate two separate implementations of the API tool.
+    This tool is framework specific.
+    One implementation is for the client, another is for the server.
+    Server side is called the server stub.
+    Client side is called client stub.
+    Stubs take care of all the implementation details of the remote procedure invocation.
+    All custom object types that we declare using the interface description language are compiled into classes or structs depending on the language.
+    Auto generate objects are refferred to as Data Transfer Objects or DTOs.
 
-    \section{Relevance}
+    Now at run time, wheneve rthe client appilcatoin calls that particular RPC method with some parameters the client stub takes care of coding the data.
+    This is called serialization or marshalling.
+    After serialisation, the connection to the remote server is inistialised and the data is send over to the stub.
 
+    On the other end the stub is listening to the client applicatoins messags and when the message is recieved it
+    unmarshalled/unserialised and then the real implementatoni of the method is invoked on the server application.
 
-    \section{RPC}
-    Does gRPC fit in here?
+    Once the server is finished, the result is passed back through via marshalling and unmarshalling, to the client stub.
+    The client application recieves the unmarshalled response as a return value.
+    This will look like it was a local method call.
 
+    Well established pattern. Frameworks, implementatoin details and performance are the only real changes.
+    API developers need to pick the right framework, define the API as well as the relevant types using a RPC framework.
+    The desciption then needs to be published.
+
+    The client and server in the system are decoupled.
+
+    When the system has been designed and implemented a stub can be generated for new clients.
+    New cliets just need to generate their client stub to use the server method based on the published API definition.
+
+    Using RPC, client and server is not restricted to programming language.
+
+    \subsection{Pros}
+    COnveinient - generate stubs which look just like local methods on objects.
+    Communication details, and data passing details are abstracted away from the developers.
+    Any failurres result in just exception or error depending on the programming language just like normal methods.
+
+    \subsection{Cons}
+    RPC methods are less reliable and are slower. This can lead to performance issues.
+    CLient will not know how long RProcedure calls will take.
+
+    \subsection{Considerations}
+    API design will need to consider this.
+    A solution is to use asynchoronous versions for slow methods which is a best practice.
+    Another consideration is idempotency in the case that a message is lost/ slow
+
+    This is geneally used when backend systems are communicated to one another but frontend systems can be considered.
+    RPC is a good style when providing an API to a different company vs an end user or a webpage.
+    Good for different internal components within a large scale system.
+
+    The RPC API style is also a good way to abstract away the network communication and focus on the actions the client wants to perform on the server.
+
+    This would be a bad fit if we want to use browser cookies or headers. There are other styles for this.
+    RPC revolved more around actions rather than data and resources (Think CRUD applications).
 
     \section{REST}
 
@@ -465,37 +519,25 @@
 
     \chapter{Large Scale Systems Architectural Building Blocks}
 
-
     \section{DNS, Load Balancing}
 
-
     \section{Message Brokers}
-    Kafka.....
-
 
     \section{API Gateways}
 
-
     \section{CDN Solutions and cloud}
-
 
     \chapter{Data storage at less trivial scale}
 
-
     \section{Relational Databases and ACID Transactions}
-
 
     \section{Non-Relational Databases}
 
-
     \section{Techniques to improve performance, availability and scalbilty of databases}
-
 
     \section{CAP Theorem}
 
-
     \section{Scalable unstructured data storage}
-
 
     \chapter{High-Level System Design}
 
