@@ -586,10 +586,91 @@ Set of architectural constraints and best practice for web APIs. It is just a st
 
     \section{GraphQL}
 
+    \include{graphQL}
 
     \chapter{Large Scale Systems Architectural Building Blocks}
 
-    \section{DNS, Load Balancing}
+    \section{DNS, Load Balancing, GSLB}
+    Basic role, balance the traffic load amongst a group of servers in a system.
+    Helps with achieve horizontal and high scalability of a system when running an application on multiple computers.
+    Without a load balancer the client application will need to know the addresses of the computers hosting the application.
+    This tightly couples the client application to out system's internal implementation and this makes changes hard.
+    Load balancers provide an abstraction as well as avoid overloading a single server with traffic.
+    This abstraction makes the application look like a single server.
+
+    \subsection{Quality attributes from a load balancer}
+    Loadbalancer provide
+    High scalability -> horizontal scaling is easy
+    Even easier in the cloud.
+
+    Provides high availability. Load balancers can be configured to stop sending traffic to servers which are not healthy.
+
+    Performance - load balancers add a little bit of latency and increase the response time but is worth the tradeoff for increased performance in terms of throughput.
+    The load balancer can cater for as many backend servers as desired with some reasonsable limitations.
+    Throughput is much large than what would be possible with a single server.
+
+    Load balancer helps us achieve maintainability, since we can add, remove, upgrade servers in rotation without disrupting the client/ user.
+    This would be done on a subset of the servers leaving another subset running.
+
+    \subsection{Types of load balancers}
+    DNS - internet infrastructure that maps human readable URLs to IP addresses that can be used by network routers to route to individual computers on the web.
+    A single DNS record doesn't have to be mapped to a single IP address. They can be configured to return a list of IPs corresponding to different servers.
+    The list returned may be in a random order.
+    When recieving a list most client applications just pick the first one in the list.
+    Technically this can be seen as load balancing
+    Cheap and super simple but DNS doesn't know the health of servers.
+    Requests may go to a down server and the DNS does't know.
+    List of IP addresses changes only so often and si based on the time to live that was configured for that particular record.
+    Additionallly this list of addresses that a particular domain is mapped to, can be cached in differnt locations such as the clients computer.
+    That makes the time between a server going down and the point that the requests are no longer sent to that server even longer.
+
+    Another drawback of the DNS loadbalcning strategy is that the round robin method doesn't consider the hardware resrouces of differnt servers.
+    Some servers may have more powerful hardware than others, nor can it detect that one server is overloaded than others.
+    Another drawback. The appliicatoins gets the IP address of all the servers, exposing implementation details whichi make the system less secure.
+    Nothing stop a malvisou client application from sending requests to a single IP address in order to overload \textbf{it}
+
+    \subsection{Addressing these drawbacks}
+    Two options. Hardware load balancers and software load balancers.
+    All communication between the client and servers are done via both these types of loadbalancers.
+    Individual servers, and IP addressses are hidden behind the load balancer and not exposed to the users making the system more secure.
+
+    These load balancers can peform health checks on the servers and can detect if one has became unresponsive.
+
+    BOth can balance load more intelligently accross servers taoking into account the differnt hardware application instances are running on.
+
+    They can be used to balance requests from users, but they can also be used inside the sytem to create an abstraction layer between services.
+
+    Superior to DNS in terms of loadbalancing but they are usually colocated with the group of servers they balancer the load on.
+    If a load balancer is too far away from the actual servers, we are adding a lot of extra latency since all communication both to and from the application has to go through the load balancer.
+
+    When running a system in multiple geographical locations having a load balancer between them will sacrifice the performance for at least one of these locations.
+
+    These load balancers do not support the DNS resolution, so a DNS solution will also be required.
+
+    \subsection{Global Server Load Balancer - GSLB}
+    A hybrid between a DNS service and the hardware or software load balancer.
+    Typically can provide a DNS service.
+    In addition it can make more intelligent routing decisions.
+    On on hand, the GSLB can figure out the users location based on the origin IP inside the incoming request.
+    a GSLB service has similiar monitoring capabilties to typical software or hardware loadbalancer.
+    It knows the locaton and the state of each server we register with out GSLB.
+
+    In a typical large-scale system deployment, those servers are load balancers located in differnt data centres in differnt geographical locations.
+    GSLB may just return the locations of the nearest load balancer.
+    The user will use that IP address from that point on to communicate with the system in that data centre through a collocated hardware or software loadbalancer.
+
+    \subsubsection{Extra notes}
+    They can be configured to route traffic on a multiple strategies. Not just geogrpahic location.
+    Since they know the health of different data centres, they can route traffic based on current traffic or load on each data centre.
+    Or based on estimated response time, or bandwidth between the user and that particular data centre.
+
+    This can allow for the best performance possible for each use regardless of their geographical location.
+
+    They are also important in disaster recovery situations. If there is an issue in one data center users can be routed to another.
+    This provides high avialability.
+
+    To prevent a load balancer from being a single point of failur, we can refister all the addresses with the GSLB DNS service or any other DNS service.
+    This allows clients to get a list of all the load balancers and either pick one or send their request randomly.
 
     \section{Message Brokers}
 
@@ -597,7 +678,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
 
     \section{CDN Solutions and cloud}
 
-    \chapter{Data storage at less trivial scale}
+    \chapter{Data storage}
 
     \section{Relational Databases and ACID Transactions}
 
@@ -893,7 +974,6 @@ Set of architectural constraints and best practice for web APIs. It is just a st
 
     \include{microservices}
 %   Consider combining this with the other microservices section
-
 
     \chapter{Microservices in depth}
 
