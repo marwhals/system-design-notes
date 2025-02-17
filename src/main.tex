@@ -166,6 +166,7 @@
     Contracts and financial obligations.
     Reputation and brand
 
+
     \section{Type of Requirements AKA Architectural Drivers}
 
     \paragraph{}
@@ -183,6 +184,7 @@
 
 
     \chapter{Quality attributes in large scale systems}
+
 
     \section{Performance}
     Some performance metrics
@@ -371,6 +373,7 @@
     and handbooks for certain situations.
     This avoids having to improvise in an emergency.
 
+
     \chapter{API Design}
     Motivations - After requirements, system can be thought of as a black box whose behaviour has a well-designed interface.
     Interface is a contract between the engineers who implement the system and the client applications who use the system.
@@ -448,6 +451,7 @@
     \paragraph{}
     APIs can be defined in any way but some best practices have emerged.
 
+
     \section{Remote Procedure Calls - RPC}
     Ability to call a client application to execute a sub routing on a remote server.
     Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
@@ -518,8 +522,9 @@
         \item Java Remote Method Invocation (RMI)
     \end{itemize}
 
+
     \section{Representational State Transfer - REST}
-Set of architectural constraints and best practice for web APIs. It is just a style allowing,making it easier to keep quality attributes.
+    Set of architectural constraints and best practice for web APIs. It is just a style allowing,making it easier to keep quality attributes.
     A RESTful API meets a certain traits.
     More resource orientated. Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
     In a REST api a client requests a named resource and the server responds wi the current state of that resource.
@@ -582,13 +587,17 @@ Set of architectural constraints and best practice for web APIs. It is just a st
         \item - Mapping the entities to URIs and organising the hierachy of resources based on their relationships
         \item - Choose a repsentation for each resource. Can use JSON for this and include links for HATEOS
         \item - Final step - assign HTTP methods to actions.
-    \item \end{itemize}
+        \item
+    \end{itemize}
+
 
     \section{GraphQL}
 
     \include{graphQL}
 
+
     \chapter{Large Scale Systems Architectural Building Blocks}
+
 
     \section{DNS, Load Balancing, GSLB}
     Basic role, balance the traffic load amongst a group of servers in a system.
@@ -689,6 +698,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
         \item - Azure stuff
     \end{itemize}
 
+
     \section{Message Brokers}
     A building block for asynchronous architectures.
 
@@ -725,7 +735,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
     \paragraph{Drawbacks}
     Performance - Introduces latency through the indirect communication between services. Not much of an issue in most systems.
 
-\subsection{Message broker solutions}
+    \subsection{Message broker solutions}
     \begin{itemize}
         \item Kafka
         \item RabitMQ
@@ -733,6 +743,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
         \item GCP
         \item Azure %TODO add more info...?
     \end{itemize}
+
 
     \section{API Gateway}
     The problem being solved.....split the monolith in separate services....now there is a lot of service duplication and performance overhead.
@@ -800,9 +811,63 @@ Set of architectural constraints and best practice for web APIs. It is just a st
         \item Azure
     \end{itemize}
 
-    \section{CDN Solutions and cloud}
 
-    \chapter{Data storage}
+    \section{Cloud Delivery Network Solutions and cloud}
+    Can be considered to be more of a service.
+    The problem being solved. Even with GSLB there still latency between the end user and the locations of the hosting server.
+    Each request has to go through multiple hops over the network between different routers etc adding even more latency.
+    Users will abandon a website if it takes to long to load. (Think 3 seconds plus)
+    Can improve system performance etc but its content that needs to be closer to the users rather than business logic.
+
+    \subsection{What it is}
+    A globally distributed network of servers located in strategica places with the main purpose of speeding up the delivery of content to the end users.
+    Solves bad user experience.
+    CDNs cache website content on their servers. Referred to as edge servers. They are physically close to the user and more strategically located in terms of network infrastructure.
+    Allos for the transfer of content much quicker to the user and improve the percieved system performance.
+    Can be used to deliver webpage contents and assets including video streams. Both live and on demand.
+    Very widely used.
+
+    Results in faster page loads, improves system security and helps protect against DDOS since malicous requests won't go to our system.
+    They will be distributed amongst a large number of servers hosted by the CDN provider.
+
+    In addition to physical closeness, they can also be hardware optimised. I.e better hardrives, CPU etc.
+    Can also reduce bandwidth by compressing content delivered over a network.
+    Examples, GZIP and JavaScript minification.
+
+    \subsection{Strategies when integrating with CDNs}
+    Pull strategy - tell CDN provider which content we want on our website to be cached and how often this cache needs to be invalidated.
+    This can be configured in the time to live property on each asset or type of asset.
+    In this model first time a user requests a certain asset the CDN will have to populate its cache by sending a reqeust to a server in our system.
+    Once that asset is cached on the CDN, subsequent reqeust by users will be served by the edge servers directly.
+    This saves the network latency associated with the communication with out servers.
+    When requesting an asset that has already expired, CDN will check for a new version. If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
+    Otherwise, if a new version is avialable the CDN  will receive the new version instead of the old one to the user.
+
+    Push strategy - Manually or automatically upload or publish the content that we want deliver through a CDN.
+    WHen the content changes, we are repsonsible for republishing the new versions to the edge servers.
+    Some CDN providers support this model directly, other enable the strategy by setting a very long TTL for our assets so the cache never expires.
+    When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user reqeusts that content.
+
+    \subsection{Choosing the right strategy}
+    \subsubsection{Advantages of pull model}
+    Lower maintence on our part. Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
+    Everything at that point will be taken care of by the CDN provider.
+
+    \paragraph{Drawbacks}
+    FIrst time there will be a longer latency as the CDN cache is popilated from the server.
+    If the time to live is the same for all assets there may be freqeutn traffic spikes when those assets expire at the same time.
+    This woudl result in a large number of requests from the CDN to refresh its cache at one time.
+
+    \paragraph{}
+    Add to the availability of the system but the servers still need to maintain availablity otherwise the CDN won't be able to pull the latest version of assets.
+
+    \subsubsection{The push strategy}
+    Good if the content does'nt change to frequently. Push to the CDN and then traffic will go the CDN servers.
+    Will reduce traffic to out system and reduces the burden on out system to maintain high availablility.
+    Even if they system goes down, users can still get data from the CDN and won't be affected by our systems internal issues at all.
+    If contnet does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
+
+    \chapter{Data storage at Scale}
 
     \section{Relational Databases and ACID Transactions}
 
@@ -810,7 +875,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
 
     \section{Techniques to improve performance, availability and scalbilty of databases}
 
-    \section{CAP Theorem}
+    \section{Brewers CAP Theorem}
 
     \section{Scalable unstructured data storage}
 
@@ -1099,6 +1164,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
     \include{microservices}
 %   Consider combining this with the other microservices section
 
+
     \chapter{Microservices in depth}
 
     \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decopuling.
@@ -1197,6 +1263,7 @@ Set of architectural constraints and best practice for web APIs. It is just a st
 
     \paragraph{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
+
 
     \chapter{Components}
 
