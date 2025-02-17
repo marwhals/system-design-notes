@@ -1069,10 +1069,31 @@
     \paragraph{Note}
     These three techniques are orthogonal to each other. Often used together in real user use cases.
 
-
-
     \section{Brewers CAP Theorem}
+    %TODO find a good diagram for this
 
+----- In the precesne of a network partition, a distributed database cannot guarantee both consitency and availabilty.
+
+    The scenario of database instances not being able to communicate with one another.
+    When an isolated server cannot communcate with its replicas it can either return an error or produce inconsistent data.
+
+    Note: No network partition then no tradeoff and both consistency and availablitily can be offered.
+
+    \begin{itemize}
+        \item Consistency - Every read request received the most recent write or an error regardless of which instance is serving when considering a network partition.
+        \item Availability - Every request receives a non error response without the guarantee that it contains the most recent write.
+        Occasionally different clients may get a different version of a record, some may be stale but all requests return a successful value.
+        \item Partition tolerance - means that the system continues to operate despite an arbitrary number of messages being delayed or lost by they network.
+    \end{itemize}
+
+
+    The theorem basically states one of these must be dropped when we are working with a dataabase that may have to deal with a database partition.
+    Could have a single database to guarantee consistence and availabilty....ie no network involved with the database....but this would not scale.
+    When architecting for partition tolerance we either have to drop availability or consistency. Depends on the use case.
+
+    The choice is not so distinct, more of a spectrum. More availabiilty less consistency, less consistency more avialabiltiy. Depends on the tolerance requirements of the application.
+
+    Important to get these tradeoffs in the architectural design phase, when we formalise non-functional requirements.
 
     \section{Scalable unstructured data storage}
 
