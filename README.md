@@ -9,3 +9,7 @@ https://www.udemy.com/course/software-architecture-design-of-modern-large-scale-
 Microservices and Event-Driven Architecture
 
 https://www.udemy.com/course/the-complete-microservices-event-driven-architecture
+
+Cloud Based Patterns
+
+https://www.udemy.com/course/the-complete-cloud-computing-software-architecture-patterns
