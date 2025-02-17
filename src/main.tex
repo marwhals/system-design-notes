@@ -841,7 +841,7 @@
     Once that asset is cached on the CDN, subsequent reqeust by users will be served by the edge servers directly.
     This saves the network latency associated with the communication with out servers.
     When requesting an asset that has already expired, CDN will check for a new version. If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
-    Otherwise, if a new version is avialable the CDN  will receive the new version instead of the old one to the user.
+    Otherwise, if a new version is avialable the CDN will receive the new version instead of the old one to the user.
 
     Push strategy - Manually or automatically upload or publish the content that we want deliver through a CDN.
     WHen the content changes, we are repsonsible for republishing the new versions to the edge servers.
@@ -849,6 +849,7 @@
     When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user reqeusts that content.
 
     \subsection{Choosing the right strategy}
+
     \subsubsection{Advantages of pull model}
     Lower maintence on our part. Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
     Everything at that point will be taken care of by the CDN provider.
@@ -867,8 +868,10 @@
     Even if they system goes down, users can still get data from the CDN and won't be affected by our systems internal issues at all.
     If contnet does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
 
+
     \chapter{Data storage at Scale}
-Motivations: Choosing the right databases amongst many options.
+    Motivations: Choosing the right databases amongst many options.
+
 
     \section{Relational Databases and ACID Transactions}
 
@@ -924,13 +927,62 @@ Motivations: Choosing the right databases amongst many options.
     When choosing one consider pros/cons and the use case.
     I.e is the data related, are read important.
 
+
     \section{Non-Relational Databases}
+    NoSQL databases generally allow for the logical grouping or records without them having to conform to some kind of schema.
+    Can easily add some kind of attributes to the different records without redesign or effecting other records.
+    \textit{Most} languages do not have tables as a structure....external libraries required.
+    NoSQL more typical computer science data structure (arrays, trees etc).
+    This eliminates the need for object relational mappings/ ORM (Hibernate) to translate business logic for storage in a database.....
+
+    Relational Databases are designed for efficient storage (low memory availability/ expensive memory).
+    NoSQL databases are typically optimised towards faster queries.
+    Different types of non-relational databases are optimised for different types of queries based on the use case.
+
+    \paragraph{}
+    Issues with flexible schemas
+    Loss of ability to easily analyse those records since each record can have different structure and data.
+    Joining becomes very hard, these operations are often not supported by NoSQL databases or are hard.
+    Each NoSQL database supports a different set of operations and different set of datastructures.
+    ACID transactions guarantees are rarely supported by non-relational databases (see exceptions).
+
+    \paragraph{}
+    Three types of NoSQL databases. Categories are somewhat blurry.
+
+    First type is simple key, value store. We have a key that uniquely identifies a record and value that represents the data.
+    The value can be anything, primitive or a binary blob.
+    Can be though of as a large scale hash table/dictionary with few constraints on the type of value that can be held for each key.
+    Good for caching pages or for quick fetching and ....easy.... querying.
+
+    Second type - A document store. Collections are stored as documents. Documents have a bit more structure.
+    Each document can be thought of as an object with different attributes.
+    Those attributes can be different types.
+    Similar to classes and fields.
+    Documents are easily mapped to objects inside a programming language. Think JSON, YAML, XML
+
+    Third Type - A graph database, an extension of a document store but with additional capabilities to traverse, link aand analyse records more efficiently.
+    These types of databases are particularly optimised for navigating and analysing relationships between records in a database.
+
+    \paragraph{Use Cases}
+    Fraud detection.
+    Recommendation engines.
+
+    \subsection{When should they be used}
+    Look at use case and analyse what is required from the database and what can be compromised.
+    Non relation databases are better when it comes to query speed.
+    Good for caching.
+    Can store common query results that correspond to user views/pages.
+    In memory key/value stores are optimised for this.
+    Real time big data is a good use case, since relational databases are too slow and not scalable enough.
+    Another use case \ldots data is not structured and different records can contain different attributes.
 
     \section{Techniques to improve performance, availability and scalbilty of databases}
 
     \section{Brewers CAP Theorem}
 
+
     \section{Scalable unstructured data storage}
+
 
     \chapter{High-Level System Design}
 
