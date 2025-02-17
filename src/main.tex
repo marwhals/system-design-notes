@@ -878,7 +878,7 @@
     \subsection{Relational Databases}
     Data is stored in tables.
     Each row in a table corresponds to a single record and all the records are related to each other through predefined columns they all have.
-    Each column in a table has a name, a type and optionally a set of constraints\ldotsnot NULL etc.
+    Each column in a table has a name, a type and optionally a set of constraints .... NULL etc.
     The relatoinship between all records inside a table is what gives this type of database the name relational database.
     Strucutre of each table is decided ahead of time and is referred to as the schema of the table.
     We know what each record in the schema must have because because it is predefined.
@@ -891,7 +891,7 @@
 
     \subsection{Advantages}
     Carryout complex and flexible queries using SQL. Use for analysis
-    Save memory because multiple tables can be joined\ldotsthus save costs.
+    Save memory because multiple tables can be joined ..... save costs.
     Easy to reason about, very natural for humans. No sophisticated knowledge requried.
     Most importantly, provides ACID transactions.
 
@@ -1020,7 +1020,6 @@
     Writing records become slower because each time a write/ new record is performed the index table must also be updated.
     Indexing is also used in non-relational databases to speed up queries.
 
-
     \subsubsection{}
     Database replication - single database, single point of failure.
     Solution, replicate data and run multiple instances of the database on different computers.
@@ -1069,10 +1068,11 @@
     \paragraph{Note}
     These three techniques are orthogonal to each other. Often used together in real user use cases.
 
+
     \section{Brewers CAP Theorem}
     %TODO find a good diagram for this
 
------ In the precesne of a network partition, a distributed database cannot guarantee both consitency and availabilty.
+    ----- In the precesne of a network partition, a distributed database cannot guarantee both consitency and availabilty.
 
     The scenario of database instances not being able to communicate with one another.
     When an isolated server cannot communcate with its replicas it can either return an error or produce inconsistent data.
@@ -1087,15 +1087,103 @@
     \end{itemize}
 
 
-    The theorem basically states one of these must be dropped when we are working with a dataabase that may have to deal with a database partition.
-    Could have a single database to guarantee consistence and availabilty....ie no network involved with the database....but this would not scale.
-    When architecting for partition tolerance we either have to drop availability or consistency. Depends on the use case.
+    The theorem basically states one of these must be dropped when we are working with a database that may have to deal with a database partition.
+    Could have a single database to guarantee consistence and availability....ie no network involved with the database....but this would not scale.
+    When architecting for partition tolerance we either have to drop availability or consistency.
+    Depends on the use case.
 
-    The choice is not so distinct, more of a spectrum. More availabiilty less consistency, less consistency more avialabiltiy. Depends on the tolerance requirements of the application.
+    The choice is not so distinct, more of a spectrum.
+    More availability less consistency, less consistency more avialabiltiy. Depends on the tolerance requirements of the application.
 
     Important to get these tradeoffs in the architectural design phase, when we formalise non-functional requirements.
 
+
     \section{Scalable unstructured data storage}
+%TODO where does pine cone and vector data bases fit in...........
+    Unstructured data, data that doesn't follow a model or schema. Non relational data still has keys and values and structure.
+    Consider binary files.
+    Databases may allow for storage but they are not optimised for it.
+    Limit on the object size with DBs otherwise we would encounter scalability and performance problems.
+    Use cases
+    - Disaster recovery
+    - Archiving
+    - Web hosting media like videos etc
+    - Collecting data points for machine learning purposes
+
+    Huge datasets, storage solution needs to be scalable.
+    Each object can also be big.
+
+    First solution - Distributed file system - network of storge devices
+    We can get different replication consistency, and auto healing guarantees based on the file system.
+    Main feature is that files are stored in a tree like structure.
+    Benefit of storing unstructured data like this is that special APIs are not needed.
+    Can easily modify these files.
+    Performance intensive operations such as big data analysis or transformations operations on data are very fast if we do it on a distributed file system.
+    ----Very useful for machine learning projects.
+
+    Limitations of Distributed file systems
+    - limited in the number of files we can create which is scalabilty issue with relatively small files like images.
+    - easy access to those files via web api is hard, Additional abstractions would be required.
+
+
+    Another solution - use an object store
+    - A scalable storage solution designed for unstructured data at an internet scale.
+    - Can scale linerly like a distributed file system by adding more storage devices.
+    - Unlike a distribtued file system we have virtually no limititation on the number of binary objects we casn store in it
+    - High sizes on the size of a single object....can be terrabytes.
+    - Good for archiving and backups
+    - Features of typical object stores can include HTTP rest API that makes them effective for storing multi media content - images etc that can be linked to a webpage
+    - Object versioning is another feature, on a file system we would need to use an external versioning system.
+
+    Differences between object store and a distributed file system.
+    - No directory hierachy
+    - Flat structure called buckets
+    - main abstraction is an object
+    - Typicall key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
+    - Objects can include an access control list who can access who has read/write permissions.
+    -
+
+    Commonly provided by cloud providers. Typicall broken into classes with each class prvoding different prices and SLA guarantess.
+    Top tier is usually availbitliy of a high percentage, offers lowest latency and highest throughput
+    Top tier is best for data that will be frequently accessed lke content videos, images etc.
+    Middle tiers have lower guarantess for avialbitly and are cheaper.
+    - These options have lmited performance and sometimes have limits frequency of usage as well.
+    - Good for data backups, i.e data not needed often
+    Lowest tier is good for longer term archiving. Usualy cheap and used for specific use cases.
+
+    \subsection{Cloud vs OpenSource vs third party managed}
+    Cloud may not be an option for budget, legal or performance constraints.
+    There are options for on premise storage devices.
+    Some follow the same APIs as some cloud vendors, so they can easily be used in hybrid cloud environments (cloud + private data centre).
+    Can use the same object ID to store data in both locations.
+
+
+    Just like distributed file systems, object stores use data replication although this is abstracted away.
+    Ensure phyiscal storage loss will not result in loss of actual data.
+
+    \paragraph{Object store downsides}
+    Data is immutable, no edits can only be replaced with a newer version.
+    Performance implications --- storing large documents that require ammends would not be feasble
+    Needs a special API or a rest API unlike a distributed file system.
+
+
+    Distributed systems are the preferred storage solution over object stores for high throughput solutions.
+
+    \subsection{Scalable Unstructured Data Storage Solutions}
+    Cloud based
+    \begin{itemize}%TODO look into differences
+        \item Amazon S3
+        \item GCP
+        \item Azure
+        \item Alibaba
+    \end{itemize}
+
+    Open source and third party
+    \begin{itemize}
+        \item OpenIO - software defined
+        \item MinIO - S3 and native to kubernetes
+        \item Ceph - \textbf{Open-source} reliable and scalable.
+    \end{itemize}
 
 
     \chapter{High-Level System Design}
