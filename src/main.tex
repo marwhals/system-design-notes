@@ -868,6 +868,60 @@
     If contnet does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
 
     \chapter{Data storage at Scale}
+Motivations: Choosing the right databases amongst many options.
+
+    \subsubsection{Relational Databases}
+    Data is stored in tables.
+    Each row in a table corresponds to a single record and all the records are related to each other through predefined columns they all have.
+    Each column in a table has a name, a type and optionally a set of constraints\ldotsnot NULL etc.
+    The relatoinship between all records inside a table is what gives this type of database the name relational database.
+    Strucutre of each table is decided ahead of time and is referred to as the schema of the table.
+    We know what each record in the schema must have because because it is predefined.
+    We can use a very robust language to query the data (analyse and update) in the table. This is SQL.
+    Different implementaiton add their own features to this language. Oracle etc....
+    Majority of operations are the same across all relational databases.
+    Proven way of store strucutred data.
+    Avoids data duplicatoin when memory is usage has to be considered (large scale)
+    Use joins to combine information from multiple tables without duplication.
+
+    \subsubsection{Advantages}
+    Carryout complex and flexible queries using SQL. Use for analysis
+    Save memory because multiple tables can be joined\ldotsthus save costs.
+    Easy to reason about, very natural for humans. No sophisticated knowledge requried.
+    Most importantly, provides ACID transactions.
+
+    \begin{itemize}
+        \item Atomicity
+        \item Consistency
+        \item Isolation
+        \item Durability
+    \end{itemize}
+
+    In the context of transactions the sequence of operations should look like a single operation externally.
+    Relational databases guarantee atomicity of transactions.
+    Atomicity - transactions appear once or not at all.
+    Consistency - guarantees that transaction that has been committed will be seen by all future queries and transactions.
+    Also guarantees that data constraints that are set for the data, are met.
+    Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state. They are separate.
+    Durability - once a transaction is complete its final state will persist.
+
+    \subsubsection{Disadvantages}
+    Rigid structure enforced by database schema enforced by the schemeas
+    Schemas has to be designed ahead of time before the table can be used.
+    Future changes to the schemas can lead to down time.
+    Changes ideally should be avoided and not done at all.
+    Through planing is required for this.
+    Harder and more costly to scale because of their complexity.
+    Providing SQL and ACID transactiosn is not straight forward and thus relational databases are harder to maintain.
+    Due to ACID guarantess, reads are slwoer to perform compare to other types of databases.
+
+    Differnt implementations have different performance optimisations and guarantess.
+
+    Generally, relational databases are slower than non relational ones.
+
+    When choosing one consider pros/cons and the use case.
+    I.e is the data related, are read important.
+
 
     \section{Relational Databases and ACID Transactions}
 
