@@ -1468,13 +1468,17 @@
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
-    \include{microservices}
-%   Consider combining this with the other microservices section
-
-
     \chapter{Microservices in depth}
 
-    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decopuling.
+    \section{Migration to microservices architecture}
+    \section{Principles and Best Practices}
+    \section{Event driven architecture}
+    \section{Event driven microservices}
+    \section{Testing Microservices and Event-Driven Architecture}
+    \section{Observability in Microservices Architecture}
+    \section{Deployment of Microservices and Event-Driven Architecture in Production}
+
+    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
     Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
     Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
     Solution, organise business logic as loosely coupled deployable independently deployable services.
@@ -1489,7 +1493,7 @@
     \paragraph{Barriers to implementing microservices}
     Method calls have now become network calls between different computers bringing in latency issues.
     In distributed systems each component is unreliable.
-    Althogh testing is faster no guarantee all the services will work when deployed together.
+    Although testing is faster no guarantee all the services will work when deployed together.
     This can lead to complicated integration tests than can impact prodictivity.
     Would be hard to understand which team owns the integration tests.
     Fixing bugs and troubleshooting performance is much harder in microservies
