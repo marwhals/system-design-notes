@@ -993,7 +993,83 @@
         \item NEO4j
     \end{itemize}
 
+
     \section{Techniques to improve performance, availability and scalbilty of databases}
+    Three techniques to improve the scalability, performance and availability of a databse.
+
+    \subsubsection{}
+    Technique one - Indexing - Speeds up retrieval operations and locate the results in a sublinear time.
+    Without indexing those operations could require a full table scan, which is bad for large tables.
+    Example operations
+    Sorting, search.
+    If performed often can lead to a bottleneck
+
+    An index is helper that we create from particular column or group of columns.
+    When the index is created from a single column, the index table contains a mapping from the column value to the record that contains the value.
+    Once that index table is created, we can put that table inside a data structure (good strucutres - B-Trees(or any self balancing tree), or a Hashmap).
+    This will keep the values sorted and thus makes searching more efficient (think big O complexity).
+    Searching is log n.
+    Sorting is n log n.
+
+    Composite indexes can be created.
+
+    %TODO add reminder on normal form........for relational databases
+
+    Optimising for one operation can lead to a tradeoff elsewhere.
+    Indexing increases memory, decreases the speed of writes but the increases the speed of reads.
+    Writing records become slower because each time a write/ new record is performed the index table must also be updated.
+    Indexing is also used in non-relational databases to speed up queries.
+
+
+    \subsubsection{}
+    Database replication - single database, single point of failure.
+    Solution, replicate data and run multiple instances of the database on different computers.
+    This increases fault tolerance, availability.
+    One replica goes down another can take its place and business is not effected.
+    Queries can continue going to available replicas while the faulty replica is fixed.
+
+    Get better performance and better throughput.
+    Better throughput by distributing our queries across multiple computers/ replicas.
+
+    \paragraph{Tradeoffs}
+    Introduces higher complexity especially with regards to write, update and delete operations.
+    (Non idempotent???)
+    Making sure concurrent modifications to the same records don't conflict with each and providing predictable guarantees in terms of consistency and correctness is not a trivial task.
+    Distributed databases are very hard to design, configure and manage....especially at scale.
+    Requires knowledge of distributed systems....
+
+    Database replication is widely supported by most modern databases
+    Non-relation databases support replication (high availability, large scale) out of the box as they were designed with that in mind.
+
+    Support for replication with relational databases varies amongst different implementations.
+
+    \subsubsection{Database partioning}
+    Also known as sharding.
+    Split data amongst different database instances for better performance.
+    Each instance will run on a different computer typically.
+    More computers, more data.
+    Queries which use different partitions can be done in paralell.
+    We get both better performance and better availability.
+    Sharing effectvely turns the database into a distributed database.
+    Add complexity and overhead since routing is required for the right shard/partition as well as making sure one shard does not become too large.
+
+    Database sharding is a common feature in most non-relational databases.
+    Since by design they they decouple different records from each other.
+    Storing records on different computers is a lot more natural and easier to implement.
+
+    For relational databases, it depends on the implementation.
+    Relation database queries usually involve more than one record/ are more common.
+    Splitting these across multiple machines is more challenging to implement in a performant way while supporting thigns like ACID transactions or table joins.
+    When choosing a relational database for high volume of data use case check for partitioning support.
+    Partitioning can also be used to split infrastrcture like compute instances and redirect traffic to different machines.
+    Can also do this based on mobile/browser etc running the same application.
+
+    This routing allows for understanding which users are affected during an outage.
+
+    \paragraph{Note}
+    These three techniques are orthogonal to each other. Often used together in real user use cases.
+
+
 
     \section{Brewers CAP Theorem}
 
