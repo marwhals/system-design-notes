@@ -870,7 +870,9 @@
     \chapter{Data storage at Scale}
 Motivations: Choosing the right databases amongst many options.
 
-    \subsubsection{Relational Databases}
+    \section{Relational Databases and ACID Transactions}
+
+    \subsection{Relational Databases}
     Data is stored in tables.
     Each row in a table corresponds to a single record and all the records are related to each other through predefined columns they all have.
     Each column in a table has a name, a type and optionally a set of constraints\ldotsnot NULL etc.
@@ -884,7 +886,7 @@ Motivations: Choosing the right databases amongst many options.
     Avoids data duplicatoin when memory is usage has to be considered (large scale)
     Use joins to combine information from multiple tables without duplication.
 
-    \subsubsection{Advantages}
+    \subsection{Advantages}
     Carryout complex and flexible queries using SQL. Use for analysis
     Save memory because multiple tables can be joined\ldotsthus save costs.
     Easy to reason about, very natural for humans. No sophisticated knowledge requried.
@@ -905,7 +907,7 @@ Motivations: Choosing the right databases amongst many options.
     Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state. They are separate.
     Durability - once a transaction is complete its final state will persist.
 
-    \subsubsection{Disadvantages}
+    \subsection{Disadvantages}
     Rigid structure enforced by database schema enforced by the schemeas
     Schemas has to be designed ahead of time before the table can be used.
     Future changes to the schemas can lead to down time.
@@ -921,9 +923,6 @@ Motivations: Choosing the right databases amongst many options.
 
     When choosing one consider pros/cons and the use case.
     I.e is the data related, are read important.
-
-
-    \section{Relational Databases and ACID Transactions}
 
     \section{Non-Relational Databases}
 
