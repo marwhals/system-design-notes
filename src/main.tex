@@ -153,7 +153,7 @@
 
     \paragraph{Requirements} - Description of what we needs to be built.
     Very different when approached from a system level.
-    Higher scope allows for freedom of tools and also requries a higher level of abstraction.
+    Higher scope allows for freedom of tools and also requires a higher level of abstraction.
     Requirements are often not from an engineer or even someone technical.
     Requirements are only part of the solution.
     Client only knows the problem they need solved.
@@ -229,8 +229,9 @@
         \item Vertical Scaling - add more CPU, higher bandwidth etc.
         Upgrade a computer.
         No code changes required.
-        This has a limit and can easily reached on a global / internet system. Easy to do with a cloud provider.
-        This can centralise the system and fail to proivide fault tolerance and availability.
+        This has a limit and can easily reached on a global / internet system.
+        Easy to do with a cloud provider.
+        This can centralise the system and fail to provide fault tolerance and availability.
         \item Organisational scaling - Add more engineers.
         Before a certain point, the more engineers, the more work gets done, the more productivity is increased.
         Eventually we get less when we add too many.
@@ -275,9 +276,9 @@
     Human error, software errors like garbage collections and hardware failures.
 
     Best way to achieve high availability in our system is through fault tolerance.
-    This enables the sytem to remain operational and available to the users despite failures within one or multiple components.
+    This enables the system to remain operational and available to the users despite failures within one or multiple components.
     When failure happen fault tolerance will allow the system to continue operating at the same level of performance or reduced performance.
-    But it will preveitn the system from being entirely unavailable.
+    But it will prevent the system from being entirely unavailable.
 
     Fault tolerance revolves around three major tactics.
     Failure prevention, failure detection and isolation and recovery.
@@ -339,7 +340,7 @@
     \subsection{SLO}
     Service level objective - Individual goals that we set for the system.
     Each SLO represents a target value/ range of values that the service needs to meet.
-    Quality attributes will make their way into the SLOs. Aviaabilty, end to end latency etc.
+    Quality attributes will make their way into the SLOs. Availability, end to end latency etc.
 
     SLOs are within a SLA.
 
@@ -434,20 +435,20 @@
     I.e same request is not processed twice.
 
     Another good practice is pagination.
-    Used when dealing with a large payload or dataset froming part of the reqeust.
+    Used when dealing with a large payload or dataset forming part of the reqeust.
     Without it most clients will not be able to handle such a large payload or dataset and this would result in poor user experience.
     Pagination allows for the client to request only a small segment of the response by specifying the maximum size of each response from out system.
-    and an offfset within the overall dataset.
-    To recieve the next segment, increase the offset.
+    and an offset within the overall dataset.
+    To receive the next segment, increase the offset.
 
     Another good practice relates to operations that take a long time to complete.
     Asynchronous APIs.
-    Client applicatoin recieves a resonse immediately without having to wait for the final result.
-    The response usually includes some kind of identifier that allows the client application to track the progress and status of an operation and eventually recevie the final result.
+    Client application receives a response immediately without having to wait for the final result.
+    The response usually includes some kind of identifier that allows the client application to track the progress and status of an operation and eventually receive the final result.
 
     Very important best practice.
     Explicitly versioning an API so that the client knows which API version they are currently using.
-    Motivation behind versioning APIs is to allow for non-backward compatble changes, thus allow for two versions of an API.
+    Motivation behind versioning APIs is to allow for non-backward compatible changes, thus allow for two versions of an API.
     Deprecate the old once gradually with good communication to the clients who are still using it.
 
     \paragraph{}
@@ -457,12 +458,14 @@
     \section{Remote Procedure Calls - RPC}
     Ability to call a client application to execute a sub routing on a remote server.
     Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
-    This feature is called local transparancy. Remote or local looks the same.
+    This feature is called local transparency.
+    Remote or local looks the same.
     Some RPC frameworks allow for multiple programming languages so applications written in different languages can communicate.
 
     \subsection{How it works}
-    API as well as the data types that are used in the API methods are devlaared using a special interface description language.
-    This is framework / implementation specific. Effectively a schema or the communication between a remote client and a server in the system.
+    API as well as the data types that are used in the API methods are developed using a special interface description language.
+    This is framework / implementation specific.
+    Effectively a schema or the communication between a remote client and a server in the system.
     After this definition using the specialised language, a code generation tool or special compiler can be used to generate two separate implementations of the API tool.
     This tool is framework specific.
     One implementation is for the client, another is for the server.
@@ -470,45 +473,47 @@
     Client side is called client stub.
     Stubs take care of all the implementation details of the remote procedure invocation.
     All custom object types that we declare using the interface description language are compiled into classes or structs depending on the language.
-    Auto generate objects are refferred to as Data Transfer Objects or DTOs.
+    Auto generate objects are referred to as Data Transfer Objects or DTOs.
 
-    Now at run time, wheneve rthe client appilcatoin calls that particular RPC method with some parameters the client stub takes care of coding the data.
+    Now at run time, whenever the client application calls that particular RPC method with some parameters the client stub takes care of coding the data.
     This is called serialization or marshalling.
-    After serialisation, the connection to the remote server is inistialised and the data is send over to the stub.
+    After serialisation, the connection to the remote server is initialised and the data is send over to the stub.
 
-    On the other end the stub is listening to the client applicatoins messags and when the message is recieved it
-    unmarshalled/unserialised and then the real implementatoni of the method is invoked on the server application.
+    On the other end the stub is listening to the clients application messages and when the message is received it
+    unmarshalled/serialised and then the real implementation of the method is invoked on the server application.
 
     Once the server is finished, the result is passed back through via marshalling and unmarshalling, to the client stub.
-    The client application recieves the unmarshalled response as a return value.
+    The client application receives the unmarshalled response as a return value.
     This will look like it was a local method call.
 
-    Well established pattern. Frameworks, implementatoin details and performance are the only real changes.
+    Well established pattern.
+    Frameworks, implementation details and performance are the only real changes.
     API developers need to pick the right framework, define the API as well as the relevant types using a RPC framework.
-    The desciption then needs to be published.
+    The description then needs to be published.
 
     The client and server in the system are decoupled.
 
     When the system has been designed and implemented a stub can be generated for new clients.
-    New cliets just need to generate their client stub to use the server method based on the published API definition.
+    New clients just need to generate their client stub to use the server method based on the published API definition.
 
     Using RPC, client and server is not restricted to programming language.
 
     \subsection{Pros}
-    COnveinient - generate stubs which look just like local methods on objects.
+    CConvenient - generate stubs which look just like local methods on objects.
     Communication details, and data passing details are abstracted away from the developers.
-    Any failurres result in just exception or error depending on the programming language just like normal methods.
+    Any failures result in just exception or error depending on the programming language just like normal methods.
 
     \subsection{Cons}
-    RPC methods are less reliable and are slower. This can lead to performance issues.
-    CLient will not know how long RProcedure calls will take.
+    RPC methods are less reliable and are slower.
+    This can lead to performance issues.
+    Client will not know how long Procedure calls will take.
 
     \subsection{Considerations}
     API design will need to consider this.
-    A solution is to use asynchoronous versions for slow methods which is a best practice.
+    A solution is to use asynchronous versions for slow methods which is a best practice.
     Another consideration is idempotency in the case that a message is lost/ slow
 
-    This is geneally used when backend systems are communicated to one another but frontend systems can be considered.
+    This is generally used when backend systems are communicated to one another but frontend systems can be considered.
     RPC is a good style when providing an API to a different company vs an end user or a webpage.
     Good for different internal components within a large scale system.
 
@@ -520,7 +525,7 @@
 
     \begin{itemize}
         \item gRPC
-        \item Apache Thirft
+        \item Apache Thrift
         \item Java Remote Method Invocation (RMI)
     \end{itemize}
 
@@ -528,36 +533,41 @@
     \section{Representational State Transfer - REST}
     Set of architectural constraints and best practice for web APIs. It is just a style allowing,making it easier to keep quality attributes.
     A RESTful API meets a certain traits.
-    More resource orientated. Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
+    More resource orientated.
+    Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
     In a REST api a client requests a named resource and the server responds wi the current state of that resource.
     Usually done using HTTP. The resource can be implemented in a completely different way, only a representation is sent.
     Resource is just an abstraction.
     Interface is more dynamic, actions are no statically defined like in RPC.
-    This is through a concept called HATEOS - hypermedia as the enginer of the application state.
-    This is achieved by accompanying a state representation repsone to the client with hyper mediat links.
-    The client can follow these links ad progress its interal state.
+    This is through a concept called HATEOAS - hypermedia as the engineer of the application state.
+    This is achieved by accompanying a state representation reasoner to the client with hyper mediat links.
+    The client can follow these links ad progress its internal state.
 
     \subsection{Achieving quality attributes}
     Important requirement of a system that provides RESTful API is that the server is stateless and does not maintain any session information about the client.
-    Each message should be served by the server in isolation withouth any information about previous requests.
-    This allows for high availabilty and scalability.
+    Each message should be served by the server in isolation without any information about previous requests.
+    This allows for high availability and scalability.
     If there is no session information high groups of servers can be used and the load can be spread. Client will no notice.
-    Cacheability - Important requirement. This means the server either implicitly or explicitly defines each response as cacheable or non-cacheable.
-    Allows the client to elimiate the potential round trip to the server and back if they response is cached somewhere closer to the client.
+    Cacheability - Important requirement.
+    This means the server either implicitly or explicitly defines each response as cacheable or non-cacheable.
+    Allows the client to eliminate the potential round trip to the server and back if they response is cached somewhere closer to the client.
     This will also reduce system load.
 
     \subsection{Resources in RESTful APIs}
-    Each resource is named and addressed usingn a URI.
-    Resources are organised in a hierachy where each resource is either a simple resource or a collection resource.
-    The hierachy is represented using forware slashes.
-    A simple resource has a state and optionally can contain sub resorces.
-    A colletion resource is a special resource that contains a list of resources of the same type.
+    Each resource is named and addressed using a URI.
+    Resources are organised in a hierarchy where each resource is either a simple resource or a collection resource.
+    The hierarchy is represented using forward slashes.
+    A simple resource has a state and optionally can contain sub resources.
+    A collection resource is a special resource that contains a list of resources of the same type.
 
     \subsubsection{Naming resources - best practices}
-    Use nouns only. Provides distinction between actions and the resources the actions will be take on.
+    Use nouns only.
+    Provides distinction between actions and the resources the actions will be take on.
     Make a distinction between collection resources, and simple resources using plural and singular.
-    Use clear and meaningful names. This will make the API easier to use for developers, and avoid mistakes and incorrect usages.
-    Final practice. Use Unique, URL friendly names for resource identifiers for usage via the web.
+    Use clear and meaningful names.
+    This will make the API easier to use for developers, and avoid mistakes and incorrect usages.
+    Final practice.
+    Use Unique, URL friendly names for resource identifiers for usage via the web.
 
     \subsection{Methods and operations}
     REST API limits the number of methods we can perform on each resource to a few predefined options.
@@ -579,9 +589,10 @@
     Guarantees from HTTP semantics.
     GET is considered safe i.e it will not change the state of the resource.
     GET, PUT, DELETE are idempotent. i.e same result if you apply those operations multiple times.
-    GETs are considered cacheable by default while responses to POST requests can be made cacheable by setting the approprite HTTP headers sent as part of the response to the client.
+    GETs are considered cacheable by default while responses to POST requests can be made cacheable by setting the appropriate HTTP headers sent as part of the response to the client.
     This feature allows us to conform to the cachabilty requirements of a REST API.
-    When the client needs to send additional information to the system via a POST or PUT command JSON can be used. XML is also usable.
+    When the client needs to send additional information to the system via a POST or PUT command JSON can be used.
+    XML is also usable.
 
     \subsection{Step to creating a RESTful API}
     \begin{itemize}
@@ -610,14 +621,15 @@
     This abstraction makes the application look like a single server.
 
     \subsection{Quality attributes from a load balancer}
-    Loadbalancer provide
+    Load balancers provide
     High scalability -> horizontal scaling is easy
     Even easier in the cloud.
 
-    Provides high availability. Load balancers can be configured to stop sending traffic to servers which are not healthy.
+    Provides high availability.
+    Load balancers can be configured to stop sending traffic to servers which are not healthy.
 
     Performance - load balancers add a little bit of latency and increase the response time but is worth the tradeoff for increased performance in terms of throughput.
-    The load balancer can cater for as many backend servers as desired with some reasonsable limitations.
+    The load balancer can cater for as many backend servers as desired with some reasonable limitations.
     Throughput is much large than what would be possible with a single server.
 
     Load balancer helps us achieve maintainability, since we can add, remove, upgrade servers in rotation without disrupting the client/ user.
@@ -625,33 +637,36 @@
 
     \subsection{Types of load balancers}
     DNS - internet infrastructure that maps human readable URLs to IP addresses that can be used by network routers to route to individual computers on the web.
-    A single DNS record doesn't have to be mapped to a single IP address. They can be configured to return a list of IPs corresponding to different servers.
+    A single DNS record doesn't have to be mapped to a single IP address.
+    They can be configured to return a list of IPs corresponding to different servers.
     The list returned may be in a random order.
-    When recieving a list most client applications just pick the first one in the list.
+    When receiving a list most client applications just pick the first one in the list.
     Technically this can be seen as load balancing
     Cheap and super simple but DNS doesn't know the health of servers.
     Requests may go to a down server and the DNS does't know.
     List of IP addresses changes only so often and si based on the time to live that was configured for that particular record.
-    Additionallly this list of addresses that a particular domain is mapped to, can be cached in differnt locations such as the clients computer.
+    Additionally this list of addresses that a particular domain is mapped to, can be cached in different locations such as the clients computer.
     That makes the time between a server going down and the point that the requests are no longer sent to that server even longer.
 
-    Another drawback of the DNS loadbalcning strategy is that the round robin method doesn't consider the hardware resrouces of differnt servers.
+    Another drawback of the DNS load balancing strategy is that the round robin method doesn't consider the hardware resources of different servers.
     Some servers may have more powerful hardware than others, nor can it detect that one server is overloaded than others.
-    Another drawback. The appliicatoins gets the IP address of all the servers, exposing implementation details whichi make the system less secure.
-    Nothing stop a malvisou client application from sending requests to a single IP address in order to overload \textbf{it}
+    Another drawback.
+    The appliicatoins gets the IP address of all the servers, exposing implementation details whichi make the system less secure.
+    Nothing stop a malicious client application from sending requests to a single IP address in order to overload \textbf{it}
 
     \subsection{Addressing these drawbacks}
-    Two options. Hardware load balancers and software load balancers.
-    All communication between the client and servers are done via both these types of loadbalancers.
-    Individual servers, and IP addressses are hidden behind the load balancer and not exposed to the users making the system more secure.
+    Two options.
+    Hardware load balancers and software load balancers.
+    All communication between the client and servers are done via both these types of load balancers.
+    Individual servers, and IP addresses are hidden behind the load balancer and not exposed to the users making the system more secure.
 
-    These load balancers can peform health checks on the servers and can detect if one has became unresponsive.
+    These load balancers can perform health checks on the servers and can detect if one has became unresponsive.
 
-    BOth can balance load more intelligently accross servers taoking into account the differnt hardware application instances are running on.
+    BOth can balance load more intelligently across servers taking into account the different hardware application instances are running on.
 
-    They can be used to balance requests from users, but they can also be used inside the sytem to create an abstraction layer between services.
+    They can be used to balance requests from users, but they can also be used inside the system to create an abstraction layer between services.
 
-    Superior to DNS in terms of loadbalancing but they are usually colocated with the group of servers they balancer the load on.
+    Superior to DNS in terms of load balancing but they are usually colocated with the group of servers they balancer the load on.
     If a load balancer is too far away from the actual servers, we are adding a lot of extra latency since all communication both to and from the application has to go through the load balancer.
 
     When running a system in multiple geographical locations having a load balancer between them will sacrifice the performance for at least one of these locations.
@@ -663,24 +678,26 @@
     Typically can provide a DNS service.
     In addition it can make more intelligent routing decisions.
     On on hand, the GSLB can figure out the users location based on the origin IP inside the incoming request.
-    a GSLB service has similiar monitoring capabilties to typical software or hardware loadbalancer.
-    It knows the locaton and the state of each server we register with out GSLB.
+    a GSLB service has similar monitoring capabilities to typical software or hardware load balancer.
+    It knows the location and the state of each server we register with out GSLB.
 
-    In a typical large-scale system deployment, those servers are load balancers located in differnt data centres in differnt geographical locations.
+    In a typical large-scale system deployment, those servers are load balancers located in different data centres in different geographical locations.
     GSLB may just return the locations of the nearest load balancer.
     The user will use that IP address from that point on to communicate with the system in that data centre through a collocated hardware or software loadbalancer.
 
     \subsubsection{Extra notes}
-    They can be configured to route traffic on a multiple strategies. Not just geogrpahic location.
+    They can be configured to route traffic on a multiple strategies.
+    Not just geogrpahic location.
     Since they know the health of different data centres, they can route traffic based on current traffic or load on each data centre.
     Or based on estimated response time, or bandwidth between the user and that particular data centre.
 
     This can allow for the best performance possible for each use regardless of their geographical location.
 
-    They are also important in disaster recovery situations. If there is an issue in one data center users can be routed to another.
-    This provides high avialability.
+    They are also important in disaster recovery situations.
+    If there is an issue in one data center users can be routed to another.
+    This provides high availability.
 
-    To prevent a load balancer from being a single point of failur, we can refister all the addresses with the GSLB DNS service or any other DNS service.
+    To prevent a load balancer from being a single point of failure, we can register all the addresses with the GSLB DNS service or any other DNS service.
     This allows clients to get a list of all the load balancers and either pick one or send their request randomly.
 
     \subsection{Load Balancing Solutions}
@@ -709,21 +726,21 @@
     Easy when the messages are short.
     Becomes more complex with larger messages.
     There is no leeway in the system to absorb spike in traffic or load.
-    Horizontal scalaing is not an option since a transaction/ processing may take a long time on the system.
+    Horizontal scaling is not an option since a transaction/ processing may take a long time on the system.
     The solution to this is to use a message broker.
 
     \subsection{What is a message broker}
-    A queue data structure to store messages between senders and recievers.
+    A queue data structure to store messages between senders and receivers.
     Used internally in a system, not to be exposed/interacted with by a user/client.
     Can provide additional functionality in addition to storing a buffering messages.
     Can perform message routing, transformation validation and even load balancing.
-    Unlike load balancers, mesage queues decouple senders from recievers by providing their own communication protocols and APIs.
-    They are a fundemntal building block in any kind of asynchronous software architecture.
+    Unlike load balancers, message queues decouple senders from receivers by providing their own communication protocols and APIs.
+    They are a fundamental building block in any kind of asynchronous software architecture.
 
-    When we have two servieces communicating with eaach otehr via message broker, the sender doesn't have to wait for confirmation from the reciever after it sends the message.
-    The reciver doesn't even have to be available to recieve the message when the message is sent.
+    When we have two services communicating with each other via message broker, the sender doesn't have to wait for confirmation from the reciever after it sends the message.
+    The receiver doesn't even have to be available to receive the message when the message is sent.
     Very useful in breaking a service into multiple services.
-    Another important benefit that message servies provide is buffering of messages to absorb traffic spikes.
+    Another important benefit that message services provide is buffering of messages to absorb traffic spikes.
 
     Many message brokers additionally off the published subscribe pattern, where multiple services can publish messages to a particular channel and multiple services can subscribe to that channel and get notrified when a new event is published.
     This makes it very easy to add services that bring in additional functionality, with out modifying the system.
@@ -732,10 +749,11 @@
     Adds fault tolerance, since it allows different services to communicate with one another while some may be unavailable temporarily.
     Message brokers prevent messages from being lost, a characteristic of a fault tolerant system.
     This in turn helps provide higher availability for our users.
-    Since a message broker can queue up messages when there is a traffic spike, it allows our suystem to scala to high traffic withouth modifying the system.
+    Since a message broker can queue up messages when there is a traffic spike, it allows our system to scala to high traffic withouth modifying the system.
 
     \paragraph{Drawbacks}
-    Performance - Introduces latency through the indirect communication between services. Not much of an issue in most systems.
+    Performance - Introduces latency through the indirect communication between services.
+    Not much of an issue in most systems.
 
     \subsection{Message broker solutions}
     \begin{itemize}
@@ -749,14 +767,15 @@
 
     \section{API Gateway}
     The problem being solved.....split the monolith in separate services....now there is a lot of service duplication and performance overhead.
-    Each separate service needs to implement its own secuirty, authorisation, authentication etc....
+    Each separate service needs to implement its own security, authorisation, authentication etc....
     To solve this decouple the client application from the internal organisation of the system and simplify out external API.
-    This can be done via another abstractoin called the API Gateway.
-    An API Gateway is an API management service tha tsites betwen the client and the collection of backend services.
+    This can be done via another abstraction called the API Gateway.
+    An API Gateway is an API management service that sits between the client and the collection of backend services.
     API Gateway follows a software architectural pattern called API composition.
 
     In this pattern, we compose all all the different APIs of our services that we want to expose externally into a single API.
-    This single API can be called by applications, by sending requests to one service. This vs sending multiple requests to different services to achieve a task.
+    This single API can be called by applications, by sending requests to one service.
+    This vs sending multiple requests to different services to achieve a task.
 
     Provides an abstraction between the client and the rest of our system.
 
@@ -789,21 +808,24 @@
     I.e read some external format and translate it for the internal system.
 
     \subsection{Best practices and anti patterns}
-    Do not include business logic here. Main purpose is API composition and routing of requests to different services.
-    Those services are the ervices that make the business decisions and perform the actual tasks.
-    If you add business logic to it that service will end up doing all the work. I.e a single service.
-    In turn this will become an unmanagable amount of code.
+    Do not include business logic here.
+    Main purpose is API composition and routing of requests to different services.
+    Those services are the services that make the business decisions and perform the actual tasks.
+    If you add business logic to it that service will end up doing all the work.
+    I.e a single service.
+    In turn this will become an unmanageable amount of code.
     One of the problems we want to solve by splitting a service into multiple services.
 
-    Next consideration, is that since all trafic goes through it, the API gateway may become a single point of failure.
+    Next consideration, is that since all traffic goes through it, the API gateway may become a single point of failure.
     This can be solved by adding multiple instances of the API gateway service and placing them behind a load balancer.
-    This solves scalabily, availablility and performance aspect.
+    This solves scalability, availability and performance aspect.
 
-    Another thing to consider is deployment. A bad release/ bug can crash the APi gateway service and the entire system can become unavailable to clients.
+    Another thing to consider is deployment.
+    A bad release/ bug can crash the APi gateway service and the entire system can become unavailable to clients.
     Human error needs to avoided and deployments require thought.
 
     Additional latency is added as well since there is another service that request must go through before performing business actions.
-    Avoiding the API gateways is an antipattern that should be avoided even though it may optimise the request processing.
+    Avoiding the API gateways is an anti-pattern that should be avoided even though it may optimise the request processing.
 
     \subsection{API Gateway Solutions}
     \begin{itemize}
@@ -816,20 +838,23 @@
 
     \section{Cloud Delivery Network Solutions and cloud}
     Can be considered to be more of a service.
-    The problem being solved. Even with GSLB there still latency between the end user and the locations of the hosting server.
+    The problem being solved.
+    Even with GSLB there still latency between the end user and the locations of the hosting server.
     Each request has to go through multiple hops over the network between different routers etc adding even more latency.
     Users will abandon a website if it takes to long to load. (Think 3 seconds plus)
     Can improve system performance etc but its content that needs to be closer to the users rather than business logic.
 
     \subsection{What it is}
-    A globally distributed network of servers located in strategica places with the main purpose of speeding up the delivery of content to the end users.
+    A globally distributed network of servers located in strategic places with the main purpose of speeding up the delivery of content to the end users.
     Solves bad user experience.
-    CDNs cache website content on their servers. Referred to as edge servers. They are physically close to the user and more strategically located in terms of network infrastructure.
-    Allos for the transfer of content much quicker to the user and improve the percieved system performance.
-    Can be used to deliver webpage contents and assets including video streams. Both live and on demand.
+    CDNs cache website content on their servers.
+    Referred to as edge servers. They are physically close to the user and more strategically located in terms of network infrastructure.
+    Allos for the transfer of content much quicker to the user and improve the perceived system performance.
+    Can be used to deliver webpage contents and assets including video streams.
+    Both live and on demand.
     Very widely used.
 
-    Results in faster page loads, improves system security and helps protect against DDOS since malicous requests won't go to our system.
+    Results in faster page loads, improves system security and helps protect against DDOS since malicious requests won't go to our system.
     They will be distributed amongst a large number of servers hosted by the CDN provider.
 
     In addition to physical closeness, they can also be hardware optimised. I.e better hardrives, CPU etc.
@@ -842,38 +867,40 @@
     In this model first time a user requests a certain asset the CDN will have to populate its cache by sending a reqeust to a server in our system.
     Once that asset is cached on the CDN, subsequent reqeust by users will be served by the edge servers directly.
     This saves the network latency associated with the communication with out servers.
-    When requesting an asset that has already expired, CDN will check for a new version. If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
-    Otherwise, if a new version is avialable the CDN will receive the new version instead of the old one to the user.
+    When requesting an asset that has already expired, CDN will check for a new version.
+    If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
+    Otherwise, if a new version is available the CDN will receive the new version instead of the old one to the user.
 
     Push strategy - Manually or automatically upload or publish the content that we want deliver through a CDN.
-    WHen the content changes, we are repsonsible for republishing the new versions to the edge servers.
+    WHen the content changes, we are responsible for republishing the new versions to the edge servers.
     Some CDN providers support this model directly, other enable the strategy by setting a very long TTL for our assets so the cache never expires.
     When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user reqeusts that content.
 
     \subsection{Choosing the right strategy}
 
     \subsubsection{Advantages of pull model}
-    Lower maintence on our part. Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
+    Lower maintenance on our part.
+    Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
     Everything at that point will be taken care of by the CDN provider.
 
     \paragraph{Drawbacks}
-    FIrst time there will be a longer latency as the CDN cache is popilated from the server.
-    If the time to live is the same for all assets there may be freqeutn traffic spikes when those assets expire at the same time.
-    This woudl result in a large number of requests from the CDN to refresh its cache at one time.
+    FFirst time there will be a longer latency as the CDN cache is populated from the server.
+    If the time to live is the same for all assets there may be frequent traffic spikes when those assets expire at the same time.
+    This would result in a large number of requests from the CDN to refresh its cache at one time.
 
     \paragraph{}
-    Add to the availability of the system but the servers still need to maintain availablity otherwise the CDN won't be able to pull the latest version of assets.
+    Add to the availability of the system but the servers still need to maintain availability otherwise the CDN won't be able to pull the latest version of assets.
 
     \subsubsection{The push strategy}
-    Good if the content does'nt change to frequently. Push to the CDN and then traffic will go the CDN servers.
-    Will reduce traffic to out system and reduces the burden on out system to maintain high availablility.
+    Good if the content doesn't change to frequently.
+    Push to the CDN and then traffic will go the CDN servers.
+    Will reduce traffic to out system and reduces the burden on out system to maintain high availability.
     Even if they system goes down, users can still get data from the CDN and won't be affected by our systems internal issues at all.
-    If contnet does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
+    If content does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
 
 
     \chapter{Data storage at Scale}
     Motivations: Choosing the right databases amongst many options.
-
 
     \section{Relational Databases and ACID Transactions}
 
@@ -881,20 +908,23 @@
     Data is stored in tables.
     Each row in a table corresponds to a single record and all the records are related to each other through predefined columns they all have.
     Each column in a table has a name, a type and optionally a set of constraints .... NULL etc.
-    The relatoinship between all records inside a table is what gives this type of database the name relational database.
-    Strucutre of each table is decided ahead of time and is referred to as the schema of the table.
+    The relationship between all records inside a table is what gives this type of database the name relational database.
+    Structure of each table is decided ahead of time and is referred to as the schema of the table.
     We know what each record in the schema must have because because it is predefined.
-    We can use a very robust language to query the data (analyse and update) in the table. This is SQL.
-    Different implementaiton add their own features to this language. Oracle etc....
+    We can use a very robust language to query the data (analyse and update) in the table.
+    This is SQL.
+    Different implementation add their own features to this language.
+    Oracle etc....
     Majority of operations are the same across all relational databases.
-    Proven way of store strucutred data.
-    Avoids data duplicatoin when memory is usage has to be considered (large scale)
+    Proven way of storing structured data.
+    Avoids data duplication when memory is usage has to be considered (large scale)
     Use joins to combine information from multiple tables without duplication.
 
     \subsection{Advantages}
     Carryout complex and flexible queries using SQL. Use for analysis
     Save memory because multiple tables can be joined ..... save costs.
-    Easy to reason about, very natural for humans. No sophisticated knowledge requried.
+    Easy to reason about, very natural for humans.
+    No sophisticated knowledge requried.
     Most importantly, provides ACID transactions.
 
     \begin{itemize}
@@ -919,10 +949,10 @@
     Changes ideally should be avoided and not done at all.
     Through planing is required for this.
     Harder and more costly to scale because of their complexity.
-    Providing SQL and ACID transactiosn is not straight forward and thus relational databases are harder to maintain.
-    Due to ACID guarantess, reads are slwoer to perform compare to other types of databases.
+    Providing SQL and ACID transactions is not straight forward and thus relational databases are harder to maintain.
+    Due to ACID guarantees, reads are slower to perform compare to other types of databases.
 
-    Differnt implementations have different performance optimisations and guarantess.
+    Different implementations have different performance optimisations and guarantees.
 
     Generally, relational databases are slower than non relational ones.
 
@@ -1051,7 +1081,7 @@
     More computers, more data.
     Queries which use different partitions can be done in paralell.
     We get both better performance and better availability.
-    Sharing effectvely turns the database into a distributed database.
+    Sharing effectively turns the database into a distributed database.
     Add complexity and overhead since routing is required for the right shard/partition as well as making sure one shard does not become too large.
 
     Database sharding is a common feature in most non-relational databases.
@@ -1074,10 +1104,10 @@
     \section{Brewers CAP Theorem}
     %TODO find a good diagram for this
 
-    ----- In the precesne of a network partition, a distributed database cannot guarantee both consitency and availabilty.
+    ----- In the presence of a network partition, a distributed database cannot guarantee both consistency and availability.
 
     The scenario of database instances not being able to communicate with one another.
-    When an isolated server cannot communcate with its replicas it can either return an error or produce inconsistent data.
+    When an isolated server cannot communicate with its replicas it can either return an error or produce inconsistent data.
 
     Note: No network partition then no tradeoff and both consistency and availablitily can be offered.
 
@@ -1130,28 +1160,30 @@
 
     Another solution - use an object store
     - A scalable storage solution designed for unstructured data at an internet scale.
-    - Can scale linerly like a distributed file system by adding more storage devices.
-    - Unlike a distribtued file system we have virtually no limititation on the number of binary objects we casn store in it
+    - Can scale linearly like a distributed file system by adding more storage devices.
+    - Unlike a distributed file system we have virtually no limititation on the number of binary objects we casn store in it
     - High sizes on the size of a single object....can be terrabytes.
     - Good for archiving and backups
     - Features of typical object stores can include HTTP rest API that makes them effective for storing multi media content - images etc that can be linked to a webpage
     - Object versioning is another feature, on a file system we would need to use an external versioning system.
 
     Differences between object store and a distributed file system.
-    - No directory hierachy
+    - No directory hierarchy
     - Flat structure called buckets
     - main abstraction is an object
-    - Typicall key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
+    - Typically key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
     - Objects can include an access control list who can access who has read/write permissions.
     -
 
-    Commonly provided by cloud providers. Typicall broken into classes with each class prvoding different prices and SLA guarantess.
-    Top tier is usually availbitliy of a high percentage, offers lowest latency and highest throughput
+    Commonly provided by cloud providers.
+    Typicall broken into classes with each class prvoding different prices and SLA guarantess.
+    Top tier is usually availability of a high percentage, offers lowest latency and highest throughput
     Top tier is best for data that will be frequently accessed lke content videos, images etc.
-    Middle tiers have lower guarantess for avialbitly and are cheaper.
-    - These options have lmited performance and sometimes have limits frequency of usage as well.
+    Middle tiers have lower guarantees for viability and are cheaper.
+    - These options have limited performance and sometimes have limits frequency of usage as well.
     - Good for data backups, i.e data not needed often
-    Lowest tier is good for longer term archiving. Usualy cheap and used for specific use cases.
+    Lowest tier is good for longer term archiving.
+    Usualy cheap and used for specific use cases.
 
     \subsection{Cloud vs OpenSource vs third party managed}
     Cloud may not be an option for budget, legal or performance constraints.
@@ -1161,7 +1193,7 @@
 
 
     Just like distributed file systems, object stores use data replication although this is abstracted away.
-    Ensure phyiscal storage loss will not result in loss of actual data.
+    Ensure physical storage loss will not result in loss of actual data.
 
     \paragraph{Object store downsides}
     Data is immutable, no edits can only be replaced with a newer version.
@@ -1193,7 +1225,7 @@
     \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
     Versus design patterns which are just about organising code within a single application.
     Software architectural patterns are \quote{blueprints} for solutions that involve multiple software components.
-    The purpose is to avoid repeating mistakes and antipatterns for large scale systems.
+    The purpose is to avoid repeating mistakes and anti patterns for large scale systems.
 
     \paragraph{Business incentives for this approach} - One - Save time and resources for devs and the organisation
     when building a solution on a similar scale.
@@ -1563,9 +1595,10 @@
     Data that enters the system is dispatched into both the batch layer and the speed layer simultaneously.
     The purpose of the batch layer is to manage out data set and be the system of records.
     The data in our master set is immutable and new data is appended, never modified.
-    This data is usually on a distributed files system, optimized for storing big files containing massive amountds of data.
+    This data is usually on a distributed files system, optimized for storing big files containing massive amounts of data.
     The second purpose of the batch layer is to pre computer our batch views.
-    Every time we run out batch processing job, it processes all the data that we have in out master data set. Once the processing is cimplete it indexes and store the data in a read only database.
+    Every time we run out batch processing job, it processes all the data that we have in out master data set.
+    Once the processing is cimplete it indexes and store the data in a read only database.
     Typically, this overrides the existing pre computed views that we created the previous time we ran the processing job.
     Note: The batch layer aims at perfect accuracy and operates on the entire data set.
 
