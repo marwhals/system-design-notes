@@ -373,6 +373,8 @@
     and handbooks for certain situations.
     This avoids having to improvise in an emergency.
 
+    \section{Performance testing}
+    Placeholder for stuff to do with performance testing.....
 
     \chapter{API Design}
     Motivations - After requirements, system can be thought of as a black box whose behaviour has a well-designed interface.
@@ -1391,7 +1393,7 @@
 
     \subsection{Event-Driven Architecture}
 
-    \paragraph{Motivation}
+    \subsubsection{Motivation}
     If microservice A want to communicate with Microservice B, then not only does it require awareness of service B, it also needs to know how to call what API microservice B provides and how to call it at run time.
     Also, microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
     Microservice A has a dependency on microservice B\@.
@@ -1443,7 +1445,6 @@
 
     Further, the data can be optimized for each type of operation.
 
-
     The second problem that CQRS helps solve is joining multiple tables that are located in separate databases that belong to two different microservices.
     Prior to monoliths all data was in one table.
     If that was a relational database all the records could be joined and then analysed.
@@ -1453,20 +1454,41 @@
     This data needs to be combined programmatically because now we potentially have different types of databases.
     Some of these databases may not even be relational.
 
-
     CQRS solves this problem.
     Every time there is a change of data in a services database, those services would publish those changes as an event to which other services subscribe to.
     The other service will store what is called a materialized view of the joined read-to-query data from both service A and service B in its own read-only database.
     Whenever we need to get a join view we can just send a request to the joining service rather than send a request to two services.
 
     \paragraph{summary of EDA}
-    When combined with microservices this allows for decoupling of services potentially allowing for horizontal and organiszation scalability.
+    When combined with microservices this allows for decoupling of services potentially allowing for horizontal and organization scalability.
     Event driven architecture allows us to analyse and respond to large streams of data in real time.
 
     \paragraph{Pattern within EDA}
     Event sourcing - allows for the auditing and storage of the current state of a business entity by only appending events and replaying them when needed.
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
+
+    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
+    Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
+    Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
+    Solution, organise business logic as loosely coupled deployable independently deployable services.
+    Each service is owned by a small team and has narrow scope of responsibility.
+    Now we have organisational scalability, building is faster, less burden on the developer, each binary is smaller in size.
+    Testing and reasoning is easier, onboarding is faster and this development velocity is faster.
+    Hardware demands are easier since commodity hardware can now be used due to less CPU and memory usage.
+    Flexible tool choice for development teams.
+    Refactoring is easier.
+    Higher system stability, the damage caused by a bug etc is much smaller since each service is deployed separately.
+
+    \paragraph{Barriers to implementing microservices}
+    Method calls have now become network calls between different computers bringing in latency issues.
+    In distributed systems each component is unreliable.
+    Although testing is faster no guarantee all the services will work when deployed together.
+    This can lead to complicated integration tests than can impact productivity.
+    Would be hard to understand which team owns the integration tests.
+    Fixing bugs and troubleshooting performance is much harder in microservices
+    Incorrect scope identification for a service can also cause additional organizational overhead.
+    Could lead to duplicated effort.
 
     \chapter{Microservices in depth}
 
@@ -1485,29 +1507,6 @@
     \section{Software Extensibility Architecure Patterns}
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
     \section{Deployment and Production Testing Patterns}
-
-    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
-    Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
-    Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
-    Solution, organise business logic as loosely coupled deployable independently deployable services.
-    Each service is owned by a small team and has narrow scope of responsibility.
-    Now we have organisational scalability, building is faster, less burden on the developer, each binary is smaller in size.
-    Testing and reasoning is easier, onboarding is faster and this development velocity is faster.
-    Hardware demands are easier since commodity hardware can now be used due to less CPU and memory usage.
-    Flexible tool choice for development teams.
-    Refactoring is easier.
-    Higher system stability, the damage caused by a bug etc is much smaller since each service is deployed separately.
-
-    \paragraph{Barriers to implementing microservices}
-    Method calls have now become network calls between different computers bringing in latency issues.
-    In distributed systems each component is unreliable.
-    Although testing is faster no guarantee all the services will work when deployed together.
-    This can lead to complicated integration tests than can impact prodictivity.
-    Would be hard to understand which team owns the integration tests.
-    Fixing bugs and troubleshooting performance is much harder in microservies
-    Incorrect scope identification for a service can also cause additional organiszatoinal overhead.
-    Could lead to duplicated effort.
-
 
     \chapter{Big Data Architeciture}
 
