@@ -378,16 +378,15 @@
     Placeholder for stuff to do with performance testing.....
 
     \chapter{API Design}
-    Motivations - After requirements, system can be thought of as a black box whose behaviour has a well-designed interface.
-    Interface is a contract between the engineers who implement the system and the client applications who use the system.
+    \section{Motivations} - After gathering requirements,the system can be thought of as a black box whose behaviour has a well-designed interface.
+    An interface is a contract between the engineers who implement the system and the client applications which use the system.
     Such an interface is a called an API since it is going to be called by other applications remotely through a network.
     Not to be confused with programming library.
-    Applications calling the Api could be front-end clients like mobiles and web browsers.
-    They can be other backend systems including those from other companies.
-    After internal design each component will be called by other applications within out system.
+    Applications calling the Api could be front-end clients like mobiles and web browsers, they can be other backend systems including those from other companies.
+    After internal design each component will be called by other applications within our system.
 
-    \subsection{Category of APIs}
-    Three categories of API
+    \subsection{Categories of APIs}
+    There are generally three categories of APIs
     \begin{itemize}
         \item Public APIs
         \item Private or Internal APIs
@@ -398,31 +397,30 @@
     Exposed to the general public and any developer can use them and call them from their application.
     Good general practice for public APIs is requiring the users to register before being allowed to send requests and use the system.
     Allows for better control over who is using the system and how they are using it.
-
-    This in turn provides better security. Can black list users who abuse the system.
+    This in turn provides better security.
+    Can black list users who abuse the system.
 
     \subsection{Private APIs}
     Only exposed internally within the company.
     Allow other teams or part of our organisation to take advantage of our system and provide value without exposing the system directly outside the organisation.
 
     \subsection{Partner APIs}
-    Similar to public APIs but are only exposed to companies and users with a business relation ship.
+    Similar to public APIs but are only exposed to companies and users with a business relationship.
     This can be in the form of buying a product or subscribing to a service.
 
-    \paragraph{}
+    \subsection{Benefits of APIs}
     Benefits of APIs is that a client can enhance their business by using the system without knowing anything about the internal design or implementation.
     Once an API is defined and exposed clients don't have to wait until the system has been finished implementing.
-    Client can start making progres towards their integration with us.
-    Once exposed,
-    it is easier to design and architect the internal structure or out system because.
-    the API essentially defines the endpoitns to the different routes in the system the user can use.
+    Clients can start making progres towards their integration goals.
+    Once exposed, it is easier to design and architect the internal structure or out system because the API effectively defines the endpoints/the different routes in the system the user can use.
 
     \subsection{Desigining an API well}
     Encapsulate the internal design and implementation and abstract it away from the users/developers that want to use the system.
     Otherwise, it defeats the point of the API.
     An API needs to be completely decoupled from internal design an implementation to allow for design to change in the future, without breaking contract with the client.
-    API needs to be easy to use and easy to understand, and impossible to misuse on purpose.
+    API needs to be easy to use and easy to understand, and impossible/hard to misuse on purpose.
 
+    \paragraph{}
     This can be achieved by
     Having only one way to get certain data or perform a task rather than many.
     Having descriptive names for actions and resources, exposing only the information that the users needs and not more than that.
@@ -434,6 +432,7 @@
     Client has no idea but can resend the request with no change of effect.
     I.e same request is not processed twice.
 
+    \paragraph{}
     Another good practice is pagination.
     Used when dealing with a large payload or dataset forming part of the reqeust.
     Without it most clients will not be able to handle such a large payload or dataset and this would result in poor user experience.
@@ -441,22 +440,24 @@
     and an offset within the overall dataset.
     To receive the next segment, increase the offset.
 
+    \paragraph{}
     Another good practice relates to operations that take a long time to complete.
     Asynchronous APIs.
     Client application receives a response immediately without having to wait for the final result.
     The response usually includes some kind of identifier that allows the client application to track the progress and status of an operation and eventually receive the final result.
 
+    \paragraph{}
     Very important best practice.
     Explicitly versioning an API so that the client knows which API version they are currently using.
     Motivation behind versioning APIs is to allow for non-backward compatible changes, thus allow for two versions of an API.
     Deprecate the old once gradually with good communication to the clients who are still using it.
 
-    \paragraph{}
+    \paragraph{Note}
     APIs can be defined in any way but some best practices have emerged.
 
 
     \section{Remote Procedure Calls - RPC}
-    Ability to call a client application to execute a sub routing on a remote server.
+    Ability to call a client application to execute a sub routine on a remote server.
     Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
     This feature is called local transparency.
     Remote or local looks the same.
@@ -531,17 +532,17 @@
 
 
     \section{Representational State Transfer - REST}
-    Set of architectural constraints and best practice for web APIs. It is just a style allowing,making it easier to keep quality attributes.
+    Set of architectural constraints and best practice for web APIs. It is just a style allowing / making it easier to achieve / improve quality attributes.
     A RESTful API meets a certain traits.
     More resource orientated.
     Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
-    In a REST api a client requests a named resource and the server responds wi the current state of that resource.
-    Usually done using HTTP. The resource can be implemented in a completely different way, only a representation is sent.
+    In a REST api a client requests a named resource and the server responds with the current state of that resource.
+    Usually done using HTTP. The resource can be implemented in a completely different way, only a representation of the resource is sent.
     Resource is just an abstraction.
-    Interface is more dynamic, actions are no statically defined like in RPC.
+    Interface is more dynamic, actions are not statically defined like in RPC.
     This is through a concept called HATEOAS - hypermedia as the engineer of the application state.
-    This is achieved by accompanying a state representation reasoner to the client with hyper mediat links.
-    The client can follow these links ad progress its internal state.
+    This is achieved by accompanying a state representation reasoner to the client with hyper media links.
+    The client can follow these links and progress its internal state.
 
     \subsection{Achieving quality attributes}
     Important requirement of a system that provides RESTful API is that the server is stateless and does not maintain any session information about the client.
@@ -562,7 +563,7 @@
 
     \subsubsection{Naming resources - best practices}
     Use nouns only.
-    Provides distinction between actions and the resources the actions will be take on.
+    Provides distinction between actions and the resources the actions will be taken on.
     Make a distinction between collection resources, and simple resources using plural and singular.
     Use clear and meaningful names.
     This will make the API easier to use for developers, and avoid mistakes and incorrect usages.
@@ -597,20 +598,17 @@
     \subsection{Step to creating a RESTful API}
     \begin{itemize}
         \item - Identify entities in a system to serve as resources
-        \item - Mapping the entities to URIs and organising the hierachy of resources based on their relationships
-        \item - Choose a repsentation for each resource. Can use JSON for this and include links for HATEOS
+        \item - Mapping the entities to URIs and organising the hierarchy of resources based on their relationships
+        \item - Choose a representation for each resource. Can use JSON for this and include links for HATEOS
         \item - Final step - assign HTTP methods to actions.
         \item
     \end{itemize}
-
 
     \section{GraphQL}
 
     \include{graphQL}
 
-
     \chapter{Large Scale Systems Architectural Building Blocks}
-
 
     \section{DNS, Load Balancing, GSLB}
     Basic role, balance the traffic load amongst a group of servers in a system.
@@ -632,7 +630,7 @@
     The load balancer can cater for as many backend servers as desired with some reasonable limitations.
     Throughput is much large than what would be possible with a single server.
 
-    Load balancer helps us achieve maintainability, since we can add, remove, upgrade servers in rotation without disrupting the client/ user.
+    Load balancers helps us achieve maintainability, since we can add, remove, upgrade servers in rotation without disrupting the client/ user.
     This would be done on a subset of the servers leaving another subset running.
 
     \subsection{Types of load balancers}
@@ -958,7 +956,6 @@
 
     When choosing one consider pros/cons and the use case.
     I.e is the data related, are read important.
-
 
     \section{Non-Relational Databases}
     NoSQL databases generally allow for the logical grouping or records without them having to conform to some kind of schema.
