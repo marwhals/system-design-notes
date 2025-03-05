@@ -1189,7 +1189,7 @@
     - These options have limited performance and sometimes have limits frequency of usage as well.
     - Good for data backups, i.e data not needed often
     Lowest tier is good for longer term archiving.
-    Usualy cheap and used for specific use cases.
+    Usually cheap and used for specific use cases.
 
     \subsection{Cloud vs OpenSource vs third party managed}
     Cloud may not be an option for budget, legal or performance constraints.
@@ -1528,7 +1528,6 @@
     Incorrect scope identification for a service can also cause additional organizational overhead.
     Could lead to duplicated effort.
 
-
     \chapter{Microservices in depth}
 
 
@@ -1601,7 +1600,51 @@
     - Also have the same problem when we are a team that owns a microservice, that consumes events from other microservices.
     --- Here again we, need to run those microservices and a message broker just to test that our microservice is able to consume those events and that the events did not change without out knowledge.
 
+    \subsection{Contract Tests and Production Testing}
+    Many companies invest disproportionally high efforts into end to end tests or abandon them altogether.
+    Other challenges between the integration of microservices, which included their complexity and tight coupling between teams.
 
+    \subsubsection{Testing challenges solutions}
+    Integration tests
+    - To deal with the complexity of integration tests is to use light weight mocking.
+    - Mock the API layer of the microservice dependencies which we wish to integrate with and send it back a hard coded response if it receives the expected request.
+    - Similarly other microservices can run mock consumers rather than running real microservices.
+    -- They can write tests that make those mock consumers, send us requests and test that out microservice returns the expected service.
+    -- The strategy reduces the coupling between the different team because if one team breaks their build the other team can continue running its tests.
+    --- It also reduces the overhead of running real instances of the other microservices.
+    ---> This strategy on its own has one major issue
+    ----- The issue is that the contract between an API consumer and the API provider can get out of sync without those teams every detecting \textbf{it}
+    -------> example - the API provider team may change its API update, its mock consumer and its tests and all their tests will pass successfully
+    -------> But the communication about those changes may be lost or misunderstood by microservice A which consumes that API
+    ---------> But the communication about those changes may be lost or misunderstood by microservice A which consumes that API. So that they either make incorrect changes and their tests will also pass.
+    ----------> Once in production those microservices won't be able to communicate with each other and cause an outage.
+    -----------> Motivates the existence of ---contract tests---
+    -----------> Contract tests work by using a dedicated tool to keep the mock API provider and the mock API consumer in sync through a shared contract
+    -----------> When the API consumer team runs their tests, they are run against their mock API provider is recoreded along with the expected response into a contract file
+    -----------> This contract file is the shared with the team that owns Microservice B, which provides that API using this contract
+    -----------> The team that owns Microservice B replays all those recorded requests to the real microservice B and verifies that the responses it gets are the same as recorded in the contract
+    -----------> And if microservice B has many consumers, it will take all their recorded contracts, create those mock consumers and run each one against their actual APi implementation
+    End Goal of this ----- each team can run its own integration tests without dealing with the complexities of building, configuring and running other microservices.
+    ---- the contract test tools guarantee that each team tests against the most up to date and correct contract shared between those microservices
+    ----> Can also extend the idea of contract tests to integration tests between microservices. ****Insert concrete example****
+    ----> Contract tests can simplify running integration tests for microservices that communicate synchronously and asynchronously but still give us high confidence that when we deploy those microservieces to prodoction, they can comunicate with each other as we can expect.
+
+    \subsection{End to end tests}
+    Contract tests can be a substitute for integration tests, they are not a substitute for ene to end tests
+    -- If setting up end to end tests is is not feasible the alternative is testing in production
+    -- One way is using a gradual release using blue green deployment in combination with canary testing
+    --- A blue green deployment is a safe way to release a new microservice version to production using two identical production using two identical production using two identical production environments withouth any downtime durign release.
+    -- Blue environment is a set of servers or containers that run out old version, and the green environment is a set of servers or containers that run the new version we want to release
+    -- Once we deploy the new version to the green environment, no real user traffic is going to it.
+    -- This is an opportunity to increase our confidence by running automated and even manual tests against those servers without impacting real users.
+    -- After we run those tests we can shift a portion of the production traffic to the green environment and monitor the new version for performance and functional issues.
+    ------> This process is called canary testing
+    ------> If we detect an issue, we immediately direct the traffic back from the green environment to the blue environment with minimal impact on users
+    ------> On the other hand, if no issues are detected we direct all the production traffic from the blue environment to the green environment and gradually decommission the blue environment since it's no longer needed/
+
+    \subsection{Summary}
+
+    These alternatives should be used only if they are setting up ****real**** microservices in development stage for testing purposes is too complex or expensive.
 
     \section{Observability in Microservices Architecture}
 
