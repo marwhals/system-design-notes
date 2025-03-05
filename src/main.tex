@@ -131,7 +131,7 @@
     \section{System constraints}
     Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
     Quality attributes will lead to tradeoffs and this is normal.
-    System constraints are refered to as \quote{pillars} of an architecture.
+    System constraints are referred to as pillars of an architecture.
     System constraints provide a starting point since they are usually non-negotiable and the rest of the system has to be designed around it.
 
     Three types
@@ -190,7 +190,7 @@
     Some performance metrics
     Response time - Time between client sending a request and receive a response
     Two parts, the processing time with code and databases applying business logic.
-    And the \quote{waiting} time.
+    And the waiting time.
     The duration of time that the request or response inacitvely spends in the system.
     This time is usually spend in transit in the physical network or in software queues waiting to be handled or reach its destination.
     Waiting time is also known as latency.
@@ -374,10 +374,14 @@
     and handbooks for certain situations.
     This avoids having to improvise in an emergency.
 
+
     \section{Performance testing}
     Placeholder for stuff to do with performance testing.....
 
+
     \chapter{API Design}
+
+
     \section{Motivations} - After gathering requirements,the system can be thought of as a black box whose behaviour has a well-designed interface.
     An interface is a contract between the engineers who implement the system and the client applications which use the system.
     Such an interface is a called an API since it is going to be called by other applications remotely through a network.
@@ -604,11 +608,14 @@
         \item
     \end{itemize}
 
+
     \section{GraphQL}
 
     \include{graphQL}
 
+
     \chapter{Large Scale Systems Architectural Building Blocks}
+
 
     \section{DNS, Load Balancing, GSLB}
     Basic role, balance the traffic load amongst a group of servers in a system.
@@ -900,6 +907,7 @@
     \chapter{Data storage at Scale}
     Motivations: Choosing the right databases amongst many options.
 
+
     \section{Relational Databases and ACID Transactions}
 
     \subsection{Relational Databases}
@@ -956,6 +964,7 @@
 
     When choosing one consider pros/cons and the use case.
     I.e is the data related, are read important.
+
 
     \section{Non-Relational Databases}
     NoSQL databases generally allow for the logical grouping or records without them having to conform to some kind of schema.
@@ -1221,7 +1230,7 @@
 
     \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
     Versus design patterns which are just about organising code within a single application.
-    Software architectural patterns are \quote{blueprints} for solutions that involve multiple software components.
+    Software architectural patterns are blueprints for solutions that involve multiple software components.
     The purpose is to avoid repeating mistakes and anti patterns for large scale systems.
 
     \paragraph{Business incentives for this approach} - One - Save time and resources for devs and the organisation
@@ -1519,23 +1528,320 @@
     Incorrect scope identification for a service can also cause additional organizational overhead.
     Could lead to duplicated effort.
 
+
     \chapter{Microservices in depth}
 
+
     \section{Migration to microservices architecture}
+
+
     \section{Principles and Best Practices}
+
+
     \section{Event driven architecture}
+
+
     \section{Event driven microservices}
+
+
     \section{Testing Microservices and Event-Driven Architecture}
+
+
     \section{Observability in Microservices Architecture}
+
+    \subsection{What is observabiilty}
+
+    \paragraph{Three pillars}
+%
+%    \begin{itemize}
+%        \item Distributed Logging
+%        \item Metrics
+%        \item Distributed Tracing
+%    \end{itemize}
+
+
+    Monitoring is the process of collecting and analysing and displaying a predefined set of metrics and by attaching those metrics to alerts.
+    Via alerts we can find out if something has gone wrong.
+    Monitoring tools and dashboards will only tell us when stuff goes wrong but they will not tell us what the problem is.
+
+    Observability allows for active debugging and searching for patterns, follow inputs and outputs, and get insights into the behaviour of our system.
+    This allows us to follow the flow of individual transactions or events across the entire system.
+    Can discover performance bottlenecks and find the source of the problem.
+
+    Monitoring is important for any system.
+    Observability is primarily critical for microservices architecture.
+    Monoliths are easy to debug since it is effectively one application.
+    Worst case scenario.
+    Can ssh into a monolith and inspect its logs and get an idea of what part of the code is causing the performance issues or is throwing the exception.
+
+    On the other hand, in microservices architecture, a single user request may involve several microservices and databases.
+    These can communicate through a message broker like kafka.
+    If an issue happens at some point in the transaction, it can be difficult to find out which service is happened in.
+    Its is further challenging as all those computers run as a group of instances on different computers thus making it harder.
+    Many issues occur at the boundaries of microservices rather than in the microservice code itself.
+    Being able to trace the path of requests through a set of microservices is very important.
+
+    Typically, having just one type of ``single'' is no sufficient to debug microservices or and EDA system.
+
+    \subsection{Signals}
+    When referring to signals three types of signal are referred to.
+    Know as the three pillars of observability.
+    One of those pillars are distributed logging metrics, distributed tracing logs and append only files that record individual events happening within an application process.
+    Those events are accompanied by metadata such as the timestamp of the event, the reqeust that triggered it and the method class or application where the event happened and so on.
+
+    Metrics are regularly sampled data points represented as numeric values such as counters, distributions or gauges.
+
+    \subsubsection{Metric examples}
+    Examples include counters of the number of requests per minute, errors per hour, distributions of latencies or gauges that represent the current CPU or memory usage.
+
+    \subsubsection{Tracing}
+    Traces represent the path a given request takes throughout several microservices and the time each microservice takes to process the request.
+    Traces may include additional information such as response headers, response codes and so on.
+
+    When receive an alert about an issue or manually detected issue using dashboards we can further debug the issue using a combination of those signals.
+    Can trace individual requests, isolate the issue to a particular microservice or API and even down to an individual method even line of code that causes the bug of performance bottleneck.
+
+    Using those signals, we can also get enough insight into how to solve that issue.
+    Typical solutions can include a rollback, hotfix or changes to the infrastructure.
+    Infrastructure changes can include things like adding more service instances, diverting, traffic to other regions, data centres....etc.
+
+    \subsection{Distributed Logging}
+
+    Logging is a basic way to provide insights into the current state of an application.
+    Each log line can represent an applications even like receiving a new request or an action like performing a database query or starting a complex processing operation.
+    It's also a way to record exceptions and errors in a method accompanied by the set of parameters that led to that issue.
+    This information is useful to debug and fix the issue and fix bugs.
+
+    Should be noted that in a microservices architecture we can have thousands of instances of different microservices producing millions of lines per day.
+    Consider the practicality.
+
+    A solution to this collection of large and very useful data is to collect them into a centralised and highly scalable logging system.
+    The system needs to parse and index those logs so they can be easily searched by patterns of text and grouped and filtered by attributes like host, microservice, time period or region to make searching easy.
+
+    Good practice to follow a predefined structure or schema and the same terminology across different events within a microservice and across separate microservices.
+
+    Log lines should be easily readable by humans, but also easily readable by machines so they can be efficiently,parsed, grouped and analysed.
+
+    Can be extremely important when we're faced with a time sensitive issue affecting users and we need to find a root cause solution quickly.
+
+    Log structures include log FMT (key value pairs), Json and XML.
+
+    Next best practice is to assign a log level or severity to each log line, depending on the framework or system we use.
+
+    Typical log levels are trace, debug, infor, warn, error and fatal.
+    Adds info that logs can be sliced on in order to reduce noise and alert fatigue.
+    This is useful for the on call engineer.
+    Can use automated tools to search and group events on those levels of severity.
+    Those tools can alert us or create a ticket automatically for someone to work on.
+
+    Events that indicate potential problems such as high processing time of outgoing or receiving requests containing unexpected values must be logged at the warn level
+
+    This way we can filter on the log level and potentially prevent future issues by addressing those events.
+
+    A developer can look at all log events at a fine level to see details on the debug and trace levels.
+
+    \paragraph{Next best practice}
+    The next best practice is to use a unique correlation ID for every user request or transaction and adding this ID for each corresponding to an event or step and processing that request and transaction.
+    Since each microservice instance is likely processing multiple user requests concurrently.
+    This helps search and filter only the events related to teh request in question.
+    Can also help us to see the sequence of events for a given request across multiple microservices.
+
+    \paragraph{Next best practice}
+    Provide as much contextual information to each log line as possible
+    - Want to include the parameters that led to this error.
+    - If we have a database query that took a very long time to complete, logging the exact query and the content etc can help fix/mititgate.
+
+    Common data we want to include in every log line is
+    - Name of the service
+    - Th emitted log event
+    - The host name where that happened
+    - the userID or some other identifier that can add more context to who initiated the operation and of course the timestamp that that event happened
+
+    Two considerations in mind
+    - First we should only log information that is critical for debugging because on a large scala system storage and processing can be very expesnive
+    - Second we should never log sensitive or personally identifiable information such as usernames, passwords, security numbers, emails, credit card numbers and so on.
+    - These details are sometimes helpful but can cause a huge legal risk for the company in the event of a security breach
+    - Add extra complexity in relation to security and data retention, compliance and generally is unethical
+    --- Idea of a random engineer with access to personal information is not a good one
+
+    \subsection{Metrics}
+    A measurable or accountable signals of software that helps us monitor performance of a system and detect anomalies when they occur.
+    Usually come in numerical values so we can easily quantify them and set alerts based on their direct or derived values because they are just numbers.
+
+    Out of the three pillars of observability they are best collected, visualised and organised into dashboards.
+
+    These production dashboards are a critical tool for us when a production issue needs our attention instead of having to search and read though hundreds of log lines, we can look at two.
+
+    Questions to ask ask as a team about microservices.
+    - Should ask what should we measure
+    - What should we collect
+    - what should we monitor
+    - as well as why we can't collect all of them
+
+    Somthing to consider is that the number of signals we can collect is pretty large on the resource levle.
+    We can measure many things but they are not helpful in certain situations.
+    Additionally we can instrument our application and measure anything starting from the number of requests we recieve per minute to the number of time a critical piece of logic is being executed.
+    However collecting anything and everything that can be measured is a big anti pattern.
+
+    Storing so many signals from each server can be expensive.
+    Talking about a large scale system with 10s of 100s of microservices.
+    Even if cost is not an issue the next problem is information overload.
+    -- Consider on call engineer hahahhaahaha
+    -- What metrics should this person look at, so many metrics they won't fit on the screen
+    --- Makes it hard to find the anomalies
+    --- even if do notice the anomalies it is hard to know which metric is the symptom and which is the cause
+    --- Instead be smart about metrics.
+    --- Can leverage decades of experience from companies which have already been doing distributed systems and focus on the five most types of signals which will give us the most infromation and the least amount of noise.
+
+    \paragraph{Five types of signals that will give us the most knowledge}
+    The first is Google Searches for Gold and Signals, which focuses on user facing metrics
+    The second is the use method (Brandon Gregg) which focuses more on system resources.
+    By combining these categories of singlals we have five categoies of signals whicih are
+    - Traffic errors
+    - Latency
+    - Saturation
+    - Utilization
+
+    Traffic is the amount of demand being placed on our system per unit of time.
+    Number of HTTP request per second or minute that recevies Http traffic.
+    We can also measure the number of queries or transactions per second or per minute on the database or message broker.
+    Can measure the number of events it receives adn the number of events it delivers to consumers.
+    --- In some cases a single request to a microservice results in many out going requests and incoming reqeusts separately.
+    --- Thats because open connections to other services consume system resources and can directly impact the microservice performance.
+
+    Next category of metrics is errors.
+    - When we measure errors, we are interested in the error rate and the type of errors we are getting if possible.
+    - A good signal to setup an alert for because the error rate goes up.
+    At this point users have already been impacted.
+    - In the case of an increase in the number of exceptions in out application, we may not be able to show the error type as a number value, so we defer this information to logging.
+    -- However if we start receiving a HTTP response status code that is different from 200 from a service we depend on, we can use that as a metric which will be very helpfulin troubleshooting production issues.
+    -- Also latency sensitive system swe can count successful responses as errors if they exceed so latency threshold that we set ahead of time for an even driven microservice
+    -- Can also measure the rate of events that it fails to process and the reason for the failure, if its possible to classify in  a message broker, we can measure error singals like the number of events it failed to deliver to customer.
+
+    On the database side, we can measure the number of aborted transactions, disk failures and so on.
+
+    Next type of signal is latency
+    -- The time it takes for a service to process a request.
+    -- Seems straight forward but there are a few thing to consider to measure it correctly.
+    -- The first important consideration is to not just look at the average latency, but always consider the full latency distribution....especially tail latency.
+    ---- This could help identify performance bottlenecks
+    -- Another consideration is the separation the latency of successful operations from the failed operations.
+    -- If we mix failed and successful operations we may get the wrong data or a misleading average
+
+    Next type is saturation
+    - Measures how overloaded a full service or a given resource is.
+    - Important for a service that has a queue, whether its an external queue like a message broker, an microservice internal queue or CPU
+    --- Too many things in a queue means the system cannot keep up with the demand at present - this would indicate a scalability issue in the respective area.... CPU, message broker,database etc
+    --- If work in a microservice keeps growing it could mean that part of our microservice is too slow and this instance may crash too soon with an out-of-memory exception.
+    --- Finally having visibility into saturation can also explain why out users have long latency or requests from other services that are timing out.
+
+    Final signal is utilisation
+    -- how busy a resource is over a period of time
+    -- Typically applies to resources with limited capacity like CPU, memory, disk space and so on.
+    -- Its important to point out that in most cases we will see performance degradation before 100\% resource utilisation
+    ---- Important to set critical alerts before we reach that critical level
+    ------- CPU getting close to over utilisation, we need to scale out and add more service instances other wise we may get higher latency issues etc
+    ---- Similarly if we see out database is getting close to running out of storage, we need to add more database instances to keep up with the growing amounts of data
+    We want to measure utilisation with high granularity, not just an average over minutes otherwise we will miss the short periods of utilisation that may be attributed to performance bottlenecks or other ineffciencies in out processing
+
+    These arent the only five signals that should be collected
+    --- Consider business use case/scenario
+    --- Additional can be collected for observability depending on logic and the specifics of out microservice
+
+    Those five types of signals are the most common that apply to any system and give us the most value by tracking them.
+
+    \subsection{Distributed Tracing}
+    Distributed tracing is a method of tracking requests as they flow through the entire systems.
+    Starts at the clients device all the through the backend services and databases.
+    As the request is being traced we collect critical performance information about the time each part of the system is processing it
+    Allows engineers to visualise the entire flow and understand all the components involved in processing the reqeust and the time it took for each component to do its work.
+    Extremely valuable for troubleshooting bugs or errors tha lead to wrong behaviour or performance bottlenecks.
+    Usually distributed tracing is not enough to tell is what is happening exactly but it is enough to narrow down out search to a particular component or a communication problem between two componenets.
+    After we know where the problem is happening we can use other observability pillars (logs, and metrics) to debug further.
+
+    \paragraph{How distributed tracing works}
+    When the initial reqeust is being made we generate a uniqe trace ID and place it into an object called a trace context
+    This trace context object contains key data about the entire trace as the request flow through the services.
+    That context is propagated through Http headers or message headers inside events.
+    Just passing the tracing context from service to service is not enough for the application instances to collect the tracing data.
+    Need to instrument them using a tracing instrumentation library or SDK
+
+    Tracing libraries come in different languages so even in a polyglot system we can get a complete trace.
+
+    Now as soon as the service instance receives the trace context, it collects the necessary data and propagates the context for the next service
+
+    At the eng od the transaction, each service instance that was involved has its own measurements and data which can later aggregated by the trace ID to visualise all parts of the transaction and how long each part of the transaction took.
+
+    Trace is broken into logical units of work which are called spans.
+    Trace spans can be coarse grained like the processing of a request by a service or a query by a database
+
+    They can be manually created by the developers using the instrumentation library.
+    So different units of work within a service can be visualized and measured separately.
+
+    This way if one logical part seems slower than usual we can investigate it as a potential performance bottleneck.
+
+    If an expected span is missing we may have a bug we need to debug further to increase the granularity even futher.
+    Can connect related pieces of work together by organising spans in a hierarchy with a parent child relationship.
+
+    \paragraph{Distributed tracing data collection}
+    General approach.
+    Once the trace data is collected inside each service instance, it is pulled by an agent which runs as a separate process on the same host with each service instance.
+    Those agents then send the tracing data to a central queue or topic in a message broker.
+    The all the tracing data that comes from many services is analysed, aggregated and stored in a databse by a big data processor.
+    Later a developer can query and visualise this data using a tracing UI in the browser.
+
+    \paragraph{Challenges}
+    Need to manually introduce code to collect the data for these systems.
+    Usually requires dependency on a certain library and to learn how to use it correctly.
+    If this is not done properly out spans may be too broad, lacking granularity or important data.
+    Can go as for making the traces useless.
+
+    The second challenge is cost
+    - Need to run an agent on each microservice host which consumes its own CPU and memeory
+    - Then the collected data must be sent over the network which requires additional bandwidth
+    - The we need to run a big data pipeline with it own infrastructure to process those tracing logs that come from different services.
+    --- This comes with its own cost
+    - Biggest cost is storing those traces in a database and retaining them for at least for a few weeks.
+    - This is so that developer can find them if they need to debug an issue
+    - Considering scala most companies use sampling on the client side which may mean we get one trace out of 10,000 or 1000 reqeusts.
+    -- this can lower our storage costs but with such a high sampling ratio sometimes it maeks it difficult to find a trace we are trying to debug.
+    -- Another problem is the size of the trace and the amount of information contained in them.
+    -- Typical Microservice or EDA deployment involves so many components that it is difficult for even a human to read it.
+
+
+    Despite the challenges distrbuted tracing is very useful when debugging microservices.
+    Help developer have the confidence to debug issues in prodction, find the root cause.
+
+%    TODO add more details maybe????
+    \subsection{Distributed Tracing Solutions}
+    \begin{itemize}
+        \item OpenTelemetry
+        \item Jaeger
+        \item Zipkin
+        \item Uptrace
+    \end{itemize}
+
+
     \section{Deployment of Microservices and Event-Driven Architecture in Production}
+
 
     \chapter{Cloud Architecure patterns}
 
+
     \section{Scalabilty patterns}
+
+
     \section{Performance Patterns for Data Intensive Systems}
+
+
     \section{Software Extensibility Architecure Patterns}
+
+
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
+
+
     \section{Deployment and Production Testing Patterns}
+
 
     \chapter{Big Data Architeciture}
 
@@ -1605,7 +1911,7 @@
     All the data goes into a queue or a message broker and is then picked up as it arrives by the processing job.
     Processing job analyses the new even and adds the processed even to the real time view ready for querying.
     This layer compensates for the latency in the batch layer.
-    Unlike the batch layer it only operates on the most recent data and doesn't attempt to provied a cimplete view or make any data corrections.
+    Unlike the batch layer it only operates on the most recent data and doesn't attempt to provided a complete view or make any data corrections.
 
     This layer exists between the last time a batch was run and the present moment/recent data.
 
@@ -1669,6 +1975,7 @@
 
     \subsubsection{Event Sourcing}
 
+
     \section{Detailed Design}
 
     \subsection{Caching}
@@ -1703,6 +2010,7 @@
     \paragraph{SQL}
 
     \subsection{Networks}
+
 
     \section{Performance and Scalability}
 
