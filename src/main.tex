@@ -1546,6 +1546,62 @@
 
     \section{Testing Microservices and Event-Driven Architecture}
 
+    \paragraph{Motivation} Before deploying a system we to production we need to gain confidence through automated tests.
+
+    \subsection{Monoliths}
+    TODO get testing pyramid picture
+    Three categories - Unit, Integration and End to End tests
+
+    UNit tests - cheapest to maintain, they are small, easy to write and fast to execute because they are so cheap.
+    Include a high number of them.
+    Located at the bottom of the pyramid.
+    Provide the least confidence about the overall system since they only test each unit in isolation.
+    Once we run the application we have no idea if those units will work together or not
+
+    Integration tests
+    Those tests verify that different units and systems we integrate with such as database or message broker actually work together.
+    Those tests are bigger and slower so we should have fewer of the than unit tests.
+    After running them we have more confidence in our tests
+
+    End to end tests-- at the top
+    These tests run the entire system including UI and database and verify they work as expected
+    From an end user perspective each such test should represent a particular user journey or business requirement and ensure it matches the specification for the application
+    Heaviest and most expensive tests to run.
+    Minimise the amount of these tests.
+    These tests provide the highest confidence that our system will work as intended in production
+
+    \subsection{Translating testing pyramid into microservices}
+    Each team should follow the same steps as the monolith, i.e pyramid for each microservice
+    Then we treat each microservice as a small unit that is part of the larger system and put it in a larger testing pyramid
+    So just like in case of unit tests testing each microservice in isolation is essential but not enough to increase the confidence that all the microservice will work together
+    Need another layer of integration tests.
+    Those integration tests verify that every pair of microservices can talk to each other using the agreed API while mocking the rest of our system. Hmmmmmmm.
+    To complete this pyramid we need to add system level end to end tests at the very top
+    Those tests in theory should run all out microservices, databases, message brokers and frontends in a test environment.
+    This should verify that all components work together as expected.
+
+    \subsection{Challenges}
+    First challenge - end to end tests are hard to setup and maintain despite providing the most confidence
+    It unclear what team should own this environment and when one of the microservice teams breaks their build the entire test pipeline will be broken.
+    This can result in teams being blocked and unable to make any releases to production.
+    Alternatively, developers may just start ignoring end to end tests  lol and release their microservices anyway which makes tests a liability with no benefit.
+    Very costly to run what is essentially a duplicate environment of the production environment even if the scale is smaller.
+    - In practice some companies spend disproportionately too much effort building and maintaining those few tests while other companies decide to take the risk and simply don't bother investing in those tests at all.
+    The second challenge of hte new pyramid is that even running integration tests can be quite difficult and creates a point of tight coupling between teams.
+    --- When the that owns MMicroservice A that consumes the API of microservice B wants to run integration tests it needs to build, configure and run both microservice while Team A knows how to build and run their own microservice.
+    -- It may be unclear to them how to setup microservice B, its even more difficult if microservice has many dependencies like a database or another service that needs to runnd or mocked.
+    -- The team that owns Microservice B has a problem, this microservice may have multiple microserivces that consume its API.
+    ---- To ensure that the changes that make in their API did not break all those API consumers they need to build, configure and run all those consumers to execute those tests.
+    ---- This can easily get out of hand and slow down the development of our entire organisation.
+
+    Third challenge is when using event driven architecture to decouple microservices.
+    - in this case we have a microservice that produces events to a message broker and it actually doesnt always know which microservice consume those events.
+    - This kind of decoupling is one of the benefits we want from event driven architecture
+    - However now we can't really run any integration tests with those microservices
+    - Also have the same problem when we are a team that owns a microservice, that consumes events from other microservices.
+    --- Here again we, need to run those microservices and a message broker just to test that our microservice is able to consume those events and that the events did not change without out knowledge.
+
+
 
     \section{Observability in Microservices Architecture}
 
