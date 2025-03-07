@@ -2148,14 +2148,33 @@
     \paragraph{Important Note}
     If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the contaienr orchestrator will outwight its cost and complexity.
 
-
-
-
-
-
-
     \chapter{Cloud Architecure patterns}
 
+    \paragraph{Motivations}
+    It is the business logic and the user that defines out software product to the outside world.
+    When considering quality requirements, products that have functionally have nothing in common are facing the exact same challenges.
+    This means they can benefit from the same solutions.
+    While companies may not have anything in common externally, they can benfit from the same scalabilty, extensibilty patterns internally.
+    All companies are expected to be highly avaiable and reeliable.
+
+    \paragraph{Cloud computing}
+    Provides ...... infinite computation, storage and network capacity.
+    Infrastrcuture as a service, without this every company would spend months hiring specialists and building infrastrcutres to deliver a basic product.
+    Cloud charges only for the services that are used.
+    This removes the barriers for startups since there is on high upfront cost.
+    Cloud also provides message brokers, DBs etc.
+
+    Downside
+    Non of that infrastrcuture is owned by the company. It is out of the companies  control.
+    Typicall don't get the best hardware and a lot of it has already been used.
+    Runs the risk of failng and there is nothing that can be done about it.
+    The bigger the system the higher the probabilty of failure is.
+    Monthly bill will get bigger and bigger as the company grows.
+    As an architect need to manage cost, scalabilty and profitabiltiy.
+
+    Cloud architecture can be though of building un reliable systems using unreliable components.
+
+    This type of architecture will have to account for reliabilty and handling failures a lot more seriously.
 
     \section{Scalabilty patterns}
 
