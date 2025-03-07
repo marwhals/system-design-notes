@@ -594,7 +594,8 @@
     \subsection{HTTP Semantics}
     Guarantees from HTTP semantics.
     GET is considered safe i.e it will not change the state of the resource.
-    GET, PUT, DELETE are idempotent. i.e same result if you apply those operations multiple times.
+    GET, PUT, DELETE are idempotent.
+    i.e same result if you apply those operations multiple times.
     GETs are considered cacheable by default while responses to POST requests can be made cacheable by setting the appropriate HTTP headers sent as part of the response to the client.
     This feature allows us to conform to the cachabilty requirements of a REST API.
     When the client needs to send additional information to the system via a POST or PUT command JSON can be used.
@@ -710,7 +711,7 @@
     \begin{itemize}
         \item - HAProxy
         \item - NGINX
-        \item - AWS - Application (Layer 7), Network (Layer 4), Gateway Load Balanacer, Classic Load balancer (Layer 7 and 4)
+        \item - AWS - Application (Layer 7), Network (Layer 4), Gateway Load Balancer, Classic Load balancer (Layer 7 and 4)
         \item - GCP %TODO add later
         \item - Azure %TODO add later
     \end{itemize}
@@ -854,7 +855,8 @@
     A globally distributed network of servers located in strategic places with the main purpose of speeding up the delivery of content to the end users.
     Solves bad user experience.
     CDNs cache website content on their servers.
-    Referred to as edge servers. They are physically close to the user and more strategically located in terms of network infrastructure.
+    Referred to as edge servers.
+    They are physically close to the user and more strategically located in terms of network infrastructure.
     Allos for the transfer of content much quicker to the user and improve the perceived system performance.
     Can be used to deliver webpage contents and assets including video streams.
     Both live and on demand.
@@ -986,14 +988,17 @@
     ACID transactions guarantees are rarely supported by non-relational databases (see exceptions).
 
     \paragraph{}
-    Three types of NoSQL databases. Categories are somewhat blurry.
+    Three types of NoSQL databases.
+    Categories are somewhat blurry.
 
-    First type is simple key, value store. We have a key that uniquely identifies a record and value that represents the data.
+    First type is simple key, value store.
+    We have a key that uniquely identifies a record and value that represents the data.
     The value can be anything, primitive or a binary blob.
     Can be though of as a large scale hash table/dictionary with few constraints on the type of value that can be held for each key.
     Good for caching pages or for quick fetching and ....easy.... querying.
 
-    Second type - A document store. Collections are stored as documents. Documents have a bit more structure.
+    Second type - A document store.
+    Collections are stored as documents. Documents have a bit more structure.
     Each document can be thought of as an object with different attributes.
     Those attributes can be different types.
     Similar to classes and fields.
@@ -2096,25 +2101,25 @@
     The solution is container orchestration (Kubernetes etc).
 
     \paragraph{What is container orchestration}
-    A continer orchestrator is a tool that managed the entire life cycle of all the microservice contaienrs within our system.
+    A container orchestrator is a tool that managed the entire life cycle of all the microservice contaienrs within our system.
     Can be thought of like an operating system.
-    For microservices architectuyre deployed as a containers, the responsibilties of a container ocrchestrator include automation of deploying new microservices or new versions of microservices as containers.
-    Managing resource allocation among existing containers to ensure each container gets the right amoutn of CPI memory and stroage to work properly.
+    For microservices architecture deployed as a containers, the responsibilities of a container orchestrator include automation of deploying new microservices or new versions of microservices as containers.
+    Managing resource allocation among existing containers to ensure each container gets the right amount of CPI memory and stroage to work properly.
 
-    Monitoring the health of containers self healking, which allows automatica deployment of new contianres to maintain a healthy number of instances of each microservice.
-    --- We have automatci bin packing whicch mean scheduling contianrers in an efficient way to providde optimal utiliszation of exisitng hardware.
-    Then we have load balancing between containers of the same microservice scalaing service out or in by adding or removing containers based on the traffic and teh resouce utilisation.
+    Monitoring the health of containers self healing, which allows automatic deployment of new contianres to maintain a healthy number of instances of each microservice.
+    --- We have automatic bin packing which mean scheduling continuers in an efficient way to provide optimal utilisation of existing hardware.
+    Then we have load balancing between containers of the same microservice scaling service out or in by adding or removing containers based on the traffic and teh resouce utilisation.
     And finally managing the discovering and network connectivity between services, containers and the outside world.
 
     \paragraph{Kubernetes as an example}
     Other tools exist. See DevOps stuff for specific tools or more complex details
 
-    A typical contaienr orchestration cluster will have a control plan deployed on at least one machine.
+    A typical container orchestration cluster will have a control plan deployed on at least one machine.
     -- That machines is a controller node.
-    -- The remining VMs or servers that run out microservice contaienrs are called the worker noides
-    -- The contoller node runs all the processses that orchestrat and manage our cluster
-    -- All the information about the cluser configuration and current state is stored by another process, which a key value store databases
-    -- If we need to add another container of a particular microservice, we have nother process that monitors the worker node resource and deceides where to shedule that new container.
+    -- The remaining VMs or servers that run out microservice containers are called the worker noides
+    -- The controller node runs all the processes that orchestrate and manage our cluster
+    -- All the information about the cluster configuration and current state is stored by another process, which a key value store databases
+    -- If we need to add another container of a particular microservice, we have another process that monitors the worker node resource and deceides where to shedule that new container.
     -- We can have another process that monitors the health of our worker nodes or state changes within those nodes.
     -- Another process can manage all the cloud provider specific logic, such as deleting unresponsive worker nodes by the cloud provider, adding cloud managed load balancers, routing them to our containers etc.
     -- In addition to the processes running in the control plane, each worker node also runs a set of agens to manage the containers running only on that node.
@@ -2155,27 +2160,28 @@
     It is the business logic and the user that defines out software product to the outside world.
     When considering quality requirements, products that have functionally have nothing in common are facing the exact same challenges.
     This means they can benefit from the same solutions.
-    While companies may not have anything in common externally, they can benfit from the same scalabilty, extensibilty patterns internally.
-    All companies are expected to be highly avaiable and reeliable.
+    While companies may not have anything in common externally, they can benefit from the same scalability, extensibility patterns internally.
+    All companies are expected to be highly available and reliable.
 
     \paragraph{Cloud computing}
     Provides ...... infinite computation, storage and network capacity.
-    Infrastrcuture as a service, without this every company would spend months hiring specialists and building infrastrcutres to deliver a basic product.
+    Infrastructure as a service, without this every company would spend months hiring specialists and building infrastructures to deliver a basic product.
     Cloud charges only for the services that are used.
     This removes the barriers for startups since there is on high upfront cost.
     Cloud also provides message brokers, DBs etc.
 
     Downside
-    Non of that infrastrcuture is owned by the company. It is out of the companies control.
-    Typicall don't get the best hardware and a lot of it has already been used.
-    Runs the risk of failng and there is nothing that can be done about it.
-    The bigger the system the higher the probabilty of failure is.
+    Non of that infrastructure is owned by the company.
+    It is out of the companies control.
+    Typically don't get the best hardware and a lot of it has already been used.
+    Runs the risk of failing and there is nothing that can be done about it.
+    The bigger the system the higher the probability of failure is.
     Monthly bill will get bigger and bigger as the company grows.
-    As an architect need to manage cost, scalabilty and profitabiltiy.
+    As an architect need to manage cost, scalability and profitability.
 
     Cloud architecture can be though of building un reliable systems using unreliable components.
 
-    This type of architecture will have to account for reliabilty and handling failures a lot more seriously.
+    This type of architecture will have to account for reliability and handling failures a lot more seriously.
 
     \section{Scalabilty patterns}
 
