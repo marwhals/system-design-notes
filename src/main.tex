@@ -2111,7 +2111,7 @@
 
     A typical contaienr orchestration cluster will have a control plan deployed on at least one machine.
     -- That machines is a controller node.
-    -- The remining  VMs or servers that run out microservice contaienrs are called the worker noides
+    -- The remining VMs or servers that run out microservice contaienrs are called the worker noides
     -- The contoller node runs all the processses that orchestrat and manage our cluster
     -- All the information about the cluser configuration and current state is stored by another process, which a key value store databases
     -- If we need to add another container of a particular microservice, we have nother process that monitors the worker node resource and deceides where to shedule that new container.
@@ -2148,6 +2148,7 @@
     \paragraph{Important Note}
     If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the contaienr orchestrator will outwight its cost and complexity.
 
+
     \chapter{Cloud Architecure patterns}
 
     \paragraph{Motivations}
@@ -2165,7 +2166,7 @@
     Cloud also provides message brokers, DBs etc.
 
     Downside
-    Non of that infrastrcuture is owned by the company. It is out of the companies  control.
+    Non of that infrastrcuture is owned by the company. It is out of the companies control.
     Typicall don't get the best hardware and a lot of it has already been used.
     Runs the risk of failng and there is nothing that can be done about it.
     The bigger the system the higher the probabilty of failure is.
@@ -2178,18 +2179,42 @@
 
     \section{Scalabilty patterns}
 
+    \subsubsection{Load Balancing Pattern}
+    \subsubsection{Pipes and Filters Pattern}
+    \subsubsection{Scatter Gather Pattern}
+    \subsubsection{Execution Orchestrator Pattern for Microservices Architecture}
+    \subsubsection{Choreography Pattern for Microservices}
 
     \section{Performance Patterns for Data Intensive Systems}
 
+    \subsubsection{Map Reduce Pattern for Big Data Processing}
+    \subsubsection{The Saga Pattern}
+    \subsubsection{Transactional Outbox Pattern - Reliability in Event Driven Architecture}
+    \subsubsection{Materialised View Pattern - Architecting High-Performance Systems}
+    \subsubsection{CQRS Pattern}
+    \subsubsection{CQRS + Materialised View for Microservice Architecture}
+    \subsubsection{Event Sourcing Pattern}
 
     \section{Software Extensibility Architecure Patterns}
 
+    \subsubsection{Sidecar and Ambassador Pattern}
+    \subsubsection{Anti Corruption Adapter Pattern}
+    \subsubsection{Backends for Frontends Pattern}
 
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
+
+    \subsubsection{Throttling and Rate Limiting Pattern}
+    \subsubsection{Retry Pattern}
+    \subsubsection{Circuit Breaker}
+    \subsubsection{Dead Letter Queue (DLO)}
 
 
     \section{Deployment and Production Testing Patterns}
 
+    \subsubsection{Rolling Deployment Pattern}
+    \subsubsection{Blue Green Deployment Pattern}
+    \subsubsection{Canary Release and A/B Testing Deployment Patterns}
+    \subsubsection{Chaos Engineer Production Testing Pattern}
 
     \chapter{Big Data Architeciture}
 
