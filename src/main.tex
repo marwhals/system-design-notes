@@ -2036,7 +2036,60 @@
     - When it comes to security and performance this is also be the most expensive option.
     - When it comes to security and performance this is also the least optimal option of all the deployment types.
 
-    \subsection{Containers for Microservices using Function as a Service}
+    \subsection{Containers for Microservices using Dev, Testing and Production}
+    Problem to be solved -- Lack of parity between development environment, production environment.
+    A.k.a - works on my machine but not in prod problem due to the differences between the configs in the two
+
+    One solution is to develop and test the microservice in a production like Virtual Machine on our development computer.
+    -- This leads to a new problem, the host operating system need to run another software layer called a hypervisor.
+    -- Hypervisor runs just like any other program on our host operating system with its own kernel and operating system.
+    -- This kernel manages all the guest operating system application processes, file system and security networking, memory and many other components.
+    -- Also uses device drivers to interact with virtual hardware which is emulated by the hypervisor
+    -- We can see that we have a lot of unnecessary overhead just to run a single microservice instance.
+    -- If we want to run and test the integration of a few microservices, we need to run multiple virtual machines, each with its own operating system and it own kernel.
+    ----- This creates a lot of overhead and makes everything slow and inefficient, which makes the development and testing very hard.
+    -- Containers (docker etc) solve this problem by isolating what we want to osilate and sharing everything else.
+    -- When we package our microservices into containers, each container image includes our microservice binary, the command to run it and all the dependencies it requires in complete isolation from any other microservice.
+    -- When we create multiple instances of that image, each container has its own isolated file system, network interface and runtime.
+    ---- **The OS kernel drivers and everything else that we don't need to isolate are shared among all the containers.
+    ---- The overhead of running a few dozen of containers on our machine is minimal, making it attractive for developing and testing microservices
+    -- Benefits of containers go beyond this, they are useful in a CI/CD pipeline which may use a different OS and hardware that development computers.
+    -- This does not matter since container images are completely decoupled from the OS and the hardware so we can create them once and run them on any hardware and operating system that supports containers and container runtime.
+
+    Disadvantages of using full VMs
+    -- If two microservice instances run on the same cloud server each VM runs and entirely separate copy of the same operating system.
+    ---- This duplication means we lose valuable memory CPU and storage resources to the operating system
+    ---- Deploying and starting each VM can take minutes before being ready to accept traffic.
+    ---- Another issue is cloud vendor lock in and lack of portability
+    ---- When we create a VM image for a microservice,  the formate of this image may be cloud vendor specific, also the configuration describes the type of VM we want to rent is also cloud vendor specific.
+    ---- If we get an attractive offer from another cloud vendor and we want to migrate completly, we will have to do a lot of work creating those new images and even this is an even bigger problem when we have a a multi cloud environment/ hybrid cloud environment.
+    ---- Uses of hybrid cloud -- higher performance and greater security.
+    ---- In these situations cloud VMs will be challenging to manage.
+    ---- This is all solved by using containers.
+    -- All we need to do is create those container images once and then deploy them on generic cloud VMs or even directly on dedicated hosts.
+    -- In any environment the only requirement is to install the container runtime, which is the software that runs those containers and we're good to go.
+
+    \subsection{Summary}
+    Why containers
+    -- Better portability between environments since we can build a microservice image once and then use it in development, QA, staging and production on any cloud provider hardware or operating system.
+    -- Also get faster startup time because containers usually take a few milliseconds to deploy and run
+    -- We can also save a lot of money on infrastructure because the hardware utilisation is much better when we use containers.
+    --- Instead of renting multiple smaller VMs where we lose part of the CPU and memory to the operating system, we can rent larger VMs or even dedicated hosts
+    --- When we deploy the containers of different microservices on a single VM or host we can better utilise the hardware because they share the same operating system kernel.
+    ----- In many cases this means that we can run more intensive microservice instances for the same amount of hardware than when we use cloud VMs.
+
+    We now have another problem to solve before being able to take advantage of containers in production
+    -- The problem is that we have two layers of abstractions that need to be glued together
+    -- We have cloud infrastructure abstraction, VMs etc which need to be rented and autoscaled based on the traffic or load on out system as well as other cloud managed systems like databases, message brokers and distributed logging.
+    --- Also have container abstraction, where there are numerous abstractions representing different microservices.
+    --- Each microservice image needs to be deployed as a group of containers instances on that infrastructure.....
+    --- Then we need a way to discover and connect all those microservice containers to each other and the managed services through the network.
+    --- We also need to manage the scalability and availability of each group of the containers so we can add more instances if the traffic goes up and remove instances when the traffic goes down.
+    --- Additionally we need to automatically replace containers that crash and a way to update all the containers of the same microservice when a new version of the microservice is released.
+    --- Doing this manually for 100s/1000s of container instances potentially running in different cloud providers is an incredibly difficult task.
+
+    \subsubsection{Summary}
+    .....................
 
     \subsection{Container Orchestration and Kubernetes for Microservices Architecture}
 
