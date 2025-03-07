@@ -13,7 +13,8 @@
 \usepackage{lipsum}     % For placeholder text (to test layout)
 \usepackage{helvet}
 \usepackage{arydshln}
-\usepackage{wasysym} % Helvetica as a sans-serif font alternative
+\usepackage{wasysym}
+\usepackage{amstex} % Helvetica as a sans-serif font alternative
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -1975,7 +1976,6 @@
     - If we need additional security, we can rent a single tenant dedicated instance which are a bit more expensive, but guarantee that onlyy VMs of our organisation can run on the same physical hardware
     - If we also need the most optimal performance and want to eliminate the possibility of a noise neighbor we can rent dedicated hosts,which is also the most expensive option.ó
 
-
     \paragraph{Multi-Tenant Virtual Machine Cloud Service}
     \begin{itemize}
         \item Amazon Elastic Computer Cloud (EC2) Instances
@@ -2092,6 +2092,66 @@
     .....................
 
     \subsection{Container Orchestration and Kubernetes for Microservices Architecture}
+    The big challenge - Managing, deploying and configuring thousands of containers, running hundreds of microservices potentially accross different cloud providers.
+    The solution is container orchestration (Kubernetes etc).
+
+    \paragraph{What is container orchestration}
+    A continer orchestrator is a tool that managed the entire life cycle of all the microservice contaienrs within our system.
+    Can be thought of like an operating system.
+    For microservices architectuyre deployed as a containers, the responsibilties of a container ocrchestrator include automation of deploying new microservices or new versions of microservices as containers.
+    Managing resource allocation among existing containers to ensure each container gets the right amoutn of CPI memory and stroage to work properly.
+
+    Monitoring the health of containers self healking, which allows automatica deployment of new contianres to maintain a healthy number of instances of each microservice.
+    --- We have automatci bin packing whicch mean scheduling contianrers in an efficient way to providde optimal utiliszation of exisitng hardware.
+    Then we have load balancing between containers of the same microservice scalaing service out or in by adding or removing containers based on the traffic and teh resouce utilisation.
+    And finally managing the discovering and network connectivity between services, containers and the outside world.
+
+    \paragraph{Kubernetes as an example}
+    Other tools exist. See DevOps stuff for specific tools or more complex details
+
+    A typical contaienr orchestration cluster will have a control plan deployed on at least one machine.
+    -- That machines is a controller node.
+    -- The remining  VMs or servers that run out microservice contaienrs are called the worker noides
+    -- The contoller node runs all the processses that orchestrat and manage our cluster
+    -- All the information about the cluser configuration and current state is stored by another process, which a key value store databases
+    -- If we need to add another container of a particular microservice, we have nother process that monitors the worker node resource and deceides where to shedule that new container.
+    -- We can have another process that monitors the health of our worker nodes or state changes within those nodes.
+    -- Another process can manage all the cloud provider specific logic, such as deleting unresponsive worker nodes by the cloud provider, adding cloud managed load balancers, routing them to our containers etc.
+    -- In addition to the processes running in the control plane, each worker node also runs a set of agens to manage the containers running only on that node.
+    --- That includes the container runtime, which is the software enginer running the containers on each hots
+    --- The we have the agent that monitors and actuallly start the microservice containers when it recives the appropriate command from the control plan.
+    --- We also have another process which acts as a proxy.
+    ---- This proxy maintains a set of network rules to route requests between containers of different microservice and balances, the load on containers of the same microservice.
+    --- Additionally we may need to run each instance of our microservice with a sidecar process.
+    ----- This sidecar process can be a logging or monitoring agent or an in memory cache
+    ----- Typically putting more than one process inside a single container is not a good practice.
+
+    Kubernetes allows us to bundle several containers inside another logical unit which is called a pod.
+    -- A pod is the small's runtime unit that kubernetes will manage for us even if that pod only contains a single microservice container
+    -- The description of all microservices architecture, their configuration with container images they use and how much CPU memory and storage they need is described in a declarative human readable way.
+    -- This configuration also contains all the information about the services our microservices connect to outside the container cluster.
+    -- THose include cloud functions, databases, object stores, message brokers and so on.
+    ---- This configuration is stored and maintained in a version control system just like any other code.
+    ------ Once a change is made to that configuration, it will be sent to the control Planes APi server which triggers the relevant updates within the cluset.
+
+    In a typical microservices architecture, we'll have 100s/1000s of such worker nodes running 1000s of containers belonging to different microservices.
+    -- For higher availability and to keep up with everything going on in the cluster, we'll also typically have multiple replicas of the controller nodes inside the contoler plane.
+    -- Even for higher availability we can have multiple clusters with the same or different configutations running on different cloud regions or even cloud providers.
+    --- We can route traffic using a global load balancer.
+    --- This routing can be based on criteria such as physical proximity to the user, the load or health of each cluster and so on.
+    ---- Container orchestration architecture can be pretty complex to set up and manage.
+    ------> Requires expertise from DevOps or Site Reliability Engineers
+    ------> Requires dedicated resources just for orchestration purposes, like controller instances.
+
+    This investment pays off because its cost is amortised accross all the teams and microservices that are managed.
+
+    \paragraph{Important Note}
+    If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the contaienr orchestrator will outwight its cost and complexity.
+
+
+
+
+
 
 
     \chapter{Cloud Architecure patterns}
