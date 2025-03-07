@@ -2001,6 +2001,43 @@
 
 
     \subsection{Containers for Microservices using Function as a Service}
+    More event driven that other deployments.
+    Used when the service is rarely used / low traffic most of the time.
+    - If a cloud VM/ dedicated host is used we will be paying for rented hardware during the down time as well.
+    - When the rarely used service is used there will be a traffic spike.
+    - Need to configure and pay for a load balancer and maintian autoscalaing policies for this microservice, which adds more to the infrastructure running costs
+    - Running a service for events that rarely occur is not very cost efficient
+    - There is also the cost of maintaining it
+    - The tream that owns the microservice in addition to eh business logic will also need to maintian a lot of boiler plate code that hanndles http reqeusts or events from another source that triggers that logic.
+    - Also need to maintaing script to biuld, package and deploy our microservice binary with all its dependencies to a cloud server.
+    - A lot of effort for events that rarely happen
+
+    A solution is use a serverless offering called function as a service.
+    - A cloud solution that allows for the architecting of a system in a fully even driven model, not only from the software perspective but also from the infrastrcutre perspective
+    - Only need to provide cloud vendor with two things, the type of events we wanted to handle and the logic we wanted to executre when that event is triggered. Noting else
+    - Only when the event is triggered will the cloud provider take out code, package it, deploy it to physical hardware and execute it
+    - If the traffic follows a seasonal pattern where there are a lot of requests coming in a very short period of time, in that case the cloud provider will also handle the horizontal scalabiilty
+    --- This allows for handling the traffic spike without the need to maintain any autoscaling policies of configuring a load balancer
+    --- The pricing model is based on the number of requests our microservice receives as well as the memory, time to handle each request by running out logic.
+    --- If a requests or event doesn't arrive we don't pay anything.
+    -- CLear benefit is that a lot of money can be saved for events that happen very rarely.
+    -- Can save a lot of money on infrastructure for seasonal workloads with rare but very high traffic spikes
+    -- Cloud provider also handles all the operational scaling of that service
+    -- Another benefit for both those types of workloads is that it allows us to save a lot of development cost and overhead as the cloud provider takes care of building, packaging and deploying out microservice.
+    -- Trade offs
+    -- If the traffic pattern changes the costs of the service may increase significantly
+    -- If the business logic becomes more complex each time we receive a request or event handling it will require a lot more time and memory.
+    -- As a result it will become more expensive for us to use this offering than deploying it on a cloud VM or even a dedicated host.
+    -- Another downside is the performance of a serverless deployment is much less predictable than deploying business logic as part of a microservice we fully control.
+    -- Serverless deployments like function as a service are not the best option for latency sensitive workloads.
+    -- This is also less secure type of deployment because not only does our code run in a multi-tenant environment, we also expose our source code to the cloud provider.
+
+    \paragraph{Summary}
+    Function as a service for the correct workloads can be a very efficient way to deploy microservices.
+    - If used incorrectly, or not for the right workload it can also be the most expensive options.
+    - When it comes to security and performance this is also be the most expensive option.
+    - When it comes to security and performance this is also the least optimal option of all the deployment types.
+
 
     \subsection{Container Orchestration and Kubernetes for Microservices Architectureó}
 
