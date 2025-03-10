@@ -2185,7 +2185,86 @@
 
     \section{Scalabilty patterns}
 
+    \paragraph{Motivations}
+    These patterns allow us to  to architect and deploy a highly scalable system for different domain and use-cases.
+    This will enable a business to handle billions of requests per day, process petabytes of data and most importantly and do this in a cost effective way in a cloud environment.
+
     \subsubsection{Load Balancing Pattern}
+    Problem being solved.
+    Simple web app with high traffic will eventually run out of CPU, memory or network capacity of single server will either crash or significantly degrade its performance.
+    A situation we want to avoid and upgrading that server to a more powerful virtual machine will only delay this problem.
+
+    The load balancing as a pattern places a dispatcher between the source of the data or network requests to out system and the workers that process that data and send back out response.
+    In this pattern, the dispatcher routes each request from the client to one of the available workers.
+    This was if the number of clients grows or the rate at which those clients send us requests increases, we can add more workers and spread the load among all of them.
+    This allows for the scaling of our system very quickly without the need to make any significant changes to out system.
+
+    A very common use case of load balancing is balancing HTTP requests from the front end to the backend.
+    ---> The front end can be either a mobile app installed on end users devices or run as a client side JavaScript on the user's web browsers.
+    ---> and the back end is a set of application instances we run on the cloud infrastructure
+    ---> Those applications instances typically run as identical copies of the same application on separate physical or virtual machiens
+    ---> This way, instead of the clients sending a reqeust from the front end directly to our backend servers, their requests all go to the load balancing dispatcher and this dispatcher routes each request to one of the application instances.
+    -------> Example, if service one and service two get a lot of requests, we can scale them up and place more workers behind their load balancing dispatchers.
+    -------> But if service three doesn't get that much traffic then we can scale it down, which will help us save money.
+
+    \paragraph{General Techniques}
+    The first one is by using a cloud load balancing service.
+    -- This is a special cloud managed service whose entire purpose si to accept a high load of network requests and root them to our backend servers
+    -- The implementation details of the cloud load balancing service are hidden from us and are considered proprietary tech lock in.
+    -- They may start with a single load balancer instance that takes all the incoming requests from the client and based on the configurable, the algorithm routes those requests to a group of out servers.
+    -- However if we deploy out service instances in different isolation zones, then the load balancing service may also run as multiple instances, one in each zone and as the traffic grows that cloud load balancing service may scale itself up and run as a group of load balancer instances.
+    -- Additionally each load balancer instance is monitored and is automatically restarted if something if something happens to it
+    ----- This way we don't end up in a situation where there load balancer itself becomes a single point of failure or performance bottleneck.
+    ----- NOw we can use the cloud load balancing service to route requests from external clients to out backend servers, but we can also use it between different services internally, just like we saw before.
+
+    The second way to implement the load balancing pattern is using a message broker or a distributed message using the message broker.
+    -- We can have one or multiple publishers sending messages to the message broker, and on the receiving end, we can have a group of consumer workers that read those messages similarly to the load balancer.
+    -- Depending on the volume of message, we can scale those messages similarly to the load balancer.
+    -- Depending on the volume of message we can scale those consumer instances up and down as we need to do so we can keep up with the rate of incoming messages
+
+    \subparagraph{Note} Worth noting that message brokers should only be used internally between services, while a load balancer is perfectly suited for taking requests from external services.
+    And just like in the case of a cloud load balancing service.
+    Most modern message broker solutions are implemented as distributed systems that use replication, redundancy and run as a group of instances.
+    This way the message broker is scalable on its own and transient failures within the message broker do not impact our system.
+
+    \paragraph{Software design and architecture considerations}
+    The first consideration or decision we need to make is the algorithm the load balancer uses to route each incoming reqeust to a given worker.
+    This routing algorithm heavily depends on the design of the backend we're routing traffic to.
+
+    The first algorithm is round robin algorithm, the load balancer is routing each incoming reqeust sequentially to the next worker instance.
+    This algorithm is very simple and is usually the default for evey load balancer implementation.
+
+    \subparagraph{Important Note} This algorithm works well only under the assumption that our application is stateless.
+    in other words the assumption is that each reqeust from a client can be handled in isolation by any on the target application servers.
+    However, this isn't always possible and in many cases we need to maintain an active session between the particular client and the server its communicating with.
+
+    Classic example of such a scenario is if after authenticating a suer we keep the users credentials on the server side to make every subsequent request faster.
+
+    Now, if we use the round robin algorithm to route requests to such an application, the client would have to re authenticate every time for every single requests.
+    Similarly, if a client is uploading a very broken down into multiple requests.
+    We want to make sure that all those requests are going to the same server.
+
+    *****And here again if we use the round robin algorithm, our system will just not work.
+    In those cases, we can use a different algorithm which is called sticky session or session affinity.
+    Using the algorithm, the load balancer tries its best to send traffic from a given client to the same server as long as that server is healthy.
+    This can be achieve by placing a cookie on the clients devices, which will be sent with every request to the load balancer.
+
+    **** Another way to do this is simily using the clients IP address as the identifying attribute in each request.
+    From that point on, every reqeust that comes from that particular client can be tracked and routed to the same server for the duration of the session.
+    However, this algorithm works great only for relatively short sessions, but if one particular server gets stuck with too many long sessions, then it will have a disproportionately larger number of requests to handle.
+
+    **** For these situations, there is another algorithm which is called least connection
+    Using this algorithm, the load balancer will route new requests to servers that have the least number of already established connections.
+    Open the least connections algorithm is particularly useful tasks associated with long term connections, such as in the case SQL, LDAP and other similar scenarios
+
+    Another cloud computing feature that typically goes along with load balancing is a feature that is called auto of scaling
+    Typically, every cloud computing instance, such as a physical or virtual machine, runs a few big run processes called agents.
+    -- Those agents collect data about the network traffic, memory consumption or CPU utilisation on each host.
+    -- Using this real time data collected from each server, we can define out of scaling policies to increase
+    -- Or decrease the number of services based on those metrics
+    -- Additionally, all cloud vendors allows us to tie those auto scaling policies to the load balancing service.
+    -- It is always aware of the size and addresses of the backend servers at any given moment.
+    ---- This powerful combination between dynamic resizing and load balancing gives us the ability to automatically scale out system up when the traffic and demand is high and save costs by scaling it down when the traffic to out system is low.
     \subsubsection{Pipes and Filters Pattern}
     \subsubsection{Scatter Gather Pattern}
     \subsubsection{Execution Orchestrator Pattern for Microservices Architecture}
