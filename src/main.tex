@@ -2265,7 +2265,78 @@
     -- Additionally, all cloud vendors allows us to tie those auto scaling policies to the load balancing service.
     -- It is always aware of the size and addresses of the backend servers at any given moment.
     ---- This powerful combination between dynamic resizing and load balancing gives us the ability to automatically scale out system up when the traffic and demand is high and save costs by scaling it down when the traffic to out system is low.
+
     \subsubsection{Pipes and Filters Pattern}
+
+    Follows the stream of water flowing through a series of pipes and getting filtered in multiple stages until it gets to the desired condition.
+    Instead it is data and the filters are isolated components that process that data at different stages/
+    -- A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
+    -- The origin of the data is referred to as the data source and the final destination for that data after it gets through.
+    -- All the desired processing stages is often called a data sink
+
+    \paragraph{Example}
+    Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that reviedes data samples from sensor or end devices/
+    -- A few example of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
+    -- The pipes that connect the filters in this pattern are typically distributed queues or message brokers
+    -- Its also worth pointing out that the entire data doesn't have to flow through those so called pipes.
+    -- Can store data in a temporally location on the distributed files system or even a database and simply send notifications about the new data and where to find it
+
+    \subsubsection{Examples and scenarios}
+    Can start with a simple application that takes either a particular type of even or input request as a trigger.
+    That event can carry some information that we need process through multiple stages before we make some kind of decision or get that data into a state that we can store in a database.
+    -- If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
+    --- First problem is the tight coupling between all different processing components.
+    --- For example, since they're part of the same application, they will need to be implemented in the same programming language
+    -- What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
+    ----- While using Java or C-Sharp to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
+    ---- This can no easily be done.
+
+    Second problem is each processing gtype may require a completely different type of hardware to perform it processing most effectively.
+    --- Hardware for machine learning, fast CPU cores etc, lots of memory, a high bandwidth network card
+
+    If we have all the tasks implemented in a single application, we can't ever get to a point where each task is running on the most optimal hardware for its needs.
+    Finally, each task may require a completely different number of instance to provide a good enough throughput and be able to handle the incoming data.
+    -- If we split the processing pipeline into separate independently deployed software components, we can use the best programming language, or ecosystem for each type of operations.
+    -- And since each such component can run on its own type of hardware we can guarantee that the entire pipeline runs optimally, not only from the performance perspective, but also in terms of the cost of infrastructure.
+    -- Because in a cloud environment, each type of hardware is priced different based on its features and capabilities.
+    -- We can easily scale the number of instances for each processing component as we need, while saving costs on more processing lightweight processing units for the others.
+
+    Finally, we can also get higher throughput by executing independent tasks in parallel on separate computers.
+
+    \subsubsection{Real life example}
+    This pattern is extensively used for processing stream of data about user extensively for processing streams of data user activity, such as in the digital advertisement business.
+    Its used to process data from end devices in the internet of things industry and its also popular in image and video processing pipelines.
+
+    \paragraph{Specific example - video sharing service}
+    When a new video is uploaded, it needs to go through a few stages before it can be optimally streamed simultaneously to different devices in different geographical locations.
+    -- First stage may be splitting the original potentially large video file into smaller chunks.
+    -- This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
+    -- Then once we have the individual chunks separated, we need to select a single frame from each chunk to be the thumbnail
+    -- This way when user wants to jump to a different part of the video, they can have those thumbnails as guidelines.
+    -- In the next stage, we resize each chunk to different resolutions and bit rates
+    ----- This allows us to use a technique called adaptive streaming with the adaptive streaming technique
+    ----- We can change the resolution of the video dynamically while streaming the video to the user depending on their network conditions
+    ------ Example when they have a good connection we can send them high quality high resolution chunks of the video, and if their connection speed drops, all of a sudden we can seamlessly switch to the lower quality chunks to avoid buffering delays
+    -- Finally a tht elast stage we encode each chunk in each of the different resolutions to different formats, so we can support multiple types of devices and video players.
+    -- Audio parts
+    ---- video needs to be resized frame by frame to different resolutions and bit rates
+    --- Audio doesnt need that
+    ---- However we can pass the audio through a parallel pipeline of filters where we can use natural processing libraries and specialised hardware to transcribe any speech present in the audio into text at the next stage
+    -- We can either provide caption to translate the text to different languages and then feed that to the captioning filter as well
+    -- So at the end of this pipeline, we'll have the audio accompanied by text files that represent captions of that audio in different languages.
+    -- Finally we can have another branch in out pipeline which can sample sections of the video or audio and run proprietary algorithms that detect whether this content is copyrighted or consider to be inappropriate for out targer audience.
+    -- In that case, it can either alert a special team of specialists to manually review it or simply reject the video altogether
+
+    \subsubsection{Important considerations}
+    Firstly, its important to note that there is quite a fair amount of overhead and complexity involved in maintaining this architecture, especially if the individual filters are too granular
+    - Its important to balancer between that overhead and the benefits we get from having this clean separation
+    - The second thing is to keep in mind is making sure that each filter is stateless and is provided with enough information as part of its input to perform it tasks.
+    - The last important consideration is that this pattern is not a good fit for situation where all the operations within the pipeline need to be performed as part of a transaction
+    -- The reasons for that is performing a distributed transaction across multiple independent components is extremely difficult and inefficient, especially if we need to abort and redo them frequently.
+
+    \subsubsection{Summary}
+    ======================================================================
+
     \subsubsection{Scatter Gather Pattern}
     \subsubsection{Execution Orchestrator Pattern for Microservices Architecture}
     \subsubsection{Choreography Pattern for Microservices}
