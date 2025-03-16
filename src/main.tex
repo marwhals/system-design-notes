@@ -1537,18 +1537,146 @@
 
     \chapter{Microservices in depth}
 
+    \section{Introduction}
+
+    \subsection{Introduction}
+    In this style a system is organised as a collection of independent services.
+    Each has a narrow scope or responsibility and is fully owned by a team of developers.
+    Very popular with big, successful companies.
+    When done correctly, this architecture allows organisations to build highly scalable systems that reach billions of users while keeping their operational costs low, staying efficient and inovative.
+
+    Note this has to be done under, the right conditions with a company that is ready for the change otherwise we introduce a large amount of overhead with no benefits.
+
+    Related but not a pre-requisite is Event Driven Architecture.
+    - This combined with microservices is a very powerful design pattern.
+
+    Problem --- Scaling a three tier architecture / Monolith
+    -- Typically has presentation tier, business logic tier and a data tier.
+    -- Still useful, easy to implement and use with a small team of developers. Two Pizza rule %..........
+    -- This is good enough for some companies.
+
+    However as a company becomes more successful and the development team continues growing larger problems start appearing.
+    - First issue is low organisational scalability. Too many engineers on the same code base leads to merge conflicts, toe stepping and other dramas.
+    ---- Even a small feature can become slower and harder to deal with.
+    ---- Results in more planning and meetings and coordination.
+    ---- More people we have in those meetings the longer and less productive they become...............
+    ---- Number of engineers is not the only issue, as we add more feature to the application, our code base becomes larger and more complex.
+    ---- This makes it harder to reason about, takes longer to load in an IDE, slow to build and test........and riskier to deploy.
+    ---- As a result, our release schedule becomes less frequent, which makes things even worse/
+    ------ Every new release contains even more features, increasing the chances of bugs and outages.
+    ---- Finally, onboarding new developers now takes more time as it is much harder for them to get familliar with the large code base.
+    ---- Also with every additional engineer in a team we start seeing diminishing returns until we hit a point where adding more people actually reduces everyone's productivity.
+    ---- Besides low organisational scalability, a large monolithic application can also have technical problems make the system less scalable.
+    ---- Each application instance which contains our entire business logic, requires a lot of CPU and memory.
+    ------> Instead of using cheap commodity hardware, we need to run each instance on a more high end and expensive computers.
+    ------> We are also constrained by technology choices that may have been made many years ago and we can't take advantage of newer technologies.
+    ------> Refactoring our code base, from one library to another can be a huge effort, let alone considering a new programing language or a framework.
+    ------> Another problem is that our application becomes less stable
+    ------> Even a small memory leak, performance issue or a bug can affect out entire system and may require us to perform a rollback
+    ---- Logically separating the monolithic applicatoin into layers, modules, or even libraries can help only so much.
+    ------- At the end of the day those modules are still tightly copuled together.
+    ------- We're still constrained to using the same technologies and programming languages and the application still needs to be deployed as a single run time unit.
+
+    --------Comment - Problem has been stated / staged
+
+    \subsection{Microservice Architecture - Benfits and Challenges}
+With this architecture we gain a much higher organisational scalabilty since each service contains only a subset of the overall functionality, each service's code base is much smaller.
+    --- Allows each developer to load their code up in their IDE much fasteeerrrrrrrr
+    --- Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
+    --- Testing and reasoning about each service in isolation becomes much easier becaise there is much less logic to understand run and test.
+    --- This simplicity of the code in each microservice also speeds up the onboarding process of a new team, so a company can grow quickly and stay more efficient.
+    --- All this increases the development velocity of each team, which mean we can deliver more features and gain an advantage over our competitors
+    --- On system scalability, we also get a lot of benefits in the monolithic application
+    ---- Each instance had to run the entire code base which required very powerful and expensive hardware to run each instance.
+    ---- When we break our code base into microservices each service is much smaller, so each instance of a microservice consumers less memory and CPU
+    ----- As a result, it can run on cheap and widely available commodity hardware,
+    ----- Each team can also make the best judgement on what technologies would benefit their service and they can also respond to technology changes much faster by refactoring their already small code base.
+    -------- Could even rewrite the code base if necessary.
+    ----- Finally we get much higher stability for the entire system since each microservice is deployed as a separate runtime unit.
+    ----- The blast radius of a bug, memory leak or performance issue is much smaller.
+    ---- In most cases a bug in one microservice will impact only that microservice or just the ones that depend on it on some level.
+    ------ The rest of the system can continue operating on it just fine.
+
+    Essentially, microservices break the scalability barrier that we will hit with a monolithic architecture.
+    --- Monolith is good to get started......for continued growth microservice are a good option.
+
+    \subsubsection{Challenges}
+    - Now method calls that used to have predictable behaviours, success rates and latency became network calls between two different applications that may be running on different computers.
+    ---- Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
+    -- Beside the network itself, the nature of distributed system is that each component is inherently unreliable
+
+    For instance, a reqeust from one  service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenence from a testing perspective.
+    We also now have testing challenges.
+    Testing each microservice in isolation has became easier, faster.
+    There is no guarantee that they will work when they have all been put together as a whole.
+    When we make a change in one service, we have far less confidence that once the new version of our service is deployed in production, it won't break another service.
+    This situation may lead to the creation of very complex and slow integration tests that can slow our productivity.
+    Given that each service may belong to a different team, it's very hard to decide who owns those integration tests to begin with.
+
+    Finally, with microservices, its much harder to troubleshoot performance issues and bugs............
+
+    May also experience challenges in organisational scalability.
+    One of the biggest questions is how to set the scope of responsibility between microservices.
+    If we set the boundaries incorrectly, we may actually have more organisational overhead than benefits.
+    -- Examples
+    ---- If every change in a system requires careful coordination between different teams then we are not better off that what we were in a monolithic architecture
+    ---- Similarly if every team uses a different tech stack.
+    ---- Tools and practices we may have a lot of duplicated efforts and confusion when looking at code from other teams.
+    
+    Without careful consideration we can end up with more challenges that what we would get with a monolith.
+    -- This is some times referred to as a distributed monolith or a big ball of mud
+
+    \subsubsection{Use other companies experiences}
+    Many companies share findings from actually implementing microservices. Mistakes and successes.
+    Following industry proven principles the benefits of microservices can outweigh the organisational complexity and overhead.
+    
+    \subsubsection{Summary}
+    Benefits of microservices architecture
+    - Higher organisational scalability due to the smaller code base of each microservice
+    - Allows for high system scalability, which allows for the use of the best technology for each microservice and to run it on cheaper hardware.
+
+    Challenges
+    - Additional complexities and overhead
+    - Unpredictability of running a distributed system with unreliable components on an unreliable network.
+    - The risk of decreased organisational scalability if we do not set appropriate boundaries between microservices and their teams.
 
     \section{Migration to microservices architecture}
+
+    \subsection{Microservice Boundaries - Core Principles}
+
+    \subsection{Decomposition of a Monolithic Application To microservces}
+
+    \subsection{Migration to microservces - steps tips and patterns}
 
 
     \section{Principles and Best Practices}
 
+    \subsection{Databases in microservice architecture}
+
+    \subsection{The DRY principle in micrservices and shared libraries}
+
+    \subsection{structured autonomy for development teams}
+
+    \subsection{micro frontends architecture pattern}
+
+    \subsection{API management for micrservices architectureó}
+
 
     \section{Event driven architecture}
 
+    \subsection{Introduction to Event-Driven Architecture}
+
+    \subsection{Use Cases an Apttern of Event-Driven architecture}
+
+    \subsection{Message delivery semantics In event driven architectureó}
 
     \section{Event driven microservices}
 
+    \subsection{Saga Pattern}
+
+    \subsection{CQRS Pattern}
+
+    \subsection{Event sourcing pattern}
 
     \section{Testing Microservices and Event-Driven Architecture}
 
@@ -2342,22 +2470,22 @@
     %TODO fix this
 
     Similarly to the load balancing pattern in the scatter gather pattern, we also have the client or the requester who sends their request to out system.
-    Then on the other hand, we have a group of workers that repsond to those senders reqeusts.
+    Then on the other hand, we have a group of workers that respond to those senders requests.
     In the middle we have the dispatcher, which dispatches the reqeust form the sender to the workers and aggregates their results.
-    Unlike the load balancing pattern, where each reqeust from the sender is dispatched to only one worker, in the scatter gather pattern, the dispatch error allow sthe request to all the workers.
+    Unlike the load balancing pattern, where each reqeust from the sender is dispatched to only one worker, in the scatter gather pattern, the dispatch error allows the request to all the workers.
     Later the dispatcher gathers the response from all the workers, aggregates them into a single response and sends it back to the sender.
-    Another difference between the load balancing pattern and the scatter getter pattern is that unliske in the load balancing pattern where the workers are actualy different.
-    Those workers can either be instantces of the saem appliication but have differetn data.
-    They can be different service swithin out company that provide different functionality, or they can be external services owned by different companies that partner with us.
-    The core principle of the scatter getter pattern is that each reqeust sent to a different worker is entierly independent of the other reqeusts sent to the other workers
-    Due to this process we can perform a large number of request scompletly in paralell, which has the potential to provide a large amaount of information in a constant time that is independednt of the number of workers.
+    Another difference between the load balancing pattern and the scatter getter pattern is that unlike in the load balancing pattern where the workers are actually different.
+    Those workers can either be instances of the same application but have different data.
+    They can be different service within our company that provide different functionality, or they can be external services owned by different companies that partner with us.
+    The core principle of the scatter getter pattern is that each reqeust sent to a different worker is entirely independent of the other requests sent to the other workers
+    Due to this process we can perform a large number of request completely in parallel, which has the potential to provide a large amount of information in a constant time that is independent of the number of workers.
 
     \paragraph{Examples}
     %TODO examples
 
     \subsubsection{Considerations}
 
-    Each worker can become unreachable or unavailable at any given moment due to issues in the network or infrastrcture.
+    Each worker can become unreachable or unavailable at any given moment due to issues in the network or infrastructure.
     This can be an even greater issue if ther workers were communicating outside of our organisation.
 
     The second thing to consider is decouplking out dispatcher from the workers.
@@ -2891,7 +3019,7 @@
     Using that pattern, we don't just extend the functionlaity of the core service istance bbut offload all the complexities of the network communication and security to the ambassatdor instance.
 
     \subsection{Anti Corruption Adapter Pattern}
-Applied when dealing with migration problems.
+    Applied when dealing with migration problems.
     Sceanario
     Monolith is outdated, may be uyysing old technolgies or a very complex database scheme and its PAI is also very outdated.
     The development team became too big and the code base became too complex so we decvided to start breaking this monolitic application into microsrevices.
@@ -2980,6 +3108,7 @@ Applied when dealing with migration problems.
     --- It depends
     ---- Main factor in making this decision is figuring out how different or unique the features and the code paths are.
     ----- Important because we may not gain anything from additional granularity.
+
     \paragraph{Further example}
     %TODO further example
 
@@ -2991,10 +3120,11 @@ Applied when dealing with migration problems.
     ----- Example we can use is the user agent header which can tell us what type of device or platform the request is coming from.
     Use of this pattern can help extend the functionality of our system to different front ends.
 
+
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
 
     \subsection{Throttling and Rate Limiting Pattern}
-Problems that this pattern helps us address.
+    Problems that this pattern helps us address.
     First problem is the potantial overconsumption of one or multiple resources in out ssytem.
     -- Think API being bombarded at a very high rate with requests.
     This can lead to one of two scenarios.
@@ -3006,20 +3136,20 @@ Problems that this pattern helps us address.
     This scale out could cost us more money then we anticipate.
 
     Regardless if that client had malcious intentions or legitaimate need to call at a high rate we must protect ourselves from such a traffic spike.
-    Another potential risk for overonconsumption is if out ssytem calles external  APIs of other compniaes or of a cloud provider that accidently may go over budget.
+    Another potential risk for overonconsumption is if out ssytem calles external APIs of other compniaes or of a cloud provider that accidently may go over budget.
     -- An example of this is some sort of big data analysis as part of a batch processing job that we run on a fixed scheulde.
     Basically want to avoid a huge bill from over consumption.
 
     In these scenarios we can use the throttling or rate limiting pattern.
     Int his pattern we set a limit on the number of requests that can be made during a period of time.
     Similary in certain situations we can also impose limits on the bandwidth and set a maximum number of megabytes or gigabytes of data that can either be sent oread from out system at a given period of time.
-    This limit, can be set for  period of one second, one minute, one day and so on.
+    This limit, can be set for period of one second, one minute, one day and so on.
 
     Now the sceanario where we are the service providers and need to protect out system from overconsumption is reffered to as server side throttling.
     The other sceanario is client side throttling.
 
     \paragraph{What should we do if the client exceeds the limit we set for them?}
-        Few strategies.
+    Few strategies.
     One is to simply drop reqeusts.
     -- If we use this strategy it is a good practice send back a response with an error code that indicates ths reason why this reqeust was rejected.
     -- In HTTP this is 429 *Too many requests* --- this is communicated to the caller.
@@ -3060,7 +3190,7 @@ Problems that this pattern helps us address.
     The solution depends on the use case and the workload.
 
     \subsection{Retry Pattern}
-Note - If this pattern is not used correctly it can make things worse.
+    Note - If this pattern is not used correctly it can make things worse.
 
     The problem we are dealiong with.
     Ssystem is calling another system through the networrk.
@@ -3075,7 +3205,7 @@ Note - If this pattern is not used correctly it can make things worse.
     First thing we need to do in this sceanario is error categorisation.
     - Need to devide if this error is user error or a ssytem error.
     - Example 403 user is not authorsied to perform or access a particular resrouce
-    -- In this case, we should simply sen the error back to the user with as much information as possible, that help the user with as much information as possible that will help  the user correcting it if applicable.
+    -- In this case, we should simply sen the error back to the user with as much information as possible, that help the user with as much information as possible that will help the user correcting it if applicable.
     - However for internal system errors, we need to try our best to hide the error from the user and attempt to recover from it if possible.
     - One way to recover from an internal system error is by using the retru pattern, we simply retry the same operation by sending the saem reqeust to the remote server.
     ---- Or we can retry the operation by resenfint the reqeust as many time as we want until we get out successful response
@@ -3147,7 +3277,7 @@ Note - If this pattern is not used correctly it can make things worse.
     - Implementation details - shared libraries, ambassadors side car pattern.
 
     \subsection{Circuit Breaker}
-Not all failures are recoverable, short temporary and recoverable. Sending a reqeust again may not be the best solution.
+    Not all failures are recoverable, short temporary and recoverable. Sending a reqeust again may not be the best solution.
     Retry patterns take the opimistic approach.
     The circit breaker takes the pessimistic approach, since the error it handles are more server and long lasting.
     Its assumption is that if they first few reqeusts fialed, then the next reqeust will likely also fail.
@@ -3266,6 +3396,7 @@ Not all failures are recoverable, short temporary and recoverable. Sending a req
     -- Two ways to process message in the dead letter queue
     --- First way is fix an republish those message back to the original queue
     --- The second way was to manually handle them on a case by case basis
+
 
     \section{Deployment and Production Testing Patterns}
 
@@ -3524,48 +3655,6 @@ Not all failures are recoverable, short temporary and recoverable. Sending a req
     \subsubsection{Scalability}
 
     \paragraph{Load Balancing}
-
-    \paragraph{Pipes and filters}
-
-    \paragraph{Scatter and Gather}
-
-    \subsubsection{Microservices specific}
-
-    \paragraph{Execution orchestrator}
-
-    \paragraph{Choreography}
-
-    \subsubsection{Extensibility}
-
-    \paragraph{Sidecar}
-
-    \paragraph{Adapters}
-
-    \paragraph{Frontends for Backends}
-
-    \subsubsection{Availablility, error handling and recovery}
-
-    \paragraph{Rate Limiting}
-
-    \paragraph{Retry Pattern}
-
-    \paragraph{Circuit breaker}
-
-    \paragraph{Dead Letter Queue}
-
-    \subsection{Data intensive applications patterns}
-
-    \subsubsection{Map Reduce}
-
-    \subsubsection{Saga}
-
-    \subsubsection{Transactional Outbox}
-
-    \subsubsection{Materialized View Pattern}
-
-    \subsubsection{CQRS}
-
-    \subsubsection{Event Sourcing}
 
 
     \section{Detailed Design}
