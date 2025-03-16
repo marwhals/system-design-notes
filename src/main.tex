@@ -1745,6 +1745,75 @@ With this architecture we gain a much higher organisational scalabilty since eac
     \section{Migration to microservices architecture}
 
     \subsection{Microservice Boundaries - Core Principles}
+    The sceanario - A sucessful e-commerce company with a monolith.
+    - Just breaking fown a large codde base into an abritary set of microservices and hading each off to a separate team will not necesarily benefit the client
+    - Typical three tier
+    -- Web application takes web requests form users running our front end code in their web browser and mobile apps -- Presentaion tier
+    -- in the data tier we have an internal database storign all of the transactions, prodiucts, reviews and inventory information
+    -- Also have an external payment service that belongs to a third party which handles the billiing
+
+    Monlith was good at the start but now the code base is large and complex.
+    Applicaton binary size is too big and the application requries very expensive hardware and the development team is passed the two pizza rule.
+    -- Lots of inefficientcies
+
+    Could split this into microservices but unsure on how to do the splitting.
+
+    One approach could be to follow the internal logic layers that already exist in the application code base.
+    - Can take the front layer of our code base that handles user requests, security and permission, validation and also services the HTML JavaScript and CSS to the web browser and split that into its own service.
+    --- This service can be maintained by a separate team, and is physically deployed as a separate runtime unit
+    - Could similliary take all the business functionality that handles checkouts, discounts seasonal sales and micrservices and do the same
+    -- Could do the same with the data tier and run that as a separate service as well
+    Intuitively seems like a good idea.
+    - Take advantage of the already existing separation within out application so very little refactoringh is requries
+    This doesn't work very well in practice and doesn't provide much benefit
+    The reason for that is now every new features we develop within the application wil likely require an API change, a business change and a data change.
+    - This now means that every microservice in out system will be involved in every feature requireing careful planning and release coordingation between the different \textbf{teams}
+    - So we will not gain any benegit to organisational scalabitliy using this approach.
+
+    Breaking the monolithic applicatoin into more tiers will not work.
+
+    \subsubsection{First principle}
+    Each microservice needs to be cohesive.
+    Cohesion mean that elements that are tightly related to each other and change together should stay together
+    If all the logic that changes together stays within the boundaries of the same micrservice, each team can truly operate independently.
+
+    \subsubsection{Another approach}
+    Another migration approach based on technology boundaries.
+    Good performance improvements due to more specialised use of different programming languages, tech stacks etc.
+    Problem now is that Support engineers, product managers etc don't know which subteam needs to get tasks.
+    Respobsilbitliies are not clear.
+    The terminolgy of each API is not very clear because we are mixing differnt contexts such as users, products, bank accopunts and so on all in the same API
+    The last microservice, which still has the most busienss logic has too much responsibitily and is still too big.
+    -- It has the potential to be another monolithic application.
+
+    \subsubsection{Second Princple}
+    The single responisbiilty principle.
+    Every microservice should do one thing and do it exceptionally welll.
+    If each microservice follows this principle there is no ambiguity about where a new piece of fuinctioanmmlity need to go and which team needs to own it.
+    It also helps create a very clear an easy to follow API for each micrservice because all the terminology entities or identifiers are bound to a particular context.
+
+    ---> This can potentially lead to interdependencies between services when executing a task.
+
+    \subsubsection{Third Priciple}
+    Microservices should be loosely coupled.
+    Loosely copuled microservice have very little to no interdpendencies.
+    This means that each microservice can performa its functionality with minimal communicatoin with other micrservices.
+    --- Microservice size is generally unimportant
+
+    As long as microservices are cohesive, follow the single responsibitly principle and are loosely coupled with each other, the size doesn't matter.
+    Naturally some services will be bigger and some will be smaller.
+
+    \paragraph{Important Note}
+    Those three principles are important prequisites for a successful microservices architecture.
+    If they are not followed then we will encounter issues sooner or later.
+
+    \subsubsection{Summary}
+    Important principles
+    Each microservice needs to be cohesive, which means all the elements that change together stay together within the boundaries of one microservice
+    Each microservice should follow the single responsibility principle
+    Each microservice should be loosely coupled from all other microservices to minimise runtime communicatoion.
+
+    Also microservices don't have to be small....depends on the functionality.
 
     \subsection{Decomposition of a Monolithic Application To microservces}
 
@@ -1765,6 +1834,7 @@ With this architecture we gain a much higher organisational scalabilty since eac
 
 
     \section{Event driven architecture}
+    %TODO consider skipping or going through for thoroughness
 
     \subsection{Introduction to Event-Driven Architecture}
 
@@ -1773,6 +1843,7 @@ With this architecture we gain a much higher organisational scalabilty since eac
     \subsection{Message delivery semantics In event driven architectureó}
 
     \section{Event driven microservices}
+    %TODO consider skipping or going through for thoroughness
 
     \subsection{Saga Pattern}
 
