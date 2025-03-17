@@ -1816,6 +1816,88 @@ With this architecture we gain a much higher organisational scalabilty since eac
     Also microservices don't have to be small....depends on the functionality.
 
     \subsection{Decomposition of a Monolithic Application To microservces}
+Three methods
+
+    First method to decompose a system into microservices is by business capabilities.
+    In this method we observe and analyse out system from a purely business perspective, a business capability is any copre capability that provides value to the business or its customers.
+    This can include things like revienue, marketing, customer experience and so on.
+    Once we identify those business capabilities, we can dedicate a separate microservice and a team to fully own it.
+    -- There are ways to identify those business capabitieis.
+    -- One way is to run a thought experiement where you descrube the system to a non technical person and try to explain what the system does and what value each capbilties provides.
+%   TODO EXAMPLE? Online Store
+
+    How do we know that those services follow three core principles?
+    - just by looking at the names of the services, we can see if this design fallows the single responsibitliy principle
+        and that's by design beacuse each services is responsible for an entire business capabitliyu.
+    - Can also easily check if each service is cohesive by consiering the changes that need to happen to our system.
+    - Can also verify that those services are not too independent and are loosely coupled by reviewing a few user journeys or use cases.
+
+    Decomposing a monolithic application into microservices.
+    This technique is called the compisiton by domain or sub domain.
+    Unlike the previous that looks at the sytem from the busines side.
+    This way we take the developers point of view of the system.
+    In other words the criteria for setting the boundaries of sub domains is based on the engineers understanding of the system, which is generally more intuitive.
+    IN this method we decompse the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
+
+Those subdomains can be of three types
+    - A domain that represents a core business capbiltiy
+    - A domain which is upporting a business capability
+    - A generic subdomain.
+
+    - A core business capability is a key differentiator of our business from any other competitor in the field.
+    Its a capability that cannot be bought off the shelf or outsourced
+    Its where the best effort and investment is placed.
+    Without it out business doesn't provide any value.
+
+    - A supporting sub domain is still integral to our operation of our business and support the delivery of our core domains.
+    But it is not something that differentiates us from out competitors.
+
+    - A generic sub domain is a capability that is not specific to any business.
+    Many other companies use it and in many cases we could get that component of the shelf.
+
+    This categorsiation of sub domains helps us prioritise the investment into each sub domain.
+    Can also help us figure out where we want to allocate our top and most experienced engineers and where we can save time or costs and get off the shelf existing solutions.
+
+    Once we identify those sub domains we, have a few options.
+    We can dedicate a separate microservice to each sub domain or ifg we set that certain sub domains are too tightly coupled with on another ot arn't cohesive enouugh, we can group several sub domains into one microservice.
+
+    NOTE: These two ways are not the only way to set boundaries of micrserivces.
+    Another method includes the compsition by action on or entities.
+
+    However setting the boundaries by business capbilities or sub domains is the two of the most popular ways to do so.
+
+    Comparison of the two most popular methods.
+    - Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
+    - ON the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
+        When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
+    - The achitecture we get from the decomposition by business capabilities is usually more stable
+    ---- And thats because the core business is ***usually*** (pahahahhahahaha) much more stable than engineering and technology.
+
+    On the flip side, the composing business capabilities requires much better understanding of the business.
+    This means that this process will produce a less intuitive design for engineers that the composition by subdomain
+
+    \subsubsection{Final Notes}
+    Note: There is no one right way to set the boundaries of the microservices. What works now may not work in the future.
+    So the architecture keeps evolving as new features come in and new business capabilities are added.
+    There is also no perfect decomposition to microservices and some friction or coupling is inevitable.
+    The goal of setting the boudaries correctly is to minimise this friction and no completly eliminate it.
+
+    These techniques are not *bulllet prrof*. They are just guidelines/tools that helps arrive at a good architecture.
+    --- It is not a substitute for good engineering judgment and intuition
+
+    To summaries
+    Two popular ways to decompose a monlithic application into microservices
+    - The first is by business capabilities
+    - The second is by sub domains
+    ---- In the second type there are three types of subdomains
+    ------ Core subdomains supporting
+    ------ Ssupporting sub domains
+    ------ Generic subdomains
+
+    Using either of those techniques helped us set the boundaries for microserviecs.
+
+    These will not lead to a flawless migration to microservices, some engineering judgment will be needed for the final design.
+
 
     \subsection{Migration to microservces - steps tips and patterns}
 
