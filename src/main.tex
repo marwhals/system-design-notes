@@ -2175,6 +2175,74 @@
     - More complex join operations and the loss of transaction guarantees
 
     \subsection{The DRY principle in micrservices and shared libraries}
+The DRY principle doesn't always hold true in microservices, particulary in regards to shared libraries.
+
+    Why are shared libraries a problem in microservices.
+    First problem is tight coupling.
+    When multiple microservices depend on the same libary, those changes need to communicated to other teams that own those microservices.
+    Those teams will have to make the appropriate chances in their codebase so they can continue using that library.
+    - Even if they API doesn't change, the microservices will still need to be built, retested and redeployed with every change in the shared library.
+    Additionally a bug or a vulnerability in that shared library can potentially impact all the service that use it, which defeats the puporse of isioplating those microservcies as separate runtime units in the first \textbf{place}
+
+    Another issue when using a shared library is commonly reffered to as dependency hell.
+    Depending on the programming languag or the runtime we may not be able to depend on two different versions of the same libary.
+    - Aiddtionally if we can we are breaking the DRY principle.
+    ----> Since our microservice, now has to load two version of the same libarry where most of the code is identical.
+
+    Another downside is that it also increases the size of our binary and the time to biuld and test it.
+
+    \subsection{Alternatives}
+    First scenario is when business logic is shared across mlutiple microservices.
+    This situation may indicate that we incorrectly set the boundaries between those two microservices.
+    ** A core principle of microservices is the single responsiblity principle.
+    - If we followed the decompisiton by businsess capability or subdomain, it would be unlikely that we would end up in this situation.
+    If we don we may want to consider re-evaluating those boudaries.
+    - One option would be to adjust the boundaries of those two microservices, so only one of them onctains that business logic and the other doesn't.
+
+    Another option is that business logic is cimplex enough is that we can separate it into its own microservice.
+    Another situation is when we need to share common data mondels from communication between two microservices.
+    ----> In this situation having shared libaries is actually a good practice.
+    ----> The reason for that is when it comes to communication between two microservices, we actually want the two teams and codebases to be codepenednet.
+    ----> If tehy APi or data model of once microservice changes to the point that they connot communicate, we actually do want to break the tests as soon as possible.
+    ----> Otherwise if we don't share but duplicate that code, the tests each may pass successfully and no detect the change in the other microservice.
+    ----> So those two services may not be able to comunicate at runtime and we'll only find out about it only in prodcution
+    ----> Another approach to this problem is using code generation tools based on data modesl or \textbf{schemeas}
+    -------> In this case, we have a shared scheme represnting the common data model between the two microservices.
+    -------> Depending on the type of the API language or technolgy we can use the appropriate tool to generate the correpsonding data models and boilerplate code for the communication between the microservices.
+    -------> So long as the code is generated based on a shared interface definition and that generation is perforamed as part of the build and test process, its a very common and safe approach when it comes to other code, such as itility methods that frequently change.
+    -------> Its better to duplicate it accros different microservices instead of trying to reuse it in a share libary.
+    -------> This way, each microservice can have it own more specific implementation of that logic opimised for its own use casse.
+    -------> also makes it easier to migration the entire code base of a microservice to another programming language if we want to.
+
+    If we absolutley don't want to duplicate a particular piece of code, there are two options.
+    ----USe a sidecar pattern
+    -----> this pattern, we package and deploy the shared functionality as a separate process
+    ------> Instead of running it as a separate service, we run this process on the same hosts as the microservice instances.
+    ------> This way we can shre the same functionality acorss mlutople instance of the same microservice and across mulutple instances of different microservices.
+    T he microservice instance can communicate with its co-located sidecar process using standard,well known network protocols.
+    Since the sidecar process and the microservice process are running on the same host, the performance overhead of this communication is relatively smaller that if we ran processing on different hosts.
+    -- On the other hand this overhead is still higher than if we ran that lofica as a shared library inside the microservice process.
+
+    So as the second option, in the rare cases when we have very generic ans table code that rarely changes, such as loggin, retryuing and pattern matching its okay to use shared libariies as long as they don't lead to dependency hell.
+    These libraries should be as self-contained and independent of on another as much as possible, but this should be a last resort.
+
+    NOTE: Inside the code base of each indicitual micorserivce we should still follow the DRY principle as usual.
+    So code duplication within a microservice is unacceptable and we should always extract common logic into a single method class or modules.
+
+    \subsubsection{Data duplication}
+    Duplicate microservice data can seem like a waste of space but sometimes it is necesssary to improve performance, if wee don't want to pay the pricue of sneding a request to another service for data, then we can store a cache of that data inside of our microservices.
+    In microservice architecture, this approach is acceptable as long as two things are considered.
+    - The first is only on eof the microsericvs need to be clear owner and source of truygh for that data.
+    - That means that only one microservice can get, write, update or delete operations to that data and the other microsercvice containing a copy of that data get only read operations.
+    - The second thing to undersatnd, when we duplicate microservice sdata across microservices we can only guarantee *eventual* consistency.
+    **** THis is very important for situations where strict consistency is important, data duplicate shoudl be avoided.
+
+    \subsubsection{Summary}
+    DRY doesn't always apply to microservices
+    Share libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unision as wwll as dependency hell.
+    Alternatives to share libraries, separating complex business logic into a new microserivce using the side care pattern, cod egeneration and duplicating code accorss microservices.
+    Duplicating data and code accorss microservices can be ineveitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
+    ---> Also each microservice needs to remain clear for the ownder for each piece of data.
 
     \subsection{structured autonomy for development teams}
 
