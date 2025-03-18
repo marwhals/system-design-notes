@@ -2305,11 +2305,53 @@ The myth. Each team has full autonomy in choosing their tehcnoilgy stack, tools,
     Another factor is the companies culture.
     ---- Some compnies stick to one langauge, perk of this is they can hire deveopers once and move them between different teams with very little overhead.
 
-
     \subsection{micro frontends architecture pattern}
-
+The monolithic frontend. One team maintains a single frontend while the backend uses microservics. A single team is currently looking after the frontend.
+    This can create a dependency on the frontend team when just one of the microservices wants to make a change cauusing the frontend team to become a bottleneck in the organsiation.
+    The frontend team can also endup developing expertise that belongs to other teams.
+    This leads to tight coupling to the back end team and the alreaddy constrained front end team.
+    
+    The monolitic front end code base has anothe rproblem.
+    As a buinsess grows so does the front end.
+    So the single code base becaomes very large and hard to maintain and reasons about.
+    It also takes longer to test.
+    IF we want to release a new UI feastuere the entier front end needs to be rebuilt, retested and redployed.
+    These are similar problems to a monolithci backend but now in the frontend.
+    
+    To solve this problmem we can use the pattern. Micro-Frontends.
+    
+    in this pattern we split the monolithic web applicaiton into mlutople front end modules an libarres that act as an indepenedent single page applications.
+    The splitting can be done by business capabitliy or domain, just like in the back end.
+    In most cases each page in the web applicaion becomes a micro-frontend, by we can also have serveral micro-frontends visible on the saem page.
+    Each Microfrontend is completly decoupled from the other micro-ffrontends and should know how to mount and unmount itself from the DOM in the browser.
+    Each Microfrontend can also be loading in the browser as a standalone web application for testing purposes.
+    
+    More importantly it is owned by a separate team with full stack capbiltiies and the domaain knowledge to develpo and maintain this Microfrontend.
+    All those micro frontends are then assembled together at run time by a container web application.
+    When the user loads our site on their browser, the role of the continer appliicati is to render common elements like page headers and footers and take care of common functionlity such as authentication and shared libaries and teall each micro-frontend when a where they need to be redered on the page.
+    
+    NOTE: Microfrontend is an architectural pattern not a web fraemwork or library. Many frameworks support it but it is not requried.
+    NOTE: Shared web components vs micro frontends
+    A microfrontend is basically a single page application with very limited vusines functionality,
+    Differnt microfrontends may reuse common UI elements but the two concepts are unrelated.
+    
+    \subsubsection{Benefits}
+    Replace the big comlex monolith with a few small, more manageble code basses. Each for a different Micro-frotnend.
+    Now each team fully owns its domain and technical stack end to end.
+    Each micro front end is much easier and faster to test in isolation since its scope is a lot smaller
+    Each microfrontend has its own CI pipeline an deployment process and each team can release new features on its own schedule.
+    
+    \subsubsection{Best practices}
+    Frist - Ensure that hte CMirofrontends are loaded atr runtime and are not express as compile or bulid time dependencies of the container application
+    Otherwis all we did is just separate the code base logically, but at run time we would still have a monolithic frontend requireing complete redeployment for every new features.
+    Next best practice is to make sure that Microfrontds don't share state and the browser sharing state would be the equivalent of different microservcies shareing a data base which is generally a bad approach.
+    
+    If different microservices need to communicate with each other they can do it using on e of the following ways. Using cusotm ervents, passing callbacks or using the browsers address bar.
+    
+    \subsection{Summary}
+    
+    
     \subsection{API management for micrservices architectureó}
-
 
     \section{Event driven architecture}
     %TODO consider skipping or going through for thoroughness
