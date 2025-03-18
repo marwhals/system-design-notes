@@ -183,6 +183,7 @@
     System Constraints - Limitations and boundaries
     Examples - Time Constraints and Deadlines, Financial Constraints, Staffing Constraints
 
+
     \chapter{Quality attributes in large scale systems}
 
 
@@ -1533,111 +1534,272 @@
     Incorrect scope identification for a service can also cause additional organizational overhead.
     Could lead to duplicated effort.
 
+
     \part{Domain Driven Design}
     %TODO hmmmm consider where to place this in the document -------
     %TODO hmmmm consider which parts to skim.........
+
+
     \chapter{Microservices Architecture}
+
+
     \section{Microservices Architecture}
+
+
     \section{Business and Digital Transformation}
+
+
     \section{A Business Perspective of Microservices}
+
+
     \section{A Technical Perspective of Microservices}
+
+
     \section{Adoption of Microservices Architecture}
 
+
     \chapter{Introduction to Domain Driven Design}
+
+
     \section{Domain, Sub-Domain and Domain Experts}
+
+
     \section{Conceptual Models, Architural Styles}
+
+
     \section{Modelling Techniques and Architectural Styles}
+
+
     \section{Domain Models}
+
+
     \section{Modelling Techniques and Architectural Styles}
+
 
     \chapter{Understanding the Business Domain}
+
+
     \section{Why understand the business}
+
+
     \section{Introduction to Business Model Canvas}
 
+
     \chapter{Domain Driven Design: Strategic Patterns}
+
+
     \section{Introduction to DDD and Patterns}
+
+
     \section{Business Subdomain Types}
+
+
     \section{Understanding the Business Context}
+
+
     \section{Business Domain Language}
+
+
     \section{Strategic Pattern: Ubiquitious Language}
+
+
     \section{Strategic Pattern: Boudned Context}
+
+
     \section{Discovering the Bounded Contexts in a Domain}
 
+
     \chapter{Bounded Context Relationships}
+
+
     \section{Introduction to DDD Integration Patterns}
+
+
     \section{Managinc BC Relationships using Context Maps}
+
+
     \section{Symmetric Relationship Patterns}
+
+
     \section{Asymmetric Relationship Patterns}
+
+
     \section{One to Many relationship patterns}
 
+
     \chapter{Domain Driven Design - Tactical Patterns}
+
+
     \section{Introduction to DDD Tactical Patterns}
+
+
     \section{Entity Object - Pattern}
+
+
     \section{Value Object - Pattern}
+
+
     \section{Aggregate and factory pattern}
+
+
     \section{Model Behaviour: Anemic and Rich Models}
+
+
     \section{Repository Object - Pattern}
+
+
     \section{Domain Service - Pattern}
+
+
     \section{Applicatoin Services - Pattern}
+
+
     \section{Infrastructure Services - Pattern}
 
+
     \chapter{Event Driven Architecture and Domain Events}
+
+
     \section{Introduction to Events in Microservices Architecture}
+
+
     \section{Monolithic and Distributed Communication Patterns}
+
+
     \section{Microservices Interaction Patterns}
+
+
     \section{Event Driven Architecture}
+
+
     \section{Domain Events - Pattern}
+
+
     \section{Integration Events - Pattern}
 
+
     \chapter{Event Storming for creating shared knowledge}
+
+
     \section{Learning Objectives: Discovering the Events in a Domain}
+
+
     \section{Introduction to Event Storming}
+
+
     \section{Elements of Event Storming}
+
+
     \section{Preparing the ES workshop}
+
+
     \section{Conducting the ES workshop}
 
+
     \chapter{Microservices Data Management Patterns}
+
+
     \section{Introduction to Microservices Data Persistence}
+
+
     \section{Monolithic Apps - Shared Persistence Storage}
+
+
     \section{Service Orientated Architecure (SOA)}
+
+
     \section{Separate Database Patter}
+
+
     \section{Brownfield Microservices - Database patterns , options}
+
+
     \section{Shared Database Pattern}
 
 
     \chapter{Microservices DB Performance Management}
+
+
     \section{Need for more Data Patterns}
+
+
     \section{Commands Query Separation (CQS)}
+
+
     \section{Realisation of Commands and Queries}
+
+
     \section{CQRS - Command Query Responsibiltiy Segragation}
+
+
     \section{Data Replication between WRITE-READ sides}
+
+
     \section{Event Sourcing and Event Store consideration}
 
+
     \chapter{Microservices Managing the Data integrity}
+
+
     \section{Introduction to Reliable Messaging}
+
+
     \section{Designing for failure}
 
+
     \chapter{Microservices and Kafka}
+
+
     \section{Use of Kafka in Microservices}
+
+
     \section{Kafka Overview}
+
+
     \section{Kafka Concepts}
+
+
     \section{Kafka vs AMQP (Rabbit MQ)}
 
+
     \chapter{Managing Distributed Transactions with SAGA}
+
+
     \section{Distrubuted Transactions with SAGA}
+
+
     \section{SAGA Pattern for distributed transactions}
+
+
     \section{SAGA Choreography vs Orchestration}
+
+
     \section{SAGA Implementation Considerations}
 
+
     \chapter{Microservices and API}
+
+
     \section{Microservices - API Realisation}
+
+
     \section{introduction to REST API}
+
+
     \section{REST API Resources and Design COnstriaints}
+
+
     \section{API Management}
+
+
     \section{Introduction to GraphQL}
+
+
     \section{GraphQL Schema Definition}
 
+
     \chapter{Microservices in depth}
+
 
     \section{Introduction}
 
@@ -1682,7 +1844,7 @@
     --------Comment - Problem has been stated / staged
 
     \subsection{Microservice Architecture - Benfits and Challenges}
-With this architecture we gain a much higher organisational scalabilty since each service contains only a subset of the overall functionality, each service's code base is much smaller.
+    With this architecture we gain a much higher organisational scalabilty since each service contains only a subset of the overall functionality, each service's code base is much smaller.
     --- Allows each developer to load their code up in their IDE much fasteeerrrrrrrr
     --- Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
     --- Testing and reasoning about each service in isolation becomes much easier becaise there is much less logic to understand run and test.
@@ -1707,7 +1869,7 @@ With this architecture we gain a much higher organisational scalabilty since eac
     ---- Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
     -- Beside the network itself, the nature of distributed system is that each component is inherently unreliable
 
-    For instance, a reqeust from one  service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenence from a testing perspective.
+    For instance, a reqeust from one service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenence from a testing perspective.
     We also now have testing challenges.
     Testing each microservice in isolation has became easier, faster.
     There is no guarantee that they will work when they have all been put together as a whole.
@@ -1724,14 +1886,14 @@ With this architecture we gain a much higher organisational scalabilty since eac
     ---- If every change in a system requires careful coordination between different teams then we are not better off that what we were in a monolithic architecture
     ---- Similarly if every team uses a different tech stack.
     ---- Tools and practices we may have a lot of duplicated efforts and confusion when looking at code from other teams.
-    
+
     Without careful consideration we can end up with more challenges that what we would get with a monolith.
     -- This is some times referred to as a distributed monolith or a big ball of mud
 
     \subsubsection{Use other companies experiences}
     Many companies share findings from actually implementing microservices. Mistakes and successes.
     Following industry proven principles the benefits of microservices can outweigh the organisational complexity and overhead.
-    
+
     \subsubsection{Summary}
     Benefits of microservices architecture
     - Higher organisational scalability due to the smaller code base of each microservice
@@ -1741,6 +1903,7 @@ With this architecture we gain a much higher organisational scalabilty since eac
     - Additional complexities and overhead
     - Unpredictability of running a distributed system with unreliable components on an unreliable network.
     - The risk of decreased organisational scalability if we do not set appropriate boundaries between microservices and their teams.
+
 
     \section{Migration to microservices architecture}
 
@@ -1816,7 +1979,7 @@ With this architecture we gain a much higher organisational scalabilty since eac
     Also microservices don't have to be small....depends on the functionality.
 
     \subsection{Decomposition of a Monolithic Application To microservces}
-Three methods
+    Three methods
 
     First method to decompose a system into microservices is by business capabilities.
     In this method we observe and analyse out system from a purely business perspective, a business capability is any copre capability that provides value to the business or its customers.
@@ -1828,7 +1991,7 @@ Three methods
 
     How do we know that those services follow three core principles?
     - just by looking at the names of the services, we can see if this design fallows the single responsibitliy principle
-        and that's by design beacuse each services is responsible for an entire business capabitliyu.
+    and that's by design beacuse each services is responsible for an entire business capabitliyu.
     - Can also easily check if each service is cohesive by consiering the changes that need to happen to our system.
     - Can also verify that those services are not too independent and are loosely coupled by reviewing a few user journeys or use cases.
 
@@ -1839,7 +2002,7 @@ Three methods
     In other words the criteria for setting the boundaries of sub domains is based on the engineers understanding of the system, which is generally more intuitive.
     IN this method we decompse the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
 
-Those subdomains can be of three types
+    Those subdomains can be of three types
     - A domain that represents a core business capbiltiy
     - A domain which is upporting a business capability
     - A generic subdomain.
@@ -1869,7 +2032,7 @@ Those subdomains can be of three types
     Comparison of the two most popular methods.
     - Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
     - ON the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
-        When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
+    When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
     - The achitecture we get from the decomposition by business capabilities is usually more stable
     ---- And thats because the core business is ***usually*** (pahahahhahahaha) much more stable than engineering and technology.
 
@@ -1898,8 +2061,81 @@ Those subdomains can be of three types
 
     These will not lead to a flawless migration to microservices, some engineering judgment will be needed for the final design.
 
-
     \subsection{Migration to microservces - steps tips and patterns}
+    Common approach is big bang approach.
+    In this approach the team maps out the desired boundaries for the future microservices architecture.
+    Then try and get management on board to stop any development of new features and focus on the migration.
+    In theory a good idea if the entire team fully focuses on the migration and doesn't get distracted by adding new features. They should be able to finish much faster.
+    That is in theory.
+    ----> This approach is actually the worst in terms of productiviy and impact on the business.
+    ----> Why?
+    First of all having too many developers working on the same project, which in this case is the refactoring of the monolith into microservices is a bad idea.
+    Note: We mainly want to migration to microserivces because out team already has productivity and communication issues, which is what we call organisational scalability.
+    --> Having too many cooks in the kitchen will create alot of friction.....
+    --> The second reason is estimating the effort for such big project is very hard.
+    ---> Just like in the case of many big and ambnigious projects, we often encoutner technical problems we didn't forsee
+    ---> If management was promised a project would be done in four months and its not finished five months later the amangement will start getting nervous.
+    ----> This puts the entire process in danger of abandonment
+    --> To minimise additional time loss, finally sopping any development of new feature for many months, can be detrimiental to the business.
+    --> Product managers may get bored and have no way to get promoted, which in turn may cause them to leave the company.
+    --> Salespeople have nothing to sell or pitch to clients and users who don't care about the internal architecture may start thinking that out business is in trouble or our company is unwilling to improve their experience.
+
+    The better approach is incremental and continuous.
+    In this approach, we identify the components within our code base that can benegit the most from migrating to seprate microservices.
+    - The best candidates for the migration ranked by the benefit we get from migrating them are the following areas with the most development and frequent changes.
+    ---- Components that have high scalability requirements that cannot be met as long as they are part of the big monlithic application
+    ---- Lastly, the components with very little technical debt and good logical separation that fits the scope of a microservice.
+    ---- We prefer to migrate code with the most development because migrating code that noboody touches doesn't really provide that much value because it isn't the source of any problem.
+    ---- ON the other hand, the logic that is constantly evlovling is the biggest source of merge conflicts.
+    ------> It is also the biggest contributor to releases of our entire monolithic application.
+    ------> So if we separate it into a micrservice, those changes will not require us to redploy a new version of out code that didn't change.
+    ------> Separating those parts of the code into a separate microservice wil help us disentable its business logic from the rest of the application, making it much easier to reason about and less likely to introduce a bug.
+    -----> once we migrate that part of the code into a microservice, we identify the next candidate and we keep going continiuous until we reach a point where the opriginal monlith is gone.
+    -----> OR whats left in the monolith never changes, so there is no point in touching it further.
+
+    This incremental approach has several important benefits.
+    First, we don't have to set hard deadlinnes to complete the migration, even if it take a year or longer to reach the final point.
+    - We are constaintly making visibnle and measureable progress
+    - Our business is also no disripted and even if the migration of one part of our code exceeds the estimates, it will be in the order of days ro weeks and not months or years.
+
+    How to prepare for a migration
+    - After identifying the componenet or the components we want to migrate, *******WE MUST ENSURE WE HAVE GOOD TEST COVERAGE****************.
+    ----> ***This step is critical because with good code coverage we have the confidence that we did not break any functionality during our refactroign.
+    ----> Otherwise the entire migration may get delayed if things start breaking.
+    ----> Once we have good test coverage, its important to define a clear well thought out API for the compnoent we plan to migrate and in the last step we also want to isolate the component by removeing any interdependenceies to the rest of the application.
+
+    How to perform the actual migration
+    ---> Use the Strangler Fig pattern
+    ---> The strangler fig pattern introduced by Martin Fowler.... is inspired by a plant that starts as a small vine growing on top and alongside an existing old tree.
+    ----> And then over time, it spreads and grows, comletely consuming the odl tree, taking its place.
+    ----> The idea behind this pattern is first to introduce the proxy in front of the monolithic legacy application that simply allows reqeusts to pass through.
+    ----> The proxy is commonly called the Strangler facade and is typically implemented using an *API gateway*
+
+    API Gateway reminder: An off the shelf open source or cloud based component that routes reqeusts based on the API they are intended for.
+    --> Once the newly created microservices has been thoroughly tested and deployed we divert the traffic for that API from the monolithic application andd send it to the newly created microservice isntead.
+    --> This change ahppens completly transparently to the suers and minimises the risk of issues during the migration.
+    --> After monitoring the performance and the functionality of the new microservice for some time, we can remove the old component with the same functionality inside the monlithic application.
+    --> Then we repeat the same steaps with new microservice until we're either left with an empty old application
+    -----> or with a legacy applicatoin to support old clients.
+
+    \subsubsection{Conclusion}
+    Final tip for a smooth bug free migration whe nmigrating an old monolithic application to a new and modern microservice architecture.
+    ----> Standard dev------ probably would like to try new languages and technolgoies immiediately
+    However the best approach while migrating to a new architectrue, it to keep the code and the tech stack unchanged as much as possible.
+    The reason for that is that every additional change we make is a potential source for a bug and the migration itself is already complext and risky enough.
+    --- We *do not* want to add even more risk factors to the process.
+
+    Once the migration is complete and the new microservice is running and stable, we can easily start refactoring it to use newer technologies if necessary.
+
+    \subsubsection{Summary}
+    How to identify the components that can be the best condates for migration
+    --- Those candidates includeded areas that changed the most frequently, require the higher scalability or have the least amount of technical debt.
+
+    Preparing and executing the migration,
+    which involved adding test coverage,
+    defining the API,
+    isolating the components from the rest of the application and finally using the strangler fig pattern to chip out the different parts of
+    the monolith and migrate them into separately deployed microservices and managed microservices.
 
 
     \section{Principles and Best Practices}
@@ -1924,6 +2160,7 @@ Those subdomains can be of three types
 
     \subsection{Message delivery semantics In event driven architectureó}
 
+
     \section{Event driven microservices}
     %TODO consider skipping or going through for thoroughness
 
@@ -1932,6 +2169,7 @@ Those subdomains can be of three types
     \subsection{CQRS Pattern}
 
     \subsection{Event sourcing pattern}
+
 
     \section{Testing Microservices and Event-Driven Architecture}
 
