@@ -2352,6 +2352,71 @@ The monolithic frontend. One team maintains a single frontend while the backend 
     
     
     \subsection{API management for micrservices architectureó}
+Problems we are trying to solve.
+
+    We have dozens of APIs enpoints exposed by different microservice that are hard coded across many frontenssd and client SDKs
+    This tightly couples the client side code to the internal implementatoin of our system.
+    Another problem is that different microservices may expiose their API to different customers.
+
+    While internally we may do our best to follow specific guidelines, it is not always possiible to do this with external APIs
+    For instance, in the saem service we may have to expose one type of API for a partner company that only supports some old API techniolgy but then we have to expose the saem API functionality to two other comapnies that support newer but different API technicalogies.
+    Aditionally we may have different versions of the same PAI for different tieers fo clients with different apabilities based on their subsciprtions level.
+
+    This Junlgle of APIs can becaome hard to manage and reason about.
+    Another problem is controling and monitorign how each client or device interacts with out system.
+    Finally a lot of boiler plate code such as authorisation, rate limiting etc has to be implmeneted in each microservice.
+
+    This can lead to a lot of effort, duplication and wastes a lot of time for each team that could instead focus on somethign else.
+
+    So to decouple out client side from the internal architecture and make API management easier we can use the API gateway pattern.
+
+    The API gateway pattern is particulalry useful for microservices archtiecture and is ued by many companies.
+    This pattern places a component called API gatewasy at the entry to our sytem and is repnobsble for all the API management.
+
+    In the simplest schenario, the API gateway simply routes request for given API endpoint to the relevant microservice that handles it.
+In a lot of cases it can do more than just routing reqeusts.
+    Can also performan translation between data formats when that reciever and sender microservices can suppoort.
+    This can make the API definition and ma agement much easier and cleaner for each microservice because they don't have to care about the different clients an their specific limitations.
+    They can all follow one standard and utilise the same infrastructrue in addition to routing the reqeust to the corresponding microservice.
+    The API gateway can also perform traffic management and throtling.
+    **Can also delegate auithorisation and TLS termination to the API gateway.
+    So microservice don't have to worry about it and can focus on buysines logic implmentation.
+    Also since all the traffic from our front ends is going through the API gateway, we can easily monitor it.
+    --> This enable use to detect issues in particular APis or analyse the behaviour of our clients and partner companies.
+
+    Finally, certain implementations of an API gate wway can even allow fainining out a given request to multople services and aggregating the result before sending it back to the client.
+    This is a critical feature for multiple reasons.
+    First reason is that it even further decouples the clients from out internal implementations.
+    Example, internally we can refactor those service sby either combining serveral microservice into one or splitting an existing microservice into multiple microservices.
+    And all of those implementation details will remain completly transparent to the suer.
+
+    This feature is also *******very important********* for mobile devices and IOT since each network reqeust of their end directly affects their battery life.
+
+    \subsubsection{Load Balancer vs API Gateway in microservices}
+    Both reoute incoming network reqeusts from a client to a single destination.
+    Similarties end \textbf{there}
+
+    Main difference is the purpose.
+    The role of a load balancer to balancer traffic on a group of servers.
+    Those servers usually run identical copies of the same application in the contexct of microservices.
+    We typically have a load balancer in front of each microservcie where each microservice is deploiyed as a group of identical instances.
+
+    ON the other hand, the pupose of the API gateway is to be out systems public facing interface.
+    Its role is to route reqeusts, not to servers, but to services based on different cretiteia.
+
+    Besindes the difference in their piurpose there is also a difference in their funtionality.
+
+    The load balancer aims to be as simple as possible to to reduce the performance overhead.
+    It also usually performs health checks on its backend servers to ensure it doesn't route reqeusts to unresponsive servers.
+    Also offerd different load balancing algorithms for different workloads.
+
+    On the other hand, the API gateway is expected to provide many other features such as throttling, monitoring, API versioning and management protocol and data fromal translation and so one.
+    Since those components have different purposes, they're usually used together in micorservices architecture.
+
+    \subsubsection{Managing APIs in Microservices}
+    Using the API gateway service at the entry point to ours sytem allows for the routing of reqeusts to different microservices.
+    Additionally, it provides us with many features like throttoling clients that send us to many reqeusts, handling authrosiation and TLS termination protocol and data translation monitoring in aditional to other.
+    Not the same thing as a load balancer incase I forget or (----------------).....they server different purposes.
 
     \section{Event driven architecture}
     %TODO consider skipping or going through for thoroughness
