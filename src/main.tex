@@ -2141,6 +2141,38 @@
     \section{Principles and Best Practices}
 
     \subsection{Databases in microservice architecture}
+    Principle - database per microservice.
+    -- Otherwise tight coupling between services can occur
+    In this principle, each microservice team fully owns it data and does not expose it directly to any other service, ---even at the cost of additional latency.
+    Whenever a given service requires data from another service, the reqeust has to go through the target service API.
+    Additionally each service needs to abstract the actual database technology or strcuture at the API level.
+    This way the team owning that micrservice decides to change the database, technology or scheme, that change will be completely transparaent to the consumers of that API
+    Additionally if the changes also require some changes in its API, ew can always offer two versionsxs of the API for few weeks or even months.
+    This allows other teams enough time to make their chagnes and update to the new API withouth the need for any coordination.
+
+    \subsubsection{Downsides}
+    Added latency. Sengin a network request to another service, parsing the reqeust, querying the database, sending it back and parsing it back defintely adds a performance overhead compared to a simple query agains the database directly.
+    - When this performance overhead becomes and issue it is okay to cahce or even store some of the data that belong to another microservice in the datrabase that belongs to the microservice that needs that data.
+    - However it is important to ensure that the source of truth remains in only once microservice, if we do cache or store data that belongs to a different microservice, we lose strict consistency and have to settle for eventual consistency.
+    ---- And thats because th edata we store locally may be stale until we get the new data from the source of truth.
+    ---- The next downside is the loss of the abiltiy to join data from mlutiple tables when all the data was repsented as tables within the same database.
+    ---- We could easily perform the join operations based on a common key or column
+    ---- When we splut that data across different databases, some which may not even be relationawl databases
+    ------ No longer can we perform those join operations
+    The only way to achieve the same functionality would be to pull data from two different databases, then transform the data so both objects are represented in the saem format and the perform that join programmatically.
+    - The next downside is the loss of transaction guarantees.
+    - Going back to single database, we could midufy rows in mlutiple tables as part of a single transaction and guarantee that the change to all those tables would be atomic.
+    - Performing a distrbuted transactoin across multiple services is very hard
+    ----> Even though it is theoretically possble in practice it is almost never used.
+
+    \subsection{Summary}
+    Motivations for a single database per microservice
+    - Sharing databases causes tight coupling beetween services, code bases and teams causing a lot of coordination overhead.
+    This overhead is elminated when each micrservice owns its own data and exposes it only through an abstraction API
+
+    Challenges and drawbascks
+    - Wors performance i.e latency
+    - More complex join operations and the loss of transaction guarantees
 
     \subsection{The DRY principle in micrservices and shared libraries}
 
