@@ -2239,12 +2239,72 @@ The DRY principle doesn't always hold true in microservices, particulary in rega
 
     \subsubsection{Summary}
     DRY doesn't always apply to microservices
-    Share libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unision as wwll as dependency hell.
-    Alternatives to share libraries, separating complex business logic into a new microserivce using the side care pattern, cod egeneration and duplicating code accorss microservices.
-    Duplicating data and code accorss microservices can be ineveitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
+    Share libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unison as wwll as dependency hell.
+    Alternatives to share libraries, separating complex business logic into a new microservice using the side care pattern, cod egeneration and duplicating code accorss microservices.
+    Duplicating data and code accorss microservices can be inevitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
     ---> Also each microservice needs to remain clear for the ownder for each piece of data.
 
     \subsection{structured autonomy for development teams}
+The myth. Each team has full autonomy in choosing their tehcnoilgy stack, tools, databases, APIs and fraemworks.
+    ---> Major pitfall
+    First reasons is the upfront cost of infrastructure
+    Consider after a monoltih to microservices migration each team has to pay that cost again and duplicate that saem effort for their code base and ecosystem.
+    To make things worse mainting all the infrastrcuture is an ongoing effort.
+
+    So if we have a dedicated DevOps, QA, etc those engineers will have to migration all the infrastrcutre of hundreds of microservceis where each on is entietly different.
+    Those teams will quickly get overwhelmed and have to hire more people to keep up with the jungle of technoglogies.
+    Besides setup and maintanece cost there is also a cost associated with learning and becoming prodcutive using all those tools.
+    Any new developer at a given team needs to read through the documentatoin, leadn and memeorise all their best practices and get used to followign them in their daily work.
+    --> What if they need to work on another teams code base to make a small change, see how they setup a particular integration tests or what their configuration looks like.
+    --> It would be a huge learnig curve and would not scala in a large organisation.
+    --> There is also the pobrlme of non uniforma APIs
+    In the end all these microservices need to come together as wonce system and coimmunicate with each other to accomplish a common goal in an easy and performance way.
+    Code what woudl happen if every team that owns a microservice could deffine their own API in their own style, following thei own best practices.
+    ---> Fronteend engineer would need to learn the API of each team and integrate with it. Call different enfpoints with different styles, naming convenntations etc. Leads to huge hard to maintian mess.
+    Basically, this free reign will make engineer have to read a bunch of documentation to ensure that their work adheres to best practices.
+
+    -> By allowing each team full autonomy we are acutally makign things a lot worse and introducing a lost of overhead.
+    Should really aim for structured autonomy
+    Each team is autonomous byt only within certain boundaries which can be grouped into three tiers.
+
+    Tier one - most restruivture and describres areas that should not be under each teams jusrisdiction.
+    Instead those areas should uniform aacross the entier company.
+    That includes infrastructre monitoign and alerting, as well as continuous integration and continuous deliver technologies and scripts.
+    This way we can invest a lot of effort into adopting or building this infrastcture from scrasch.
+    That effort is going to be ammortized acrosss the entire organsiation making this investment cost effective.
+
+    Another reas that should be uniform across the company is guidelines and best practrices for defining public and internal APIs
+    This should be obvisou because external cliesnts don't care that they're sengin requests that end up in different microservices inside our system and also interanlly.
+    It makes integration and communication between different microservcies belonging to different teams very easy.
+
+    The final area that should be standard and unifgorma acorss all the micrtoservices is ecurity and data compliance processes.
+    If one microservice becomes hacked then the entire system becaomes vulnerable. If one of out microservices viaolates some local privacy or data retention policiy our entire organisation will be held accountable.
+    ----> Nobody will care that it was the fault of a single small microservice.
+
+    The second tier allows some freedom, but within some boundareis.
+    This includes choosing a programming language and database technolgoies.
+    Each runtime and data storeage solution is optimal for a different use case.
+    However the set of approved programming languages and database technologies should be restctied.
+    This is to prvent a complete jungle of technolgies which can happen if every team *can choose the latest and most fashionable programming langiage for their microservice* hahahahhaa
+    It also take a lot of time for each company to develop expertise in mananging configuring and running each type of runtime and database in prodcution.
+
+    Most big companies use no more thatn a hadnful of programming langauges across hundreds of microservices.
+
+    The last tier give each team complete autonomy.
+    This includes, the release process, schedul and frequecy.
+    This way each team can work entirely independently from other teams and release new feature based on their workload priorites and requirements and develop their own custom scruipt and tools specifically for their need to make thei local development and testing more efficient.
+
+    Also each team should fully own its own documentation and onboarding process for new developers.
+    Its imnportant to callout that those are genealr guidelines and best practices and the actual bouundaries of those three tiers differ slightly in different companies.
+
+    One factor is ths size and influence of DevOps or SRE teams.
+    Typically companies with more dominant DevOps or SRE teams lean more towards common standards, which make thei life managing the system easier.
+    Anotehr factor is the sneiority od developerd hired in the company.
+    Generally, the more senior developers are the more freedom they prefer in setting up or building their own infrastcuture.
+
+    Another factor is the companies culture.
+    ---- Some compnies stick to one langauge, perk of this is they can hire deveopers once and move them between different teams with very little overhead.
+
 
     \subsection{micro frontends architecture pattern}
 
