@@ -382,16 +382,17 @@
 
     \chapter{API Design}
 
-
-    \section{Motivations} - After gathering requirements,the system can be thought of as a black box whose behaviour has a well-designed interface.
-    An interface is a contract between the engineers who implement the system and the client applications which use the system.
+    \section{Motivations} - After gathering requirements, the system can be thought of as a black box whose behaviour has a well-designed interface.
+    An interface is a contract between the engineers who implement the system and the client applications which uses the system.
     Such an interface is a called an API since it is going to be called by other applications remotely through a network.
-    Not to be confused with programming library.
-    Applications calling the Api could be front-end clients like mobiles and web browsers, they can be other backend systems including those from other companies.
+    Not to be confused with a programming library.
+    Applications calling the Api could be front-end clients like mobiles and web browsers or they can be other backend systems including those from other companies.
     After internal design each component will be called by other applications within our system.
 
     \subsection{Categories of APIs}
+
     There are generally three categories of APIs
+
     \begin{itemize}
         \item Public APIs
         \item Private or Internal APIs
@@ -414,61 +415,58 @@
     This can be in the form of buying a product or subscribing to a service.
 
     \subsection{Benefits of APIs}
-    Benefits of APIs is that a client can enhance their business by using the system without knowing anything about the internal design or implementation.
-    Once an API is defined and exposed clients don't have to wait until the system has been finished implementing.
-    Clients can start making progres towards their integration goals.
-    Once exposed, it is easier to design and architect the internal structure or out system because the API effectively defines the endpoints/the different routes in the system the user can use.
+    The benefits of APIs is that a client can enhance their business by using the system without knowing anything about the internal design or implementation.
+    Once an API is defined and exposed clients don't have to wait until the systems implementation has been finished.
+    Clients can start making immediate progress towards their integration goals.
+    Once exposed, it is easier to design and architect the internal structure or our system because the API effectively defines the endpoints/the different routes in the system the users can use.
 
     \subsection{Desigining an API well}
     Encapsulate the internal design and implementation and abstract it away from the users/developers that want to use the system.
-    Otherwise, it defeats the point of the API.
-    An API needs to be completely decoupled from internal design an implementation to allow for design to change in the future, without breaking contract with the client.
-    API needs to be easy to use and easy to understand, and impossible/hard to misuse on purpose.
+    Otherwise, it defeats the point of the API (I.e abstraction).
+    An API needs to be completely decoupled from internal design and implementation inorder to allow for design to change in the future; without breaking contract with the client.
+    The API needs to be easy to use and easy to understand, and impossible/hard to misuse on purpose.
 
-    \paragraph{}
-    This can be achieved by
-    Having only one way to get certain data or perform a task rather than many.
-    Having descriptive names for actions and resources, exposing only the information that the users needs and not more than that.
+    \subsubsection{How to achieve this}
+    This can be achieved by having only one way to get certain data or perform a task rather than having many alternatives.
+    Having descriptive names for actions and resources, exposing only the information that the users need and no more than that.
     Keep things consistent across our API will make using it a lot easier.
-    Another good practice is keeping operations idempotent as much as possible.
-    i.e an operation that doesn't have any additional effect on the result if its performed more than once.
-    Idempotency is preferred since the API is going to be used over the network.
-    Messages can be lost or a critical component inside out system may go down and the message was not recieved.
-    Client has no idea but can resend the request with no change of effect.
-    I.e same request is not processed twice.
+    Another good practice is keeping operations idempotent as where possible.
+    I.e an operation that doesn't have any additional effect on the result, if it is performed more than once.
+    Idempotency is preferred since the API is going to be used over the network (i.e the network can be unreliable).
+    Messages can be lost or a critical component inside our system may go down and the message may or may not have been received.
+    The client or user will have no idea but can resend the request with no change of effect.
+    I.e same request will not be processed twice (i.e double transaction etc).
 
-    \paragraph{}
-    Another good practice is pagination.
+    \subsubsection{Good Practice: Pagination}
     Used when dealing with a large payload or dataset forming part of the reqeust.
-    Without it most clients will not be able to handle such a large payload or dataset and this would result in poor user experience.
-    Pagination allows for the client to request only a small segment of the response by specifying the maximum size of each response from out system.
+    Without it most clients will not be able to handle such a large payload or dataset and this would result in a poor user experience.
+    Pagination allows for the client to request only a small segment of the response by specifying the maximum size of each response from our system
     and an offset within the overall dataset.
-    To receive the next segment, increase the offset.
+    To receive the next segment increase the offset.
 
-    \paragraph{}
-    Another good practice relates to operations that take a long time to complete.
-    Asynchronous APIs.
-    Client application receives a response immediately without having to wait for the final result.
-    The response usually includes some kind of identifier that allows the client application to track the progress and status of an operation and eventually receive the final result.
+    \subsubsection{Good Practice: Asynchronous APIs}
+    Another good practice for operations that take a long time to complete are asynchronous APIs.
+    The Client application receives a response immediately without having to wait for the final result.
+    The response usually includes some kind of identifier that allows the client application to track the progress
+    and status of an operation and eventually receive the final result.
 
-    \paragraph{}
-    Very important best practice.
+    \subsubsection{Very Important Practice: Explicit Versioning}
     Explicitly versioning an API so that the client knows which API version they are currently using.
-    Motivation behind versioning APIs is to allow for non-backward compatible changes, thus allow for two versions of an API.
-    Deprecate the old once gradually with good communication to the clients who are still using it.
+    The motivation behind versioning APIs is to allow for non-backward compatible changes, thus allowing for two versions of "the same" API\@.
+    Meanwhile we can deprecate the old once gradually with good communication to the clients who are still using it.
 
-    \paragraph{Note}
+    \section{API Best Practices}
     APIs can be defined in any way but some best practices have emerged.
 
 
-    \section{Remote Procedure Calls - RPC}
+    \subsection{Remote Procedure Calls - RPC}
     Ability to call a client application to execute a sub routine on a remote server.
     Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
     This feature is called local transparency.
     Remote or local looks the same.
     Some RPC frameworks allow for multiple programming languages so applications written in different languages can communicate.
 
-    \subsection{How it works}
+    \subsubsection{RPC: How it works}
     API as well as the data types that are used in the API methods are developed using a special interface description language.
     This is framework / implementation specific.
     Effectively a schema or the communication between a remote client and a server in the system.
@@ -504,12 +502,12 @@
 
     Using RPC, client and server is not restricted to programming language.
 
-    \subsection{Pros}
+    \subsection{RPC: Pros}
     CConvenient - generate stubs which look just like local methods on objects.
     Communication details, and data passing details are abstracted away from the developers.
     Any failures result in just exception or error depending on the programming language just like normal methods.
 
-    \subsection{Cons}
+    \subsection{RPC: Cons}
     RPC methods are less reliable and are slower.
     This can lead to performance issues.
     Client will not know how long Procedure calls will take.
@@ -517,7 +515,7 @@
     \subsection{Considerations}
     API design will need to consider this.
     A solution is to use asynchronous versions for slow methods which is a best practice.
-    Another consideration is idempotency in the case that a message is lost/ slow
+    Another consideration is idempotency in the case that a message is lost or slow.
 
     This is generally used when backend systems are communicated to one another but frontend systems can be considered.
     RPC is a good style when providing an API to a different company vs an end user or a webpage.
@@ -525,16 +523,15 @@
 
     The RPC API style is also a good way to abstract away the network communication and focus on the actions the client wants to perform on the server.
 
-    This would be a bad fit if we want to use browser cookies or headers. There are other styles for this.
+    This would be a bad fit if we want to use browser cookies or headers.
+    There are other styles for this.
     RPC revolved more around actions rather than data and resources (Think CRUD applications).
-
 
     \begin{itemize}
         \item gRPC
         \item Apache Thrift
         \item Java Remote Method Invocation (RMI)
     \end{itemize}
-
 
     \section{Representational State Transfer - REST}
     Set of architectural constraints and best practice for web APIs. It is just a style allowing / making it easier to achieve / improve quality attributes.
@@ -607,9 +604,21 @@
         \item - Mapping the entities to URIs and organising the hierarchy of resources based on their relationships
         \item - Choose a representation for each resource. Can use JSON for this and include links for HATEOS
         \item - Final step - assign HTTP methods to actions.
-        \item
     \end{itemize}
 
+    \section{REST API Design in Depth}
+
+    \subsection{Setting the stage}
+    \subsection{Evolution of RESTful Services}
+    \subsection{REST API Architectural Constraints}
+    \subsection{Designing REST API}
+    \subsection{REST API Error Handling Patterns}
+    \subsection{REST API Handling Change - Versioning Patterns}
+    \subsection{REST API Cache Control Patterns}
+    \subsection{REST API Response Data Handling Patterns}
+    \subsection{REST API Security}
+    \subsection{REST API Specifications using Swagger 2.0 / OAI}
+    \subsection{API Management}
 
     \section{GraphQL}
 
