@@ -382,6 +382,7 @@
 
     \chapter{API Design}
 
+
     \section{Motivations} - After gathering requirements, the system can be thought of as a black box whose behaviour has a well-designed interface.
     An interface is a contract between the engineers who implement the system and the client applications which uses the system.
     Such an interface is a called an API since it is going to be called by other applications remotely through a network.
@@ -455,9 +456,9 @@
     The motivation behind versioning APIs is to allow for non-backward compatible changes, thus allowing for two versions of "the same" API\@.
     Meanwhile we can deprecate the old once gradually with good communication to the clients who are still using it.
 
+
     \section{API Best Practices}
     APIs can be defined in any way but some best practices have emerged.
-
 
     \subsection{Remote Procedure Calls - RPC}
     Ability to call a client application to execute a sub routine on a remote server.
@@ -533,16 +534,17 @@
         \item Java Remote Method Invocation (RMI)
     \end{itemize}
 
+
     \section{Representational State Transfer - REST}
     Set of architectural constraints and best practice for web APIs. It is just a style allowing / making it easier to achieve / improve quality attributes.
     A RESTful API meets a certain traits.
     More resource orientated.
-    Encapsulates the different entities in a system and allows for the manipulatoin of those resources through only a small number of methods.
-    In a REST api a client requests a named resource and the server responds with the current state of that resource.
+    Encapsulates the different entities in a system and allows for the manipulation of those resources through only a small number of methods.
+    In a REST api, a client requests a named resource and the server responds with the current state of that resource.
     Usually done using HTTP. The resource can be implemented in a completely different way, only a representation of the resource is sent.
     Resource is just an abstraction.
     Interface is more dynamic, actions are not statically defined like in RPC.
-    This is through a concept called HATEOAS - hypermedia as the engineer of the application state.
+    This is through a concept called HATEOAS - hypermedia as the engine of the application state.
     This is achieved by accompanying a state representation reasoner to the client with hyper media links.
     The client can follow these links and progress its internal state.
 
@@ -577,7 +579,7 @@
     Creating, Updating, Deleting and getting the current state.
     When the resource is a collection resource, getting its state usually means getting a list of its sub-resources.
 
-    Since RESTapis are commonly implemented using HTTP the operations are mapped to HTTP methods as follows.
+    Since REST APIs are commonly implemented using HTTP the operations are mapped to HTTP methods as follows.
 
     \begin{itemize}
         \item POST - Create an existing resource.
@@ -586,7 +588,7 @@
         \item GET - Get the state of an existing resource.
     \end{itemize}
 
-    Additional can be defined but the situation is un common.
+    Additional can be defined but the situation is uncommon.
 
     \subsection{HTTP Semantics}
     Guarantees from HTTP semantics.
@@ -606,28 +608,371 @@
         \item - Final step - assign HTTP methods to actions.
     \end{itemize}
 
+
     \section{REST API Design in Depth}
+    %TODO combine notes
 
     \subsection{Setting the stage}
+    Apps has bad reviews and is dying as there are no active users.
+    Management has become concerned.
+    This decline has occurred because competition has better technologies that make their offering more attracted to consumers.
+    Competitors are also stealing partners with affiliation deals.
+    Management has now realised that they must invest in digital technologies or continue to lose market share.
+    API is core to this businesses survival strategy.
+    Over time the company will gain popularity and system will expand.
 
     \subsection{Evolution of RESTful Services}
+    API - user interface to data and systems that is conusmed by applications rather than himans.
+    A well define contract between provider and consumer
+    \textit{Contract = Structure of Request and Response XML}
+
+    \subsubsection{JSON vs XML}
+    XML is heavy in terms of network traffic
+    Parsing of XML is CPU is Memory intensive
+    Slow performance of XMl on browser front end is not desired
+    Mobile devices batter performance reduced due to XML
+    Standards \& versions of standards caused confusion and complexity
+
+    XML-RPC and SOAP are API standards that use XML
+    With the rise of mobile and single page apps REST/JSON have gained popularity
+    APIs are leveraged across many industries
+
+    \subsubsection{REST}
+    Architectural style and Set of Principles not Technology specific or standard specific
+
+    Resources are objects, things and entities
+    Resources have representational state managed in backend
+    REST is NOT a standard but an architectural style
+    REST may use the HTTP application protocol
+
     \subsection{REST API Architectural Constraints}
     Six constraints for a API to be RESTful
+    \begin{itemize}
+        \item 1) Client - Server
+        \item 2) Uniform Interface
+        \item 3) Statelessness
+        \item 4) Caching
+        \item 5) Layered System
+        \item 6) Code on demand (Optional)
+    \end{itemize}
+
+    \subsubsection{How to know if an architecture is RESTful?}
+    Richardson Maturity model
+    \begin{itemize}
+        \item Level 0: The Swamp of POX
+        \item Level 1: Resources
+        \item Level 2: HTTP Verbs
+        \item Level 3: Hypermedia Controls
+    \end{itemize}
+
+    \subsubsection{REST Architectural Constraints - 1 - Uniform Interface}
+    Client and Server share a common technical interface
+    Definition of an interface
+    \begin{itemize}
+        \item Contract for communication between client-server
+        \item Contract has NO business context
+        \item Contract defined using HTTP methods and media types
+    \end{itemize}
+    Uniform Interface De-Couples the architecture; components can evolve independently
+
+    There are four guiding principles
+    - 1) Identity of the resource (URI / URL)
+    - 2) Representation of the resource
+    - 3) Self descriptive messages - metadata
+    - 4) Hypermedia
+
+    \subsubsection{Client Server - 2}
+    Client and server do not reside in the same process
+    - RPC over HTTP
+    - Server Decoupled from CLIENT
+
+    \subsubsection{Statelessness - 3}
+    Each client request is independent
+    Server receives all info it needs in the request
+
+    \subsubsection{Caching - 4}
+    Statelessness - Negative impact on performance
+                    Chattieness
+                    Higher data traffic (impact's scalability
+
+    Caching - Performance
+            -   Scalabitlity
+            -   Reduce Chattiness
+
+    Caching counter-balances some of the negative impacts of Statelessness
+
+    \subsubsection{Layered System - 5}
+    - Client - Server architecture consist of multiple layers
+    --- No one layer can see past the next
+    --- Layers may be added, removed or modified based on needs
+
+    \subsubsection{Code on demand (Optional)}
+    Server can extend client's functionality by sending the code
 
     \subsection{Designing REST API}
+    Design your API with the needs of the App Developers in mind
+    Use nouns to identify resources, use of plural is suggested
+    Actions
+    --- API Operation $ \neq $ CRUD
+    
+    OK to use action as part of resource hierachy or create an action with subquery
+    
+    1) Create, a simple base URL; subdomain; separate domain
+    2) Resources names should be nouns; Use of plurals is fine
+    3) Actions can be verbs, may be standalone
+    4) URI Pattern for associations; avoid nesting over three levels >_>
+    
+    \subsubsection{CRUD operations}
+    POST - Creates a resource,
+    201 is a success, may return a link (id) to new resource in Location header
+    - May return the new object
+
+    Failure - 4xx Bad Request ---- 400 missing field etc
+    5xx Issue in processing - e.g 503 database unreachable
+
+    GET - reads/ retrieves a resource collection or specific resource
+    200 - Send back the response in reqeusted format
+    Failure - 4xx Bad Request - e.g 404 Resource no found
+    5xx - Issue in processing - e.g 500 Internal Server Error
+
+    PUT/PATCH Request Handling - Updating a resource
+    - PUT - Updates all attributes of existing resource - effectively replace. Can also CREATE if client provide ID (not suggested)
+    - PATCH - Modifies parts of an existing resource
+
+    Success - 200 - Resource in body of response - OPTIONAL
+    204 - No Content
+    201 - Created - No need to send the Link - OPTIONAL
+
+    Failure - 4xx Bad Request - e.g 404 Resource Not Found
+    5xx - 503 Database unreachable
+
+    DELETE - Deleting a resource
+    Success 200 - May return deleted resource in the response body
+    204 - No returned content = 204
+    Failure - 4xx Bad Request - 404 Resource Not Found
+    5xx Issue in processing - 503 database unreachable
+
+    Rougly speaking restrict the number of HTTP codes to a maximum of 8
+    ---> 200/400/500 \textbf{MUST} be used
+
+    \subsubsection{An alternative approache}
+    Always send back HTTP Status = 200 OK
+    --- Place details in the payload
+
+    \subsubsection{API Changes}
+    Non - Breaking
+    - Adding a new operation or resource
+    - Adding optinal parameters or properties
+
+    Breaking
+    - Change the HTTP verb or methods
+    - Delete an operation
+
+    \paragraph{Handling Change}
+    - Avoid Changes : Is the change really adding value?
+    \begin{itemize}
+        \item Eliminate or miniises impact on app developers
+        \item Provider planning opportunity to the app developers
+        \item Support backward compatibility (if possible)
+        \item Provide support to app developers with the changes
+        \item Minimise the change frequency e.g (once per 6 months)
+    \end{itemize}
+    \textbf{Version your API right from day 1}
+
+    \subsubsection{Version information}
+    %TODO add code listings
+    HTTP Header
+    Query Paramenter
+    URL
+
+    \subsubsection{Multiple Version Support Key points}
+    \begin{itemize}
+        \item Support at least 1 previous version for a period of time ---- 3 months/ a year etc
+        \item Mark the previous version as deprecated. \textit{New app developers can only access the latest version}
+        \item Publish a roll out plan in advance
+        \item Manage the changlog that clearly shows the reason for the new version
+    \end{itemize}
+
+    \subsubsection{Design Decisions}
+\begin{itemize}
+    \item Which component should control the caching
+    \item What to cache?
+    \item Who can cache?
+    \item For how long is the cached data valid?
+\end{itemize}
+
+    \paragraph{Why cache?}
+    Benefits - Enhances performance, Leads to higher scalabilty
+
+    Data to cache depends on - Speed of change, Time Sensitivity, Security
+
+    Design decisions - Who can cache?, for how long?
+
+    \subsubsection{HTTP Cache control}
+    Responses
+    WHo can cache the response?
+    FOr how long?
+    Under what conditions?
+
+    Request
+    - Override the caching behaviour
+    - Protect sensitive data from caching
+
+    \paragraph{Practices}
+    Take advantage of caching especially for high volume APIs
+    Consider no-store and private for sensitive data
+    Provide the validation tag (ETAG) especially for large responses
+    Carefully decide on the optimal max-age
+
+    \subsubsection{Partial Response}
+    Better performance and optimised resource usage - CPU, memory, bandwidth
+    API Consumer controls the granularity
+    Common API version for all consumers
+    ---- E.g. to support multiple devices, use cases - form factors
+
+    \subsubsection{Pagination}
+    Cursor - "Control strucutre that enables traversal of records"
+    Cursor based pagination considered most efficient
+
+    Offset-based pagination - Commonly used approach %TODO add example /thing?offset=6&limit=5
+
+    HTTP Link Header - Use of a Link header a.k.a web linking
+
+    \paragraph{practices}
+    - Consider pagination for avoiding large data sets
+    ---- Decide on the default page size may be different for API(s)
+    - Support for multiple pagination for different resources
+
     \subsection{REST API Error Handling Patterns}
+
     \subsection{REST API Handling Change - Versioning Patterns}
+
     \subsection{REST API Cache Control Patterns}
+
     \subsection{REST API Response Data Handling Patterns}
+
     \subsection{REST API Security}
+
+    Basic authentication ---- not a good idea with HTTP (sending encoded credentials over the network in Authorisation header in HTTP reqeust). Better to use with TLS/ HTTPS
+
     \subsection{REST API Specifications using Swagger 2.0 / OAI}
+
+    \subsubsection{COntract creation approach}
+    Contract Last - API developer -> code and then specs
+    Contract First - API Developer -> Specs and then code
+
+    \textbf{Adopt the Contract First approach for REST API design and development}
+
+    Swagger is a standard to describe RESTful API
+    Why?
+    Developer documentation
+    Automated Proxy Creation, Server code generation
+    Client code generation
+    Service Virtualisation (Mocking)
+
+    Defacto standard supported by multiple vendors
+
+    - Multiple path definitions
+    - Each path can have multiple operations
+
+    Can be edited with any YAML tool
+
     \subsection{API Management}
+
+    API Management Scope
+    Lifecylcle - Productivity
+    Secuirty
+    Traffic - Analytics
+    Productise - Monetizatoin
+
+
+    Lifecycle
+    - Establish processes, practices and roles
+    - Setup App developer communication
+    - Publish roadmap in advance
+    - Leverage and create tools
+
+    \subsubsection{Productivity}
+    App Developer
+    - API Documentatoin
+    - Self serve provisioning
+    - Support
+
+    API Developer
+    - Development guidenlines
+    - Frameworks
+    - Best practices
+
+    \subsubsection{API Security}
+    Leverage API management platforms for security
+    Authentication and Authorisatoin - OAuth Server, Key/Secret Management
+    Funtional Attacks - Protection from known and future threats
+
+
+    \subsubsection{API Secuity practices}
+    Educate the API developers
+    Provide development guidelines on security
+    Stay up to date on security threats
+    Have a well defined security policy
+    Develop a contingency plan
+    Work with the other stakeholders to infrastructure
+
+    \subsubsection{API Traffic Management}
+    - Response time consistency
+    - Service Level Agreement
+    - Protecting the backend
+
+    \paragraph{Traffic management}
+    Quota - Defines the maximum number of calls per unit time
+    Rate Limiting - Lists number of concurrent connections to API
+    Spike Arrest - Prevents calls beyond high water mark from reaching the backend %TODO see graph
+
+    \paragraph{Analytics}
+    Performance
+    - Response Time
+    - Throughput
+    - Peaks/Valleys
+
+    Errors
+    - API Errors
+    - Backend errors
+
+    SLA
+    - Calls / time
+    - Response
+
+    Usage?
+    %TODO go through this in a bit more depth
+
+    Transactions
+    - Specific to the implmenetaion
+    - Logic built into the proxy
+
+    \subsubsection{API Management: Product and Monetise}
+    API = Product
+    Business base ---- New revenue, brand awareness, partnership
+    Research - Consumer, need and wants, why use the API
+    Create - Delivery/planning and pilot
+    Marketing - Events, Promote
+    Launch Post Launch - Launch/ Support
+
+    \textbf{You need to tread an API like a product}
+
+    \subsubsection{Monetization}
+    %TODO add a diagram describing
+
+    \paragraph{Techniolgy considerations}
+    Tiered prdocut definitions
+    Usage metering/ subscription management
+    REporting /  partner management
 
     \section{GraphQL}
 
     \include{graphQL}
 
+
     \chapter{Large Scale Systems Architectural Building Blocks}
+
 
     \section{DNS, Load Balancing, GSLB}
     Basic role, balance the traffic load amongst a group of servers in a system.
@@ -2185,7 +2530,7 @@
     - More complex join operations and the loss of transaction guarantees
 
     \subsection{The DRY principle in micrservices and shared libraries}
-The DRY principle doesn't always hold true in microservices, particulary in regards to shared libraries.
+    The DRY principle doesn't always hold true in microservices, particulary in regards to shared libraries.
 
     Why are shared libraries a problem in microservices.
     First problem is tight coupling.
@@ -2255,7 +2600,7 @@ The DRY principle doesn't always hold true in microservices, particulary in rega
     ---> Also each microservice needs to remain clear for the ownder for each piece of data.
 
     \subsection{structured autonomy for development teams}
-The myth. Each team has full autonomy in choosing their tehcnoilgy stack, tools, databases, APIs and fraemworks.
+    The myth. Each team has full autonomy in choosing their tehcnoilgy stack, tools, databases, APIs and fraemworks.
     ---> Major pitfall
     First reasons is the upfront cost of infrastructure
     Consider after a monoltih to microservices migration each team has to pay that cost again and duplicate that saem effort for their code base and ecosystem.
@@ -2316,53 +2661,52 @@ The myth. Each team has full autonomy in choosing their tehcnoilgy stack, tools,
     ---- Some compnies stick to one langauge, perk of this is they can hire deveopers once and move them between different teams with very little overhead.
 
     \subsection{micro frontends architecture pattern}
-The monolithic frontend. One team maintains a single frontend while the backend uses microservics. A single team is currently looking after the frontend.
+    The monolithic frontend. One team maintains a single frontend while the backend uses microservics. A single team is currently looking after the frontend.
     This can create a dependency on the frontend team when just one of the microservices wants to make a change cauusing the frontend team to become a bottleneck in the organsiation.
     The frontend team can also endup developing expertise that belongs to other teams.
     This leads to tight coupling to the back end team and the alreaddy constrained front end team.
-    
+
     The monolitic front end code base has anothe rproblem.
     As a buinsess grows so does the front end.
     So the single code base becaomes very large and hard to maintain and reasons about.
     It also takes longer to test.
     IF we want to release a new UI feastuere the entier front end needs to be rebuilt, retested and redployed.
     These are similar problems to a monolithci backend but now in the frontend.
-    
+
     To solve this problmem we can use the pattern. Micro-Frontends.
-    
+
     in this pattern we split the monolithic web applicaiton into mlutople front end modules an libarres that act as an indepenedent single page applications.
     The splitting can be done by business capabitliy or domain, just like in the back end.
     In most cases each page in the web applicaion becomes a micro-frontend, by we can also have serveral micro-frontends visible on the saem page.
     Each Microfrontend is completly decoupled from the other micro-ffrontends and should know how to mount and unmount itself from the DOM in the browser.
     Each Microfrontend can also be loading in the browser as a standalone web application for testing purposes.
-    
+
     More importantly it is owned by a separate team with full stack capbiltiies and the domaain knowledge to develpo and maintain this Microfrontend.
     All those micro frontends are then assembled together at run time by a container web application.
     When the user loads our site on their browser, the role of the continer appliicati is to render common elements like page headers and footers and take care of common functionlity such as authentication and shared libaries and teall each micro-frontend when a where they need to be redered on the page.
-    
+
     NOTE: Microfrontend is an architectural pattern not a web fraemwork or library. Many frameworks support it but it is not requried.
     NOTE: Shared web components vs micro frontends
     A microfrontend is basically a single page application with very limited vusines functionality,
     Differnt microfrontends may reuse common UI elements but the two concepts are unrelated.
-    
+
     \subsubsection{Benefits}
     Replace the big comlex monolith with a few small, more manageble code basses. Each for a different Micro-frotnend.
     Now each team fully owns its domain and technical stack end to end.
     Each micro front end is much easier and faster to test in isolation since its scope is a lot smaller
     Each microfrontend has its own CI pipeline an deployment process and each team can release new features on its own schedule.
-    
+
     \subsubsection{Best practices}
     Frist - Ensure that hte CMirofrontends are loaded atr runtime and are not express as compile or bulid time dependencies of the container application
     Otherwis all we did is just separate the code base logically, but at run time we would still have a monolithic frontend requireing complete redeployment for every new features.
     Next best practice is to make sure that Microfrontds don't share state and the browser sharing state would be the equivalent of different microservcies shareing a data base which is generally a bad approach.
-    
+
     If different microservices need to communicate with each other they can do it using on e of the following ways. Using cusotm ervents, passing callbacks or using the browsers address bar.
-    
+
     \subsection{Summary}
-    
-    
+
     \subsection{API management for micrservices architectureó}
-Problems we are trying to solve.
+    Problems we are trying to solve.
 
     We have dozens of APIs enpoints exposed by different microservice that are hard coded across many frontenssd and client SDKs
     This tightly couples the client side code to the internal implementatoin of our system.
@@ -2384,7 +2728,7 @@ Problems we are trying to solve.
     This pattern places a component called API gatewasy at the entry to our sytem and is repnobsble for all the API management.
 
     In the simplest schenario, the API gateway simply routes request for given API endpoint to the relevant microservice that handles it.
-In a lot of cases it can do more than just routing reqeusts.
+    In a lot of cases it can do more than just routing reqeusts.
     Can also performan translation between data formats when that reciever and sender microservices can suppoort.
     This can make the API definition and ma agement much easier and cleaner for each microservice because they don't have to care about the different clients an their specific limitations.
     They can all follow one standard and utilise the same infrastructrue in addition to routing the reqeust to the corresponding microservice.
@@ -2427,6 +2771,7 @@ In a lot of cases it can do more than just routing reqeusts.
     Using the API gateway service at the entry point to ours sytem allows for the routing of reqeusts to different microservices.
     Additionally, it provides us with many features like throttoling clients that send us to many reqeusts, handling authrosiation and TLS termination protocol and data translation monitoring in aditional to other.
     Not the same thing as a load balancer incase I forget or (----------------).....they server different purposes.
+
 
     \section{Event driven architecture}
     %TODO consider skipping or going through for thoroughness
@@ -4503,17 +4848,29 @@ In a lot of cases it can do more than just routing reqeusts.
     \section{Introduction}
     Cover security from a system design point of view.
 
+
     \section{OWASP Top 10}
+
     \subsection{Broken Access Control}
+
     \subsection{Cryptographic Failures}
+
     \subsection{SQL Injection}
+
     \subsection{Insecure Design}
+
     \subsection{Security Misconfiguration}
+
     \subsection{Vulnerable and Outdated Components}
+
     \subsection{Identification and Authentication Failures}
+
     \subsection{Software and Data Integrity Failures}
+
     \subsection{Security Logging and Monitoring Failures}
+
     \subsection{Server Side Request Forgery}
+
 
     \section{Network security}
 
