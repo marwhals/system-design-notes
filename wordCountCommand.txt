@@ -1,0 +1,1 @@
+texcount -total src/main.tex
