@@ -14,7 +14,8 @@
 \usepackage{helvet}
 \usepackage{arydshln}
 \usepackage{wasysym}
-\usepackage{amstex} % Helvetica as a sans-serif font alternative
+\usepackage{amstex}
+\usepackage{tikz} % Helvetica as a sans-serif font alternative
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -692,12 +693,12 @@
 
     \subsubsection{Caching - 4}
     Statelessness - Negative impact on performance
-                    Chattieness
-                    Higher data traffic (impact's scalability
+    Chattieness
+    Higher data traffic (impact's scalability
 
     Caching - Performance
-            -   Scalabitlity
-            -   Reduce Chattiness
+    - Scalabitlity
+    - Reduce Chattiness
 
     Caching counter-balances some of the negative impacts of Statelessness
 
@@ -714,14 +715,14 @@
     Use nouns to identify resources, use of plural is suggested
     Actions
     --- API Operation $ \neq $ CRUD
-    
+
     OK to use action as part of resource hierachy or create an action with subquery
-    
+
     1) Create, a simple base URL; subdomain; separate domain
     2) Resources names should be nouns; Use of plurals is fine
     3) Actions can be verbs, may be standalone
     4) URI Pattern for associations; avoid nesting over three levels >_>
-    
+
     \subsubsection{CRUD operations}
     POST - Creates a resource,
     201 is a success, may return a link (id) to new resource in Location header
@@ -794,12 +795,12 @@
     \end{itemize}
 
     \subsubsection{Design Decisions}
-\begin{itemize}
-    \item Which component should control the caching
-    \item What to cache?
-    \item Who can cache?
-    \item For how long is the cached data valid?
-\end{itemize}
+    \begin{itemize}
+        \item Which component should control the caching
+        \item What to cache?
+        \item Who can cache?
+        \item For how long is the cached data valid?
+    \end{itemize}
 
     \paragraph{Why cache?}
     Benefits - Enhances performance, Leads to higher scalabilty
@@ -908,7 +909,6 @@
     Authentication and Authorisatoin - OAuth Server, Key/Secret Management
     Funtional Attacks - Protection from known and future threats
 
-
     \subsubsection{API Secuity practices}
     Educate the API developers
     Provide development guidelines on security
@@ -964,7 +964,8 @@
     \paragraph{Techniolgy considerations}
     Tiered prdocut definitions
     Usage metering/ subscription management
-    REporting /  partner management
+    REporting / partner management
+
 
     \section{GraphQL}
 
@@ -1897,9 +1898,11 @@
 
     \chapter{Microservices Architecture}
 
+
     \section{Business and Digital Transformation}
     Business transformation is an umbrella term that is used for referring to fundamental changes in how an organisation conducts its business.
     See examples......
+
     \subsection{Why do businesses need to transform}
     - Environmental changes - new regulations may force the organisation to change how they do business.
     - Competitive pressure - think of an organisation that is dealing with a competitor that is rolling out innovative products at a very rapid pace/
@@ -1943,7 +1946,6 @@
     Microservices architecture helps the organisations meet these requirements from IT perspective.
 
 
-
     \section{A Business Perspective of Microservices}
 
 
@@ -1980,10 +1982,40 @@
     The goal of IT teams is to help the business achieve the business goals, hence IT teams must understand the business model.
     Understanding of the business model by IT teams will lead to faster delivery of value to the business.
     It will lead to more active participation of the IT teams in the business decisions and it will align the IT objectives with the business objectives.
-    The most important outcome of having it
+    The most important outcome of having teams of having teams understand the business is that business start to think of it as a trusted partner rather than just a service provider.
+    What this essentially means is more value to the business, move value to the customers of the business.
+
+    \paragraph{important}
+    Architects and developers etc who understand the business earn the trust of their peers.
+    I.e don't just learn new techologies, spend time understanding the business.
+
 
     \section{Introduction to Business Model Canvas}
+    Business model canvas is a tool that helps discuss, communicate, design and understand the organisations business model.
+    The benefit of the business model canvas is that the entire business model may be depicted in one image.
 
+    To create the business model canvas, one has to focus on nine core areas of the business and these are organised in the form of a canvas.
+
+    Do own research
+
+    \subsection{Building blocks}
+    - Nine building blocks
+    - The first building block is customer segments. Customers are the reason the business exists, so one has to think carefully about who are the customers.
+    - The next building block is value proposition. What kind of value are we providing to each of these customers.
+    - The next one is key resources. Emphasis on key, there are many resources that our business requires but you need to think about those resources which are essential for value proposition.
+    - There may be multiple resources that the business needs, but think about the key ones which without the business cannot exist.
+    - Next one is the key partners who are suppliers of the key resources to the business.
+    - Next one is technology providers. Consider procuring technology from other suppliers or partners.
+    - Also need to consider appropriate permissions to operate. Without them a business will not be able to operate.
+    - Businesses need to carry out multiple activities. Underkey activities, you need to think about the activities that the business carries out to create the value for the customer.
+
+    - Customer retention is one of the most important things for any business, and to retain a customer you need to ensure that the customers are happy with the services you are providing and the relationship you have with them.
+    - Under the customer relationships, one has to think about the type of relationship that is offered to each of the customer segments.
+    - The cashflow revenue stream depicts the inflow of revenue for the business for what does.
+    - The cost structure has the depiction of the cash outflow. These are the expenses incurred by the business on carrying out the key activities.
+    - Next one is the channels by which the customers would like to be reached.
+
+    %TODO insert example canvas diagram here
 
     \chapter{Domain Driven Design: Strategic Patterns}
 
@@ -2443,18 +2475,18 @@
     Note: There is no one right way to set the boundaries of the microservices. What works now may not work in the future.
     So the architecture keeps evolving as new features come in and new business capabilities are added.
     There is also no perfect decomposition to microservices and some friction or coupling is inevitable.
-    The goal of setting the boudaries correctly is to minimise this friction and no completly eliminate it.
+    The goal of setting the boundaries correctly is to minimise this friction and no completly eliminate it.
 
-    These techniques are not *bulllet prrof*. They are just guidelines/tools that helps arrive at a good architecture.
+    These techniques are not *bullet proof*. They are just guidelines/tools that helps arrive at a good architecture.
     --- It is not a substitute for good engineering judgment and intuition
 
     To summaries
-    Two popular ways to decompose a monlithic application into microservices
+    Two popular ways to decompose a monolithic application into microservices
     - The first is by business capabilities
     - The second is by sub domains
     ---- In the second type there are three types of subdomains
     ------ Core subdomains supporting
-    ------ Ssupporting sub domains
+    ------ Supporting sub domains
     ------ Generic subdomains
 
     Using either of those techniques helped us set the boundaries for microserviecs.
@@ -2467,7 +2499,7 @@
     Then try and get management on board to stop any development of new features and focus on the migration.
     In theory a good idea if the entire team fully focuses on the migration and doesn't get distracted by adding new features. They should be able to finish much faster.
     That is in theory.
-    ----> This approach is actually the worst in terms of productiviy and impact on the business.
+    ----> This approach is actually the worst in terms of productivity and impact on the business.
     ----> Why?
     First of all having too many developers working on the same project, which in this case is the refactoring of the monolith into microservices is a bad idea.
     Note: We mainly want to migration to microserivces because out team already has productivity and communication issues, which is what we call organisational scalability.
@@ -2528,8 +2560,8 @@
     Once the migration is complete and the new microservice is running and stable, we can easily start refactoring it to use newer technologies if necessary.
 
     \subsubsection{Summary}
-    How to identify the components that can be the best condates for migration
-    --- Those candidates includeded areas that changed the most frequently, require the higher scalability or have the least amount of technical debt.
+    How to identify the components that can be the best candidates for migration
+    --- Those candidates included areas that changed the most frequently, require the higher scalability or have the least amount of technical debt.
 
     Preparing and executing the migration,
     which involved adding test coverage,
@@ -4801,17 +4833,37 @@
     \paragraph{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
 
+
     \part{Data Architecture}
     %Place holder
+
+
     \section{Intro}
+
+
     \section{Data Types}
+
+
     \section{Datawarehouse}
+
+
     \section{Data Lake}
+
+
     \section{Data Lakehouse}
+
+
     \section{Data Governance with the Data Mesh}
+
+
     \section{Streaming data in Data Science}
+
+
     \section{Data infrastrcture for Machine Learning}
+
+
     \section{Flowchart and Use case examples}
+
 
     \chapter{Components}
 
@@ -4826,7 +4878,8 @@
     \subsubsection{Scalability}
 
     \paragraph{Load Balancing}
-    
+
+
     \section{Detailed Design}
 
     \subsection{Caching}
