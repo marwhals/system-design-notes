@@ -16,6 +16,19 @@ Taken from www.udemy.com/course/management-consulting-techniques-tools-and-frame
 
 ### Issue tree
 
+```mermaid
+graph LR
+    
+    A[Area of analysis] --> B
+    A --> C
+    B[Problem 1] --> D[Possible Reason 1] --> K[Analysis 1]
+    B --> E[Possible Reason 2] --> J[Analysis 2]
+    C[Problem 2] --> F[Possible Reason 3] --> I[Analysis 3]
+    C --> G[Possible Reason 4] --> H[Analysis 4]
+    
+
+```
+
 ### Low-hanging fruits
 
 ### Quick wins for cost reduction
