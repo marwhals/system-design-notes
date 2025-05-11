@@ -83,6 +83,14 @@ Taken from www.udemy.com/course/management-consulting-techniques-tools-and-frame
 ### Simulation analysis - introduction
 
 ### Decomposition of effects analysis - Introduction
+- Decomposition analysis shows you what are the components driving forces behind certain phenomena.
+- Helps achieve certain goals
+  - Pick the biggest contributor
+  - Will know what to focus on to get the required effect
+  - Check to what extent you were dealing with one-offs
+  - Create a business model based on drivers and KPIs
+  - Forcast and plan the future results
+  - Evaluate the business or business unit
 
 ### LFL Analysis - Introduction
 
