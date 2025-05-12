@@ -2021,10 +2021,98 @@
 
 
     \section{Introduction to DDD and Patterns}
+    Domain driven design is an architectural approach that provides principles and patterns to address challenges faced with developing complex domain models.
+    Term originates from from Eric Evans, Domain Driven Design book.
+
+    Domain driven design emphasises on the fact that the IT project's primary focus should be on the business domain and business logic rather than technology.
+    Promotes the idea of breaking the unified model into smaller, more manageable models and it suggests the use of iterative process for improving the model to solve a domain problem.
+
+    Domain driven design offers two types of patterns.
+
+    Strategic patters are used for dividing a complex and large business problem into smaller chunks with well defined boundaries.
+
+    Tactical patterns are used for translating the conceptual models to software application and service designs.
+
+    The strategic pattern applies across multiple bounded contexts, whereas tactical patterns are applicable only within a bounded context.
+
+    The idea is that domain driven design approach leads to smaller, independent domain models that can be built can be built as highly decoupled and independent set of microservices.
 
 
     \section{Business Subdomain Types}
+    A business domain is composed of multiple subdomains. The type depends on the value a subdomain generates for the business.
+    Having an understanding of the type of subdomains is in a position to assist the business in making the build versus buy decisions for the technology solutions.
+    Businesses need to perform multiple different functions to operate.
+    These functions are performed in the purview of subdomains. Different organisations within the same industry may look at their enterprises in a different way.
+    From the subdomains perspective, one of the most common reasons is that businesses may not operate in all sub domains in that overarching domain or industry.
+    Sub domains may be further divided into smaller sub domains and can be seen as sub domain granularity, and it depends on the focus of the business.
+    Each organisation within an industry, depending on their focus may view their enterprise as composed of different subdomains under the purview fo which htey performn their business operations.
+    Each subdomain has a different level of complexity associated with it.
+    There are multiple factors that may be contributing toward the complexity of the sub domain.
 
+    \subsection{Reasons for complexity}
+    The most common reason it the complexity of the business rules itself.
+    Another reasons is the compliance aspect. If the sub domain is operating in a highly regulared environment, then that will add complexity to the sub domain.
+    Complex calculations or complex algorithms may require specialised skills or specialised knowledge to understand the sub domain and that adds to the complexity.
+    Next one is the processes and the handovers required between the sub domain and other sub domains or even external entitites; will also contirbute towards the complexity of the sub domains.
+
+    Dynamic - idea here is that if the sub domain requires changes to processes, rules, structures or any other aspect, then it will be difficult to manage the knowledge and understanding of the business domain as it is changing with the time .
+    Depending on the industry, there may be other factors that will contribute toward the complexity of the sub domain.
+
+    \subsection{Sub-Domain Categories}
+    - Sub-domains rae categorsized into three types based on their complexity and business value it adds.
+    - Generic, core and supporting.
+
+    \subsubsection{Generic Subdomain}
+    - Known solutions exisxt for such subdomains
+    Nothing special about these subdomains
+    Best practices available
+    No business advantage in re inventing the wheel
+
+    \subsubsection{Core Subdomain}
+    - Each business within a specific industriy operated differently within the core sub domains to gain some kind of advantage over their competition.
+    - The "secret sauce" for the business resides in the core sub domain and the business is always looking to carrout things differently in these core subdomains to get some kind of competitive advantage, depending on the indusitry and the environment.
+    - These core subdomains may evolve at a very rapid pace or may have a very high level of dynamicity.
+    - Organisations are looking to gain some kind of competitive edge by or achive cost savings which translates into value for the business.
+
+    \subsubsection{Supporting subdomain}
+    Supporting subdomains do not provide any direct busienss advantage but the core sub domains depend on the supporting sub domains.
+    Well known practices for supporting subdoamins, but solutions may not be readily available.
+    - Even if the solutions are available, those solutions may need to be customised to meet the needs of the core sub domain.
+    \textit{Typically the supporting sub domain does not have high levels of complexity in terms of business logic}
+
+    \subsection{Identifying sub domains}
+    Start by looking at the business capbilities in that sub domain.
+    Are there any known solutions available for the sub domain?
+    - If yes, then that sub domain is likely to be generic.
+    Otherwise need to check if that sub domain adds any business value.
+    - Is there an opportunity for the business to differentiate itself from it competitors by doing things differently within this sub domain.
+    If no then the next check is to see if the core sub domains depend on this sub domain.
+    - If yes then it is likely to be a supporting sub domain.
+    - If no then the the it is a generic sub domain where you may need to build a solution.
+
+    If the sub domain has the potential of adding some business value, then next check is to see if the business domain has high complexity.
+    If the business domain does not have a high level of complexity then it is likely to be a supporting sub domain.
+    Otherwise it is likely to be a core sub domain.
+%    TODO - Add chart
+
+    \subsection{Why categorise the sub domains?}
+    Businesses have limited resources and these resources here are referring to the HR as well as the money put aside for the various initiatives across the enterprise.
+    Categorisation of the sub domains helps in prioritisation of the various initiatives.
+    Second reason is return on investments, businesses would like to maximise their return on investments.
+    - As a result, preferences will be given to the initiatives replated to core sub domains which will lead to the maximisation of the return on investments.
+    Third reason is that categorisation of the sub domain helps the business in making the buy vs build decisions.
+    If the sub domain is a generic sub domain, then the business would buy a IT solution rather than build it.
+    Examples SAP, Workday etc.
+    If the sub domain is supporting sub domain, then the business may decide to build the solution by way of outsourcing.
+    Or they may buy a generic solution and customised it to meet the needs of their core domains. E.g salesforce etc.
+
+    If they sub domain is categorised as core, then the business will use its best teams and best talent to build the solution in this sub domain.
+    The generic sub domain has readily aviailable solutions that the business can buy.
+    The core subdomain is the sub domain where the business has the opportunity to be different and insulate itself from competitors.
+    Supporting sub domain is needed because the core subdomains depened on the supporting sub domains.
+
+    Categorisation of the sub domaisn help the business in making the build versus the buy decisions and the business gets the most return on investment by investing in the solutions in the core sub domain.
+    Typically the business will use its best talent and resources for building the solutions in the core subdomain.
 
     \section{Understanding the Business Context}
 
