@@ -2187,6 +2187,42 @@
     Summary - very useful, should be used in all forms of communication include the code.
 
     \section{Strategic Pattern: Boudned Context}
+    Business domain models are commonly craeted by laying out the domain capabilities in the business.
+    Each represents a functional area.
+    Each of these capabilities or functional areas need some kind of a customer representation in technical terms.
+
+    The technical expert will put together the class definition with multiple attributes and to do that the technical expert will gather the attributes from multiple experts from across these domains.
+    Although the customer object may have multiple attributes each of these capabitlies will need only a few of those attributes to manage the model in the long term.
+
+    One of the teams will be assigned the ownership of the common model, and this would lead to a dependency between the teams in other capabilty or funtional areas on the central team that will be managing the model.
+    The dependency will lead to a loss of agility, conflicts and complexity.
+
+    Domain driven design addresses the problems with the common domain model by breaking the domain in to independent parts referred to as the bounded context.
+    This addresses the inherent complexity in the unified enterprise model or the common models.
+    Keywords here are bounded and context.
+
+    There are certain characteristics that must be met for these bounded capabilties to be referred to as the bounded context.
+    The first one is that each of these bounded contacts must be represented with its own domain model.
+    There is no sharing of the domain model.
+    The domain model is built for the bounded context is only applicable wihin the boundaries of that bounded context.
+    Each bounded context has its own ubiquitous language.
+
+    Characteristics in detail.
+    First one is independent domain models.
+    Each capbility has different modelling requirements.
+    These models are created and managed independently by the technology teams assigned to each of these functional units.
+
+    Since these models are independent, teams from assigned to each of these functional units do not need to have knoweldge of the models managed by other teams.
+    Models can evolve independently across the functional units wihin an enterprise.
+
+    Another characterisitic of the bounded context is that there is a language that holds meaning within a bounded context i.e ubiquitous language.
+    Terms are only meaningful within a bounded context.
+
+    Summary
+    Bounded contexts can be thought of as a conceptual boundary around the business capabilities.
+    These bounded contacts have certain characterisitics.
+    Models can be developed in the bounded context, have applicable only within that bounded context.
+    The language is only relevant in that bounded context.
 
 
     \section{Discovering the Bounded Contexts in a Domain}
