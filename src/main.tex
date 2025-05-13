@@ -2225,7 +2225,46 @@
     The language is only relevant in that bounded context.
 
 
-    \section{Discovering the Bounded Contexts in a Domain}
+    \section{Discovering the Bounded Contexts in a Domain
+    This is not a straight forward task. An art not a science.
+
+    Need to partner with the domain experts.
+    Start by looking at the organisational structure.
+    Typically they are available as diagrams that depict the various business capabilities or functional areas within the orgnisation.
+    Next step, identify the business experts in the core domains and partner with them to understand their responsibilities and they key activities they are invovled in.
+    Go deeper into some of their key activities.
+    Be on the lookout for clues in the business language used by the domain experts.
+    If you organisation has invested in well-designed, modular, monolighic applications they can also act as a starting point.
+    Look at modules in the monolithic applicaiton and create the boundaries for the business contexts realised in those applications.
+
+    Overrall idea is to gather the clues from these excercises and then use these to mark the boudnaries for the bounded context to describe each one of these and the sue of these clues.
+
+    Practically speaking. Do not think that the boundaries have to be perfect as this can take some time.
+    Start with some boundary and then none.
+
+    Most organisations are good at documenting and maintaining their organisation strcuture/
+    In a new organisation, a good place to start is to give attention to the business cuntions depicted in the organisation structure.
+    Business functions can be treated as a starting point for the bounded context.
+    Just a starting point. Will need to delve deeping into each of these busienss capabilties to refine these boundaries further.
+
+    As a next step, may look at the responsbiltieis of each of the busienss experts and keep in mind that these busienss experts may be responsible for multiple functions.
+    During information gathering pay attention to the business lanauge that these experts are using.
+    The key activities of the busines are the activities that the busienss model must carry out to make the business model work.
+
+    Going deeper into each of these activities in collaboration with the business experts will help the IT experts to understand the contextual boundaries within the consumer banking downmain.
+
+    Need to collaborate with the key business experts to identiy the key activies in your orgnaisation and then dig deeper into each of these activieites as you are going through.
+    Check for linguistic clues to help understand the bounded context from the business use cases and the process perspective.
+
+    Well desinged application may already have these boundaries in place.
+    Long story short monolithic applications should not be ignored and they may be used as a starting point for creating the bounded contexts in your business domain.
+
+    Summary
+    Leverage available assets like organisation structure and well designed monolithic applications to identify the bounded contexts.
+    Partner with busienss experts to understand their key responsibilities and activities.
+    Need to pay close attention to the language used to help iddentify the bounded context.
+
+
 
 
     \chapter{Bounded Context Relationships}
