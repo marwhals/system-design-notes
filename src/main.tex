@@ -2372,6 +2372,82 @@
 
     \paragraph{Consider Adding Reactive Patterns}
 
+    \section{Event driven architecture}
+    Events occur naturally in business scenarios.
+    Events are an indication that something of significance has happened at a point in time or that something has happened in the past.
+
+    There are consumers who are interested in knowing about the events, so they would like to be notified.
+    When an event occurs, one or more consumers are notified about the event.
+    On receiving the event, the consumer may carry out processing, and this processing of the event is independent of the producer of the event and other consumers of the event.
+    An event driven architecture is a software architecture paradigm that promotes the designing of systems as loosely coupled components that act as event producers and event consumers.
+    Central to the event driven architecture is an event backbone.
+    This event backon is a infrastructure component.
+    It is referred to by multiple names, event bus, event broker events, router events and mediator events hub.
+    - Common terms used for this component.
+    - Name dependes on the product features and functions and the vendor """marketing""" these products. (Warrants research)
+    - Important to keep in mind that conceptually they are similar.
+    - They all provide a way for routing of the events from producers to the consumer.
+    - Producer of the event inform the event backbone of something of interest happening.
+    - They do this by way of synchronous mechanism exposed by the events backbone.
+    - When the events backbone recieves the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
+
+    The important thing to keep in mind here form the event consumer perspective is that they are not polling for these events. They are notified.
+    Same as the pub sub messaging pattern.
+    Commonly used for realising event driven architectures.
+
+    Data in the event messages.
+    - The content of the event message may be the state data or the metadata.
+    - The consumers receiving the message representing the event will get all the relevant state data and they can carry out the processing using the state data that they will recieve in the event messasge.
+    - It is also possible to design the event structure such that it contains only the metadata.
+    - Some may need meta data only others may somehow return to the publisher and retrieve the detailed information.
+    - You would have to use both the state data and metadata in your event messages.
+        - There is no hard and fast rule but certain consideration.
+        - If the message size it too big, then there may be challenges related to latency.
+            - In this scenario you may consider using only metadata in your messages.
+    - If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be agood idea to go with the state data in the event message.
+
+    \subsubsection{API Versus Event Driven Architecture}
+    APIs rae directed commands, whereas events are observables.
+    The central theme in an architecture that depends on APIs is an orchestrator.
+    Ano orchestrator may be thought of as a centralised component that holds the business logic and the flow decisions.
+    When the orchestrator needs to do something it invokes an API, waits for the response, then invoke other APIs to carry out the required business processing.
+
+    In the case of EDA the orchestrator is replaces with event producer and event consumers.
+    These event consumers are the observers of the events which are produced by the event producer.
+
+    One big difference between these two architectures is that the event producers and event consumers all have business logic and are repsonsible for achieving the desired results from the business process.
+    The event producer does not make a direct invocation on any component.
+
+    Rather, it simply triggers an event, a message that is passed on to all the consumers.
+    Keep in mind that even producers may also be event consumers and event consumers may also be event producers.
+
+
+    Differences between API and Event Driven Architectures
+    - In the case of APIs, the caller has a knowledge of the API endpoint, whereas in the case of events the producer doesn't know any consumer.
+    - APIs are synchronous, meaning that the caller has to wait for the response to come back. The caller is blocked.
+    - In the case of events, a producer just produces an event and moves on. Not it does not even depend on the availability of the consumers.
+        - What this means is that it can lead to higher availability in the case the consumer is not available
+        - The producer moves on and when the consumers comes up it reciecves the event data.
+    - APIs are based on the reqeust response paradigm wheres in the case of events the message consistes of event data, which can be the state data or the metadata in the case of the API.
+    - Even with the disributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events, the event prodicers and the event consumers are highly decoupled and the architecture itself is extensible.
+        - The reason is that you may add or remove consumers without impacting the consumer in any way.
+    - Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread acrosss multiple components.
+        - Each of these componenets, the prdocuers and the consumers have the autonomy to make business decisions.
+        - With APIs, it is easy to understand the flow because the business logic is centralised.
+        - With event driven architecture, it is reltively difficult to follow the busines logic.
+
+    EDA is preferred for microservices but both APis and events can be used. The decision depends on your use case and your requirements.
+
+
+    \subsubsection{Summary}
+    Events indicate that something of significance has happened.
+    Event driven architecture is a software architecture paradigm which is based on events.
+    By nature, EDA uses asynchronous communication between consumers and producers.
+    EDA is highly decoupled and extensible and the busienss logic and the business processes in the case of EDA are decentralized.
+    That means all of the components in the system have some business logic which may be managed independently of other components in the system.
+
+
+%    TODO fix
 
     \section{Introduction to Events in Microservices Architecture}
 
