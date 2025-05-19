@@ -2505,6 +2505,47 @@
     - State updates and raising of the event must be done in a unit of work or in a transaction.
 
     \section{Integration Events - Pattern}
+    - Event consumers are outside the source Bounded Context
+    - Can be consumed by external services
+    - An integration event is a message that informs components outside of the source Bounded Context that something of significance has happened
+        - A integration even does not lead to any state changes in the source Bounded Context
+
+    \subsubsection{Domain versus Integration Events}
+    - Domain
+        - Within a Bounded Context i.e Microservices
+        - State changed within a BC
+        - Direct function calls
+        - Synchronous calls
+        - Modelled as part of BC model
+    - Integration
+        - Between BC or BC and External Services
+        - No state change in source BC
+        - Must be a Network Protocol
+        - Asynchronous preferred
+        - Consumer decides
+
+    Integration events communication
+    - Asynchronous is preferred
+        - To achieve higher levels of decoupling
+        - Future extensibility i.e add new consumers
+        - Enables one-to-many
+
+    Messaging Technology examples: Kafka, RabbitMQ, ActiveMQ......add others
+
+    Relationship - Domain and Integration Events
+    - Domain event may be published as integration event
+        - Both events defined as part of the model for the BC
+        - Semantically the same
+        - Publishing mechanism is different - or same if external messaging is ued for both event types
+
+    Integration Event consumer
+    - Consumer may leverage anti corruption layer
+
+    \subsubsection{Summary}
+    - Domain events may be published as integration events
+    - Integration events published asynchronously
+    - Consumer bounded context may use ACL
+
 
 
     \chapter{Event Storming for creating shared knowledge}
