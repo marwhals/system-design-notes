@@ -2328,9 +2328,49 @@
     Microservices are producers and consumers of events.
     As a result, event driven architecture is commonly used for building applications with microservices.
     Events are asynchronous in nature and realisation of events based interactions require the use of some messaging technology.
-    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ)
+    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ) %TODO consider where Aeron etc fits into this
+
+    \section{Monolithic and Distributed Communication Patterns}
+    First pattern is the monolithic object communication pattern in which the object calls methods on other objects.
+    All of this is happening within a common memory space or within a common process.
+    This is typical of a monolithic application. Referred to as a monolithic object commnication pattern.
+
+    \paragraph{Note}
+    In distributed applications or systems the components reside in their own process space.
+    In other words there is no sharing of compute or memory resources between the components.
+    These components communicate with each other by way of some kind network protocol.
+    This network communication protocol may be sychronous or asynchoronous in nature.
+    - By Sychronous, the caller statys blocked until it recieved a response from the other component.
+    - Examples: HTTP, RPC
+
+    - by Asynchronous communication, the caller does not wait for a response
+    - Examples: Advanced Message Queueing Protocol
+
+    These are not mutually exclusive.
+    Communication may be between two endpoints.
+    Referred to as 1 to 1 communication, also known as single receiver communication.
+    Common example is HTTP, wherein the communication is between two endpoints.
+    With synchronous protocols you wil always have 1 to 1 communication (Reactive :D)
+
+    This communication pattern may also be realised by using the asynchronous messaging mechanism.
+    It will look synchronous but the underlying protocol is asynchronous
 
 
+
+    In a one to many communication pattern, there are multiple components that are interested in receiving messages from the sender.
+    This is commonly achieved by way of a pub sub messaging pattern.
+    - A message is published by a publisher to a topic
+    - Other components will subscribe to the topic and receive messages.
+        - Each of these components will carry out a specific task assigned to it.
+
+    Common protocols for this kind of communications is REST over HTTP for these microservices.
+
+
+
+    For messaging there are two types of products. Products that are AMPQ compliant such as ActiveMQ and RabbitMQ.
+    Then there are products that are non AMPQ compliant such as Kafka, Amazon, SQS, Amazon, SNS. These are only examples.
+
+    \paragraph{Consider Adding Reactive Patterns}
 
 
     \section{Introduction to Events in Microservices Architecture}
