@@ -2447,22 +2447,62 @@
     That means all of the components in the system have some business logic which may be managed independently of other components in the system.
 
 
-%    TODO fix
-
-    \section{Introduction to Events in Microservices Architecture}
-
-
-    \section{Monolithic and Distributed Communication Patterns}
-
-
-    \section{Microservices Interaction Patterns}
-
-
-    \section{Event Driven Architecture}
-
-
     \section{Domain Events - Pattern}
+    Events are an integral part of the model defined for the bounded context.
+    - It is important to capture all the relevant events within a bounded context, as a part of the model and the ubiquitous language for that bounded context.
+    - These evetns are raised by the model components, when there is some kind of a state change.
+    - Each of these components can raise events to indicate some kind of state change.
+    - There may be other sources of events within a micro service.
+        - There may be application monitoring but this is not emitting events related to the bounded context.
+        - These are technical events and are not a part of the bounded context.
+    - Components that are emitting events are referred to as the event srouces.
+    - Event constumers are the consumers of those events and these event consumers may be a part of the same microservice.
+        - In that case the events emitted by the event source are referred to as the domain events.
+        - Events commited by the event source may be consumerd by other microservics.
+        - What that means is that an event defined in one bounded context is getting consumed in a different bounded context.
+        - In such cases, the event is referred to as an integration event.
+        - Event consumer may also be part of an external services. Basically can be thought of as a legacy service, APIs or any other service not implemented as a microservice in such cases.
+        - Semantically there is no difference between domain events and integration events.
+        - Its just the consumer that decideds whether the event will be referred to as the domain event or the integration event.
 
+    Formal definition of domain event.
+    - A domain event is a message that informs other parts within the same bounded context that something of significance has happned.
+    - This is the key part within the same bounded context.
+    - Now, when a domain event is triggered, it indicated a state change within the bounded context and the consumers of the event revieve the event message and execute some busines logic within the same bounded context.
+    - Note: The domain event is triggered within a bounded context and it is consumed within that same bounded context.
+    - The reason why events have become an integral part of the domain driven design is that events occur naturally.
+        - Important Note: That is all domains have concept of events.
+    - A quick way to identify events in a domain is to look for statements like when this has happened then do this.
+    - This part represents the event and this part represents the reaction to the event that is the business logic.
+    - This reaction is known as a side effect......!!!
+
+
+    Language plays an important role in domain driven design. Important to be very careful when you are naming you events.
+    Always use past tense as event has already happened.
+    Best Practices:
+    - Ubiquitous language so that there is not need of translation between IT teams and Business teams
+    - Do not add "event" as a suffix to the event name or do not add "operation" as a suffix.
+
+    Event handler refers to the implmentation of the event consumer logic.
+    In the case of the domain event, the handler is part of the same microservice codebase as the event producer.
+    These handlers subscribe to the events  of interest and there may be zero or more handlers per event.
+    Like the events the handlers must be named appropriately.
+
+    Use of ubiquitous language as suggested as a best practice, you can name the handler the same as the event that the handler is handling.
+
+    Common misconception about event realisation is that events have to be managed with messaging but that is not true for domain events.
+    Domain events may be emitted and consumed synchronously, for example by way of direct function calls.
+    - Note: Domain event producer and the handler are in the same process.
+    - You can use asynchronous mechanism such as in-memory messaging or even an external message broker.
+    - State changes and raising of the events need to happen atomically.
+    - In the case of synchronous calls, its easier to implement such mechanisms, whereas with asynchronous you will need to use the appropriate patterns.
+
+    \subsubsection{Summary}
+    - Two types of events - domain and integration events.
+    - Domain events are emitted and handled within the same bounded context, whereas integration events are handled outside of the bounded context.
+    - Domain events may be handled synchronously as well as a asynchronously appropriate.
+    - Naming conventions should be used for naming events and the event handlers.
+    - State updates and raising of the event must be done in a unit of work or in a transaction.
 
     \section{Integration Events - Pattern}
 
