@@ -2316,6 +2316,21 @@
 
 
     \chapter{Event Driven Architecture and Domain Events}
+    \section{Intro}
+    Relationships between bounded contexts.
+    Bounded contexts get translated into microservices and these relationships get translated into interactions between the microservices.
+    Rest over HTTP APIs are a common synchronous mechanism by which microservices interact.
+
+    Microservices also produce different types of events.
+    These are consumed by other microservices as well as the components within the bounded context where the event was produced.
+
+    Event driven architecture is an architecture paradigm promoting the production detection, consumption of, and reaction to events.
+    Microservices are producers and consumers of events.
+    As a result, event driven architecture is commonly used for building applications with microservices.
+    Events are asynchronous in nature and realisation of events based interactions require the use of some messaging technology.
+    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ)
+
+
 
 
     \section{Introduction to Events in Microservices Architecture}
