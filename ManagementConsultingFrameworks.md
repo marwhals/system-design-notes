@@ -89,7 +89,7 @@ graph LR
 
 ---
 
-## Advanced tools, techniques and frameworks used by management.
+## Advanced tools, techniques and frameworks used by management consultants.
 
 ### Advanced tools - Introduction
 
@@ -114,3 +114,113 @@ graph LR
 ### Overview of segmentation methods
 
 ### How to scale up a business - best practices from top firms
+
+---
+
+Management Consulting Skills
+
+Taken from https://www.udemy.com/course/management-consulting-business-strategy
+
+### Welcome
+
+### Consulting Approach to Problem-Solving
+
+### Consulting Presentation Skills that make an Impact
+
+### Corporate Strategy Analysis
+
+### Industry Analysis
+
+### Financial Analysis
+
+### Operations Analysis
+
+### Other Key Skills
+
+### Conclusion
+
+---
+
+Taken from https://www.udemy.com/course/management-consulting-problem-solving
+
+### Introduction
+
+### Management Consulting
+
+### Explore Management Consulting Cases
+
+### Profitability Case
+
+### Industry Analysis
+
+### Market Entry
+
+### Capacity Expansion
+
+### Merge and Acquisition
+
+### Investment
+
+### Organisation Behaviours
+
+### Brainstorming Cases
+
+### Estimation
+
+### Conclusions
+
+---
+
+Consulting approach to problem-solving https://www.udemy.com/course/consulting-approach-to-problem-solving
+
+### Course structure
+
+### Introduction to structured problem-solving
+
+### Step 1 - Problem Formulation
+
+### Step 2 - Problem Structuring
+
+### Step 3 - Work prioritisation and planning
+
+### Step 4 - Communicating the solution
+
+### Wrap-up
+
+---
+
+Market Research for Management Consultants & Analysts
+
+Taken from https://www.udemy.com/course/market-research-for-management-consultants-analysts
+
+### Introduction
+
+### Estimating Market Size
+
+### Job-to-be-done Framework
+
+### Competitive Landscape
+
+### Market Structure Analyses
+
+### Financial Modelling
+
+### Conclusions
+
+---
+
+Management Consulting Career, Industry and Practice - https://www.udemy.com/course/learn-management-consulting
+
+### Introduction
+
+###
+
+###
+
+###
+
+### Understand How Management Consulting Engagements Work
+
+### Learn the about the value that management consulting offers 😲
+
+### Conclusion
