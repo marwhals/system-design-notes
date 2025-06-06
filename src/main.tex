@@ -47,6 +47,7 @@
     \tableofcontents
     \newpage
 
+    \include{domain_drive_design/data_integrity}
 
     \chapter{Introduction}
 
@@ -1889,1069 +1890,6 @@
     Fixing bugs and troubleshooting performance is much harder in microservices
     Incorrect scope identification for a service can also cause additional organizational overhead.
     Could lead to duplicated effort.
-
-
-    \part{Domain Driven Design}
-    %TODO hmmmm consider where to place this in the document -------
-    %TODO hmmmm consider which parts to skim.........
-
-
-    \chapter{Microservices Architecture}
-
-
-    \section{Business and Digital Transformation}
-    Business transformation is an umbrella term that is used for referring to fundamental changes in how an organisation conducts its business.
-    See examples......
-
-    \subsection{Why do businesses need to transform}
-    - Environmental changes - new regulations may force the organisation to change how they do business.
-    - Competitive pressure - think of an organisation that is dealing with a competitor that is rolling out innovative products at a very rapid pace/
-
-    What is the choice for these organisations?
-    They must transform.
-    They have to think of new products.
-    They have to think about the speed at which they can roll out these new products.
-
-    - New opportunities - Organisations may have to transform themselves to integrate with new technology.
-    This often requires serious transformation initiatives.
-    - Customer demands - expectations are continuously changing in order to maintain and expand their customer base.
-    Organisations need to adjust their business to meet their customers demands and expectations.
-    Businesses that ignore their customers expectations tend to loose out to the competitors.
-
-    \subsection{Digital Transformation}
-    The process of using digital technologies to meet the needs of transformed business processes and to create innovative customer engagement mechanisms.
-    The relationship between digital transformation and business transformation is that the digital transformation supports the business transformation initiatives (ahem)
-%    TODO insert examples ---- potentially with critique
-    The value in this is that it allows for organisations to change at a very rapid pace.
-    Businesses that fail to transform fail to survive.
-    Netflix vs Blockbuster
-
-    Transformation is not a one time initiative.
-    Businesses need to change on a continuous basis and this requires rapid changes to their systems and applications.
-    Organisations must keep up with the pace of new and evolving technologies.
-
-    \subsection{Common problems}
-    A common challenge that businesses face in their transformation journey is that the old ways of building software hinders or makes it difficult for organisations to transform.
-    It is slow to build software using the older technologies and architectural paradigms.
-    Older technologies and older ways of building applications to integrate with newer digital technologies
-    This is where microservices architecture can help.
-    Microservices architecture addresses these challenges and helps the organisations move at a faster pace to achieve their transformational objectives.
-    Transformation is about rapid changes, and in the case of microservices, changes are isolated to a set of microservices.
-    Changes to a small microservices will be much faster than changes to a monolith where there are a lot of interdependencies between multiple modules realising the different business funtionalities.
-
-    \subsection{Summary}
-    Organisations need to continuously transform.
-    The requires IT systems to change at a rapid pace.
-    There is a need for rapid adoption of new digital technologies and speed to market is key.
-    Microservices architecture helps the organisations meet these requirements from IT perspective.
-
-
-    \section{A Business Perspective of Microservices}
-
-
-    \section{A Technical Perspective of Microservices}
-
-
-    \section{Adoption of Microservices Architecture}
-
-
-    \chapter{Introduction to Domain Driven Design}
-
-
-    \section{Domain, Sub-Domain and Domain Experts}
-
-
-    \section{Conceptual Models, Architural Styles}
-
-
-    \section{Modelling Techniques and Architectural Styles}
-
-
-    \section{Domain Models}
-
-
-    \section{Modelling Techniques and Architectural Styles}
-
-
-    \chapter{Understanding the Business Domain}
-
-
-    \section{Why understand the business}
-    Every modern business is a technology business. For some it is the core model. For others, technology supports the core model.
-    Irrespective of the core business model technology is an essential part of business.
-    The goal of IT teams is to help the business achieve the business goals, hence IT teams must understand the business model.
-    Understanding of the business model by IT teams will lead to faster delivery of value to the business.
-    It will lead to more active participation of the IT teams in the business decisions and it will align the IT objectives with the business objectives.
-    The most important outcome of having teams of having teams understand the business is that business start to think of it as a trusted partner rather than just a service provider.
-    What this essentially means is more value to the business, move value to the customers of the business.
-
-    \paragraph{important}
-    Architects and developers etc who understand the business earn the trust of their peers.
-    I.e don't just learn new techologies, spend time understanding the business.
-
-
-    \section{Introduction to Business Model Canvas}
-    Business model canvas is a tool that helps discuss, communicate, design and understand the organisations business model.
-    The benefit of the business model canvas is that the entire business model may be depicted in one image.
-
-    To create the business model canvas, one has to focus on nine core areas of the business and these are organised in the form of a canvas.
-
-    Do own research
-
-    \subsection{Building blocks}
-    - Nine building blocks
-    - The first building block is customer segments. Customers are the reason the business exists, so one has to think carefully about who are the customers.
-    - The next building block is value proposition. What kind of value are we providing to each of these customers.
-    - The next one is key resources. Emphasis on key, there are many resources that our business requires but you need to think about those resources which are essential for value proposition.
-    - There may be multiple resources that the business needs, but think about the key ones which without the business cannot exist.
-    - Next one is the key partners who are suppliers of the key resources to the business.
-    - Next one is technology providers. Consider procuring technology from other suppliers or partners.
-    - Also need to consider appropriate permissions to operate. Without them a business will not be able to operate.
-    - Businesses need to carry out multiple activities. Underkey activities, you need to think about the activities that the business carries out to create the value for the customer.
-
-    - Customer retention is one of the most important things for any business, and to retain a customer you need to ensure that the customers are happy with the services you are providing and the relationship you have with them.
-    - Under the customer relationships, one has to think about the type of relationship that is offered to each of the customer segments.
-    - The cashflow revenue stream depicts the inflow of revenue for the business for what does.
-    - The cost structure has the depiction of the cash outflow. These are the expenses incurred by the business on carrying out the key activities.
-    - Next one is the channels by which the customers would like to be reached.
-
-    %TODO insert example canvas diagram here
-
-    \chapter{Domain Driven Design: Strategic Patterns}
-
-
-    \section{Introduction to DDD and Patterns}
-    Domain driven design is an architectural approach that provides principles and patterns to address challenges faced with developing complex domain models.
-    Term originates from from Eric Evans, Domain Driven Design book.
-
-    Domain driven design emphasises on the fact that the IT project's primary focus should be on the business domain and business logic rather than technology.
-    Promotes the idea of breaking the unified model into smaller, more manageable models and it suggests the use of iterative process for improving the model to solve a domain problem.
-
-    Domain driven design offers two types of patterns.
-
-    Strategic patters are used for dividing a complex and large business problem into smaller chunks with well defined boundaries.
-
-    Tactical patterns are used for translating the conceptual models to software application and service designs.
-
-    The strategic pattern applies across multiple bounded contexts, whereas tactical patterns are applicable only within a bounded context.
-
-    The idea is that domain driven design approach leads to smaller, independent domain models that can be built can be built as highly decoupled and independent set of microservices.
-
-
-    \section{Business Subdomain Types}
-    A business domain is composed of multiple subdomains. The type depends on the value a subdomain generates for the business.
-    Having an understanding of the type of subdomains is in a position to assist the business in making the build versus buy decisions for the technology solutions.
-    Businesses need to perform multiple different functions to operate.
-    These functions are performed in the purview of subdomains. Different organisations within the same industry may look at their enterprises in a different way.
-    From the subdomains perspective, one of the most common reasons is that businesses may not operate in all sub domains in that overarching domain or industry.
-    Sub domains may be further divided into smaller sub domains and can be seen as sub domain granularity, and it depends on the focus of the business.
-    Each organisation within an industry, depending on their focus may view their enterprise as composed of different subdomains under the purview fo which htey performn their business operations.
-    Each subdomain has a different level of complexity associated with it.
-    There are multiple factors that may be contributing toward the complexity of the sub domain.
-
-    \subsection{Reasons for complexity}
-    The most common reason it the complexity of the business rules itself.
-    Another reasons is the compliance aspect. If the sub domain is operating in a highly regulared environment, then that will add complexity to the sub domain.
-    Complex calculations or complex algorithms may require specialised skills or specialised knowledge to understand the sub domain and that adds to the complexity.
-    Next one is the processes and the handovers required between the sub domain and other sub domains or even external entitites; will also contirbute towards the complexity of the sub domains.
-
-    Dynamic - idea here is that if the sub domain requires changes to processes, rules, structures or any other aspect, then it will be difficult to manage the knowledge and understanding of the business domain as it is changing with the time .
-    Depending on the industry, there may be other factors that will contribute toward the complexity of the sub domain.
-
-    \subsection{Sub-Domain Categories}
-    - Sub-domains rae categorsized into three types based on their complexity and business value it adds.
-    - Generic, core and supporting.
-
-    \subsubsection{Generic Subdomain}
-    - Known solutions exisxt for such subdomains
-    Nothing special about these subdomains
-    Best practices available
-    No business advantage in re inventing the wheel
-
-    \subsubsection{Core Subdomain}
-    - Each business within a specific industriy operated differently within the core sub domains to gain some kind of advantage over their competition.
-    - The "secret sauce" for the business resides in the core sub domain and the business is always looking to carrout things differently in these core subdomains to get some kind of competitive advantage, depending on the indusitry and the environment.
-    - These core subdomains may evolve at a very rapid pace or may have a very high level of dynamicity.
-    - Organisations are looking to gain some kind of competitive edge by or achive cost savings which translates into value for the business.
-
-    \subsubsection{Supporting subdomain}
-    Supporting subdomains do not provide any direct busienss advantage but the core sub domains depend on the supporting sub domains.
-    Well known practices for supporting subdoamins, but solutions may not be readily available.
-    - Even if the solutions are available, those solutions may need to be customised to meet the needs of the core sub domain.
-    \textit{Typically the supporting sub domain does not have high levels of complexity in terms of business logic}
-
-    \subsection{Identifying sub domains}
-    Start by looking at the business capbilities in that sub domain.
-    Are there any known solutions available for the sub domain?
-    - If yes, then that sub domain is likely to be generic.
-    Otherwise need to check if that sub domain adds any business value.
-    - Is there an opportunity for the business to differentiate itself from it competitors by doing things differently within this sub domain.
-    If no then the next check is to see if the core sub domains depend on this sub domain.
-    - If yes then it is likely to be a supporting sub domain.
-    - If no then the the it is a generic sub domain where you may need to build a solution.
-
-    If the sub domain has the potential of adding some business value, then next check is to see if the business domain has high complexity.
-    If the business domain does not have a high level of complexity then it is likely to be a supporting sub domain.
-    Otherwise it is likely to be a core sub domain.
-%    TODO - Add chart
-
-    \subsection{Why categorise the sub domains?}
-    Businesses have limited resources and these resources here are referring to the HR as well as the money put aside for the various initiatives across the enterprise.
-    Categorisation of the sub domains helps in prioritisation of the various initiatives.
-    Second reason is return on investments, businesses would like to maximise their return on investments.
-    - As a result, preferences will be given to the initiatives replated to core sub domains which will lead to the maximisation of the return on investments.
-    Third reason is that categorisation of the sub domain helps the business in making the buy vs build decisions.
-    If the sub domain is a generic sub domain, then the business would buy a IT solution rather than build it.
-    Examples SAP, Workday etc.
-    If the sub domain is supporting sub domain, then the business may decide to build the solution by way of outsourcing.
-    Or they may buy a generic solution and customised it to meet the needs of their core domains. E.g salesforce etc.
-
-    If they sub domain is categorised as core, then the business will use its best teams and best talent to build the solution in this sub domain.
-    The generic sub domain has readily aviailable solutions that the business can buy.
-    The core subdomain is the sub domain where the business has the opportunity to be different and insulate itself from competitors.
-    Supporting sub domain is needed because the core subdomains depened on the supporting sub domains.
-
-    Categorisation of the sub domaisn help the business in making the build versus the buy decisions and the business gets the most return on investment by investing in the solutions in the core sub domain.
-    Typically the business will use its best talent and resources for building the solutions in the core subdomain.
-
-    \section{Understanding the Business Context}
-    To make an objective decision, you will need additional facts or information on the situation. I.e the context.
-    The idea is that as an IT team, you will be carrying out knowledge crunching excercises.
-    To carry out these knowledge crunching excercises you must be aware of the business context.
-    In order for IT teams to understand the business domain, they must understand the business context.
-
-    Lack of understanding of the business context may lead to confusion and misinterpretations and that will lead to misrepresentation of the domain models.
-
-    It is important that the IT team understands the business context, without the appropriate understanding of the business context the IT team may not be able to come up with accurate models representing the business domain.
-
-
-    \section{Business Domain Language}
-    Business teams use business language, whereas the technology teams tend to use technical terms in their communication.
-    This difference in language between the business teams and the IT teams can lead to linguistic challenges.
-    The message here is that the same term used in different regions may lead to confusion, that is even more true for the business language used on multiple domains.
-    If you are using business terms from one domain in another domain then it may lead to confusion and misinterpretations.
-
-    Each industry has its own lingo, i.e  a set of terms that only the experts in the industry or profession use.
-    They all use a set of terms that have meaning only in their professions and within the same industry there may be specialisations.
-    To understand the domain or to gain knowledge of the domain, one must understand the language used by the domain experts.
-    Some challenges. The first challenge is that there are multiple business languages across the enterprise.
-
-    The challenge here is that for building complex, IT teams must learn multiple business languages used by the domain experts in the context of different domains or sub domains.
-    The second challenge is that same term may appear in the context of different business domains.
-    The challenge here is that the same term across multiple domains may have a different meaning depending on the context and cause confusion amongst the IT teams.
-    The third challenge here is related to the fact that IT teams have their own lingo......
-    These are the terms that are commonly used by the IT teams and technology teams to translate the business terms into IT lingo.
-
-    When they recieve information about the domain or the knowledge from the domain expert in domain terms, they translate it into technology tmers.
-    Communication from the domain expert to the IT expert happens in terms of the domain language, whereas the communication from the IT expert to the domain expert happens in terms of the technology language.
-
-    Domain driven design suggests setting up a common language within each business context and this language is used by all stakeholders, including the IT teams.
-    This language is referred to as the ubiquitous lanauge and it helps in breaking down the domain into multiple parts that are suitable for building microservices.
-
-    \section{Strategic Pattern: Ubiquitious Language}
-    Ubiquitos lanauge is one of the strategic patterns in domain driven design.
-    The domain driven design suggests setting up a common language wihin each business context and this common language is referred to as ubiquitos language.
-    Uniquitos language can be though of as a dialiect that is used by the various teams wihin an organisation.
-    A dialect is defined by the vocabulary and ubiquiots language has a clea definition of the context to which the vocabulary or the glossary applies to.
-    The glossary contains the common terms and acronyms used within the defined context.
-
-    Optionally, it may also have example usage for the terms and acronyms and it may also have references or links to the relevant assets.
-    Can be seen as an enterprise busienss dictionary with differences.
-    Ubiquots language is not created and managed separately, mlutiple in an organisation.
-
-    Business expert speaks in business terms. Tech expert speaks in terms of tech terms.
-    There is a misconception that the it is the business expert defining the language. This ubiquitous language is not imposed by the experts.
-    It is not a language used in the industry, it can be though of as a team language, or tribal language that develops or evolves over a period of time by way of collaboratoin between the business and the technology experts.
-
-    The team creating the ubiquitous lanauge can use multiple techniques, such as drawing the process flow, diagrams, user stores and event storming.
-    This lead to the creation of the ubiquitous language for that team.
-    It is important to consider that this language is not a one time job.
-    It is a continuous process as the language takes a while to reach the high level of maturity.
-    There are no special tools for this. Any tool can be used as long as it will make the ubqiquots language accessible to all team memebers.
-    Collaboration tools such as confluence and quip are commonly used.
-    Any tools can be used, so long as it make the language accessible for all team members. Once the team is at a certain maturity level they should use it for verything.
-
-    If the team is developing the documentation and they create a new term or they find a new term that then that term shoudl be added to the ubiquitous language.
-
-    The ubiquitous language should act as a source of truth for all terms used by the team.
-    This language should be used in the application code as well as in the testing code.
-    Teams must use this language in all of their conversations.
-
-    What is the point?
-    Translation between busienss and tech is no longer needed.
-    Things become more conistent and easier to follow for both the domain expert as well as the IT expert.
-    An interesting side effect is that it helps in identifying overlapping contexts.
-    What that mean is that we can use ubiquitous language to break apart a business context into smaller parts.
-    In domain driven design, these smaller parts or contexts are referred to as the bounded context.
-
-    Summary - very useful, should be used in all forms of communication include the code.
-
-    \section{Strategic Pattern: Boudned Context}
-    Business domain models are commonly craeted by laying out the domain capabilities in the business.
-    Each represents a functional area.
-    Each of these capabilities or functional areas need some kind of a customer representation in technical terms.
-
-    The technical expert will put together the class definition with multiple attributes and to do that the technical expert will gather the attributes from multiple experts from across these domains.
-    Although the customer object may have multiple attributes each of these capabitlies will need only a few of those attributes to manage the model in the long term.
-
-    One of the teams will be assigned the ownership of the common model, and this would lead to a dependency between the teams in other capabilty or funtional areas on the central team that will be managing the model.
-    The dependency will lead to a loss of agility, conflicts and complexity.
-
-    Domain driven design addresses the problems with the common domain model by breaking the domain in to independent parts referred to as the bounded context.
-    This addresses the inherent complexity in the unified enterprise model or the common models.
-    Keywords here are bounded and context.
-
-    There are certain characteristics that must be met for these bounded capabilties to be referred to as the bounded context.
-    The first one is that each of these bounded contacts must be represented with its own domain model.
-    There is no sharing of the domain model.
-    The domain model is built for the bounded context is only applicable wihin the boundaries of that bounded context.
-    Each bounded context has its own ubiquitous language.
-
-    Characteristics in detail.
-    First one is independent domain models.
-    Each capbility has different modelling requirements.
-    These models are created and managed independently by the technology teams assigned to each of these functional units.
-
-    Since these models are independent, teams from assigned to each of these functional units do not need to have knoweldge of the models managed by other teams.
-    Models can evolve independently across the functional units wihin an enterprise.
-
-    Another characterisitic of the bounded context is that there is a language that holds meaning within a bounded context i.e ubiquitous language.
-    Terms are only meaningful within a bounded context.
-
-    Summary
-    Bounded contexts can be thought of as a conceptual boundary around the business capabilities.
-    These bounded contacts have certain characterisitics.
-    Models can be developed in the bounded context, have applicable only within that bounded context.
-    The language is only relevant in that bounded context.
-
-
-    \section{Discovering the Bounded Contexts in a Domain -This is not a straight forward task. An art not a science.}
-
-    Need to partner with the domain experts.
-    Start by looking at the organisational structure.
-    Typically they are available as diagrams that depict the various business capabilities or functional areas within the orgnisation.
-    Next step, identify the business experts in the core domains and partner with them to understand their responsibilities and they key activities they are invovled in.
-    Go deeper into some of their key activities.
-    Be on the lookout for clues in the business language used by the domain experts.
-    If you organisation has invested in well-designed, modular, monolighic applications they can also act as a starting point.
-    Look at modules in the monolithic applicaiton and create the boundaries for the business contexts realised in those applications.
-
-    Overrall idea is to gather the clues from these excercises and then use these to mark the boudnaries for the bounded context to describe each one of these and the sue of these clues.
-
-    Practically speaking. Do not think that the boundaries have to be perfect as this can take some time.
-    Start with some boundary and then none.
-
-    Most organisations are good at documenting and maintaining their organisation strcuture/
-    In a new organisation, a good place to start is to give attention to the business cuntions depicted in the organisation structure.
-    Business functions can be treated as a starting point for the bounded context.
-    Just a starting point. Will need to delve deeping into each of these busienss capabilties to refine these boundaries further.
-
-    As a next step, may look at the responsbiltieis of each of the busienss experts and keep in mind that these busienss experts may be responsible for multiple functions.
-    During information gathering pay attention to the business lanauge that these experts are using.
-    The key activities of the busines are the activities that the busienss model must carry out to make the business model work.
-
-    Going deeper into each of these activities in collaboration with the business experts will help the IT experts to understand the contextual boundaries within the consumer banking downmain.
-
-    Need to collaborate with the key business experts to identiy the key activies in your orgnaisation and then dig deeper into each of these activieites as you are going through.
-    Check for linguistic clues to help understand the bounded context from the business use cases and the process perspective.
-
-    Well desinged application may already have these boundaries in place.
-    Long story short monolithic applications should not be ignored and they may be used as a starting point for creating the bounded contexts in your business domain.
-
-    Summary
-    Leverage available assets like organisation structure and well designed monolithic applications to identify the bounded contexts.
-    Partner with busienss experts to understand their key responsibilities and activities.
-    Need to pay close attention to the language used to help iddentify the bounded context.
-
-    \chapter{Bounded Context Relationships}
-
-
-    \section{Introduction to DDD Integration Patterns}
-
-
-    \section{Managinc BC Relationships using Context Maps}
-
-
-    \section{Symmetric Relationship Patterns}
-
-
-    \section{Asymmetric Relationship Patterns}
-
-
-    \section{One to Many relationship patterns}
-
-
-    \chapter{Domain Driven Design - Tactical Patterns}
-
-
-    \section{Introduction to DDD Tactical Patterns}
-
-
-    \section{Entity Object - Pattern}
-
-
-    \section{Value Object - Pattern}
-
-
-    \section{Aggregate and factory pattern}
-
-
-    \section{Model Behaviour: Anemic and Rich Models}
-
-
-    \section{Repository Object - Pattern}
-
-
-    \section{Domain Service - Pattern}
-
-
-    \section{Applicatoin Services - Pattern}
-
-
-    \section{Infrastructure Services - Pattern}
-
-
-    \chapter{Event Driven Architecture and Domain Events}
-    \section{Intro}
-    Relationships between bounded contexts.
-    Bounded contexts get translated into microservices and these relationships get translated into interactions between the microservices.
-    Rest over HTTP APIs are a common synchronous mechanism by which microservices interact.
-
-    Microservices also produce different types of events.
-    These are consumed by other microservices as well as the components within the bounded context where the event was produced.
-
-    Event driven architecture is an architecture paradigm promoting the production detection, consumption of, and reaction to events.
-    Microservices are producers and consumers of events.
-    As a result, event driven architecture is commonly used for building applications with microservices.
-    Events are asynchronous in nature and realisation of events based interactions require the use of some messaging technology.
-    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ) %TODO consider where Aeron etc fits into this
-
-    \section{Monolithic and Distributed Communication Patterns}
-    First pattern is the monolithic object communication pattern in which the object calls methods on other objects.
-    All of this is happening within a common memory space or within a common process.
-    This is typical of a monolithic application. Referred to as a monolithic object commnication pattern.
-
-    \paragraph{Note}
-    In distributed applications or systems the components reside in their own process space.
-    In other words there is no sharing of compute or memory resources between the components.
-    These components communicate with each other by way of some kind network protocol.
-    This network communication protocol may be sychronous or asynchoronous in nature.
-    - By Sychronous, the caller statys blocked until it recieved a response from the other component.
-    - Examples: HTTP, RPC
-
-    - by Asynchronous communication, the caller does not wait for a response
-    - Examples: Advanced Message Queueing Protocol
-
-    These are not mutually exclusive.
-    Communication may be between two endpoints.
-    Referred to as 1 to 1 communication, also known as single receiver communication.
-    Common example is HTTP, wherein the communication is between two endpoints.
-    With synchronous protocols you wil always have 1 to 1 communication (Reactive :D)
-
-    This communication pattern may also be realised by using the asynchronous messaging mechanism.
-    It will look synchronous but the underlying protocol is asynchronous
-
-    In a one to many communication pattern, there are multiple components that are interested in receiving messages from the sender.
-    This is commonly achieved by way of a pub sub messaging pattern.
-    - A message is published by a publisher to a topic
-    - Other components will subscribe to the topic and receive messages.
-        - Each of these components will carry out a specific task assigned to it.
-
-    Common protocols for this kind of communications is REST over HTTP for these microservices.
-
-    For messaging there are two types of products. Products that are AMPQ compliant such as ActiveMQ and RabbitMQ.
-    Then there are products that are non AMPQ compliant such as Kafka, Amazon, SQS, Amazon, SNS. These are only examples.
-
-    \paragraph{Consider Adding Reactive Patterns}
-
-    \section{Event driven architecture}
-    Events occur naturally in business scenarios.
-    Events are an indication that something of significance has happened at a point in time or that something has happened in the past.
-
-    There are consumers who are interested in knowing about the events, so they would like to be notified.
-    When an event occurs, one or more consumers are notified about the event.
-    On receiving the event, the consumer may carry out processing, and this processing of the event is independent of the producer of the event and other consumers of the event.
-    An event driven architecture is a software architecture paradigm that promotes the designing of systems as loosely coupled components that act as event producers and event consumers.
-    Central to the event driven architecture is an event backbone.
-    This event backon is a infrastructure component.
-    It is referred to by multiple names, event bus, event broker events, router events and mediator events hub.
-    - Common terms used for this component.
-    - Name dependes on the product features and functions and the vendor """marketing""" these products. (Warrants research)
-    - Important to keep in mind that conceptually they are similar.
-    - They all provide a way for routing of the events from producers to the consumer.
-    - Producer of the event inform the event backbone of something of interest happening.
-    - They do this by way of synchronous mechanism exposed by the events backbone.
-    - When the events backbone recieves the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
-
-    The important thing to keep in mind here form the event consumer perspective is that they are not polling for these events. They are notified.
-    Same as the pub sub messaging pattern.
-    Commonly used for realising event driven architectures.
-
-    Data in the event messages.
-    - The content of the event message may be the state data or the metadata.
-    - The consumers receiving the message representing the event will get all the relevant state data and they can carry out the processing using the state data that they will recieve in the event messasge.
-    - It is also possible to design the event structure such that it contains only the metadata.
-    - Some may need meta data only others may somehow return to the publisher and retrieve the detailed information.
-    - You would have to use both the state data and metadata in your event messages.
-        - There is no hard and fast rule but certain consideration.
-        - If the message size it too big, then there may be challenges related to latency.
-            - In this scenario you may consider using only metadata in your messages.
-    - If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be agood idea to go with the state data in the event message.
-
-    \subsubsection{API Versus Event Driven Architecture}
-    APIs rae directed commands, whereas events are observables.
-    The central theme in an architecture that depends on APIs is an orchestrator.
-    Ano orchestrator may be thought of as a centralised component that holds the business logic and the flow decisions.
-    When the orchestrator needs to do something it invokes an API, waits for the response, then invoke other APIs to carry out the required business processing.
-
-    In the case of EDA the orchestrator is replaces with event producer and event consumers.
-    These event consumers are the observers of the events which are produced by the event producer.
-
-    One big difference between these two architectures is that the event producers and event consumers all have business logic and are repsonsible for achieving the desired results from the business process.
-    The event producer does not make a direct invocation on any component.
-
-    Rather, it simply triggers an event, a message that is passed on to all the consumers.
-    Keep in mind that even producers may also be event consumers and event consumers may also be event producers.
-
-
-    Differences between API and Event Driven Architectures
-    - In the case of APIs, the caller has a knowledge of the API endpoint, whereas in the case of events the producer doesn't know any consumer.
-    - APIs are synchronous, meaning that the caller has to wait for the response to come back. The caller is blocked.
-    - In the case of events, a producer just produces an event and moves on. Not it does not even depend on the availability of the consumers.
-        - What this means is that it can lead to higher availability in the case the consumer is not available
-        - The producer moves on and when the consumers comes up it reciecves the event data.
-    - APIs are based on the reqeust response paradigm wheres in the case of events the message consistes of event data, which can be the state data or the metadata in the case of the API.
-    - Even with the disributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events, the event prodicers and the event consumers are highly decoupled and the architecture itself is extensible.
-        - The reason is that you may add or remove consumers without impacting the consumer in any way.
-    - Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread acrosss multiple components.
-        - Each of these componenets, the prdocuers and the consumers have the autonomy to make business decisions.
-        - With APIs, it is easy to understand the flow because the business logic is centralised.
-        - With event driven architecture, it is reltively difficult to follow the busines logic.
-
-    EDA is preferred for microservices but both APis and events can be used. The decision depends on your use case and your requirements.
-
-
-    \subsubsection{Summary}
-    Events indicate that something of significance has happened.
-    Event driven architecture is a software architecture paradigm which is based on events.
-    By nature, EDA uses asynchronous communication between consumers and producers.
-    EDA is highly decoupled and extensible and the busienss logic and the business processes in the case of EDA are decentralized.
-    That means all of the components in the system have some business logic which may be managed independently of other components in the system.
-
-
-    \section{Domain Events - Pattern}
-    Events are an integral part of the model defined for the bounded context.
-    - It is important to capture all the relevant events within a bounded context, as a part of the model and the ubiquitous language for that bounded context.
-    - These evetns are raised by the model components, when there is some kind of a state change.
-    - Each of these components can raise events to indicate some kind of state change.
-    - There may be other sources of events within a micro service.
-        - There may be application monitoring but this is not emitting events related to the bounded context.
-        - These are technical events and are not a part of the bounded context.
-    - Components that are emitting events are referred to as the event srouces.
-    - Event constumers are the consumers of those events and these event consumers may be a part of the same microservice.
-        - In that case the events emitted by the event source are referred to as the domain events.
-        - Events commited by the event source may be consumerd by other microservics.
-        - What that means is that an event defined in one bounded context is getting consumed in a different bounded context.
-        - In such cases, the event is referred to as an integration event.
-        - Event consumer may also be part of an external services. Basically can be thought of as a legacy service, APIs or any other service not implemented as a microservice in such cases.
-        - Semantically there is no difference between domain events and integration events.
-        - Its just the consumer that decideds whether the event will be referred to as the domain event or the integration event.
-
-    Formal definition of domain event.
-    - A domain event is a message that informs other parts within the same bounded context that something of significance has happned.
-    - This is the key part within the same bounded context.
-    - Now, when a domain event is triggered, it indicated a state change within the bounded context and the consumers of the event revieve the event message and execute some busines logic within the same bounded context.
-    - Note: The domain event is triggered within a bounded context and it is consumed within that same bounded context.
-    - The reason why events have become an integral part of the domain driven design is that events occur naturally.
-        - Important Note: That is all domains have concept of events.
-    - A quick way to identify events in a domain is to look for statements like when this has happened then do this.
-    - This part represents the event and this part represents the reaction to the event that is the business logic.
-    - This reaction is known as a side effect......!!!
-
-
-    Language plays an important role in domain driven design. Important to be very careful when you are naming you events.
-    Always use past tense as event has already happened.
-    Best Practices:
-    - Ubiquitous language so that there is not need of translation between IT teams and Business teams
-    - Do not add "event" as a suffix to the event name or do not add "operation" as a suffix.
-
-    Event handler refers to the implmentation of the event consumer logic.
-    In the case of the domain event, the handler is part of the same microservice codebase as the event producer.
-    These handlers subscribe to the events  of interest and there may be zero or more handlers per event.
-    Like the events the handlers must be named appropriately.
-
-    Use of ubiquitous language as suggested as a best practice, you can name the handler the same as the event that the handler is handling.
-
-    Common misconception about event realisation is that events have to be managed with messaging but that is not true for domain events.
-    Domain events may be emitted and consumed synchronously, for example by way of direct function calls.
-    - Note: Domain event producer and the handler are in the same process.
-    - You can use asynchronous mechanism such as in-memory messaging or even an external message broker.
-    - State changes and raising of the events need to happen atomically.
-    - In the case of synchronous calls, its easier to implement such mechanisms, whereas with asynchronous you will need to use the appropriate patterns.
-
-    \subsubsection{Summary}
-    - Two types of events - domain and integration events.
-    - Domain events are emitted and handled within the same bounded context, whereas integration events are handled outside of the bounded context.
-    - Domain events may be handled synchronously as well as a asynchronously appropriate.
-    - Naming conventions should be used for naming events and the event handlers.
-    - State updates and raising of the event must be done in a unit of work or in a transaction.
-
-    \section{Integration Events - Pattern}
-    - Event consumers are outside the source Bounded Context
-    - Can be consumed by external services
-    - An integration event is a message that informs components outside of the source Bounded Context that something of significance has happened
-        - A integration even does not lead to any state changes in the source Bounded Context
-
-    \subsubsection{Domain versus Integration Events}
-    - Domain
-        - Within a Bounded Context i.e Microservices
-        - State changed within a BC
-        - Direct function calls
-        - Synchronous calls
-        - Modelled as part of BC model
-    - Integration
-        - Between BC or BC and External Services
-        - No state change in source BC
-        - Must be a Network Protocol
-        - Asynchronous preferred
-        - Consumer decides
-
-    Integration events communication
-    - Asynchronous is preferred
-        - To achieve higher levels of decoupling
-        - Future extensibility i.e add new consumers
-        - Enables one-to-many
-
-    Messaging Technology examples: Kafka, RabbitMQ, ActiveMQ......add others
-
-    Relationship - Domain and Integration Events
-    - Domain event may be published as integration event
-        - Both events defined as part of the model for the BC
-        - Semantically the same
-        - Publishing mechanism is different - or same if external messaging is ued for both event types
-
-    Integration Event consumer
-    - Consumer may leverage anti corruption layer
-
-    \subsubsection{Summary}
-    - Domain events may be published as integration events
-    - Integration events published asynchronously
-    - Consumer bounded context may use ACL
-
-    \chapter{Event Storming for creating shared knowledge}
-
-    Events occur naturally in domains.
-    What that means is that to understand the domain, you must understand the events consumed in the domain.
-    Event storming is a collaborative exercise that is carried out by the stakeholders to identify the events, producers and consumers in a given scope.
-    The objective is to create a shared understanding of the domain.
-    The outcome of the exercise is a knowledge model for the domain.
-    Event storming is carried out in the workshop format.
-    There is a facilitator who works with the stakeholders from different parts of the organisation or different parts of the domain.
-
-    This workshop may be carried out in person or online using collaboration tools in one of the lectures.
-
-    \section{Introduction to Event Storming}
-
-    Knowledge crunching is a way by which teams process the knowledge received from the domain experts into a domain model.
-    
-    How do recieve the knowlege from the domain experts?
-    - Interviews
-    - Design thinking (from domain driven design)
-    
-    Common technique called event storming. (Just examples)
-    
-    Other ways in which you can receive knowledge from the domain experts in a structured manner.
-    My focus here is on event storming.
-    A formal definition of event storming is a collaborative, workshop based technique for creating a shared undersatnding of complex business domains and processes.
-    Key to realises that this is creating a shared understanding.
-    
-    The intent is not to design and model the system but to just create a shared understanding among the stakeholders within the domain, and the stakeholders are the business experts as well as the technology experts.
-    Event storming may be used for creating this shared understanding from the overall perspective or the big picture perspective as well as it can be used for creating the shared knowledge from a business process perspective.
-    The technique for this is quite flexible in terms of what it can be used for.
-    The central theme is business events.
-    
-    The participants in the workshop identify and understand the business events.
-    They look for the cause of the business events as well as the effect of those business events.
-    - Technique was created by Alberto Brandolini in 2012 %popular amongst the practitioners.%
-    \textbf{Biggest benefit of this technique is that it accelerates the development process for complext applications}
-    One important think to keep in mind is that the knowledge created by way of event storming is used as an input for creating the models.
-    In otherwords, you will not be replacing modelling with event storming as an input for creating your UML diagrams. See book about event storming.
-    
-    \subsubsection{The workshop}
-    The most important thing about the event storming workship is that you must invite the right set of domain experts.
-    There is a dedicated faciallitator who works with the participants.
-    This dedicated facilitator should have some prior experience with event storming.
-    The number of partcipants in the workshop is dedicated by the scope.
-    If you are carrying out the event storming workshop for understanding the business process then you should expect have between 4 and 8 partcipants in the workshop.
-    The duration of the workshop depends on the scope of the domain and the experience of the participants.
-    It may vary anywhere from a couple of hours to a couple of days.
-    In-person workshop is preferred over online workshops and the reasons is that event storming involves a lot of interactions when the participants are in the same room.
-
-    Recently online workshops have also become commonplace and are becoming more acceptable. Good tools to carry these out online.
-
-
-
-    An in-person workshop is conducted in a spacious room with a lot of walking area.
-    This room must offer enough free space on walls to hang the plot of paper so that the participants have unlimited modelling space.
-    I.e they will not have to stop throwing their ideas on the plot of paper due to running out of the space for it.
-    Participants will be using a lot of different colored stickies.
-    At the end of the workshop, the walls will have plotter paper hanging of the walls and there will be a lot of stickies on it.
-    The stickes on the plotter paper, are color coded.
-
-
-
-    For an online workshop, participants join over a video call and use a collaboration platform for carrying out the event Storming activities.
-
-    All the participants can make changes to a common virtual board and these changes are visible to other participants in real time.
-    There are many collaboration platforms that allow the participants to do exactly that.
-
-    The expected output form the workship is the creation of a shared understanding of the business process.
-    The shared understanding is then used for the modelling of the domain.
-
-
-
-
-    The objective is not to design to the system.
-    The objective is not to be able to answer all the questsion.
-    It is not to produce the domain driven design models.
-
-
-    Event storming is a collaborative process for creating share understanding of the domain or the business process.
-
-    Event storming is carried out in a facilitated workshop format and it may conducted in person or online.
-    
-    \section{Elements of Event Storming}
-
-    Read the book by alberto....
-
-    Business events are natural in all domains.
-    They are the starting point of the conversation in an event storming workshop.
-    An important point to note is that all business events are referred to is that all business eventts are referred to as the domain events in the context of event storming.
-    The objective of the event Storming workship is to understand the causation.
-    What this means is that the participants discuss the domain events to understand the cause of those events and then they also discuss the effect of those events.
-
-    This cause and effect is depicted as teh knowledge of the domain by using the six basic elements.
-
-    There are six building blocks or elements which are used for depicting the knowledge or flow in an event storming workshop.
-    Color coded stickies are used to represent each of the six elements.
-    There is a suggested standard for the colors of these stickies or the elements, specific colors are not required.
-
-    You can decide on a standard for the colors of these stickies or the elements but you don't have to follow it as long as you are consistent through out the workshop.
-    - A domain actor causes a state change in the domain and this state change is initiated by way of a command invoked by the actor.
-    - This state change is initiated by way of a command invoked by the actor.
-    - Command is represented by a blue sticky on the workspace.
-    - This command leads to the raising of domain events, a domain event is a representation of some fact that has already happened.
-    - A domain event is repsented in the workspace as an orange sticky.
-    - When the domain event is raised, it may lead to a reaction, and this reaction is carried out by way of component that is referred to as the policy.
-    - This policy is repsented by way of a purple sticky..
-    -- Since domain events represent something that has happened in the past, they should always be named in past tense.
-
-    Important to understand that a command is abstract.
-    That is , it does not represent an active component within the domain.
-    It simply represents the intent of an actor that must be carried out by the domain.
-
-    Business logic execution is carrier out in the command processes in the context of event storming.
-    The element that carries out the processing of the command is referred to as the aggregate.
-
-    The element that carries out the processing of the command is referred to as the aggregate.
-    An aggregate is represented by way of a yellow sticky.
-    Apart from the command, an external system or service can also be a source of an event.
-
-    Think of the external service as something outside the domain under consideration.
-    Such external services are represented by a pink sticky.
-
-    An event is directly or indirectly associated within a domain.
-    A state change represents some kind of change in data within that domain.
-    This data may be of interest to the stakeholder, so the way it works within event storming is that event has some data which is represented by a read model.
-    This read model is the response to queries for the domain data.
-    The read model is used by the user interface that the stakeholders can use.
-    - This user can be an email
-    - Doesn't have to be a pane of glass showing the data.
-    - It can be a dashboard for the executor or it can definitely be a browser based application during the event Storming workshop.
-    The read model is presented by way of a green sticky.
-    It is also referred to as the.
-    It is also referred to as the event data model or query model.
-    They key point to keep in mind is that event has some data which is of value to the stakeholders and this read model repsents that data.
-
-    \subsubsection{Summary}
-    Central idea is the domain event.
-    The domain event is caused by a command which is processed by the aggregate domain.
-    Event may also be caused by a command which is processed by the aggregate domain.
-    Event may also be caused by a command being processed by an external service.
-    The effect of the domain event is realised by way of a policy that is triggered by the domain event.
-    This policy may further invoke commands that may lead to other domain events.
-    Domain event has some data of value to the stakeholder.
-    The data of value is represented by way of a read model.
-    This read model may drive a user interface.
-
-    \section{Preparing for the ES workshop}
-
-    Common for large organisations to hire outside consultatns to carry out the facilitation.
-    (Author says you don't need them.....)
-
-    Existing team members such as project managers and Scrum masters can easily be trained to become event storming workshop facilitators.
-    Bottom line is anyone can learn to become a facilitator by observing experienced facilitators and by practicing.
-
-    Make the assumption here that the facilitator is identified and the participants have been invited.
-    What does the facilitator have to do next?
-    Prepare the room for the in-person workshop, or if it is a remote workshop then they need to ensure that all the tools are ready to go.
-    Second thing they need to do is on the day of the workshop, educate the participant on what is the event storming workshop.
-
-    Define the scope of the workshop. Make sure all the participants are on the same page in terms of which business process or processes are in the scope of the worksop.
-    Then level set the expectation by discussing the expected outcome.
-    Once these tasks have been completed by the facilitator, its time for the facilitator to dive in.
-
-    Details of each task.
-    To set the stage for an in-person workshop, you need to make sure that the room that you're using is spacious.
-    Move all tables and chairs out of the way.
-    Reaons for this is to provide space for the participants to move around and hang the plot of paper on the walls with masking take and then draw a timeline from left to right.
-    The number of plotter papers that you will hang on the wall will depend on the scope of the excercise.
-    Don't have to hange the plot of paper all aournd the room, you can do it as you go along.
-    Idea is to be prepared to set up the stage for a remote workshop, esure that all the tools are readyu to go at least two days prior to the workshop.
-    Ensure that all the tools are ready to go at least two days prior to the workshop.
-    I.e have the video conferencing setup.
-    Must have the tools for the collaboration setup, create a board and make sure all teh participants are able to connect to the video conference and they are able to use the collaboration tools as well.
-    --> Avoid addressing technical challenges faced by the participants. This can be a dampener.
-    ---> make sure everything is working from day one before the workshop starts.
-
-
-    May have a group of participants who are already experienced with the event storming, but there is no harm in spending a few minutes reminding everyone as to what is involved in the workshop and as part of this education do not use any technical terms.
-    Specifically do not talk about domain driven design.
-    Keep it business focused.
-    Note, participants are no necessarily technologists.
-    Discuss, the purpose of colored stickies and the workspace, bbut you don't have to spend too much time on these aspects as participants will learn as you processed through the workshop.
-    Something that really helps is put all the colored stickies and what they represent somewhere in the workspace so that it is visible to anyone who has a question about what color to use, which is an extermely common question.
-
-    In the beginning of the wrokshop, after the general overview of event storming, it is time for the facilitator to define the workshop, after the general overview of event storming, it is time for the facilitator to define the scope of the workshop.
-    The scope of the workshop may be a big picture from the domain perspective, or it may be a single business process.
-    Irrespective of what the scope is.
-    It is important for all participants in the room to be on the sme page and ensure that everyone stays on track.
-    Place the high level objective for the workshop in the sowkspace so that it is visible at all times.
-
-    Another thing that is important is that as you will start going through the workshop, it is very much possible that there may be discussions around aspects which are out of scope from the workshop perspective, but they may be valueable from the domain perspective.
-    As a result, you don't want to lose out those aspectss, so create a dedicated space to list out all of these out of scope elements.
-    You can follwo up on these items after the workshop.
-
-    Faciliator, before the workshop is set the expectations and this is best odne by way of sharing real experienced from the past workshops and if possible, sharing pictures form those workshops.
-    These expectations should be realistic.
-
-    Engage the participants and ask them what their thoughts are on the event storming workshop a swell as on what htey expect.
-    Idea is to get everyone excited so that they become active partcipants in the workshop and they should all be looking forward to learning and teaching.
-    Use this part of the workshop for ice breaking activities.
-    At this time, the facilitator is ready to dive in.
-    One of the important roles for the facilitator is to make sure that everyone is having fun and is energised because low energy will lead to an outcome which is going to be of bad quality.
-    Participants must feel engaged.
-    Participants must be active throughout the workshop, so a facilitator must keep those aspects in mind.
-
-    \section{Conducting the ES Workshop}
-
-    Facilitators must keep in mind that event storming doesn't require the particpants to use all of the elements to create the knowledge model.
-    It is the faciliators job to help the participants pick up the relevant elements to design the knowledge model.
-    A lot of flexibility in how the event storming workshop is conducted.
-
-    Facilitator may adjust the steps, the flow and the pace as needed.
-    These adjustments depend on multiple factos such as the facilitators and participants, past experiences, complexity of the domain and granularity of the knowledge model. Whether it is going to be high level or whether it's going to be detailed.
-    There may be other factors as well.
-
-    General steps.
-    The first step involved in the workshop prioritises the participants to identify the domain events.
-    Once the domain events have been identified
-
-    as a next step, participants discuss the ordering of the events across the timeline.
-    In this step, duplicate events are also revealed and removed.
-
-    In the third step participants are asked to identify the cause and effects of events.
-    Here commands, policies and external services get added to the knowledge model.
-
-    In the fourth step, the commands are associated with the aggregates.
-
-    ---------
-
-    First step in the knowledge gathering excercsie.
-    The faciliator asks the participants to brainstorm and hang as many events as possible in the workspace.
-    Initiallly participants may be hesitant.
-    This is common so it is suggested that the facilitator be the first one to place an event lol.
-    At this point, all participants should be encouraged to hang events once all the particpants have placed the events that they could come up with.
-
-    Excercise moves to the next step.
-    In this step, the particpants discuss when each of the events occur and order the events across the timeline from left to right.
-
-    One important tip for the facilitator is that facilitators should always remember that their role is to facilitate and they need to let the participants do the modelling.
-    Once the participants have ordered the events look for duplicates.
-
-    Step number three.
-    Participants need to think about commands policies and actors to identify the cause and the effect of events.
-
-    These concepts are a little tricky compared to the domain events, so the point the facilitator is encouraged to ask questions to help the particpants make some progress.
-
-    In step number four, the facilitator asks the participants to think about the business.
-    This is the logic that responsible for creating the domain events.
-    At the same time it is important for the facilitator to keep track of time.
-    Every 30 minutes it is suggested that the facilitator review the progress and adjust the pace and the direction as needed.
-
-    Facilitator may ask the participants to focus, put people in flow.
-    Focus may shitft to the next event for which we don't have the domain logic information.
-
-    Post workshop activities carried out by the facilitator.
-    Facilitator takes pictures of the workspace before taking down all of the poltter pare from the walls.
-    It will be much more easier for the facilitator to go through the pictures rather than rolling out the long sheets of paper.
-
-    At the end of the workshop the facilitator asks the participants for their feedback.
-    What worked well?
-    What needs to be changed?
-
-    The expectation is that the facilitator will incorporate this feedback in their next workshop.
-    Within 2 to 3 days.
-
-    The facilitator consolidates the knowledge and shares knowledge model with all of the participants.
-    Faciliator requests the participants to go over the knowledge model to ensure its accuracy.
-
-    Facilitator decides on the next steps and ensures that all of the parking lot items are addressed.
-
-    %TODO excercise
-
-    \section{Learning Objectives: Discovering the Events in a Domain}
-
-
-    \section{Introduction to Event Storming}
-
-
-    \section{Elements of Event Storming}
-
-
-    \section{Preparing the ES workshop}
-
-
-    \section{Conducting the ES workshop}
-
-
-    \chapter{Microservices Data Management Patterns}
-
-
-    \section{Introduction to Microservices Data Persistence}
-
-
-    \section{Monolithic Apps - Shared Persistence Storage}
-
-
-    \section{Service Orientated Architecure (SOA)}
-
-
-    \section{Separate Database Patter}
-
-
-    \section{Brownfield Microservices - Database patterns , options}
-
-
-    \section{Shared Database Pattern}
-
-
-    \chapter{Microservices DB Performance Management}
-
-
-    \section{Need for more Data Patterns}
-
-
-    \section{Commands Query Separation (CQS)}
-
-
-    \section{Realisation of Commands and Queries}
-
-
-    \section{CQRS - Command Query Responsibiltiy Segragation}
-
-
-    \section{Data Replication between WRITE-READ sides}
-
-
-    \section{Event Sourcing and Event Store consideration}
-
-
-    \chapter{Microservices Managing the Data integrity}
-    Using messaging there is potential loss of the message if the MQ or the messaging broker is unavailable.
-    The write side, writes the data to its database but is unable to put the message on the queue.
-    Now the read side will never recieve the message.
-
-    As a result the data across the two database instances is now in an inconsistent state.
-    This kind of data loss may be prevented by using a reliable messaging pattern.
-    In this pattern, the message is guaranteed to be delivered.
-    The idea is that when the right side encounters a failure on the message sent, it continues to retry until it is successful in sending the message.
-
-    These retries may cause a delay in getting to a consistent state of data across the databases instances, but the data will eventually be consistent across the database instances.
-
-    Another scenario that my lead to inconsistent state.
-    In this scenario the right side sends duplicate messages and the read side processes the same message, more than once and that may lead to inconsistent state.
-
-    \section{Designing for failure}
-    The concept of design for failure suggests that you should always anticipate that there will be failure.
-    As a designer of the software, you should identify the failure points in your architecture.
-
-    Consider where are the failure points?
-    Data base may go down or even the network may not be available to a microservice inorder to connect with the message bus etc.
-    Even if the network is available, the external service may not be available.
-    So the suggestion is that once you have identified the failure points in your architecture, proactively address the failure poitns.
-
-    Note:
-    The best way to find out all the failure points in an architecture are to assume that there will be failures in all interfaces and components.
-    Database may go down. Run out of resources, command object may not be able to push a message to the MQ due to the failure of the MQ server.
-    May be failures on the read side.
-
-    As a designer, once you have identified the failrue points you need to think about the impact of those failure points.
-
-    Example solutions:
-    Write to the database and publish a message to the MQ in a single unit of work or transaction.
-    Two phase commit is a mechanism that can be used for carrying out the write and publish in a single unit of work or transaction.
-    Popular for the last three decades.
-    In two phase commit a distributed algorithm is used for coordringating all processes involved in the distributed transaction.
-    It is also referred to as the extended architecture or just ECS for short.
-
-    In the two phase commit, there is a transaction manager that coordingates the transaction across all of the involved resources.
-
-    The challenge with two phase commit is that it is quite complext to implement.
-    A bigger issue is that a lot of distributed technologies do not support it.
-
-    Due to these challenges the two phase commit is not very popular with the designers of distributed systmes.
-
-
-    An alternative would be to break the database write and publish steps intwo steps and use local database transactions.
-    In this courses it is called the "reliable mesagin pattern". In this pattern, the right side writes the domain objet data and the event data in the database tables with a local transaction.
-    Then the evens are replayed against querying system in a separate step.
-
-    Key points.
-    You must identify failure points in your architecture and you must proactively address those failure points.
-    This is the concept of designing for failure.
-
-    Two phase commit can be used for executing distributed transaction across multiple resources.
-    Keeping in mind there are multiple challenges in using two phase commit for preventing the loss of messages or events.
-
-    You may use reliable messaging patterns.
-
-    %%TODO -- Address --- CQRS - Write side failures
-    %%TODO -- Address --- CQRS - Read side failures
-    %%TODO -- Handling duplicate messages
-
-    \chapter{Microservices and Kafka}
-    Skip for now.....do hands on.
-%    \section{Use of Kafka in Microservices}
-%    \section{Kafka Overview}
-%    \section{Kafka Concepts}
-%    \section{Kafka vs AMQP (Rabbit MQ)}
-
-
-    \chapter{Managing Distributed Transactions with SAGA}
-    \section{Distrubuted Transactions with SAGA}
-    \section{SAGA Pattern for distributed transactions}
-    \section{SAGA Choreography vs Orchestration}
-    \section{SAGA Implementation Considerations}
-
-    \chapter{Microservices and API}
-    \section{Microservices - API Realisation}
-    \section{introduction to REST API}
-    \section{REST API Resources and Design COnstriaints}
-    \section{API Management}
-    \section{Introduction to GraphQL}
-    \section{GraphQL Schema Definition}
-
 
     \chapter{Microservices in depth}
     \section{Introduction}
@@ -4875,7 +3813,6 @@
     - Performant writes
     - Efficient Reads
 
-
     \section{Software Extensibility Architecure Patterns}
 
     These patterns allow for the extenstion of the funcitonality and the capabiltiies of a system.
@@ -5031,7 +3968,6 @@
     -- Can use load balancing using parameters or HTTP headers.
     ----- Example we can use is the user agent header which can tell us what type of device or platform the request is coming from.
     Use of this pattern can help extend the functionality of our system to different front ends.
-
 
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
 
@@ -5309,7 +4245,6 @@
     --- First way is fix an republish those message back to the original queue
     --- The second way was to manually handle them on a case by case basis
 
-
     \section{Deployment and Production Testing Patterns}
 
     \subsection{Rolling Deployment Pattern}
@@ -5336,7 +4271,6 @@
 
     One downside of this pattern is there is no isolation between the servers running the new version of our application and the old version of our application
     So there is a risk of the new deployed instances starting a cascade of failures that may actually bring the entire service down.
-
 
     Another downside to this is that throughout the entire duration of the release rollout we have two software versions running side by side.
     -- If the new version of the change we introduced is fully compatible with the old version then it is not an issue
@@ -5477,14 +4411,12 @@
     Chaos Engineering is a pattern that allows us to increase confidence and protect out production system against critical failures by injecting failures deliberately in a controlled way.
     We can find single points of failure, scalability issues and make sure when a real traffic spike or hardware failure happens we have the logic in place to handle the situation gracefully.
 
-
     \chapter{Big Data Architeciture}
 
     \paragraph{Terminology} - Data sets which are too big or too complex or are produced at too fast that exceed the capacity of a traditional application.
     Characteristics are typically volume, variety, rate/velocity.
     This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
     Can also be used to find anomalies, analysing logs.
-
 
     \section{Batch}
     requires the storage of incoming data in a distributed database or a distributed files system.
@@ -5510,7 +4442,6 @@
     Forces users to wait a long time before they can act on the insights from the system.
     May not know that the data is not in real time.
 
-
     \section{Real time processing / Streaming}
     Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
     After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
@@ -5521,7 +4452,6 @@
     \paragraph{Cons}
     Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
     Hard to data fusion in real time, at different time points or analysing historic data. Only limited to recent data for predictions.
-
 
     \section{Lambda architecture}
     May need processes of both strategies.
@@ -5553,37 +4483,26 @@
     \paragraph{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
 
-
     \part{Data Architecture}
     %Place holder
 
-
     \section{Intro}
-
 
     \section{Data Types}
 
-
     \section{Datawarehouse}
-
 
     \section{Data Lake}
 
-
     \section{Data Lakehouse}
-
 
     \section{Data Governance with the Data Mesh}
 
-
     \section{Streaming data in Data Science}
-
 
     \section{Data infrastrcture for Machine Learning}
 
-
     \section{Flowchart and Use case examples}
-
 
     \chapter{Components}
 
@@ -5598,7 +4517,6 @@
     \subsubsection{Scalability}
 
     \paragraph{Load Balancing}
-
 
     \section{Detailed Design}
 
@@ -5625,7 +4543,6 @@
     \paragraph{Application level}
     Scaling via instances
 
-
     \chapter{Databases}
 
     \paragraph{NoSQL}
@@ -5634,7 +4551,6 @@
     \paragraph{SQL}
 
     \subsection{Networks}
-
 
     \section{Performance and Scalability}
 
@@ -5669,13 +4585,10 @@
     \chapter{Deployments}
     Docker, Jenkins
 
-
     \chapter{System design security concerns}
-
 
     \section{Introduction}
     Cover security from a system design point of view.
-
 
     \section{OWASP Top 10}
 
@@ -5699,18 +4612,13 @@
 
     \subsection{Server Side Request Forgery}
 
-
     \section{Network security}
-
 
     \section{Encryption}
 
-
     \section{Digital signatures}
 
-
     \section{Authentication}
-
 
     \chapter{Useful resources}
     Stuff used to create these notes
@@ -5721,7 +4629,6 @@
     \newpage
 
 % Example of including a code snippet
-
 
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
