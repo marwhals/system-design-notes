@@ -114,3 +114,159 @@ Potentially useful reading list
 98. *The Big Short* – Michael Lewis
 99. *The Smartest Guys in the Room* – Bethany McLean & Peter Elkind
 100. *The Black Swan* – Nassim Nicholas Taleb
+
+---
+
+# Economics
+
+---
+
+## 🧠 Core Economic Theory & Textbooks
+
+1. *The Wealth of Nations* – Adam Smith
+2. *Capital* – Karl Marx
+3. *The General Theory of Employment, Interest and Money* – John Maynard Keynes
+4. *Principles of Economics* – N. Gregory Mankiw
+5. *Economics* – Paul Samuelson & William Nordhaus
+6. *Intermediate Microeconomics* – Hal R. Varian
+7. *Microeconomic Theory* – Mas-Colell, Whinston & Green
+8. *Macroeconomics* – Olivier Blanchard
+9. *Econometrics* – Fumio Hayashi
+10. *Mathematics for Economists* – Carl P. Simon & Lawrence Blume
+
+---
+
+## 📈 Economic History & Development
+
+11. *A Farewell to Alms* – Gregory Clark
+12. *Why Nations Fail* – Acemoglu & Robinson
+13. *The Great Transformation* – Karl Polanyi
+14. *The Ascent of Money* – Niall Ferguson
+15. *The Economic History of the World* – Angus Maddison
+16. *The Birth of Plenty* – William J. Bernstein
+17. *The Lever of Riches* – Joel Mokyr
+18. *The Origins of Capitalism* – Ellen Meiksins Wood
+19. *Guns, Germs, and Steel* – Jared Diamond
+20. *The Rise and Fall of Nations* – Ruchir Sharma
+
+---
+
+## 🌍 Globalization & International Economics
+
+21. *Globalizing Capital* – Barry Eichengreen
+22. *The Globalization Paradox* – Dani Rodrik
+23. *The Box* – Marc Levinson
+24. *The Travels of a T-Shirt in the Global Economy* – Pietra Rivoli
+25. *Poor Economics* – Banerjee & Duflo
+26. *The Bottom Billion* – Paul Collier
+27. *Dead Aid* – Dambisa Moyo
+28. *The End of Poverty* – Jeffrey Sachs
+29. *Development as Freedom* – Amartya Sen
+30. *The Elusive Quest for Growth* – William Easterly
+
+---
+
+## 💸 Behavioral & Experimental Economics
+
+31. *Thinking, Fast and Slow* – Daniel Kahneman
+32. *Misbehaving* – Richard H. Thaler
+33. *Nudge* – Thaler & Sunstein
+34. *Predictably Irrational* – Dan Ariely
+35. *The Honest Truth About Dishonesty* – Dan Ariely
+36. *Scarcity* – Mullainathan & Shafir
+37. *The Undoing Project* – Michael Lewis
+38. *Animal Spirits* – Akerlof & Shiller
+39. *The Why Axis* – Gneezy & List
+40. *Experimental Economics* – Davis & Holt
+
+---
+
+## 🏛️ Political Economy & Institutions
+
+41. *Capital in the Twenty-First Century* – Thomas Piketty
+42. *The Road to Serfdom* – Friedrich Hayek
+43. *Capitalism and Freedom* – Milton Friedman
+44. *The Shock Doctrine* – Naomi Klein
+45. *The End of Alchemy* – Mervyn King
+46. *The Big Short* – Michael Lewis
+47. *Lords of Finance* – Liaquat Ahamed
+48. *The Man Who Knew* – Sebastian Mallaby
+49. *The Rise and Fall of the Great Powers* – Paul Kennedy
+50. *The Great Rebalancing* – Michael Pettis
+
+---
+
+## 🌿 Environmental & Resource Economics
+
+51. *Doughnut Economics* – Kate Raworth
+52. *The Economics of Climate Change* – Nicholas Stern
+53. *Collapse* – Jared Diamond
+54. *Natural Capitalism* – Hawken, Lovins & Lovins
+55. *The Limits to Growth* – Donella Meadows et al.
+56. *Hot, Flat, and Crowded* – Thomas L. Friedman
+57. *The Sixth Extinction* – Elizabeth Kolbert
+58. *This Changes Everything* – Naomi Klein
+59. *The Uninhabitable Earth* – David Wallace-Wells
+60. *Climate Shock* – Wagner & Weitzman
+
+---
+
+## 🏦 Financial Markets & Crises
+
+61. *Manias, Panics, and Crashes* – Charles Kindleberger
+62. *Irrational Exuberance* – Robert J. Shiller
+63. *The Black Swan* – Nassim Nicholas Taleb
+64. *Fooled by Randomness* – Nassim Nicholas Taleb
+65. *Flash Boys* – Michael Lewis
+66. *When Genius Failed* – Roger Lowenstein
+67. *Too Big to Fail* – Andrew Ross Sorkin
+68. *The Alchemy of Finance* – George Soros
+69. *Against the Gods* – Peter Bernstein
+70. *The Intelligent Investor* – Benjamin Graham
+
+---
+
+## 🧮 Quantitative & Mathematical Economics
+
+71. *Fundamental Methods of Mathematical Economics* – Chiang & Wainwright
+72. *Mathematics for Economists* – Simon & Blume
+73. *Introduction to Econometrics* – Stock & Watson
+74. *Econometric Analysis* – William H. Greene
+75. *Time Series Analysis* – James Hamilton
+76. *Bayesian Econometrics* – Gary Koop
+77. *Microeconomic Analysis* – Hal Varian
+78. *Game Theory for Applied Economists* – Robert Gibbons
+79. *Decision Theory* – Parmigiani & Inoue
+80. *Optimization in Economic Theory* – Avinash Dixit
+
+---
+
+## 🎓 Interdisciplinary & Contemporary Issues
+
+81. *Freakonomics* – Levitt & Dubner
+82. *SuperFreakonomics* – Levitt & Dubner
+83. *The Undercover Economist* – Tim Harford
+84. *The Logic of Life* – Tim Harford
+85. *The Armchair Economist* – Steven Landsburg
+86. *The Economic Naturalist* – Robert H. Frank
+87. *The Rational Optimist* – Matt Ridley
+88. *The Upside of Inequality* – Edward Conard
+89. *The Price of Inequality* – Joseph Stiglitz
+90. *The Great Divide* – Joseph Stiglitz
+
+---
+
+## 📚 Biographies & Historical Accounts
+
+91. *Keynes: Economist, Philosopher, Statesman* – Robert Skidelsky
+92. *Milton Friedman: A Biography* – Lanny Ebenstein
+93. *Adam Smith: An Enlightened Life* – Nicholas Phillipson
+94. *The Worldly Philosophers* – Robert L. Heilbroner
+95. *Keynes: The Return of the Master* – Robert Skidelsky
+96. *Hayek: A Life, 1899–1950* – Bruce Caldwell
+97. *The House of Rothschild* – Niall Ferguson
+98. *The Life and Times of the Thunderbolt Kid* – Bill Bryson
+99. *The Snowball* – Alice Schroeder
+100. *Steve Jobs* – Walter Isaacson
+
+---
