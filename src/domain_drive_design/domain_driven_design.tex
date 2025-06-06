@@ -59,14 +59,239 @@ Microservices architecture helps the organisations meet these requirements from 
 \chapter{Introduction to Domain Driven Design}
 
 \section{Domain, Sub-Domain and Domain Experts}
+A domain is defined as a sphere of knowledge, influence or activity.
+The business perspective - a domain represents the field or industry in which the business operates.
+The software perspective - domain may be though of as the representation of the problem space for that software. The domain is made up of multiple sub domains.
+
+For large and complex domains, it is virtually impossible for a domain expert of know everything about the domain (challenge accepted :D).
+As a result, there are multiple subject matter experts or domain expert within a domain, mostly aligned with the sub domains in the bigger picture.
+
+Useful questions:
+- What domain do you operate in? Think business domain not technology domain.
+- What are the sub domains within the domain that you operate in?
+- List out the domain experts that you work with.
+
+Summary
+- Domain is defined as a sphere of knowledge, influence or activity.
+- Domains are made up of multiple sub domains.
+    - It is not possible for a single expert to have a through knowledge of all the sub domains in a complex large domains (MVK?)
+    - As a result multiple domain experts are needed to support business functions.
+    - Mostly, these domain experts are aligned with the sub domains within the larger domain
 
 \section{Conceptual Models, Architural Styles}
+Conceptual models are defined as a representation of a system made from a composition of concepts. Key idea here is concepts.
+I.e that focus is not on the physical parameters of the system.
+
+The focus here is on the critical components that make up the system.
+This information is not sufficient for the engineer in the factories to be able to build the car.
+
+Whats the purpose?
+Multiple benefits to of starting with conceptual models.
+The first one is that it enhances the understanding of the designers.
+As the designers put together the concept and think through it, they may find flaws in the design or the may find opportunities for improvement.
+---> A good conceptual model will lead to a better product.
+Second one is that it makes it easy to convey the ideas behind the concept to the stakeholders.
+Third one is that conceptual models provide a point of reference to create detailed specifications.
+This model contains some information about the physical aspects of the end product.
+This information, combined with the models layout can act as the starting point for the designers.
+
+The fourth one is that conceptual models provide documentation for future reference.
+The first thing they do is identify the core concepts that need to be put together to design the final product.
+They come up with the common terminology for the domain concepts used in the model.
+They identify the different parts of the system.
+
+Also they will identify the different parts of the overall product of the system.
+Next, the designer identifies and documents the relationship between the various domain concepts, and they also identify the critical or the foundational parameters for these concepts as well as the relationships in the banking domain.
+
+Architectural model - the visualisation of the system represented by the model.
+
+A more formal definition of the architectural model or architecture is that is is a strcutured representation of a solution that meets the requirements in the problem space.
+It is a high level abstraction of parts of the end solutions that presents a view or a perspective on how the requried payments will be met and it assists in answering the questions posed by different stakeholders.
+
+What is the difference between architectural model or architecture and design?
+
+The difference is in the level of details and focus.
+
+Architecture is mostly high level.
+Provides a skeleton for the end product and the focus is more long term concepts. Components that may not change as freqeuently or never in the lifetime of the product.
+The design is relatively detailed and the focus is on implementation.
+This is relative. Design can also be high level but they are relatively detailed compared ot the convetional or traditional architecture models.
+
+Summary
+1 - Conceptual models - a set of concepts and their relationships
+2 - Architectural models are a structured representation of solution that meets the requirements from the problem space. Does not have any implementation details
+3 - Whereas design is a structured representation of a solution that has some level of implementation details in it.
 
 \section{Modelling Techniques and Architectural Styles}
+Author opinion
+- Three guiding principles
+- Think about the purpose of the model and the audience for whom the model is being created for. Think about the prespective and the viewpoints of the audience.
+    - The idea is to think about their interests and their concerns.
+    - Will the model that I'm creating address their concerns and answer their questions?
+- Third one is level of details. How detailed should my model be so that it provides most value to the target audience.
+
+Many techniques for creating these models (hmmmmm)
+
+Four plus one architectural view model describes the architecture from the viewpoints of multiple stakeholders.
+Central to this technique is the idea of scenarios of use cases. Think of these as requirements.
+These scenarios are used as guide for creating multiple views and these sceanarios are also used for validating architecture.
+
+Logical view focuses on the functionality or the capabilities exposed by the system to the end user.
+The process view, as the name suggests explains the processes in the system and how these processes interact with each other.
+The developement view illustrates a system from a programmers perspective and is concerned with software management. This view is also known as the implementation view.
+The last one is the physical view that depicts the system form the point of view of the engineers.
+It is concerned with the topology of software components on the physical layer as well as the phyiscal connetion between these components.
+
+%TODO add four plus one diagram
+
+Why call it four plus one?
+The reasons is there are four views and plus on is for the scenarios.
+A large software project involves multiple stakeholders.
+They may be tens or even hundreds of stakeholders involved in the project.
+These stakeholders have different set of interests and concerns.
+
+Business Exec - Their interest is in understanding the value that the system will provide to the end user and how that end user value will translate into value for the business.
+Business experts - important that the business implements the right set of processes and these processes are accurate. Their intersts will be in the process.
+Developers - they are concerned with the implementation of the system.
+They are concerned about the deployments and the management of the software.
+As a result their interest is in the development view.
+Network engineer - are not concerned with he development view or the logical view or the process view.
+They would like to understand how the various servers that will host the applications or the components will talk to each other over the network.
+Architecture view - finally, the architect is responsible for creating these views and ensuring that these views rae providing the most value to each of these stakeholders.
+
+This is just a small set of stakeholders.
+There may be many more stakeholders playing different roles in the software initiative.
+
+Practice
+- List out the stakeholders in your organisation and think about which views will be most apprpriate for them.
+
+
+UML
+Created by Object Management Group.
+Provides a standard set of diagrams for architectural modelling and these diagrams are created by using a standard set of notations.
+Vast subject.
+See other resources if required.
+Latest version of UML consists of 14 diagrams which can be used to created the 4 + 1 architectural view model.
+
+Author preference.
+- Use case diagram for depicting the scenarios for logical views
+- Use the state diagram and the class diagram for process view.
+- Use sequence diagram and activity diagram for development view
+- For development view use the component diagram and package diagram.
+- For physical view deployment diagram works out the best.
+
+Software architectural style may be through of as a reusable architectural pattern which may be used as a solution to a commonly occurring problem.
+There are multiple architectural styles and these architectural styles are categorised based on the key focus area.
+The service orentated architecture and the message bus architecture falls in the category of architectural style that focuses on the communication between components.
+The layered architecture and the object orientated architecture and design are the common styles use when the architect is focusing on the structure of the system.
+The cliet server and the three tier architectural styles fall in the category of deployment, wherein the focus is on the deployment of the various components that make up  the system.
+The database centric design and the data flow diagrams are styles used where the architect is focusing on the core data within the business domain.
+
+
+The last architectural design is DDD where the focus on the business domain rather than the technolgoy.
+
+Summary
+- Architects create models using different modelling techniques.
+- Two such techniques.
+The four plus one architectural view model and unified modelling langauge.
+- The second may be combined to create very effective architectural models.
+- There are multiple architectural styles.
+- Each of these follow a set of common principles and they focus on specific aspects of the system.
+- Architects may adopt any of these styles depending on their needs and preferences.
+- Domain driven design is an architectural style in which the focus in on the business domain.
 
 \section{Domain Models}
+Reasons businesses invest in software is to solve business problems.
+Business problems may be defined as current or long term challenges and issues that may prevent the business from achieving its goals.
+These goals may be short term or they may be long term.
+It is important for the architects to understand the business problem.
+The architect must understand the domain first and for that the architects create domain models.
+
+%----------------
+
+A domain model is defined as organised structured knowledge of the domain that is relevant for solving a business problem
+Important: Organised and structured knowledge.
+
+The domain model consists of multiple parts.
+Key concepts are the foundational concepts related ot the domain.
+Domain vocabulary - consists of common terms and their definitions used by the stakeholders when they are discussing the problem space wihin that domain.
+This ensures that all stakeholders have a common understanding of all the terms used in that domain.
+
+Think of domain entities as domain objects that have a unique identity.
+The attributed in the domain objects may change over the lifetime of the object.
+
+In the real world, domain entities have a relationship with other domain entities and the model captures these relationships.
+
+Businesses use defined processes for carrying out the operations and these processes are documented within the domain model by way of workflows and activities.
+
+Important thing to keep in mind is that the domain model captures structured knowledge that is used for solving a business problem.
+In fact the domain model may contain additional knowledge by they way of visual depictions or diagrams and textual documentation.
+
+As the creator of the domain model, you are in control of what should go in the domain model to make it as effective as possible.
+
+There are no special tools for creating domain model of visualisations.
+May use any typical tool that supports UML modelling for textual documentations.
+
+Stakeholders working on the domain models may decide on the tools that will work out best for them.
+
+Key points
+Domain model is organised and structured knowledge about the domain.
+The purpose of the domain model is to help with creating a sutions to business problems within that domain.
+
+The five elements.
+- Domain vocabulary
+- Domain entities
+- Relationship between the entities
+- Workflows and activities
+- Key concepts
 
 \section{Modelling Techniques and Architectural Styles}
+Enterprise domain models  - also known as aggregate or unified domain models.
+
+In a complex industry it is hard to find one expert who knows everything.
+
+To get the domain knowledge, the teams must work with these domain experts as this knowledge is mostly not documented anywhere but is in the heads of these domain experts.
+Domain knowledge is organised and structured knowledge about the domain and these domain models are created by way of a process referred to as knowledge crunching.
+
+The team receiving the knowledge form the domain expert or experts analyses the received information and knowledge and creates the domain models.
+
+Typically the knowledge crunching process is spearheaded by the technology team that works very closely with the domain experts to create that structured domain knowledge or the domain models.
+
+it is common for the technology team to be led by an experienced technologist. (Some kind of IT lead)
+
+Ideally the IT lead should have some prior experience with domain modelling exercise and it is not required that they are an expert in specific technolgies.
+
+Opinion
+- Successful leads have a breadth of knowledge in multiple technologies and they are also open to learning busienss related topics.
+Rest of the technology team may be composed of team members with different skill sets and roles.
+
+Idea is that these models could be used by software development teams to build robust well documented systems.
+These enterprise modesl were referred to as the unified models or aggregate models.
+The idea behind all these are the saem.
+
+Intended software development process looks something like this.
+The software development teams will focus on specific areas within the enterprise domain model and then carry out the technical design.
+Code and then build the final product.
+In theory this sounds good but in reality this process is marred with multiple challenges.
+
+First challenge is the creation of the model itself.
+Enterprise models are inherently complex due to the scope and szie and the fact that multiple experts need to be engaged in order to create such models.
+The second one is that its hard to keep the models up to data as there is not single owner for the mode and it falls on the IT team to manage the model as well as the software product..hmmmmmm
+
+Unfortunately after a while due to product delivery priorities, models start to fall behind the actual implementations and loses its value.
+
+The third one is that there are linguistic challenges when you try to merge together knowledge about multiple domains into one single model.
+
+Lol - It is very common to see the same business term have different meanings in different sub domains within the organisation.
+These linguistic challenges can cause big confusion for the software development team as well as the domain experts.
+An important point to note is that these challenges are no applicable to enterprise level domain models but to any domain model that has to deal with complex domains.
+
+Pros of DDD
+- Domain driven design approach provides principles and patterns to address the challenges faced with developing complex domain models.
+
+Summary
+- Knowledge crunching refers to the process of creating the domain model from the knowledge gathered from the domain experts.
+- There are multiple challenges with creating models for complex domains and these challenges are addressed by the domain driven design approach.
 
 \chapter{Domain Driven Design: Strategic Patterns}
 
@@ -88,10 +313,12 @@ The strategic pattern applies across multiple bounded contexts, whereas tactical
 The idea is that domain driven design approach leads to smaller, independent domain models that can be built can be built as highly decoupled and independent set of microservices.
 
 \section{Business Subdomain Types}
-A business domain is composed of multiple subdomains. The type depends on the value a subdomain generates for the business.
+A business domain is composed of multiple subdomains.
+The type depends on the value a subdomain generates for the business.
 Having an understanding of the type of subdomains is in a position to assist the business in making the build versus buy decisions for the technology solutions.
 Businesses need to perform multiple different functions to operate.
-These functions are performed in the purview of subdomains. Different organisations within the same industry may look at their enterprises in a different way.
+These functions are performed in the purview of subdomains.
+Different organisations within the same industry may look at their enterprises in a different way.
 From the subdomains perspective, one of the most common reasons is that businesses may not operate in all sub domains in that overarching domain or industry.
 Sub domains may be further divided into smaller sub domains and can be seen as sub domain granularity, and it depends on the focus of the business.
 Each organisation within an industry, depending on their focus may view their enterprise as composed of different subdomains under the purview fo which htey performn their business operations.
@@ -100,37 +327,38 @@ There are multiple factors that may be contributing toward the complexity of the
 
 \subsection{Reasons for complexity}
 The most common reason it the complexity of the business rules itself.
-Another reasons is the compliance aspect. If the sub domain is operating in a highly regulared environment, then that will add complexity to the sub domain.
+Another reasons is the compliance aspect.
+If the sub domain is operating in a highly regulared environment, then that will add complexity to the sub domain.
 Complex calculations or complex algorithms may require specialised skills or specialised knowledge to understand the sub domain and that adds to the complexity.
-Next one is the processes and the handovers required between the sub domain and other sub domains or even external entitites; will also contirbute towards the complexity of the sub domains.
+Next one is the processes and the handovers required between the sub domain and other sub domains or even external entities; will also contribute towards the complexity of the sub domains.
 
 Dynamic - idea here is that if the sub domain requires changes to processes, rules, structures or any other aspect, then it will be difficult to manage the knowledge and understanding of the business domain as it is changing with the time .
 Depending on the industry, there may be other factors that will contribute toward the complexity of the sub domain.
 
 \subsection{Sub-Domain Categories}
-- Sub-domains rae categorsized into three types based on their complexity and business value it adds.
+- Sub-domains are categorized into three types based on their complexity and business value it adds.
 - Generic, core and supporting.
 
 \subsubsection{Generic Subdomain}
-- Known solutions exisxt for such subdomains
+- Known solutions exist for such subdomains
 Nothing special about these subdomains
 Best practices available
 No business advantage in re inventing the wheel
 
 \subsubsection{Core Subdomain}
-- Each business within a specific industriy operated differently within the core sub domains to gain some kind of advantage over their competition.
-- The "secret sauce" for the business resides in the core sub domain and the business is always looking to carrout things differently in these core subdomains to get some kind of competitive advantage, depending on the indusitry and the environment.
+- Each business within a specific industry operated differently within the core sub domains to gain some kind of advantage over their competition.
+- The "secret sauce" for the business resides in the core sub domain and the business is always looking to carryout things differently in these core subdomains to get some kind of competitive advantage, depending on the indusitry and the environment.
 - These core subdomains may evolve at a very rapid pace or may have a very high level of dynamicity.
-- Organisations are looking to gain some kind of competitive edge by or achive cost savings which translates into value for the business.
+- Organisations are looking to gain some kind of competitive edge by or achieve cost savings which translates into value for the business.
 
 \subsubsection{Supporting subdomain}
-Supporting subdomains do not provide any direct busienss advantage but the core sub domains depend on the supporting sub domains.
-Well known practices for supporting subdoamins, but solutions may not be readily available.
+Supporting subdomains do not provide any direct business advantage but the core sub domains depend on the supporting sub domains.
+Well known practices for supporting subdomains, but solutions may not be readily available.
 - Even if the solutions are available, those solutions may need to be customised to meet the needs of the core sub domain.
 \textit{Typically the supporting sub domain does not have high levels of complexity in terms of business logic}
 
 \subsection{Identifying sub domains}
-Start by looking at the business capbilities in that sub domain.
+Start by looking at the business capabilities in that sub domain.
 Are there any known solutions available for the sub domain?
 - If yes, then that sub domain is likely to be generic.
 Otherwise need to check if that sub domain adds any business value.
@@ -156,17 +384,18 @@ If the sub domain is supporting sub domain, then the business may decide to buil
 Or they may buy a generic solution and customised it to meet the needs of their core domains. E.g salesforce etc.
 
 If they sub domain is categorised as core, then the business will use its best teams and best talent to build the solution in this sub domain.
-The generic sub domain has readily aviailable solutions that the business can buy.
+The generic sub domain has readily available solutions that the business can buy.
 The core subdomain is the sub domain where the business has the opportunity to be different and insulate itself from competitors.
-Supporting sub domain is needed because the core subdomains depened on the supporting sub domains.
+Supporting sub domain is needed because the core subdomains depend on the supporting sub domains.
 
-Categorisation of the sub domaisn help the business in making the build versus the buy decisions and the business gets the most return on investment by investing in the solutions in the core sub domain.
+Categorisation of the sub domain help the business in making the build versus the buy decisions and the business gets the most return on investment by investing in the solutions in the core sub domain.
 Typically the business will use its best talent and resources for building the solutions in the core subdomain.
 
 \section{Understanding the Business Context}
-To make an objective decision, you will need additional facts or information on the situation. I.e the context.
-The idea is that as an IT team, you will be carrying out knowledge crunching excercises.
-To carry out these knowledge crunching excercises you must be aware of the business context.
+To make an objective decision, you will need additional facts or information on the situation.
+I.e the context.
+The idea is that as an IT team, you will be carrying out knowledge crunching exercises.
+To carry out these knowledge crunching exercises you must be aware of the business context.
 In order for IT teams to understand the business domain, they must understand the business context.
 
 Lack of understanding of the business context may lead to confusion and misinterpretations and that will lead to misrepresentation of the domain models.
@@ -183,7 +412,8 @@ If you are using business terms from one domain in another domain then it may le
 Each industry has its own lingo, i.e  a set of terms that only the experts in the industry or profession use.
 They all use a set of terms that have meaning only in their professions and within the same industry there may be specialisations.
 To understand the domain or to gain knowledge of the domain, one must understand the language used by the domain experts.
-Some challenges. The first challenge is that there are multiple business languages across the enterprise.
+Some challenges.
+The first challenge is that there are multiple business languages across the enterprise.
 
 The challenge here is that for building complex, IT teams must learn multiple business languages used by the domain experts in the context of different domains or sub domains.
 The second challenge is that same term may appear in the context of different business domains.
@@ -191,32 +421,35 @@ The challenge here is that the same term across multiple domains may have a diff
 The third challenge here is related to the fact that IT teams have their own lingo......
 These are the terms that are commonly used by the IT teams and technology teams to translate the business terms into IT lingo.
 
-When they recieve information about the domain or the knowledge from the domain expert in domain terms, they translate it into technology tmers.
+When they receive information about the domain or the knowledge from the domain expert in domain terms, they translate it into technology terms.
 Communication from the domain expert to the IT expert happens in terms of the domain language, whereas the communication from the IT expert to the domain expert happens in terms of the technology language.
 
 Domain driven design suggests setting up a common language within each business context and this language is used by all stakeholders, including the IT teams.
-This language is referred to as the ubiquitous lanauge and it helps in breaking down the domain into multiple parts that are suitable for building microservices.
+This language is referred to as the ubiquitous language and it helps in breaking down the domain into multiple parts that are suitable for building microservices.
 
 \section{Strategic Pattern: Ubiquitious Language}
 Ubiquitos lanauge is one of the strategic patterns in domain driven design.
-The domain driven design suggests setting up a common language wihin each business context and this common language is referred to as ubiquitos language.
-Uniquitos language can be though of as a dialiect that is used by the various teams wihin an organisation.
-A dialect is defined by the vocabulary and ubiquiots language has a clea definition of the context to which the vocabulary or the glossary applies to.
+The domain driven design suggests setting up a common language within each business context and this common language is referred to as ubiquitous language.
+Uniquitos language can be though of as a dialect that is used by the various teams within an organisation.
+A dialect is defined by the vocabulary and ubiquitous language has a clea definition of the context to which the vocabulary or the glossary applies to.
 The glossary contains the common terms and acronyms used within the defined context.
 
 Optionally, it may also have example usage for the terms and acronyms and it may also have references or links to the relevant assets.
 Can be seen as an enterprise busienss dictionary with differences.
-Ubiquots language is not created and managed separately, mlutiple in an organisation.
+Ubiquots language is not created and managed separately, multiple in an organisation.
 
-Business expert speaks in business terms. Tech expert speaks in terms of tech terms.
-There is a misconception that the it is the business expert defining the language. This ubiquitous language is not imposed by the experts.
-It is not a language used in the industry, it can be though of as a team language, or tribal language that develops or evolves over a period of time by way of collaboratoin between the business and the technology experts.
+Business expert speaks in business terms.
+Tech expert speaks in terms of tech terms.
+There is a misconception that the it is the business expert defining the language.
+This ubiquitous language is not imposed by the experts.
+It is not a language used in the industry, it can be though of as a team language, or tribal language that develops or evolves over a period of time by way of collaboration between the business and the technology experts.
 
 The team creating the ubiquitous lanauge can use multiple techniques, such as drawing the process flow, diagrams, user stores and event storming.
 This lead to the creation of the ubiquitous language for that team.
 It is important to consider that this language is not a one time job.
 It is a continuous process as the language takes a while to reach the high level of maturity.
-There are no special tools for this. Any tool can be used as long as it will make the ubqiquots language accessible to all team memebers.
+There are no special tools for this.
+Any tool can be used as long as it will make the ubqiquots language accessible to all team memebers.
 Collaboration tools such as confluence and quip are commonly used.
 Any tools can be used, so long as it make the language accessible for all team members. Once the team is at a certain maturity level they should use it for verything.
 
@@ -261,7 +494,7 @@ First one is independent domain models.
 Each capbility has different modelling requirements.
 These models are created and managed independently by the technology teams assigned to each of these functional units.
 
-Since these models are independent, teams from assigned to each of these functional units do not need to have knoweldge of the models managed by other teams.
+Since these models are independent, teams from assigned to each of these functional units do not need to have knowledge of the models managed by other teams.
 Models can evolve independently across the functional units wihin an enterprise.
 
 Another characterisitic of the bounded context is that there is a language that holds meaning within a bounded context i.e ubiquitous language.
@@ -269,7 +502,7 @@ Terms are only meaningful within a bounded context.
 
 Summary
 Bounded contexts can be thought of as a conceptual boundary around the business capabilities.
-These bounded contacts have certain characterisitics.
+These bounded contacts have certain characteristics.
 Models can be developed in the bounded context, have applicable only within that bounded context.
 The language is only relevant in that bounded context.
 
@@ -290,72 +523,58 @@ Overrall idea is to gather the clues from these excercises and then use these to
 Practically speaking. Do not think that the boundaries have to be perfect as this can take some time.
 Start with some boundary and then none.
 
-Most organisations are good at documenting and maintaining their organisation strcuture/
+Most organisations are good at documenting and maintaining their organisation structure
 In a new organisation, a good place to start is to give attention to the business cuntions depicted in the organisation structure.
 Business functions can be treated as a starting point for the bounded context.
-Just a starting point. Will need to delve deeping into each of these busienss capabilties to refine these boundaries further.
+Just a starting point.
+Will need to delve deepening into each of these business capabilities to refine these boundaries further.
 
-As a next step, may look at the responsbiltieis of each of the busienss experts and keep in mind that these busienss experts may be responsible for multiple functions.
-During information gathering pay attention to the business lanauge that these experts are using.
-The key activities of the busines are the activities that the busienss model must carry out to make the business model work.
+As a next step, may look at the responsibility of each of the business experts and keep in mind that these business experts may be responsible for multiple functions.
+During information gathering pay attention to the business language that these experts are using.
+The key activities of the business are the activities that the business model must carry out to make the business model work.
 
 Going deeper into each of these activities in collaboration with the business experts will help the IT experts to understand the contextual boundaries within the consumer banking downmain.
 
-Need to collaborate with the key business experts to identiy the key activies in your orgnaisation and then dig deeper into each of these activieites as you are going through.
+Need to collaborate with the key business experts to identify the key actives in your organisation and then dig deeper into each of these activities as you are going through.
 Check for linguistic clues to help understand the bounded context from the business use cases and the process perspective.
 
-Well desinged application may already have these boundaries in place.
+Well designed application may already have these boundaries in place.
 Long story short monolithic applications should not be ignored and they may be used as a starting point for creating the bounded contexts in your business domain.
 
 Summary
 Leverage available assets like organisation structure and well designed monolithic applications to identify the bounded contexts.
-Partner with busienss experts to understand their key responsibilities and activities.
-Need to pay close attention to the language used to help iddentify the bounded context.
+Partner with business experts to understand their key responsibilities and activities.
+Need to pay close attention to the language used to help identify the bounded context.
 
 \chapter{Bounded Context Relationships}
 
-
 \section{Introduction to DDD Integration Patterns}
-
 
 \section{Managinc BC Relationships using Context Maps}
 
-
 \section{Symmetric Relationship Patterns}
-
 
 \section{Asymmetric Relationship Patterns}
 
-
 \section{One to Many relationship patterns}
-
 
 \chapter{Domain Driven Design - Tactical Patterns}
 
-
 \section{Introduction to DDD Tactical Patterns}
-
 
 \section{Entity Object - Pattern}
 
-
 \section{Value Object - Pattern}
-
 
 \section{Aggregate and factory pattern}
 
-
 \section{Model Behaviour: Anemic and Rich Models}
-
 
 \section{Repository Object - Pattern}
 
-
 \section{Domain Service - Pattern}
 
-
 \section{Applicatoin Services - Pattern}
-
 
 \section{Infrastructure Services - Pattern}
 
