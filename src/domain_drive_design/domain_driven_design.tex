@@ -134,11 +134,11 @@ Many techniques for creating these models (hmmmmm)
 
 Four plus one architectural view model describes the architecture from the viewpoints of multiple stakeholders.
 Central to this technique is the idea of scenarios of use cases. Think of these as requirements.
-These scenarios are used as guide for creating multiple views and these sceanarios are also used for validating architecture.
+These scenarios are used as guide for creating multiple views and these scenarios are also used for validating architecture.
 
 Logical view focuses on the functionality or the capabilities exposed by the system to the end user.
 The process view, as the name suggests explains the processes in the system and how these processes interact with each other.
-The developement view illustrates a system from a programmers perspective and is concerned with software management. This view is also known as the implementation view.
+The development view illustrates a system from a programmers perspective and is concerned with software management. This view is also known as the implementation view.
 The last one is the physical view that depicts the system form the point of view of the engineers.
 It is concerned with the topology of software components on the physical layer as well as the phyiscal connetion between these components.
 
@@ -151,7 +151,7 @@ They may be tens or even hundreds of stakeholders involved in the project.
 These stakeholders have different set of interests and concerns.
 
 Business Exec - Their interest is in understanding the value that the system will provide to the end user and how that end user value will translate into value for the business.
-Business experts - important that the business implements the right set of processes and these processes are accurate. Their intersts will be in the process.
+Business experts - important that the business implements the right set of processes and these processes are accurate. Their interests will be in the process.
 Developers - they are concerned with the implementation of the system.
 They are concerned about the deployments and the management of the software.
 As a result their interest is in the development view.
@@ -163,7 +163,7 @@ This is just a small set of stakeholders.
 There may be many more stakeholders playing different roles in the software initiative.
 
 Practice
-- List out the stakeholders in your organisation and think about which views will be most apprpriate for them.
+- List out the stakeholders in your organisation and think about which views will be most appropriate for them.
 
 
 UML
@@ -182,9 +182,9 @@ Author preference.
 
 Software architectural style may be through of as a reusable architectural pattern which may be used as a solution to a commonly occurring problem.
 There are multiple architectural styles and these architectural styles are categorised based on the key focus area.
-The service orentated architecture and the message bus architecture falls in the category of architectural style that focuses on the communication between components.
+The service orientated architecture and the message bus architecture falls in the category of architectural style that focuses on the communication between components.
 The layered architecture and the object orientated architecture and design are the common styles use when the architect is focusing on the structure of the system.
-The cliet server and the three tier architectural styles fall in the category of deployment, wherein the focus is on the deployment of the various components that make up  the system.
+The client server and the three tier architectural styles fall in the category of deployment, wherein the focus is on the deployment of the various components that make up  the system.
 The database centric design and the data flow diagrams are styles used where the architect is focusing on the core data within the business domain.
 
 
@@ -428,15 +428,15 @@ Domain driven design suggests setting up a common language within each business 
 This language is referred to as the ubiquitous language and it helps in breaking down the domain into multiple parts that are suitable for building microservices.
 
 \section{Strategic Pattern: Ubiquitious Language}
-Ubiquitos lanauge is one of the strategic patterns in domain driven design.
+Ubiquitous language is one of the strategic patterns in domain driven design.
 The domain driven design suggests setting up a common language within each business context and this common language is referred to as ubiquitous language.
-Uniquitos language can be though of as a dialect that is used by the various teams within an organisation.
+Ubiquitous language can be though of as a dialect that is used by the various teams within an organisation.
 A dialect is defined by the vocabulary and ubiquitous language has a clea definition of the context to which the vocabulary or the glossary applies to.
 The glossary contains the common terms and acronyms used within the defined context.
 
 Optionally, it may also have example usage for the terms and acronyms and it may also have references or links to the relevant assets.
-Can be seen as an enterprise busienss dictionary with differences.
-Ubiquots language is not created and managed separately, multiple in an organisation.
+Can be seen as an enterprise business dictionary with differences.
+Ubiquitous language is not created and managed separately, multiple in an organisation.
 
 Business expert speaks in business terms.
 Tech expert speaks in terms of tech terms.
@@ -444,7 +444,7 @@ There is a misconception that the it is the business expert defining the languag
 This ubiquitous language is not imposed by the experts.
 It is not a language used in the industry, it can be though of as a team language, or tribal language that develops or evolves over a period of time by way of collaboration between the business and the technology experts.
 
-The team creating the ubiquitous lanauge can use multiple techniques, such as drawing the process flow, diagrams, user stores and event storming.
+The team creating the ubiquitous language can use multiple techniques, such as drawing the process flow, diagrams, user stores and event storming.
 This lead to the creation of the ubiquitous language for that team.
 It is important to consider that this language is not a one time job.
 It is a continuous process as the language takes a while to reach the high level of maturity.
@@ -469,35 +469,35 @@ In domain driven design, these smaller parts or contexts are referred to as the 
 Summary - very useful, should be used in all forms of communication include the code.
 
 \section{Strategic Pattern: Boudned Context}
-Business domain models are commonly craeted by laying out the domain capabilities in the business.
+Business domain models are commonly created by laying out the domain capabilities in the business.
 Each represents a functional area.
 Each of these capabilities or functional areas need some kind of a customer representation in technical terms.
 
 The technical expert will put together the class definition with multiple attributes and to do that the technical expert will gather the attributes from multiple experts from across these domains.
-Although the customer object may have multiple attributes each of these capabitlies will need only a few of those attributes to manage the model in the long term.
+Although the customer object may have multiple attributes each of these capabilities will need only a few of those attributes to manage the model in the long term.
 
-One of the teams will be assigned the ownership of the common model, and this would lead to a dependency between the teams in other capabilty or funtional areas on the central team that will be managing the model.
+One of the teams will be assigned the ownership of the common model, and this would lead to a dependency between the teams in other capability or functional areas on the central team that will be managing the model.
 The dependency will lead to a loss of agility, conflicts and complexity.
 
 Domain driven design addresses the problems with the common domain model by breaking the domain in to independent parts referred to as the bounded context.
 This addresses the inherent complexity in the unified enterprise model or the common models.
 Keywords here are bounded and context.
 
-There are certain characteristics that must be met for these bounded capabilties to be referred to as the bounded context.
+There are certain characteristics that must be met for these bounded capabilities to be referred to as the bounded context.
 The first one is that each of these bounded contacts must be represented with its own domain model.
 There is no sharing of the domain model.
-The domain model is built for the bounded context is only applicable wihin the boundaries of that bounded context.
+The domain model is built for the bounded context is only applicable within the boundaries of that bounded context.
 Each bounded context has its own ubiquitous language.
 
 Characteristics in detail.
 First one is independent domain models.
-Each capbility has different modelling requirements.
+Each capability has different modelling requirements.
 These models are created and managed independently by the technology teams assigned to each of these functional units.
 
 Since these models are independent, teams from assigned to each of these functional units do not need to have knowledge of the models managed by other teams.
 Models can evolve independently across the functional units wihin an enterprise.
 
-Another characterisitic of the bounded context is that there is a language that holds meaning within a bounded context i.e ubiquitous language.
+Another characteristic of the bounded context is that there is a language that holds meaning within a bounded context i.e ubiquitous language.
 Terms are only meaningful within a bounded context.
 
 Summary
@@ -505,7 +505,6 @@ Bounded contexts can be thought of as a conceptual boundary around the business 
 These bounded contacts have certain characteristics.
 Models can be developed in the bounded context, have applicable only within that bounded context.
 The language is only relevant in that bounded context.
-
 
 \section{Discovering the Bounded Contexts in a Domain -This is not a straight forward task. An art not a science.}
 
@@ -578,7 +577,6 @@ Need to pay close attention to the language used to help identify the bounded co
 
 \section{Infrastructure Services - Pattern}
 
-
 \chapter{Event Driven Architecture and Domain Events}
 \section{Intro}
 Relationships between bounded contexts.
@@ -597,14 +595,15 @@ There are multiple messaging technologies available for this purpose. (Kafka / R
 \section{Monolithic and Distributed Communication Patterns}
 First pattern is the monolithic object communication pattern in which the object calls methods on other objects.
 All of this is happening within a common memory space or within a common process.
-This is typical of a monolithic application. Referred to as a monolithic object commnication pattern.
+This is typical of a monolithic application.
+Referred to as a monolithic object commnication pattern.
 
 \paragraph{Note}
 In distributed applications or systems the components reside in their own process space.
 In other words there is no sharing of compute or memory resources between the components.
 These components communicate with each other by way of some kind network protocol.
-This network communication protocol may be sychronous or asynchoronous in nature.
-- By Sychronous, the caller statys blocked until it recieved a response from the other component.
+This network communication protocol may be synchronous or asynchronous in nature.
+- By Synchronous, the caller statys blocked until it received a response from the other component.
 - Examples: HTTP, RPC
 
 - by Asynchronous communication, the caller does not wait for a response
@@ -681,29 +680,27 @@ The event producer does not make a direct invocation on any component.
 Rather, it simply triggers an event, a message that is passed on to all the consumers.
 Keep in mind that even producers may also be event consumers and event consumers may also be event producers.
 
-
 Differences between API and Event Driven Architectures
 - In the case of APIs, the caller has a knowledge of the API endpoint, whereas in the case of events the producer doesn't know any consumer.
 - APIs are synchronous, meaning that the caller has to wait for the response to come back. The caller is blocked.
 - In the case of events, a producer just produces an event and moves on. Not it does not even depend on the availability of the consumers.
 - What this means is that it can lead to higher availability in the case the consumer is not available
-- The producer moves on and when the consumers comes up it reciecves the event data.
-- APIs are based on the reqeust response paradigm wheres in the case of events the message consistes of event data, which can be the state data or the metadata in the case of the API.
-- Even with the disributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events, the event prodicers and the event consumers are highly decoupled and the architecture itself is extensible.
+- The producer moves on and when the consumers comes up it receives the event data.
+- APIs are based on the reqeust response paradigm wheres in the case of events the message consists of event data, which can be the state data or the metadata in the case of the API.
+- Even with the distributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events, the event producers and the event consumers are highly decoupled and the architecture itself is extensible.
 - The reason is that you may add or remove consumers without impacting the consumer in any way.
-- Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread acrosss multiple components.
-- Each of these componenets, the prdocuers and the consumers have the autonomy to make business decisions.
+- Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread across multiple components.
+- Each of these components, the producers and the consumers have the autonomy to make business decisions.
 - With APIs, it is easy to understand the flow because the business logic is centralised.
-- With event driven architecture, it is reltively difficult to follow the busines logic.
+- With event driven architecture, it is relatively difficult to follow the business logic.
 
 EDA is preferred for microservices but both APis and events can be used. The decision depends on your use case and your requirements.
-
 
 \subsubsection{Summary}
 Events indicate that something of significance has happened.
 Event driven architecture is a software architecture paradigm which is based on events.
 By nature, EDA uses asynchronous communication between consumers and producers.
-EDA is highly decoupled and extensible and the busienss logic and the business processes in the case of EDA are decentralized.
+EDA is highly decoupled and extensible and the business logic and the business processes in the case of EDA are decentralized.
 That means all of the components in the system have some business logic which may be managed independently of other components in the system.
 
 
@@ -715,15 +712,15 @@ Events are an integral part of the model defined for the bounded context.
 - There may be other sources of events within a micro service.
 - There may be application monitoring but this is not emitting events related to the bounded context.
 - These are technical events and are not a part of the bounded context.
-- Components that are emitting events are referred to as the event srouces.
+- Components that are emitting events are referred to as the event sources.
 - Event constumers are the consumers of those events and these event consumers may be a part of the same microservice.
 - In that case the events emitted by the event source are referred to as the domain events.
-- Events commited by the event source may be consumerd by other microservics.
+- Events commited by the event source may be consumer by other microservices.
 - What that means is that an event defined in one bounded context is getting consumed in a different bounded context.
 - In such cases, the event is referred to as an integration event.
 - Event consumer may also be part of an external services. Basically can be thought of as a legacy service, APIs or any other service not implemented as a microservice in such cases.
 - Semantically there is no difference between domain events and integration events.
-- Its just the consumer that decideds whether the event will be referred to as the domain event or the integration event.
+- Its just the consumer that decided whether the event will be referred to as the domain event or the integration event.
 
 Formal definition of domain event.
 - A domain event is a message that informs other parts within the same bounded context that something of significance has happned.
@@ -743,7 +740,7 @@ Best Practices:
 - Ubiquitous language so that there is not need of translation between IT teams and Business teams
 - Do not add "event" as a suffix to the event name or do not add "operation" as a suffix.
 
-Event handler refers to the implmentation of the event consumer logic.
+Event handler refers to the implementation of the event consumer logic.
 In the case of the domain event, the handler is part of the same microservice codebase as the event producer.
 These handlers subscribe to the events  of interest and there may be zero or more handlers per event.
 Like the events the handlers must be named appropriately.
@@ -822,7 +819,7 @@ This workshop may be carried out in person or online using collaboration tools i
 
 Knowledge crunching is a way by which teams process the knowledge received from the domain experts into a domain model.
 
-How do recieve the knowlege from the domain experts?
+How do receive the knowledge from the domain experts?
 - Interviews
 - Design thinking (from domain driven design)
 
@@ -830,7 +827,7 @@ Common technique called event storming. (Just examples)
 
 Other ways in which you can receive knowledge from the domain experts in a structured manner.
 My focus here is on event storming.
-A formal definition of event storming is a collaborative, workshop based technique for creating a shared undersatnding of complex business domains and processes.
+A formal definition of event storming is a collaborative, workshop based technique for creating a shared understanding of complex business domains and processes.
 Key to realises that this is creating a shared understanding.
 
 The intent is not to design and model the system but to just create a shared understanding among the stakeholders within the domain, and the stakeholders are the business experts as well as the technology experts.
@@ -841,48 +838,41 @@ The central theme is business events.
 The participants in the workshop identify and understand the business events.
 They look for the cause of the business events as well as the effect of those business events.
 - Technique was created by Alberto Brandolini in 2012 %popular amongst the practitioners.%
-\textbf{Biggest benefit of this technique is that it accelerates the development process for complext applications}
+\textbf{Biggest benefit of this technique is that it accelerates the development process for complex applications}
 One important think to keep in mind is that the knowledge created by way of event storming is used as an input for creating the models.
-In otherwords, you will not be replacing modelling with event storming as an input for creating your UML diagrams. See book about event storming.
+In other words, you will not be replacing modelling with event storming as an input for creating your UML diagrams. See book about event storming.
 
 \subsubsection{The workshop}
-The most important thing about the event storming workship is that you must invite the right set of domain experts.
-There is a dedicated faciallitator who works with the participants.
+The most important thing about the event storming workshop is that you must invite the right set of domain experts.
+There is a dedicated facilitator who works with the participants.
 This dedicated facilitator should have some prior experience with event storming.
-The number of partcipants in the workshop is dedicated by the scope.
-If you are carrying out the event storming workshop for understanding the business process then you should expect have between 4 and 8 partcipants in the workshop.
+The number of participants in the workshop is dedicated by the scope.
+If you are carrying out the event storming workshop for understanding the business process then you should expect have between 4 and 8 participants in the workshop.
 The duration of the workshop depends on the scope of the domain and the experience of the participants.
 It may vary anywhere from a couple of hours to a couple of days.
 In-person workshop is preferred over online workshops and the reasons is that event storming involves a lot of interactions when the participants are in the same room.
 
-Recently online workshops have also become commonplace and are becoming more acceptable. Good tools to carry these out online.
-
-
+Recently online workshops have also become commonplace and are becoming more acceptable.
+Good tools to carry these out online.
 
 An in-person workshop is conducted in a spacious room with a lot of walking area.
 This room must offer enough free space on walls to hang the plot of paper so that the participants have unlimited modelling space.
 I.e they will not have to stop throwing their ideas on the plot of paper due to running out of the space for it.
 Participants will be using a lot of different colored stickies.
 At the end of the workshop, the walls will have plotter paper hanging of the walls and there will be a lot of stickies on it.
-The stickes on the plotter paper, are color coded.
-
-
+The stickies on the plotter paper, are color coded.
 
 For an online workshop, participants join over a video call and use a collaboration platform for carrying out the event Storming activities.
 
 All the participants can make changes to a common virtual board and these changes are visible to other participants in real time.
 There are many collaboration platforms that allow the participants to do exactly that.
 
-The expected output form the workship is the creation of a shared understanding of the business process.
+The expected output form the workshop is the creation of a shared understanding of the business process.
 The shared understanding is then used for the modelling of the domain.
 
-
-
-
 The objective is not to design to the system.
-The objective is not to be able to answer all the questsion.
+The objective is not to be able to answer all the questions.
 It is not to produce the domain driven design models.
-
 
 Event storming is a collaborative process for creating share understanding of the domain or the business process.
 
@@ -894,8 +884,8 @@ Read the book by alberto....
 
 Business events are natural in all domains.
 They are the starting point of the conversation in an event storming workshop.
-An important point to note is that all business events are referred to is that all business eventts are referred to as the domain events in the context of event storming.
-The objective of the event Storming workship is to understand the causation.
+An important point to note is that all business events are referred to is that all business events are referred to as the domain events in the context of event storming.
+The objective of the event Storming workshop is to understand the causation.
 What this means is that the participants discuss the domain events to understand the cause of those events and then they also discuss the effect of those events.
 
 This cause and effect is depicted as teh knowledge of the domain by using the six basic elements.
@@ -909,9 +899,9 @@ You can decide on a standard for the colors of these stickies or the elements bu
 - This state change is initiated by way of a command invoked by the actor.
 - Command is represented by a blue sticky on the workspace.
 - This command leads to the raising of domain events, a domain event is a representation of some fact that has already happened.
-- A domain event is repsented in the workspace as an orange sticky.
+- A domain event is represented in the workspace as an orange sticky.
 - When the domain event is raised, it may lead to a reaction, and this reaction is carried out by way of component that is referred to as the policy.
-- This policy is repsented by way of a purple sticky..
+- This policy is represented by way of a purple sticky..
 -- Since domain events represent something that has happened in the past, they should always be named in past tense.
 
 Important to understand that a command is abstract.
@@ -954,7 +944,7 @@ This read model may drive a user interface.
 
 \section{Preparing for the ES workshop}
 
-Common for large organisations to hire outside consultatns to carry out the facilitation.
+Common for large organisations to hire outside consultants to carry out the facilitation.
 (Author says you don't need them.....)
 
 Existing team members such as project managers and Scrum masters can easily be trained to become event storming workshop facilitators.
@@ -972,10 +962,10 @@ Once these tasks have been completed by the facilitator, its time for the facili
 Details of each task.
 To set the stage for an in-person workshop, you need to make sure that the room that you're using is spacious.
 Move all tables and chairs out of the way.
-Reaons for this is to provide space for the participants to move around and hang the plot of paper on the walls with masking take and then draw a timeline from left to right.
-The number of plotter papers that you will hang on the wall will depend on the scope of the excercise.
-Don't have to hange the plot of paper all aournd the room, you can do it as you go along.
-Idea is to be prepared to set up the stage for a remote workshop, esure that all the tools are readyu to go at least two days prior to the workshop.
+Reasons for this is to provide space for the participants to move around and hang the plot of paper on the walls with masking take and then draw a timeline from left to right.
+The number of plotter papers that you will hang on the wall will depend on the scope of the exercise.
+Don't have to hang the plot of paper all around the room, you can do it as you go along.
+Idea is to be prepared to set up the stage for a remote workshop, ensure that all the tools are ready to go at least two days prior to the workshop.
 Ensure that all the tools are ready to go at least two days prior to the workshop.
 I.e have the video conferencing setup.
 Must have the tools for the collaboration setup, create a board and make sure all teh participants are able to connect to the video conference and they are able to use the collaboration tools as well.
@@ -987,24 +977,24 @@ May have a group of participants who are already experienced with the event stor
 Specifically do not talk about domain driven design.
 Keep it business focused.
 Note, participants are no necessarily technologists.
-Discuss, the purpose of colored stickies and the workspace, bbut you don't have to spend too much time on these aspects as participants will learn as you processed through the workshop.
+Discuss, the purpose of colored stickies and the workspace, but you don't have to spend too much time on these aspects as participants will learn as you processed through the workshop.
 Something that really helps is put all the colored stickies and what they represent somewhere in the workspace so that it is visible to anyone who has a question about what color to use, which is an extermely common question.
 
 In the beginning of the wrokshop, after the general overview of event storming, it is time for the facilitator to define the workshop, after the general overview of event storming, it is time for the facilitator to define the scope of the workshop.
 The scope of the workshop may be a big picture from the domain perspective, or it may be a single business process.
 Irrespective of what the scope is.
 It is important for all participants in the room to be on the sme page and ensure that everyone stays on track.
-Place the high level objective for the workshop in the sowkspace so that it is visible at all times.
+Place the high level objective for the workshop in the workspace so that it is visible at all times.
 
 Another thing that is important is that as you will start going through the workshop, it is very much possible that there may be discussions around aspects which are out of scope from the workshop perspective, but they may be valueable from the domain perspective.
-As a result, you don't want to lose out those aspectss, so create a dedicated space to list out all of these out of scope elements.
-You can follwo up on these items after the workshop.
+As a result, you don't want to lose out those aspects, so create a dedicated space to list out all of these out of scope elements.
+You can follow up on these items after the workshop.
 
-Faciliator, before the workshop is set the expectations and this is best odne by way of sharing real experienced from the past workshops and if possible, sharing pictures form those workshops.
+Facilitator, before the workshop is set the expectations and this is best done by way of sharing real experienced from the past workshops and if possible, sharing pictures form those workshops.
 These expectations should be realistic.
 
-Engage the participants and ask them what their thoughts are on the event storming workshop a swell as on what htey expect.
-Idea is to get everyone excited so that they become active partcipants in the workshop and they should all be looking forward to learning and teaching.
+Engage the participants and ask them what their thoughts are on the event storming workshop a swell as on what they expect.
+Idea is to get everyone excited so that they become active participants in the workshop and they should all be looking forward to learning and teaching.
 Use this part of the workshop for ice breaking activities.
 At this time, the facilitator is ready to dive in.
 One of the important roles for the facilitator is to make sure that everyone is having fun and is energised because low energy will lead to an outcome which is going to be of bad quality.
@@ -1013,12 +1003,13 @@ Participants must be active throughout the workshop, so a facilitator must keep 
 
 \section{Conducting the ES Workshop}
 
-Facilitators must keep in mind that event storming doesn't require the particpants to use all of the elements to create the knowledge model.
-It is the faciliators job to help the participants pick up the relevant elements to design the knowledge model.
+Facilitators must keep in mind that event storming doesn't require the participants to use all of the elements to create the knowledge model.
+It is the facilitators job to help the participants pick up the relevant elements to design the knowledge model.
 A lot of flexibility in how the event storming workshop is conducted.
 
 Facilitator may adjust the steps, the flow and the pace as needed.
-These adjustments depend on multiple factos such as the facilitators and participants, past experiences, complexity of the domain and granularity of the knowledge model. Whether it is going to be high level or whether it's going to be detailed.
+These adjustments depend on multiple facts such as the facilitators and participants, past experiences, complexity of the domain and granularity of the knowledge model.
+Whether it is going to be high level or whether it's going to be detailed.
 There may be other factors as well.
 
 General steps.
@@ -1035,14 +1026,14 @@ In the fourth step, the commands are associated with the aggregates.
 
 ---------
 
-First step in the knowledge gathering excercsie.
-The faciliator asks the participants to brainstorm and hang as many events as possible in the workspace.
-Initiallly participants may be hesitant.
+First step in the knowledge gathering exercise.
+The facilitator asks the participants to brainstorm and hang as many events as possible in the workspace.
+Initially participants may be hesitant.
 This is common so it is suggested that the facilitator be the first one to place an event lol.
-At this point, all participants should be encouraged to hang events once all the particpants have placed the events that they could come up with.
+At this point, all participants should be encouraged to hang events once all the participants have placed the events that they could come up with.
 
-Excercise moves to the next step.
-In this step, the particpants discuss when each of the events occur and order the events across the timeline from left to right.
+Exercise moves to the next step.
+In this step, the participants discuss when each of the events occur and order the events across the timeline from left to right.
 
 One important tip for the facilitator is that facilitators should always remember that their role is to facilitate and they need to let the participants do the modelling.
 Once the participants have ordered the events look for duplicates.
@@ -1072,65 +1063,192 @@ The expectation is that the facilitator will incorporate this feedback in their 
 Within 2 to 3 days.
 
 The facilitator consolidates the knowledge and shares knowledge model with all of the participants.
-Faciliator requests the participants to go over the knowledge model to ensure its accuracy.
+Facilitator requests the participants to go over the knowledge model to ensure its accuracy.
 
 Facilitator decides on the next steps and ensures that all of the parking lot items are addressed.
 
 %TODO excercise
 
-\section{Learning Objectives: Discovering the Events in a Domain}
-
-
-\section{Introduction to Event Storming}
-
-
-\section{Elements of Event Storming}
-
-
-\section{Preparing the ES workshop}
-
-
-\section{Conducting the ES workshop}
-
-
 \chapter{Microservices Data Management Patterns}
 
-
 \section{Introduction to Microservices Data Persistence}
+Microservices can independently make changes to their own database without impacting the other microservices.
+Conversion of a monolithic application to microservices requires the designer to not only think about the refactoring of the business logic and the components of the monolithic application,
+they also need to think about the refactoring of the database.
+Refactoring the database would mean breaking the common database instance to multiple database instances
 
+This breaking of common database instance into multiple database instance is not straightforward.
+There are multiple challenges.
+
+Pattern that are covered here
+- The shared database pattern
+- Separate database pattern
+- Strangler pattern
 
 \section{Monolithic Apps - Shared Persistence Storage}
+The persistence of data is achieve by way of writing to the file systems or by more commonly writing the data to databases.
+There are multiple types of databases available today, but the most commonly used databases are the relational databases and NoSQL databases
 
+Legacy applications typically use RDBMS or relational databses for all types of data and this is because NoSQL databases were not available until the early 2000s.
+
+A typical client server application development pattern used by these legacy applications involved multiple enterprise applications, sharing a common instance of the database,
+and the enterprise application would manage the data by way of SQL statements against this shared database.
+
+Buy todays standard this architecture will no be acceptable.
+
+There are good things.
+First thing is that it will lead to simplified data management process.
+Second is that since the database engine is shared by multiple applications, the cost of the solution will go down.
+The third is that a single team of database administrators can manage the database for all applications.
+
+
+Challenges with the shared database pattern.
+The first challenge is that database challenges need to be managed very carefully.
+
+Consider the change of database schema.
+Very complicated coordination between multiple applications.
+Overall this will lead to high cost of changes.
+Will lead to higher risk because making a change to the database may lead to breaking of other applications.
+This will lead to longer time to value.
+
+Second challenge is that on may negatively impact all other applications, and this can happen if the application intentionally or unintentionally start to use up a lot resources on the database.
+Hard to diagnose since each application will only be looking at their own application logs.
+
+The third challenge is that the shared database acts as a single point of failure.
+Failure of the database will lead to the failure of all of the applications.
+
+Could argue that a single point of failure may be removed by way of some kind of availability technology, by those high availability solutions are quite complex and they will lead to higher costs.
+Other challenges are that it is complex to carry out capacity planning for the shared database as the teams need to coordinate on forcasting the needs that they have from the database perspective.
+Application teams will need to be aware of the structure of the data, so onboarding new developers in the teams will be a challenge.
+
+Shared database is an anti-pattern (Reaaak?) but some enterprises are still using it.
+
+SOA originated as a solution but it was very temporary.
 
 \section{Service Orientated Architecure (SOA)}
+Data is exposed by way of CRUD services.
+CRUD.........
+Hide the details of the structure of the database from the applications........
+Apart from providing these low level data operations.
+So as services may also be built by encapsulating the business logic to provide high level services.
+The services layer is placed between the applications and the database.
+These services provide the CRUD and high level business operations.
 
+Applications do not need to use SQL to carry out the data manipulation.
+They connect with these services over some kind of network protocols that is decided by the service provider.
 
-\section{Separate Database Patter}
+The server services layer provided multiple advantages since it hit the structure of the database.
 
+The applications became much more simpler to code and manage.
+Led to the reuse of code by way of reusable services and the change to the database will become more manageable with the services layer.
+Unfortunately it does not address many of the other shared database challenges, such as single point of failure, uncontrolled use of resources and impact on other applications and capacity estimations.
+
+Common misconception.
+A small service is not a microservice.
+
+A set of SOA services are part of the same bounded context, whereas a micro service represents a bounded context.
+
+Summary
+- Services insulated the applications from database changes, but SOA services did not address all of the challenges associated with shared databases.
+
+\section{Separate Database Pattern}
+Recommended for Greenfield microservices initiative.
+Greenfield - New application with no constraints from technical debt perspective
+Brownfield - Existing monolithic app to be converted to Microservices architecture
+
+Microservices from the ground up.
+Microservices teams assigned the bounded context
+No interdependency between teams
+Each team decide on their tech stack
+Service interactions via defined interfaces
+No direct access to data
+
+Separate database pattern
+Each microservice team owns and manages their database
+Benefits - Simpler change management
+Reduced blast radius on database failure
+Capacity planning - scaling at DB level becomes simpler
+Each team can decide on Database - doesnt have to be a RDBMS
+
+Review
+- Separate database pattern is recommended
 
 \section{Brownfield Microservices - Database patterns , options}
+Share database pattern is considered an anti-pattern in the context of microservices.
+Strangler pattern is used for converting brownfield applications to microservices.
 
+in a brownfield project, a monolithic applications is targeted to be refactored into microservices.
+The monolithic application will more that likely be a database instance.
+The designer of the microservice will have three options from the database perspective.
+
+They can go with the separate database pattern wherein each microservice will have its own instance of the database, or they can retain the common database and do database refactoring to carryout logical separate of the database.
+In the last two options the shared database is retained.
+
+Very commonly seen that legacy applications implement business logic as stored procedures.
+The idea here is that the databased has a lot of complexities and breaking the database into multiple databases may not be a straightforward task.
+
+A common strategy that a lot of folks take for converting the brown field applications to microservice sis to simpley keep the database in place and convert the application to microservices.
+- This will lead to a set of microservices sharing the database and hence they will suffer the same challenges.
+Sharing an instance of the database, the shared database pattern in the context of microserviceS is considered an anti-pattern.
+The reason for it is that with the shared database, teams lose their independence and not they are interdependent.
+
+Now any change they they will make will need to be coordinated.
+Changes would need increased testing effort and overall this will lead to the slow down of delivery of value and on independent scaling will be possible.
+The instance of the database may be the choke point, although a shared database is an anti-pattern from the microservices perspective, it is still okay to use shared database pattern for transition state architecture.
+
+....
+Start with a monolithic application
+Focus only on the application part of it and keep the database as is.
+You arrive at this transition state architecture where all the microservices are using a shared database.
+Gradually each of these microservices will be refactored to use their own database instance.
+This way the shared database is used only as a transition state, not a target state.
+
+One important point ot note about the shared database pattern for microservices, is that the microservices should not have any SQL statement in the code.
+The reason is that having the SQL statement in the code will require more effort for switching the database.
+
+Instead, the microservice designer should consider using the strangler strategy.
+
+A collection of services is created for providing the database access to the microservice.
+Each of these microservices depicted here will have their own set of services.
+These services are just referred to as the strangler services or just stranglers.
+The idea behind the services is that switching off the database will have no impact on the microservices, as all of the changes will be confined to the strangler services.
+The microservice teams can decide on their priorities and switch databases at their own pace.
+Over a period of time, all of the microservices will have their own instances of the databases.
+As a result the target state architecture will be achieved.
+The strangler pattern is a generic pattern
+Can be used of modernisation of any legacy services.
+
+A big benefit of this approach is that microservice code will be insulated from all backend changes as these changes will be confined to the services layer.
+
+Key points
+- The shared database pattern is considered an anti-pattern from the microservices perspective.
+- Strangler pattern may be used for transitioning from the shared database implementation of the microservices to separate database implementation of microservices.
 
 \section{Shared Database Pattern}
+Two options for considering when building microservices against shared databases.
+
+First one is the database refactoring and the logical database separation.
+Although shared database pattern is considered as an anti-pattern in the context of microservices, there may be times when the microservices teams will not have the flexibility to use the separate database pattern.
+There may be multiple reasons for it.
+- Time constraints, budget constraints, lack of skilled resources (hmmm) and the complexity of the database are some of the most common reasons.
+In this scenario teams have to consider the shared database pattern.
+When using the shared database, the objective of the microservice designer is to achieve maximum isolation of data within the same database instance such tha teach microservices owns part of the data in the database and each microservice ice has access to only the data it owns.
+
+If possible the microservices designer should use the database features to achieve the highest level of isolation between the microservices own data within the database instances.
+
 
 
 \chapter{Microservices DB Performance Management}
 
-
 \section{Need for more Data Patterns}
-
 
 \section{Commands Query Separation (CQS)}
 
-
 \section{Realisation of Commands and Queries}
-
 
 \section{CQRS - Command Query Responsibiltiy Segragation}
 
-
 \section{Data Replication between WRITE-READ sides}
-
 
 \section{Event Sourcing and Event Store consideration}
 
@@ -1150,8 +1268,8 @@ Skip for now.....do hands on.
 
 \chapter{Microservices and API}
 \section{Microservices - API Realisation}
-\section{introduction to REST API}
-\section{REST API Resources and Design COnstriaints}
+\section{Introduction to REST API}
+\section{REST API Resources and Design Constriaints}
 \section{API Management}
 \section{Introduction to GraphQL}
 \section{GraphQL Schema Definition}
