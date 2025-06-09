@@ -270,3 +270,225 @@ Potentially useful reading list
 100. *Steve Jobs* – Walter Isaacson
 
 ---
+
+General business reading list
+
+## 🧠 Leadership & Management (20)
+1. The Effective Executive – Peter Drucker
+2. The Hard Thing About Hard Things – Ben Horowitz
+3. Radical Candor – Kim Scott
+4. Extreme Ownership – Jocko Willink & Leif Babin
+5. Good to Great – Jim Collins
+6. Leaders Eat Last – Simon Sinek
+7. Drive – Daniel Pink
+8. High Output Management – Andy Grove
+9. Multipliers – Liz Wiseman
+10. Turn the Ship Around! – L. David Marquet
+11. First, Break All the Rules – Marcus Buckingham
+12. Trillion Dollar Coach – Eric Schmidt
+13. The Five Dysfunctions of a Team – Patrick Lencioni
+14. Leadership on the Line – Ronald Heifetz & Marty Linsky
+15. On Becoming a Leader – Warren Bennis
+16. The 21 Irrefutable Laws of Leadership – John C. Maxwell
+17. Execution – Larry Bossidy & Ram Charan
+18. What Got You Here Won’t Get You There – Marshall Goldsmith
+19. Courage to Be Disliked – Ichiro Kishimi
+20. Emotional Intelligence – Daniel Goleman
+
+## 🎯 Strategy & Competitive Advantage (20)
+21. Competitive Strategy – Michael Porter
+22. Good Strategy Bad Strategy – Richard Rumelt
+23. Playing to Win – Lafley & Martin
+24. Blue Ocean Strategy – Kim & Mauborgne
+25. The Innovator’s Dilemma – Clayton Christensen
+26. Your Strategy Needs a Strategy – Martin Reeves
+27. The Art of Strategy – Dixit & Nalebuff
+28. The Lean Strategy – Michael Ballé
+29. Measure What Matters – John Doerr
+30. Business Model Generation – Osterwalder & Pigneur
+31. The Art of War – Sun Tzu
+32. Strategy Safari – Mintzberg, Ahlstrand, Lampel
+33. HBR’s 10 Must Reads on Strategy – Harvard Business Review
+34. The End of Competitive Advantage – Rita Gunther McGrath
+35. Seeing What’s Next – Christensen, Anthony & Roth
+36. The Innovator’s Solution – Christensen & Raynor
+37. Thinking in Bets – Annie Duke
+38. Playing to Win – A.G. Lafley
+39. The Long Game – Dorie Clark
+40. The Upstarts – Brad Stone
+
+## 💰 Finance & Accounting (20)
+41. The Intelligent Investor – Benjamin Graham
+42. Principles – Ray Dalio
+43. Valuation – McKinsey & Company
+44. Financial Intelligence – Karen Berman
+45. The Essays of Warren Buffett – Warren Buffett
+46. Common Stocks and Uncommon Profits – Philip Fisher
+47. The Little Book of Common Sense Investing – John Bogle
+48. Investment Valuation – Aswath Damodaran
+49. Accounting Made Simple – Mike Piper
+50. Rich Dad Poor Dad – Robert Kiyosaki
+51. The Millionaire Next Door – Stanley & Danko
+52. The Richest Man in Babylon – George S. Clason
+53. Security Analysis – Graham & Dodd
+54. Liar’s Poker – Michael Lewis
+55. The Psychology of Money – Morgan Housel
+56. The Big Short – Michael Lewis
+57. When Genius Failed – Roger Lowenstein
+58. Corporate Finance – Berk & DeMarzo
+59. The Alchemy of Finance – George Soros
+60. The Dhandho Investor – Mohnish Pabrai
+
+## 📈 Marketing & Sales (20)
+61. Influence – Robert Cialdini
+62. This Is Marketing – Seth Godin
+63. Contagious – Jonah Berger
+64. Made to Stick – Chip Heath & Dan Heath
+65. Positioning – Al Ries & Jack Trout
+66. Building a StoryBrand – Donald Miller
+67. Hooked – Nir Eyal
+68. Marketing Management – Philip Kotler
+69. Crossing the Chasm – Geoffrey Moore
+70. Purple Cow – Seth Godin
+71. Buyology – Martin Lindstrom
+72. Hacking Growth – Sean Ellis
+73. The 22 Immutable Laws of Marketing – Ries & Trout
+74. Influence: Science and Practice – Robert Cialdini
+75. Invisible Selling Machine – Ryan Deiss
+76. The Copywriter’s Handbook – Robert Bly
+77. Predictably Irrational – Dan Ariely
+78. SPIN Selling – Neil Rackham
+79. The Challenger Sale – Dixon & Adamson
+80. The Tipping Point – Malcolm Gladwell
+
+## 🚀 Entrepreneurship & Innovation (20)
+81. The Lean Startup – Eric Ries
+82. Zero to One – Peter Thiel
+83. The Startup Owner’s Manual – Steve Blank
+84. The Art of the Start 2.0 – Guy Kawasaki
+85. Disciplined Entrepreneurship – Bill Aulet
+86. Venture Deals – Brad Feld & Jason Mendelson
+87. The Mom Test – Rob Fitzpatrick
+88. The E-Myth Revisited – Michael Gerber
+89. Who – Geoff Smart & Randy Street
+90. Creativity, Inc. – Ed Catmull
+91. Shoe Dog – Phil Knight
+92. The Everything Store – Brad Stone
+93. Founders at Work – Jessica Livingston
+94. The $100 Startup – Chris Guillebeau
+95. Rework – Jason Fried & David Heinemeier Hansson
+96. Bold – Diamandis & Kotler
+97. The Hard Thing About Hard Things – Ben Horowitz
+98. Start Something That Matters – Blake Mycoskie
+99. Originals – Adam Grant
+100. The Innovation Stack – Jim McKelvey
+
+## 📊 Operations & Supply Chain (20)
+101. The Goal – Eliyahu M. Goldratt
+102. The Phoenix Project – Gene Kim
+103. Lean Thinking – James Womack
+104. The Toyota Way – Jeffrey Liker
+105. Operations Management – Stevenson
+106. Managing the Supply Chain – Simchi-Levi
+107. Supply Chain Management – Chopra & Meindl
+108. Factory Physics – Hopp & Spearman
+109. Service Operations Management – Johnston & Clark
+110. The Machine That Changed the World – James Womack
+111. Accelerate – Nicole Forsgren
+112. The Lean Turnaround – Art Byrne
+113. Project to Product – Mik Kersten
+114. Agile Project Management – Jim Highsmith
+115. Scrum – Jeff Sutherland
+116. Kanban – David J. Anderson
+117. Flow – Mihaly Csikszentmihalyi
+118. The Bottleneck Rules – Clarke Ching
+119. The Lean Six Sigma Pocket Toolbook – Michael L. George
+120. Work the System – Sam Carpenter
+
+## 📉 Economics & Decision-Making (20)
+121. Thinking, Fast and Slow – Daniel Kahneman
+122. Nudge – Thaler & Sunstein
+123. Freakonomics – Levitt & Dubner
+124. Misbehaving – Richard Thaler
+125. The Undercover Economist – Tim Harford
+126. The Armchair Economist – Steven Landsburg
+127. Capitalism and Freedom – Milton Friedman
+128. Capital in the Twenty-First Century – Thomas Piketty
+129. Poor Economics – Banerjee & Duflo
+130. Predictably Irrational – Dan Ariely
+131. The Logic of Life – Tim Harford
+132. The Wealth of Nations – Adam Smith
+133. Animal Spirits – Akerlof & Shiller
+134. Information Rules – Shapiro & Varian
+135. The Black Swan – Nassim Taleb
+136. Antifragile – Nassim Taleb
+137. Fooled by Randomness – Nassim Taleb
+138. Economics in One Lesson – Henry Hazlitt
+139. The Big Questions: Economics – Diane Coyle
+140. The Great Rebalancing – Michael Pettis
+
+## 🧬 Organizational Behavior & Culture (20)
+141. The Culture Code – Daniel Coyle
+142. No Rules Rules – Reed Hastings & Erin Meyer
+143. Crucial Conversations – Patterson, Grenny et al.
+144. Reinventing Organizations – Frederic Laloux
+145. Team of Teams – Stanley McChrystal
+146. Work Rules! – Laszlo Bock
+147. Leaders Eat Last – Simon Sinek
+148. The Fearless Organization – Amy Edmondson
+149. The Power of Moments – Chip & Dan Heath
+150. An Everyone Culture – Kegan & Lahey
+151. The Advantage – Patrick Lencioni
+152. The Progress Principle – Amabile & Kramer
+153. Organizational Culture and Leadership – Edgar Schein
+154. The Wisdom of Teams – Katzenbach & Smith
+155. The Truth About Employee Engagement – Lencioni
+156. Drive – Daniel Pink
+157. Primal Leadership – Goleman, Boyatzis & McKee
+158. Thanks for the Feedback – Stone & Heen
+159. The Inner Game of Work – Timothy Gallwey
+160. Managing Transitions – William Bridges
+
+## ⚖️ Ethics, Impact & Global Perspective (20)
+161. Conscious Capitalism – John Mackey
+162. Let My People Go Surfing – Yvon Chouinard
+163. Factfulness – Hans Rosling
+164. Winners Take All – Anand Giridharadas
+165. Doing Good Better – William MacAskill
+166. Principles for Dealing with the Changing World Order – Ray Dalio
+167. Green to Gold – Esty & Winston
+168. The Responsible Company – Yvon Chouinard
+169. How to Avoid a Climate Disaster – Bill Gates
+170. Small Is Beautiful – E.F. Schumacher
+171. Doughnut Economics – Kate Raworth
+172. The Value of Everything – Mariana Mazzucato
+173. Net Positive – Polman & Winston
+174. The Uninhabitable Earth – David Wallace-Wells
+175. Prosperity without Growth – Tim Jackson
+176. Ethics for the Real World – Howard & Korver
+177. The Infinite Game – Simon Sinek
+178. The Shareholder Value Myth – Lynn Stout
+179. Conscious Business – Fred Kofman
+180. Capital and Ideology – Thomas Piketty
+
+## 🧩 Capstone: Synthesis & Self-Mastery (20)
+181. Thinking in Systems – Donella Meadows
+182. Range – David Epstein
+183. The 7 Habits of Highly Effective People – Stephen Covey
+184. Deep Work – Cal Newport
+185. Essentialism – Greg McKeown
+186. The Art of Possibility – Zander & Zander
+187. How Will You Measure Your Life? – Clayton Christensen
+188. The Personal MBA – Josh Kaufman
+189. Principles for Success – Ray Dalio
+190. The Systems Bible – John Gall
+191. Tools of Titans – Tim Ferriss
+192. The Obstacle Is the Way – Ryan Holiday
+193. Ego Is the Enemy – Ryan Holiday
+194. The War of Art – Steven Pressfield
+195. The Power of Now – Eckhart Tolle
+196. Grit – Angela Duckworth
+197. The Practicing Mind – Thomas Sterner
+198. Atomic Habits – James Clear
+199. The Daily Stoic – Ryan Holiday
+200. Man’s Search for Meaning – Viktor Frankl  
