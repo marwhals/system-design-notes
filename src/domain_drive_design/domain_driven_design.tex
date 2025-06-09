@@ -734,26 +734,381 @@ This language is managed by the team responsible for the open host service.
 The downstream bounded context accepts this publish language
 
 \chapter{Domain Driven Design - Tactical Patterns}
-
 \section{Introduction to DDD Tactical Patterns}
+Tactical patterns - patterns that may be used for modelling and for the realisation of microservices.
+Model driven design provides a framework for the realisation of systems modelled using the domain driven design approach.
+The tactical patterns are building blocks in the model driven design.
+
+Entities, value objects and aggregates are referred to as the domain objects.
+These domain objects are used for modelling the data in the domain model.
+Factories are for creation of the complex domains.
+Objects and repositories are sued for managing the persistence of domain objects.
+Then there are services patterns.
+- Services are used for modelling the interactions of the domain, objects with other domain objects and with infrastructure and with other external components. %TODO add a diagram
+
+Two terms - anemic and rich model.
+Can be modelled in UML and then tactical patterns can be built in plain old java classes.......
 
 \section{Entity Object - Pattern}
 
+An entity - represents a uniquely identifiable business object that encapsulates attributed and a well-define domain behaviour.
+Characteristics of an entity
+- An entity is uniquely identified within a bounded context.
+- These entities can their identities are meaningful only within their respective bounded contexts.
+- An entity has a set of attributed that are defined by the ubiquitous language for the bounded context.
+- An entity has a behaviour.....i.e it encapsulates business logic.
+--- This business logic is expose by way of operations.
+--- When these operations are executed against the entity it lead to a change of state of the entity.
+
+Business logic is sometimes referred to as domain logic.
+
+Entities are meaningful only within the bounded context in which they are defined.
+It is common to see the same entity names appearing across multiple bounded contexts, but you have to keep in mind that the definition of the entity across those bounded contexts is not guaranteed to staty the same.
+
+Recall that entities are uniquely identified within a bounded context, but sometimes it may so happen that the same attributed is ued for unique identifying the entity across business contexts (acks --- guiids etc)
+But that is purely coincidental. I.e can't be relied on.
+
+The teams defining these entities will work independently of each other and define the attributes and the operations for the entities based on the requirement in each of the business contexts.
+Entities are persisted in long term storage (this is important!!!!!!!)
+The data in the long term storage represents the current state of the entity.
+It is common for RDBMS and NoSQL databases being used for persistent storage of the entities.
+In the case of an RDBMS a table represents a collection of entities.
+The rows within the table represent the entities that are uniquely identified by way of the primary key column.
+The rest of the columns have the value for the attributes for each of the entities.
+
+Summary
+- First one is that entities are business objects that are meaningful only within a bounded context.
+- Where they are defined, entities are uniquely identified within a bounded context.
+- Next one is that the definition of the entity consists of attributes and behaviour.
+- The behaviors implements the business logic that may change the state of the entity
+- Entities are persisted in long term storage.
+
+
 \section{Value Object - Pattern}
 
-\section{Aggregate and factory pattern}
+Value objects, unlike the entity objects have no conceptual identity in the bounded context.
+In other words, value objects attributes and behaviour does not map directly to the core concepts in the bounded context.
+%TODO insert example
+Value objects may also be through of as utility objects. %HMMMM
 
+One important distinction between the entities and value objects is that the value object is not persisted to the database as an independent objects.
+The value object is either persisted to the database as part of an entity object or they are not persisted at all.
+Value objects are treated as immutable objects.
+All of the attributes put together gives a meaning to an instance of the value object as a best practice.
+It is suggested that you create a new instance of the value object instead of reusing the existing instances.
+
+Value object and bounded context.
+Value object in one BC may be an entity in another bounded context.
+
+Summary
+Value objects do not have a conceptual identity within a bounded context.
+Value objects are not persisted in a database as an independent objects.
+It is either store as part of the entity object or it is not even stored in a database.
+An entity in one bounded context may be a value in another bounded context and vice versa.
+
+%\section     Consider adding the excercise ---- making my own examples
+
+\section{Aggregate and factory pattern}
+An aggregate object is a cluster of entities and value objects that are viewed as a unifed whole from the domain concepts and data perspective.
+An aggregate consists of an aggregate root, also referred to as the root entity.
+The root entity has a unique identity from the domain perspective.
+
+The second part of the aggregate is the cluster which is formed by the boundary for the aggregate.
+Within this boundary, there may be zero or more aggregates and value objects.
+
+Objects in this cluster or the objects within the boundary are referred to as the inner objects or child objects.
+
+%TODO example ---- add or create.
+Ivoking methods on the object directly...... procedural programming ????? Advised against.
+It is good practice not to directly interact with the inner object.
+
+The code outside the aggregate will invoke the function and this function will encapsulate the business logic for operating on the inner objects.
+
+As a designer of the aggregate, it will be your responsibility to ensure that all of the require behaviour for operating on the inner objects is exposed as function by the aggregate root object.
+In general, the aggregate object are stored in multiple tables.
+- In the case of RDBMS and the case of NoSQL data base the aggregate object may be stored across multiple collection when an aggregate is inserted or updated against these databases.
+- This needs to be done in an atomic fashion.
+---- ACID -- either all the changes are successful or all the changes are rolled back %Consider adding DB trade off section
+- Unit work is an important consideration when you are designing aggregates.
+
+Factory design pattern is a common pattern for building complex domain aggregates.
+- The way it works is that you define an object that has all the logic for creating the domain aggregate.
+- This factory exposes a function that can be invoked by the code.
+- When this function for creation of the aggregate is invoked on the factor, the factor reads the data for the aggregate from persistent storage.
+--- Creates the aggregate and returns it to the caller
+- This is a very comon design pattern and is not necessarily exclusive to microservices.
+
+------> An aggregate with zero inner objects will be an entity.
+--- keep in mind a aggregate with zero inner objects may also be referred to as an aggregate or an aggregate root.
+Note: Entity aggregate and aggregate root may be used interchangeably.
+
+Summary:
+- Aggregate may contain other aggregate entities and value objects.
+- Aggregates must encapsulate behaviour to manage inner objects.
+- All changes to aggregates are saved atomically
+- Factory pattern is commonly used for creating complex domain aggregates.
+
+%%TODO example and UML - or create my own
 \section{Model Behaviour: Anemic and Rich Models}
+
+Two terms: Anemic and rich models.
+These terms are used for describing the model behaviour.
+
+Models which do not expose any business logic are referred to as anemic models.
+A more formal definition:
+- A domain model composed of entities that do not exhbit behaviour i.e operations applicable to the domain concepts are missing.
+
+Opposite is the ruch domain model and this term is coined by martin fowler in a blog. Source of research.
+Used an analogy to describe a bad model.
+If there is no behaviour then it is not a good model.
+
+How to describe an anemic model. What to look at
+Do the entities lack behaviour.
+- If the entities lack behaviour, then changes are it is an anemic model.
+- If the entities do have some functions, the you should check that these are not just for CRUD operations.
+--- That is that they are not just getters and setters with update and delete operations.
+----- If they are just crud operations then the model is anemic.
+- The third thing that you need to look for is the implementation of business logic outside of the entity objects.
+----- The idea is that the entity object does ont have any kind of business logic implementation, but it does have the CRUD functinos.
+----- THe business logic code resides in an external component that invokes the getters to get the data from the entity object.
+------- USes the data in the business logic code and then calls the setters on the entity object ot set the data back on the entitiy.
+----- This extneral component is commonly implemented as shared services or are coded as part of the application directly.
+- In the case of services, the domain objets provide the CRUD operations to the services which reside in a separate layer.
+- All of the business logic resides in the components or services implemented in the shared services layers.
+- This kind of an architecture is commonly seen in organisation tha thave adopted service orientated architecutre.
+
+The second way in which business logic may be externalised is by way of creating applications with the business logic embedded within the application code.
+-- In this scenario, the business logic gets repeated across multiple applications.
+-- Since there are many applications which are dependent on the domain layer, managing changes in the domain layer objects will be a challenge.
+-- This kind of a situation should be avoided at all costs.
+Note --- common in legacy applications.
+
+
+
+Rich model.
+A rich model implements the model behaviour inherently as a part of the entity object.
+- Object has all the business logic in one place.
+- It implements all of the domain concepts.
+
+A positive effect of having all the business logic in one place is that hte models data integrity is maintained and this is because the owner of the object will have full control on how the data is managed.
+--- Versus every application implementing business logic on their own.
+
+Guidelines between different models.
+Anemic is not bad for simple domains.
+- Need to think about the scenario, your use-case and then decide.
+--- Is the business logic changing frequently. If so an anemic model may not be an issue.
+------- Generic data services like CRUD APIs then anemic is okay.
+--- Shared scenarios or use cases where there is shared logic that does not belong in a single model entity.
+------- This scenario would be okay for an anemic model.
+-> anemic models can be considered an anti pattern in some scenarios and in others it may be okay.
+
+Common misconceptions is that in a rich model every entity should implement the behaviour and that is not right because in an aggregate object the aggregate root implements the behaviour.
+
+Summary
+Anemic models - refers to models in which the entity is implemented with no behaviour.
+--- To identify these you need to look for symptoms such as entities not implementing the behaviour.
+--- Entities implementing basic CRUD behaviour
+--- And business logic being in external components rather than being in the entities.
+- Not always an anti-pattern - use case dependent. Very subjective
 
 \section{Repository Object - Pattern}
 
-\section{Domain Service - Pattern}
+Formal definition: A repository object acts as a collection of aggregate objects in memory.
+- It hides the storage level details needed for managing and querying the sate of the aggregate in the underlying data tier
+- An aggregate root is an entity that is managed in some kind of long term storage. RDMS or NoSQL or even basic file system lol.
+- All of the logic to interact with the data storage is encapsulated by the repository object.
+- The details of these interactions are hidden from the client or the callers of the repository object.
+- The caller of the repository object function use the CRUD operations to manage and query the state of the aggregate.
+- The called of these curd operations have no knowledge of the underlying data tiers.
+---- For these callers a repository is acting as a container for a collection of aggregate objects.
 
-\section{Applicatoin Services - Pattern}
+Important Note: The client or call of the repository object function has no knowledge of the data tier.
+
+Characteristics of the repository pattern or repository object.
+- The first one is that for every aggregate defined in the domain model, you have on and only one repository.
+- In other words, not a good idea to implement multiple repositories for a single aggregate.
+- A repository may expose high level behaviour of function and this is apart from the typical CRUD function that are expected to be implemented by the repository.
+- Repository objects are managed as part of the domain layer.
+- In addition to the typical crud functions a repository may also expose higher level functions, mostly for queries.
+
+
+Persistence.
+Consider a function on an object which requires two updates on two separate databases.
+The idea is that both databases will be updated in a single unit of work.
+The atomicity aspect of the aggregate is enforced by the repository.
+The idea is that all changes to the sates of the aggregate that is the aggregate root as well as the inner objects is carried out under a unit of work.
+- Either all the changes to the database are successful or no change is made to any of the entities that are a part of the aggregate.
+- Ths may happen if there is any error in the database operation for any entities in the aggregate.
+The primary benefit of using a repository is that it keeps the domain model independent of the storage layer.
+- The domain mode is independent of the storage model.
+---- Can use a RDMS, NoSQL or a file for the storage of aggregates but the domain model doesn't need to know about it.
+---- The repository keep the domain model independent of the infrastructure
+------- Can use JDBC for SQL against a RDBMS or an SDK for NoSQL.
+- The core idea is that any change to the database tier will be isolate to the repository object and will have no impact on your domain model.
+
+Repositories can also help with unit testing and mocking.
+- Idea is simple for carrying out the testing of the client code.
+- The database may be replaced with mock up implementation of the database.
+------ Could be simple pojo that just returning static database responses.
+---- Allows for moving faster without any dependency on the availability of an actual database.
+
+One common concern raised for repositories is that for large aggregate objects there amy be an impact on the performance.
+--- The reasons for this is that large aggregate objects may need to execute multiple database operations or a join across multiple tables may be required which can lead to suboptimal performance of the query.
+- This concern can be addressed using caching solutions such as REddis or MemCache or Reactive Mongo.
+- Another common concern is related ot the suse of criteria based queries in repositories.
+- Typically the repository exposes a retrieve operation that retrieves an entire aggregate object and some applications may not need it. (graphQL???)
+- In other words only a partial result set is required which is not supported out of the box.
+- There may be a scenario where data from multiple aggregates may be needed.
+--- This is specifically of importance to a mobile application where slow speed may impact the users interest in the application.
+--- Two ways to address this concern.
+----- First way is to expose high level function in the repository
+----- The second is to expose additional queries outside of the repository.
+
+The realisations of the repository requires the developer to code the mapping between the domain objects and the domain objects and the database and vice versa.
+- This mapping may be quite complex and the coding may be quite cumbersome for large objects.
+---- This can be addressed using mapping frameworks ---- like hibernate
+---- These mapping frameworks simplify the task of mapping between the domain objects and the databases
+
+Summary
+Reporsitory objectsd make the domain model independent of the database layer.
+Database operation on the aggregates must be atomic
+The repository object enforces the atomicity.
+Repository objects may also be used for unit testing and mocking.
+
+There are some common concerns related to repository objects but these common concerns are related to the query functioning may be addressed
+- by exposing high level query function in the repository object
+- by using Reddis and Memcache and by creating
+- exposing query functions outside of the repository object.
+
+%TODO consider repoistory pattern example or make my own
+
+\section{Domain Service - Pattern}
+Idea is the implement the behaviour that does not belong an entity in a standalone independent services
+Caller and client code can invoke an operation on the independent service.
+
+More formal definition:
+It is a domain object that implements the domain functionality or concept that may not be modeled naturally as a behaviour in any domain entity or value object.
+Domain service is part of the domain model.
+
+There are different types of services. Important to understand their characteristics.
+
+Domain services.
+- Always implement business behaviour for the domain.
+- Domain services are stateless
+- Domain services are highly cohesive.
+- Domain services may interact with other domain services.
+
+Details
+Since the domain service has the business behaviour,teh domain service object is aware of the other domain objects.
+In short, any kind of domain concept may be implemented in the domain service.
+The caller of the domain service does not have the awareness of the details of the behaviour implemented in the domain service.
+So a domain service insulates the caller or the client code from the business logic details.
+Domain service does not maintain state between calls.
+
+What this means is that if you are calling hte domain service, there is not state variable or direct persistence mechanism built into the domain service.
+- Domain service depends on the entity objects to take care of the persistence.
+- The implication of no state variable or persistence is that there may be calls coming from multiple callers or clients, but there is no correlation between these calls and it does not matter whether the call is coming form the saem client or different clients.
+- Bottom line is that there is no correlation between any calls originating from anywhere.
+
+Domain services are highly cohesive.
+They do one thing and do it well.
+
+Domain services may interact with other domain services.
+
+Summary
+Domain services are technology agnostic.
+There is a common misconception that all domain services should be exposed as APIs and that is not corect.
+A domain service is independent of the technology used for the invocation.
+-- Could be a POJO or it may be carried out over a network protocol such as HTTP or a MQ
+
+Characteristics of a domain service.
+- The domain service implements domain behaviour that does not fit naturally in other entities and value objects in the domain model.
+- Other characteristics are that the domain service is stateless
+- The domain service is highly cohesive.
+- Domain service may invoke other domain services.
+
+
+\section{Application Services - Pattern}
+Formal definition:
+An application service is a domain object does not implement any domain functionality, but depends on other domain objects for exposing high level domain objects for exposing high level domain functionality to the consumers external to the model.
+The key difference between the domain service and the application service is that application service does not implement any kind of business logic or domain functionality.
+The other big different is that the application service is exposed to external consumers such as web application, mobile application or application servers.
+
+Characteristics of an application services.
+Application services have no domain logic and this is the amin difference between the application service and the domain service.
+Application services just like domain services are stateless.
+Application services may define an external interface.
+Application services are exposed over some kind of network protocol.
+
+Details
+An application service has no domain logic. It depends on the other domain objects for domain logic.
+This is the main difference between a domain service and an application service.
+The application service orchestrates the execution of the domain logic.
+
+Like the domain service and application service is also stateless..
+There is no state management carried out in the application service.
+There is no state variable or persistence of domain object implemented in the application service.
+Application service depends on the domain objects for persistence
+An applications service exposes the interface used by the outside world.
+-- by outside world what is mean is external components which are outside of the domain of the model.
+-- Point to note here is that the interface exposed to the outside world does not need to be an entity or value object.
+---- In other words the schema of the request and response for the application service does not need to be aligned  with any of the domain objects.
+
+An application service exposed th external interface over network protocol in a domain model.
+The application service may be through of as a boundary object that protects all of the objects wihin the domain model.
+The application service may be exposed as an API and this API is consumed by the external components over network protocol.
+This network protocol may be HTTP, MQ or may even be proprietary protocol.
+
+The format of the data between the external component and the API is flexible.
+- Can be JSON, XML, CSV or any other formate depending on the implementation of the application service.
+- The external components may or may not have knowledge of the domain objects or their structures.
+
+An application service may expose a domain service to external components.
+
+Summary
+- Application services do not implement any domain behaviour
+- They provide high level services by way of orchestrating execution of the domain logic in the domain objects
+- Application services expose interfaces to external components
+-- That is components that are outside of the domain model by way of a network protocol such HTTP or MQ
 
 \section{Infrastructure Services - Pattern}
+An infrastructure service is defined as a service that interacts with an external resource to address a concern that is not part of the primary problem domain.
+It defines a contract used by the domain objects to interact with the outside services.
+-- Key word here is the external service.
 
+Commonly used external resources.
+First one is logging system.
+Domain objects need to log messages and this can be done against any kind of external logging system such as Fluid and Elasticsearch
+Domain objects may need to send out notification as a part of the business process.
+Domain objects very likely need some kind of persistence mechanism and this persistence mechanism may be an external database or even a file system.
+It is common for the domain objects to be dependent on external services or APIs such as Salesforce,Google Maps etc. Just some common examples.
+LIke the application services infrastructure services have no domain logic.
+Infrastructure services follow the single responsibility principle and expose a standard interface or contract.
+
+Details
+Infrastructure service has no domain logic because it provides infrastructure service, not a business service.
+It does not have any direct dependency on the domain objects and the infrastructure service sis consumed by the domain objets and services to interact with the external resources.
+Single responsibility. The idea is that the service provides funcitonality for one and only one thing.
+The intent is to simplify the implementation and make it easy to understand the service.
+
+An infrastructure service defines a standard contract between the model and the external resources.
+- Can be thought of as an API which mean for consumption by the model objects and services.
+- The realisation of the API is in the infrastructure layer and this make the model technology and external services agnostic.
+
+The domain object when they need to interact with external resource will go through the API will go through the standard contract exposed by the infrastructure services.
+The infrastructure service will interact with the external resource by way of the SDK or APIs exposed by the external service.
+- The infrastructure service will carry out the translation of teh call from the standard interface to the interface exposed by the external resource.
+- It will also carry out any kind of transformation needed on thee data.
+Thus making hte domain model independent of the external resource.
+
+Summary
+Infrastructure services like application services do not implement any domain behaviour
+Infrastructure services expose external resource by way of standard interface or standard contracts
+This standard contract mechanism insulates the domain model from changes in external services.
+
+%TODO - include example application, domain and infrastructure services or create examples
 \chapter{Event Driven Architecture and Domain Events}
+
 \section{Intro}
 Relationships between bounded contexts.
 Bounded contexts get translated into microservices and these relationships get translated into interactions between the microservices.
@@ -772,7 +1127,7 @@ There are multiple messaging technologies available for this purpose. (Kafka / R
 First pattern is the monolithic object communication pattern in which the object calls methods on other objects.
 All of this is happening within a common memory space or within a common process.
 This is typical of a monolithic application.
-Referred to as a monolithic object commnication pattern.
+Referred to as a monolithic object communication pattern.
 
 \paragraph{Note}
 In distributed applications or systems the components reside in their own process space.
@@ -816,15 +1171,15 @@ When an event occurs, one or more consumers are notified about the event.
 On receiving the event, the consumer may carry out processing, and this processing of the event is independent of the producer of the event and other consumers of the event.
 An event driven architecture is a software architecture paradigm that promotes the designing of systems as loosely coupled components that act as event producers and event consumers.
 Central to the event driven architecture is an event backbone.
-This event backon is a infrastructure component.
+This event backbone is an infrastructure component.
 It is referred to by multiple names, event bus, event broker events, router events and mediator events hub.
 - Common terms used for this component.
-- Name dependes on the product features and functions and the vendor """marketing""" these products. (Warrants research)
+- Name depends on the product features and functions and the vendor """marketing""" these products. (Warrants research)
 - Important to keep in mind that conceptually they are similar.
 - They all provide a way for routing of the events from producers to the consumer.
 - Producer of the event inform the event backbone of something of interest happening.
 - They do this by way of synchronous mechanism exposed by the events backbone.
-- When the events backbone recieves the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
+- When the events backbone receives the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
 
 The important thing to keep in mind here form the event consumer perspective is that they are not polling for these events. They are notified.
 Same as the pub sub messaging pattern.
@@ -878,7 +1233,6 @@ Event driven architecture is a software architecture paradigm which is based on 
 By nature, EDA uses asynchronous communication between consumers and producers.
 EDA is highly decoupled and extensible and the business logic and the business processes in the case of EDA are decentralized.
 That means all of the components in the system have some business logic which may be managed independently of other components in the system.
-
 
 \section{Domain Events - Pattern}
 Events are an integral part of the model defined for the bounded context.
@@ -1225,7 +1579,7 @@ At the same time it is important for the facilitator to keep track of time.
 Every 30 minutes it is suggested that the facilitator review the progress and adjust the pace and the direction as needed.
 
 Facilitator may ask the participants to focus, put people in flow.
-Focus may shitft to the next event for which we don't have the domain logic information.
+Focus may shift to the next event for which we don't have the domain logic information.
 
 Post workshop activities carried out by the facilitator.
 Facilitator takes pictures of the workspace before taking down all of the poltter pare from the walls.
@@ -1413,7 +1767,7 @@ When using the shared database, the objective of the microservice designer is to
 If possible the microservices designer should use the database features to achieve the highest level of isolation between the microservices own data within the database instances.
 
 \chapter{Microservices DB Performance Management}
-
+%TODO consider value......
 \section{Need for more Data Patterns}
 
 \section{Commands Query Separation (CQS)}
