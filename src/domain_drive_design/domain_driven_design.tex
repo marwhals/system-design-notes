@@ -548,14 +548,190 @@ Need to pay close attention to the language used to help identify the bounded co
 \chapter{Bounded Context Relationships}
 
 \section{Introduction to DDD Integration Patterns}
+Bounded contexts are independent, but the bounded contexts are not isolated from other bounded contexts around them.
+Models in the bounded context collaborate to fulfill the requirements of a system.
+The basic premise behind this is that when you build microservices, they will not fulfill all of the system requirements on their own.
+These microservices will need to interact with other microservices.
+These relationships imply some kind of dependency between the bounded contracts or the microservices.
 
-\section{Managinc BC Relationships using Context Maps}
+There are multiple types of relationships between the bounded contexts.
+In a symmetric relationship, two bounded contracts depend on each other.
+- In this scenario, bounded context A is dependent on bounded context B and bounded context B is dependent on Bounded Context A.
+In a assymmetric relationship, one bounded context depeneds on another bounded context B in a one to many relationship. I.e multiple bounded context depend on a single bounded context.
+
+There are multiple relationship patterns, these patterns define the dependency relationship between the bounded contexts.
+
+Note:
+Big ball of mud is an anti pattern in software developement. As a designer of micrservices this should be avoided.
+Context maps are visual representation of the relationship between the bounded contexts.
+
+\section{Managinc Bounded Context Relationships using Context Maps}
+Unmanaged bounded context relationships leads to the big ball of mud. I.e badly structured models that lead to spaghetti code.
+- This kind of a model and spaghetti code is typically created by unregulated growth and fixes over a period of time.
+- Big ball of mud in the context of domain driven design refers to an anit-pattern. Generally should be avoided.
+
+Bounded contexts cannot stay isolated but the relationships need to be managed.
+Otherwise there will be a loss of model integrity, and there will be a loss of a team's ability to operate independently (very bad!)
+
+Challenges:
+Consider sceanario with BC-A and BC-B. Each has its own model.
+Say there is a dependency between A and B. Now A depends on B and will have a dependency on B's models.
+- The impact is that now linguistic boundaries within the bounded context A does not hold.
+- There may be confusions in terms of the language used for A's and B's models, in otherwords the BC is no contaminated. This is referred to as loss of model integrity.
+
+Bounded contexts are translated into a one or more microservices.
+Dependencies between the bounded context are eventually translated to the dependencies between the micrservices. (consider)
+Changes will require some kind of collaboration between the teams owning these microservices APIs, this means that teams will lsoe their abiltiy to operate independently.
+- This will lead to loss of agility which is counter to one of the reasons why microservices architecture is adopted.
+
+We know that bounded context dependencies or microservices dependencies cannot be avoided.
+The suggestion is to manage these bounded context relationships using appropriate domain driven design patterns.
+
+Teams must make a conscious effort not to create a big ball of mud.
+They must make a conscious effort not to create a big ball of mud, and they must document the relationship between the bounded context using context maps.
+
+Context maps are a visual representation of the systems, bounded contexts and relationships between them.
+%TODO insert diagram
+
+Multiple benefits of using context maps.
+First one is that it makes it easier for the team members to understand the big picture.
+The next is that it helps in understanding the interdependencies between bounded contexts.
+The third one iss that is helps the teams gauge the level of collaboration needed with other teams.
+The context map also helps in refinement of the bounded context and the models.
+
+Summary
+- As a designer of the microservice, you must avoid creating a big ball of mud.
+- The idea is that if you create too many dependencies between the bounded context, it will lead to the loss of benefits that you expect to realise form the microservices architecture.
+- Next one is that as a microservices designer, you must use well-defined patterns for defining the relationships between your bounded contexts.
+- Last but not least, document the relationship between the bounded the bounded context, using context maps.
 
 \section{Symmetric Relationship Patterns}
 
+Three new strategic patterns.
+Separate ways, partnership pattern and the shared colonel pattern.
+There may be a scenario where the bounded contexts in a system has no relationship with other bounded contexts.
+In such a scenario, the bounded contacts are truly independent or autonomous.
+
+Consider the scenario where there are two bounded contexts A and B which have no relationship.
+- This means that there is no sharing of models between these two bounded contexts since they are independent.
+- Teams can work on these two bounded contexts autonomously.
+- In other words, these teams do not have to collaborate or coordinate for any task.
+Could argue that there are opportunities to reuse parts of A and B or vice versa but one has to consider the trade off.
+- The tradeoff is that if there is reuse, then there will be a loss of autonomy.
+- To go a little deeper say there is a model shared by team B then the teams cannot work autonomously.
+- Why? because if A has to change the model, then the team for B will need to agree to the changes.
+- Regarding the reuse, when there is no relationship between the bounded contexts of A and B then this is referred to \textit{Separate Ways pattern}
+- From the realisation perspective, this means that they will independent set of applications or services for each of the bounded contexts.
+--- Teams will be able to independently develop applications and services for these two bounded contexts.
+--- This means that these two teams can work independently at their own pace to meet the business goals of their respective business unit.
+
+Sometimes you find bounded contexts that have mutual dependency on each other.
+This kind of a relationship between the bounded context is referred to as the symmetric relationship or bidirectional dependency.
+To depict a symmetric relationship, a solid line is placed between the bounded contexts.
+This mutual dependency leads to high level of coupling between the bounded context and this type of relationship is referred to as the partnership pattern in domain driven design.
+
+From the realisation perspective pattern, this translates into services that have mutual dependencies.
+What this means is that the services may be developed by different teams,but because of the mutual dependencies between the services, the teams cannot operate independently.
+Not only that, each of the teams engaged in this kind of a relationship would need to learn the business models and the ubiquitous language for the bounded context managed by the other team.
+What this means is that the teams in this kind of relationship will need to coordinate their changes, deployments and their releases and that will defeat the purpose of adopting microservices architecture.
+- How is this problem solved?
+- One way to solve this problem is to demarcate the boundaries for the shared models.
+- Consider two independent teams A and B.
+----- They can create a demarcation around the models that are shared between the two bounded contexts.
+----- The idea is to manage these shared models independent of the rest of the bounded context.
+----- What this means is that if A needs a change and this change is not part of the shared models then the team assigned to bounded context A can make independent decisions.
+----- Similarly if there are changes needed outside of the shared models and bounded context B the team assigned to bounded context B can make those decision independently.
+------ At any point, if there is a need for making a change to the shared models, then the two teams will coordinate.
+
+The sharing od models between the bounded context is referred to as the shared kernel pattern.
+The important thing to keep in mind for the shared kernel is that overlapping parts of the context represent the shared domain model, the shared concepts and the shared business language between the two bounded contexts.
+Typically, the shared kernel is realised by way of shared libraries such as Java Jars, Python packages and Ruby Gems etc........
+Teams can independently develop services that use these shared libraries.
+
+It is okay for the teams to use shared kernel and shared libraries so long as the scope of sharing between the bounded context is limited to a small set of models for scenarios involving sharing of too many models.
+Between the bounded context, it becomes difficult to maintain the integrity of the boundaries of the bounded contexts and this is the reason for the suggestion to use shared kernel only, if we are talking about a small set of shared concepts between the bounded contexts.
+
+Summary - Strategic patterns
+
+First one is the separate ways pattern in which there is no relationship between the bounded contexts
+As a result, the teams working on the two bounded contexts can work truly independently.
+
+The next one is the partnership pattern in which there are interdependencies between the bounded contexts.
+As a result, teams must coordinate with each other to make changes to their own bounded contexts.
+
+The third one is the shared kernel in which it is suggested that the boundaries of the shared concepts and models be clearly demarcated and only the changes to these shared models need to be cordinated by the teams.
+In other words, if the team is working on changes that are not related to the shared models or concepts, the it can carry out those changes withouth needing input from the other team.
+
 \section{Asymmetric Relationship Patterns}
 
+Two terms, upstream bounded context and downstream bounded context.
+Three patterns, customer supplier pattern, conformist pattern and the anti-corruption layer pattern.
+
+One bounded context has dependency on another bounded context.
+This kind of a relationship is depicted by way of assigning roles to the bounded context.
+The bounded context that exposes modesl to the other bounded context is referred to be in the upstream role an the bounded context that is dependent on the other bounded context is referred to be the downstream bounded context.
+This depicts a relationship in which bounded context A has knowledge of models in bounded context B, and since the relationship is asymmetric bounded context B does not have any knowledge of the models in bounded context A.
+- An important thing to keep in mind here is that this relationship does not indicate the flow of data or information.
+- It depicts the dependencies from the realisation perspective.
+--- The upstream bounded context exposes some functionality and models that are consumed by the downstream bounded context.
+--- There are two options that the upstream bounded context has.
+--- 1) It can expose the functionality and models based on the needs of the downstream bounded context.
+--- 2) The second options is that the upstream bounded context exposes certain functionality and models without any consideration to the needs of the downstream bounded context.
+
+These are two separate patterns.
+Option 1 - The upstream bounded context fulfils some specific needs of the downstream bounded context and this pattern is referred to as the customer supplier pattern.-
+- Can be thought of as the client server pattern where the server creates the interfaces based on the needs of the client.
+- From the realisation perspective, the supplier team always conslults with the customer team to ensure that the suppler service fulfils the needs of the customer services.
+
+Option 2 - The upstream bounded context exposes modesl with no regard to downstream bounded context requirements or needs.
+-- In this sceanario, the downstream bounded context accepts the models exposes by the upstream bounded context.
+-- This type of relationship pattern is referred to as the conformist pattern.
+-- In this pattern, the downstream bounded context conforms to the upstream bounded context models.
+-- To depict this relationship %%TODO See or create diagram using TikZ
+-- BC A is conforming to the models exposed be BC B
+----- One important not here is that bouth the bounded contexts use the same model.
+
+
+Consider a scenario in which the downstream bounded context decides not to conform to the upstream bounded context.
+- In other words, the team for bounded context A decides to create their own model instead of adopting the models for bounded context B
+--- In that scenario, the models from bounded context will be exposed to the bounded context.
+--- A would require some kind of a translation to convert the models from bounded context B to bounded context A.
+---- The suggestion is to isolate this translation logic in a separate layer.
+---- This layer for the translactoin is referred to as the anti-corruption layer and this pattern is also referred to as the anti-corruption layer pattern.
+--- The idea between the anti corruption layer is to protect the bounded context from corruption.
+--- See diagram. This kind of relationship is depicted by replacing D with ACL.
+------- Depicting a relationship between A and B, wherein each of these bounded contexts have their own model.
+------- They have no knowledge of each other's models except that the ACL has the required knowledge of both the models for A and B and carries out the translation from B's model to A's model.
+
+Summary
+- The downstream bounded context depends on the upstream bounded context.
+-- In the customer supplier pattern, the upstream bounded context adjusts the model to the downstream bounded context.
+-- In the conformist pattern, the upstream bounded context does not give any regard to the needs of the downstream bounded context.
+------ SO the downstream bounded context conforms to the upstream models in order to protect the downstream bounded context.
+-- Teams may decide to use the anti-corruption layer.
+----- This anti-corruption layer has the logic for translating the model from the upstream format to the downstream format that way,
+----- the downstream bounded context has no knowledge of teh upstream model context and hence there is no direct dependency.
+-------- All the code related to the dependency is isolated in the ACL
+
 \section{One to Many relationship patterns}
+%TODO create diagrams
+%TODO consider schema generation like avro, gRPC, REST api doc generation
+
+Two patterns, open host service and the published langauge pattern.
+In the one to many relationship upstream bounded contexts referred to as providers offers common services to two or more bounded contexts.
+-- THis is referred to as the as the open host service pattern.
+-- To depict this common services pattern.
+-- There is an open host service provider which offers a common language for integration.
+-- This common language is accepted by teams working on the downstream bounded context.
+--- This common language is referred to as the published language, and this pattern is referred to as the published language pattern.
+
+Summary:
+Open Host Service pattern in which the upstream bounded context provides a set of common services or common capabilities to the downstream bounded context.
+Published language pattern which goes hand in hand with the open host service pattern.
+
+The upstream bounded context or the open host service provider exposes the common language for the common services.
+This language is managed by the team responsible for the open host service.
+The downstream bounded context accepts this publish language
 
 \chapter{Domain Driven Design - Tactical Patterns}
 
