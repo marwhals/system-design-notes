@@ -100,10 +100,8 @@
 
     Multiple ways to represent this, one way is a sequence diagram which is a part of UML. Standard for viaualising system design.
 
-
     \section{Non functional requirements}
     These requirements have an effect on the software architecture.
-
 
     \section{Why redesign}
     System is functionally correct but speed, scalability, maintenance or security is too hard for reasons like number of users or data volume.
@@ -130,7 +128,6 @@
         \item Feasibility of quality attributes
     \end{itemize}
 
-
     \section{System constraints}
     Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
     Quality attributes will lead to tradeoffs and this is normal.
@@ -151,7 +148,6 @@
     Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
     Need to avoid tight coupling with certain components or constraints to allow for change otherwise whole system could be rearchitected.
 
-
     \section{Gathering System Requirements}
 
     \paragraph{Requirements} - Description of what we needs to be built.
@@ -168,7 +164,6 @@
     Hardware and Software costs.
     Contracts and financial obligations.
     Reputation and brand
-
 
     \section{Type of Requirements AKA Architectural Drivers}
 
@@ -1560,7 +1555,6 @@
     Some follow the same APIs as some cloud vendors, so they can easily be used in hybrid cloud environments (cloud + private data centre).
     Can use the same object ID to store data in both locations.
 
-
     Just like distributed file systems, object stores use data replication although this is abstracted away.
     Ensure physical storage loss will not result in loss of actual data.
 
@@ -1568,7 +1562,6 @@
     Data is immutable, no edits can only be replaced with a newer version.
     Performance implications --- storing large documents that require ammends would not be feasble
     Needs a special API or a rest API unlike a distributed file system.
-
 
     Distributed systems are the preferred storage solution over object stores for high throughput solutions.
 
