@@ -1980,18 +1980,165 @@ If possible the microservices designer should use the database features to achie
 \chapter{Microservices and Kafka}
 %TODO Skip for now.....do hands on.
 \section{Use of Kafka in Microservices}
+
 \section{Kafka Overview}
 \section{Kafka Concepts}
 \section{Kafka vs AMQP (Rabbit MQ)}
 
 \chapter{Managing Distributed Transactions with SAGA}
-%TODO Consider skipping for now. Do hands on
+%TODO Do hands on Spring WebFlux + Kafka
 \section{Distrubuted Transactions with SAGA}
-\section{SAGA Pattern for distributed transactions}
-\section{SAGA Choreography vs Orchestration}
-\section{SAGA Implementation Considerations}
+Recap - it is not always possible for microservices to use a two phase commit for transactional management.
+The alternative is to use the Saga pattern.
+The challenge with building sagas is that they are complicated.
 
-z\chapter{Microservices and API}
+Challenge with building Sagas is that they are complicated, but there are frameworks for it (Reactive Spceification and WebFlux).
+These frameworks hide the complexities needed for the realisation of this pattern.
+
+\section{SAGA Pattern for distributed transactions}
+Refresh - two phase commit which can be used for managing data consistency within a single data base.
+In the ccase of distributed transactions, there may be multiple databases across multiple microservices.
+
+The design for failure principle suggests that you should always anticpipate that there will be failures.
+You should proactively identify the failure points in your architecture involving distributed components of microservices.
+- Then you should address of the failure points in your architecture.
+- This is the best practice for building a distributed systems.
+
+The idea is that since each microsedrvice has its own data base, if failures are not addressed it will lead to an inconsistent state of data across the mlutiple databases owned by the microservices.
+Important: This needs to be avoided at all costs.
+
+The designer of the distributed system must ensure that the data is consistent across all of the distributed services or microservices.
+State should be consistent across all databases.
+It can be all successful or it can be all failures, but it cannot be a mix of success and failure.
+One important point to keep in mind is that local transactions cannot be used for reverting the state of the database.
+
+The saga pattern provides a solution for managing data consistency across microservices.
+It involves use of local transaction coupled with compensating transactions.
+
+The role in compensating transactions is to revert the database changes.
+Via compensating transactions the consistency of data will be achieved across all databases.
+This means each transaction requires a compensating transaction.
+
+Saga pattern may be applied to monolithic and distributed systems.
+When applied to the distributed systems it is sometimes referred to as distributed saga.
+In microservices we are referring to distributed Saga.
+
+Saga it not new. Introduced in a paper in 1987 (add link).
+
+Summary
+- A Saga pattern is used for managing data consistency across microservices.
+- Involves the use of local transactions data to the databases, and it involves use of compensating transactions for reverting the database changes in case of failures.
+- The reason compensating transactions are used is because it is not possible to use database transaction rollback for reverting the database changes.
+
+
+
+\section{SAGA Choreography vs Orchestration}
+
+There are two ways to build saga call flows.
+
+A Saga is implemented in two ways.
+The first way is to use what is referred to as event choreography, in which there is not central component to manage the transactions.
+The second way to do it is by way of command orchestration in which there is a central component for managing the flow of Saga.
+The central component is referred to as the Saga Execution Coordinator.
+
+Details.
+In the event choreography saga, the microservices emit and recieve domain events and these events are the processed by each of these services independently,
+Services may listen for events of interest and react to those events in an autonomous fashion and as part of transaction processing these services may emit new events.
+The use of event choreography leads to highly decoupled services.
+
+There are challenges.
+The first one is that is difficult to implement test and debug.
+Next one is that events are emitted and consumed by each of the services in the saga in an independent fashion and that can lead to out of sequence events.
+Each of the services in the event choreography needs to make sure that out of sequence events are handled properly.
+Handling the failure scenarios in event choreography is difficult because there is not centralised service.
+
+Coordinating the recovery from failure scenarios in a command orchestration saga implementation.
+A central component manages the calls to services in Saga.
+There are two ways in which command orchestration saga may be built int he first method a domain object, which is part of the domain object model, acts as the central component for managing the calls to other services.
+In the second method, there is a dedicated orchestrator which is defined outside of the domain model to coordinate the calls to services in the saga.
+
+The central component is sometimes referred to as the Saga Execution Coordinator.
+
+An external coordinator is preferred over coordinator built into the domain object.
+The external Execution coordinator is also referred to as the orchestrator.
+It is a generic component that does not have any kind of business logic.
+
+It provides certain capabilities to define the flow and it carries out the invocation of the services, by way of the flow defined by the designer of the microservices.
+It also carries out the state management in its own dedicated persistent storage that has not relationship with the domain data storage.
+
+There are multiple external orchestrators that may be used for building saga with microservices.
+- Examples are a BPM or a workflow tool.
+- Step functions are another one.
+--- If you are using cloud then this is a quick way to build sagas.
+- Then there are mlutiple frameworks in different languages. Spring can be used.
+
+Step Functions.
+AWS Step functions let the develope define the process by way of JSON.
+There is also a visualisation tool that shows the flow service calls.
+Typically the business logic, which is the transaction and the compensating transactions are implemented in lambda functions.
+The step function service in AWS coordinates the executions of the transactions and the compensating transactions.
+
+These are the services that are called as part of the saga and these are the compensating transactions which revert the effect of the service calls.
+
+The command orchestrator based saga implementation is less decoupled compared to the event choreography based saga.
+Also the command orchestrator introduces a single point of failure.
+- Even with those weaknessses, command orchestrators are much simpler to work with since there is a central component that defines the flow of the services calls.
+Developers can quickly understand how the command orchestrator saga is working and as a result they are simple build test and manage.
+
+Failure scenarios may also be handled much more easily in command orchestrators compared to the event choreography based sagas.
+Some saga execution coordinators or workflow engines also provides a centralised way to check the state of the flow.
+
+Summary
+Building Sagas using the event choreography pattern.
+- No central coordinator for the flow of transactions.
+
+The other way to build Saga is to use the command orchestrator pattern in which there is a component that acts as the coordinator for the flow of transactions.
+A domain object may act as the Saga execution coordinator or an external component such as a workflow engine or framework may be used as the Saga Execution Coordinator.
+
+\section{SAGA Implementation Considerations}
+Aspect to consider - Sychronous vs Asynchronous calls.
+
+Service in the Saga may expose commands by way of APIs. Example, REST APIs and these Rest APIs may be invoked by way of an orchestraot in a synchornous fashion.
+This is feasible...but asynchornous mechanisms such as messaging is the preferred way to fo.
+The bottom line is that whenever possible use messaging instead of synchronous ptotocols such as REST over HTTP.
+
+Each transaction in a saga should be assigned a unique identity (guid or some equivalent). Idea behind this is that it helps with even sourcing and the servcies in the saga may use it to identify duplicate transactions.
+The idea behind this uniqe identity is that it helps with event sourcing and the services in the saga may use it to identify duplicate transactions.
+The idea is simple, if the transaction with specific ID has already been processed then it doesn't need to be processed again.
+
+Idempotence is the property of certain operations in mathematics and computer science (hahahahahhaha) where they can be applied multiple times withouth changing the result beyond the initial applications.
+
+In a saga the service transactions mus te idempotent. The unique identity given to each of the message can help in achieving the important behviour of the transactions.
+
+How services may retain the processed transactions in a log.
+When a transaction is recieved, the service will check if the transaction ID has already been processed.
+If it has not been processed then the transaction will be processed.
+A response will be created and saved to the database and sent back to the called.
+Say another request comes in with a transaction  ID that has already been processed.
+- In this case the service will not process the transaction again.
+Rather, it will pick up the past response from the database and sent it back to the caller.
+
+About Failures.
+Service request failures are okay if they are followed by compensating transactions, but the compensating transactions cannot fail.
+They must execute successfully.
+Otherwise data across the microservices will get into inconsistent staet in order to build a capability for recovering from failed compensating transactions.
+Consider using event sourcing.
+
+Recap - Step functions may be used for building a command orchestrator based Saga flows.
+If you aren't using AWS, you may still use certain frameworks that provide the foundational components for building distributed transactions.
+Example frameworks: Eventuate, AxonIQ, Seata ---- These can be leveraged for accelerating the development of microservices.
+
+Key points
+Messaging is preferred for the intercommunication between the services in a saga.
+Each transaction should have a unique identity which helps the services achieve idempotency.
+That means the same transaction may be executed without the loss of data consistency.
+Transactions can faile but....if a transaction fails then the compensating transactions must be executed.
+The compensating transaction itself cannot fail.
+
+%TODO Excercise ---- could make my own maybe
+%TODO UML code walk through.......consider alternatives
+
+\chapter{Microservices and API}
 %TODO Potentially already done. Consider skipping for now
 \section{Microservices - API Realisation}
 \section{Introduction to REST API}
