@@ -1992,7 +1992,7 @@ Recap - it is not always possible for microservices to use a two phase commit fo
 The alternative is to use the Saga pattern.
 The challenge with building sagas is that they are complicated.
 
-Challenge with building Sagas is that they are complicated, but there are frameworks for it (Reactive Spceification and WebFlux).
+Challenge with building Sagas is that they are complicated, but there are frameworks for it (Reactive Specification and WebFlux).
 These frameworks hide the complexities needed for the realisation of this pattern.
 
 \section{SAGA Pattern for distributed transactions}
@@ -2004,7 +2004,7 @@ You should proactively identify the failure points in your architecture involvin
 - Then you should address of the failure points in your architecture.
 - This is the best practice for building a distributed systems.
 
-The idea is that since each microsedrvice has its own data base, if failures are not addressed it will lead to an inconsistent state of data across the mlutiple databases owned by the microservices.
+The idea is that since each microservice has its own data base, if failures are not addressed it will lead to an inconsistent state of data across the mlutiple databases owned by the microservices.
 Important: This needs to be avoided at all costs.
 
 The designer of the distributed system must ensure that the data is consistent across all of the distributed services or microservices.
@@ -2070,7 +2070,7 @@ There are multiple external orchestrators that may be used for building saga wit
 - Examples are a BPM or a workflow tool.
 - Step functions are another one.
 --- If you are using cloud then this is a quick way to build sagas.
-- Then there are mlutiple frameworks in different languages. Spring can be used.
+- Then there are multiple frameworks in different languages. Spring can be used.
 
 Step Functions.
 AWS Step functions let the develope define the process by way of JSON.
@@ -2082,7 +2082,7 @@ These are the services that are called as part of the saga and these are the com
 
 The command orchestrator based saga implementation is less decoupled compared to the event choreography based saga.
 Also the command orchestrator introduces a single point of failure.
-- Even with those weaknessses, command orchestrators are much simpler to work with since there is a central component that defines the flow of the services calls.
+- Even with those weaknesses, command orchestrators are much simpler to work with since there is a central component that defines the flow of the services calls.
 Developers can quickly understand how the command orchestrator saga is working and as a result they are simple build test and manage.
 
 Failure scenarios may also be handled much more easily in command orchestrators compared to the event choreography based sagas.
@@ -2096,22 +2096,22 @@ The other way to build Saga is to use the command orchestrator pattern in which 
 A domain object may act as the Saga execution coordinator or an external component such as a workflow engine or framework may be used as the Saga Execution Coordinator.
 
 \section{SAGA Implementation Considerations}
-Aspect to consider - Sychronous vs Asynchronous calls.
+Aspect to consider - Synchronous vs Asynchronous calls.
 
-Service in the Saga may expose commands by way of APIs. Example, REST APIs and these Rest APIs may be invoked by way of an orchestraot in a synchornous fashion.
-This is feasible...but asynchornous mechanisms such as messaging is the preferred way to fo.
+Service in the Saga may expose commands by way of APIs. Example, REST APIs and these Rest APIs may be invoked by way of an orchestrator in a synchronous fashion.
+This is feasible...but asynchronous mechanisms such as messaging is the preferred way to fo.
 The bottom line is that whenever possible use messaging instead of synchronous ptotocols such as REST over HTTP.
 
 Each transaction in a saga should be assigned a unique identity (guid or some equivalent). Idea behind this is that it helps with even sourcing and the servcies in the saga may use it to identify duplicate transactions.
-The idea behind this uniqe identity is that it helps with event sourcing and the services in the saga may use it to identify duplicate transactions.
+The idea behind this unique identity is that it helps with event sourcing and the services in the saga may use it to identify duplicate transactions.
 The idea is simple, if the transaction with specific ID has already been processed then it doesn't need to be processed again.
 
-Idempotence is the property of certain operations in mathematics and computer science (hahahahahhaha) where they can be applied multiple times withouth changing the result beyond the initial applications.
+Idempotence is the property of certain operations in mathematics and computer science (hahahahahhaha) where they can be applied multiple times without changing the result beyond the initial applications.
 
 In a saga the service transactions mus te idempotent. The unique identity given to each of the message can help in achieving the important behviour of the transactions.
 
 How services may retain the processed transactions in a log.
-When a transaction is recieved, the service will check if the transaction ID has already been processed.
+When a transaction is received, the service will check if the transaction ID has already been processed.
 If it has not been processed then the transaction will be processed.
 A response will be created and saved to the database and sent back to the called.
 Say another request comes in with a transaction  ID that has already been processed.
@@ -2121,7 +2121,7 @@ Rather, it will pick up the past response from the database and sent it back to 
 About Failures.
 Service request failures are okay if they are followed by compensating transactions, but the compensating transactions cannot fail.
 They must execute successfully.
-Otherwise data across the microservices will get into inconsistent staet in order to build a capability for recovering from failed compensating transactions.
+Otherwise data across the microservices will get into inconsistent state in order to build a capability for recovering from failed compensating transactions.
 Consider using event sourcing.
 
 Recap - Step functions may be used for building a command orchestrator based Saga flows.
@@ -2139,10 +2139,346 @@ The compensating transaction itself cannot fail.
 %TODO UML code walk through.......consider alternatives
 
 \chapter{Microservices and API}
-%TODO Potentially already done. Consider skipping for now
+%TODO Do excercises and hands if necessary --- or go do my own
+
 \section{Microservices - API Realisation}
+API - application programming interface is an interface that defines the interactions between multiple software applications or mixed hardware software intermediaries.
+
+Focus on microservices, which can be thought of as independent applications.
+Microservices expose APIs for consumption by other microservices.
+
+It is common for these APIs to be exposed over HTTP but messaging is preferred protocol for these interactions between APIs.
+These APIs are a separate set of APIs that may be exposed to the external componetns such as user interfaces or legacy applications.
+Some of these consumers may even be outside of the organisation that own the microservice for such interactions.
+
+HTTP is commonly used and the reason for that is that messaging would require dependency on a specific messaging technology.
+-- In turn this would make the use of the API very restrictive.
+HTTP being an open standard makes the API more available to any type of client that can make HTTP calls.
+Microservices may realised these APIs in multiple ways.
+
+Designers of microservices commonly use RESTFUL APIs and GraphQL APIs at a high level.
+
+The different between the two is how they define the contract between the client and the server.
+
+Both have pros and cons.
+
 \section{Introduction to REST API}
+
+Is your architecture useful - consider Richardson maturity model.
+- Some developers think that they by using HTTP and JSON they are creating something that qualifies as a RESTful architecture.
+-- That may or not be true.
+These applications may not be restful but they may like rest or restish
+
+What makes an architecture restful?
+- In order for an architecture to be restful it must follow six design rules.
+- These six rules are referred to as the rest Architecture constraints.
+
+-- Described by Roy Fielding in his Dissertation in 2000.
+
+Six constraints - consider researching if required.
+- First constraint for rest is client server. This constraint suggests the use of client server design principles for impllementing the rest APIs
+- Second one is the uniform interface that suggests use of well-defined contracts between the client and the server.
+- The third one is the statelessness, which suggests that the server should not manage the state of the application.
+- Fourth one is caching - the server should use HTTP cachin headers to cache responses to the requests received from the client.
+- Fifth one is layering - This suggests that the architecture should be layered and each of these layers should be manageable independently
+- Last one is code on demand - and this suggests that a server can not only send dataa to the client in response to the request but it can also send code that the client can execute
+---- This final one is optional.......but interesting :D
+
+To summarise - as long as your implementation is following the first five constraints you architecture will be considered as Restful.
+- Recall that Rest APIs are no restricted to HTTP protocol.
+----- So if your API is using HTTP and it is following rest architectural constraints then it is said to be an HTTP REST API or REST of HTTP.
+
+
 \section{REST API Resources and Design Constriaints}
+All real world objects or resources may be described by way of attributes.
+In software systems, these attributes are managed in some kind of persistent storage.
+- Could be an RDBMS or a NoSQL database.
+- Certain attributes of the object may change over a period of time.
+-- All state changes are captured in a persistent storage.
+-- What we are saying here is that representational state of the car is managed in the database and multiple instances are uniquely identified by some kind of unique ID.
+-- Each can have different attributes.
+
+Think of a system that can query this database.
+- The system may ask the database and will respond by sending back the representation state of an object or entity.
+This is the foundational concept.
+
+From the source database, this representational state data may be in any format.
+- Could be name value pairs or it may be in a database record format.
+- This internal representational state is converted to other formats.
+- Those are not the only format it can be converted to.
+--- Representational state may be converted to JPEG, PDF, Excell, excerter.
+
+If we replace the logic with the Rest API, then it is a good representation of the restfulAPI from the data formats perspective.
+- What this tells you is that a rest API is not tied to any specific data format.
+- In fact the same instance of a RESTFUL API can convert and send back the representation state af a resource in different formats based on the clients needs.
+
+All modern APIs use HTTP as the communicatoin protocol and we call such APIs HTTP Rest APIs.
+The reason is because the rest APIs style itself is not tied to HTTP.
+You can bulid Rest APIs with other protocols as well.
+Rest over HTTP APIs expose and endpoint and this endpoint is used for manageing the state of the resources.
+-- Keyword here is managing the state.
+What that tells you is that you can carry out the CRUD operations on the resources exposed by the REST APIs.
+
+You can create, retrieve, update and delete the resources in order to carry out the CRUD operations.
+The client has to use an appropriate http verb.
+Consider ACME travel HTTP endpoint.
+- Client will use this endpoint to perform CRUD operations to create a resource (POST)
+- GET to retrieve the HTTP resource.
+- PUT for updating the state of an resource (consider idempotency)
+- DELETE - verb needs to be used for deleting a resource.
+
+Summary - What makes an API Restful
+- REST APIs - follow a set of design principles
+- they follow the REST architectural style
+- they expose resources one which the rest client can carry out operations.
+- REST APIs are not tied to any specific technology
+- REST API does not define any standard for request or response payloads or how the API should be built.
+- REST APIs can use any communication protocol or any data format.
+
+Note: Not tied to HTTP and JSON, common misconception.
+
 \section{API Management}
+APIs exposed by the microservices are consumed by three different types of consumers.
+- First type are the private or internal API consumers.
+- These private consumers are part of the same microservices team or are developers of other microservices.
+--- Idea is that the private consumers belong to the same organisation as the owners of the APIs
+- The second type of consumer are the public or external consumers
+--- These are independent developers outside of the organisation.
+- The third type of consumer is the partner API consumers.
+
+From the implementation perspective there is not difference between the three types of API.
+The difference is how they are managed.
+
+Private vs Public.
+Private API consumer could invoke the API more oftern then a public one.
+Another example is that a private consumer could have access to more feature, wheres public is restricted.
+
+These aspects of an API are managed outside of the microservices implementation by way of an API management platform.
+Can think of an API management platform as a technology that is used for address the common API concerns.
+These common concerns are typically the concerns related to the access and authorisation to the APIs logging and analytics quotas.
+
+Microservices expose their APIs by way of these API management platforms.
+- The API management platform exposes the API by way of a proxy or endpoint.
+- The consumers of the API invoke the API by way of the proxy endpoint.
+- They never connect directly to the API exposed by the microservice when the consumer invokes the API.
+- The API management platform applies the management control and based on the outcome of those controls, the API management platform either allows the invocation oif the API on the microservice or it denies the reqeust for invocation.
+
+Management control
+- Most API management platforms offer a declarative or policy based management features.
+- What this means is that the developer of the microservice doesn't have to code any of these management controls.
+- They can simply put together policies for defining these controls.
+
+Example - a policy may be defined for the internal or private consumer to be such that maximum flexibility is provided to the consumer.
+So in other words, most of their calls will go through the public domain developers, the policy may be extremely restructured to partner APIs.
+The policy may be such that it defines some kind of a SLA.
+
+How are these policies defined?
+These policy definition mechanism is totally dependent on the API management product.
+JSON is commonly used for defining these policies.
+
+For further research look at Apigee, Mulesoft etc.
+To understand these JSON policy documents. Also check out cloud equivalents.
+-- Reccomended approach.....is to use an api management solution.
+Multiple benefits but on of the biggest is....
+- The team can focus on the domain or the business logic, rather than spending time on common concerns such as security logging etc.
+-- As a result microservice code is cleaner.
+
+Last but not least, since the consumers of the API do not connect directly to the microservice change management becomes easier.
+- What that means is that the microservices development team can make the changes to the API and adjust the proxy on the API management platform to insulate the end consumer from those changes.
+
+Key points:
+- There are three types of APIs depending on the type of consumers
+- The private API is consumed by the consumers within the same organisation.
+- Public APIs are consumed by consumers that are outside the organisation and are in the public domain
+- Partner APIs are used by the partners of the organisation
+- Microservice expose APIs and the consumers do not connect directly to these APIs, but they connect by way of an API management platform that provides a policy based mechanism for addressing common concersn related to APIs.
+- Since these common concerns are address by the API management platform, microservices implement only the business logic for the APIs.
+
+%TODO - example or create my own, design or create my own
+
 \section{Introduction to GraphQL}
+
+GraphQL is a query language for APIs that is not tied to any specific database or technology or network protocol.
+GraphQL is a specification for query language.
+At time, the term GraphQL is also used for referring to a component that implements the GraphQL specifications.
+A GraphQL server exposes the GraphQL API endpoint that is used by the GraphQL clients to invoke GraphQL operations.
+
+History: Developed by Facebook/Meta for use in mobile applications in 2012. Became open source in 2015.
+
+The are many small  to large organisations that have adopted GraphQL as a standard for their APIs
+
+REST vs GraphQL
+Rest API exposes the API interface to the client by way of contract.
+The contract defines the schema for the request payload that the client sends to the server and it also defines the schema for the response payload that the server sends to the client.
+The structure of the response and response schemas is fixed and the client receives all of the data in  the response payload, whether it needs it or not.
+If you think about the rest API server as a data source that is like executing SELECT * from the table. hahahhaha
+As the client has no choice in terms of what it needs in the response schema.
+This issue where the rest API where the client is fetching more data the it needs it referred to as the over fetching issue.
+
+GraphQL contract
+GraphQL contract is in the form of a GraphQL schema that defines the operations that are supported by the GraphQL server.
+These operations ca nbe query operations which is equivalent to the retrieves and the operation can be type mutations which are for updating, creating or deleting the data manged on the GraphQL server.
+
+The GraphQL schema also have type definitions.
+Client can invoke the queries and tell the server what it needs in the response payload.
+Now the client has contorl over the response.
+This is like calling the SELECT with field names etc.
+This way the client is able to get only what it needs and not have to be concerned with the over fetching issues.
+
+API granularity
+Generally the rest APIs are built as highly granular services and this is done to meet the needs of multiple types of clients.
+This leads to an issue.
+Under fetching which results in more network calls from a microservice. This leads to latency and a performance hit.
+
+If this was to be replaced with a GraphQL, the api the provider will put together the GraphQL specification which will be used by the web developer to invoke the GraphQL queries against the API endpoint.
+In the query, the client side will specify the fields that it would like to receive as part of the response.
+Server will process the query and respond back with the requested fields in the response.
+With this setup, with a single call the client is able to retrieve the required data.
+Hence both the under fetching and the over fetching issues are addressed by graphQL.
+
+A graphQL server is implemented as a layer to manage all the client interactions.
+it sits in front of the application tier.
+This layer implements the GraphQl specification and is responsible  for managing the client interaction and an invocation of the API.
+
+This layer interacts with the components in the application tier.
+The developer of the GraphQL API needs to put together the GraphQl specifications which are used by the GraphQL server layer.
+
+There is not standard implementation of GraphQL.
+There are multiple frameworks available for different languages.
+Each of these frameworks have a different requirement from the application perspective.
+Most frameworks require the developers to create GraphQL components that get wired to the GraphQL server, so the components that the developer need to put together depend on the framework.
+
+
+GraphQL operation flow.
+In a typical implementation of the GraphQL server client invokes the operation on the endpoint exposed by the GraphQL server.
+The GraphQL server on receiving this invocation validates the request against schema definition.
+If everything is good, then it requests the application to create an instance of a component provides the implementation for the operation.
+This component is also referred to as the query resolver.
+The data fetcher component then interacts with the data sources, which can be a database or it can be other components.
+The idea is that the data fetcher retrieves the data from on or more sources.
+After receiving the data from the source.
+The data fetcher then creates one or more instances of the resolver.
+These resolvers are then returned back to the GraphQL server layer.
+The GraphQL server layer invokes the functions on these resolvers to get the data for the fields that need to be passed in the response.
+
+The graphQL server implementation is available in multiple languages.
+Link for further research (https://graphql.org/code/)
+
+GraphQL Advantages
+Recap - Already learned that GraphQL addresses the over fetching and under fetching issues faced by the rest API clients.
+The graphQL API client is in full control of the responses.
+Documentation for the GraphQL is provided in the form of schema, so there is not need for seprate documentation.
+The graphQL server layer provides very descriptive error information to the clients which can be used by the client side whicch can be used but the client side to understand the exact issue in their requests to the GraphQL server.
+
+GraphQL Disadvantages
+Biggest one is that there may be performance challenges with complex queries.
+--- Web caching is not as straightforware to implement with GraphQL as it is with the RestAPIs
+
+- REST Apis are easy to learn compared to GraphQL APIs from the design perspective.
+- REST APIs are defined in terms of resources and endpoints, whereas the GraphQL APIs are exposed over a single endpoint and the contract is in the form of a schema definition from the control perspective.
+---- The client side has no control on the response whereas the client has full control on the response in the case of graphQL.
+
+REST APIs expose crud operations using HTTP verbs whereas in the case of graphQL all operations are invoked with either HTTP GET or POST.
+There are three types of operations, query, mutation and subscription.
+
+REST API client needs to make multiple network calls to gather the required information, whereas GraphQL API leads to reduced network traffic and that may lead to better performance from use cases.
+
+From usecases perspective, REST APis are suited for resource driven applications whereas GraphQL are more suited for data driven applications (very important.....)
+
+Summary
+GraphQL is a specification for APIs
+GraphQL addresses the under fetching and the over fetching issues related to the rest APIs.
+A GraphQL server implements the GraphQL specification.
+A GraphQL developer needs to put together the schema definition for the API and they also need to implement the components needed by the GraphQL server.
+The type of components that the developer has to put together depends on the GraphQL server in use.
+
 \section{GraphQL Schema Definition}
+See this link for details: https://graphql.org/learn
+
+GraphQL and REST are not mutually exclusive.
+Standard....pick the one that makes sense for your use-case.
+Evaluate requirements and then decide which one to go for.
+
+The graphQL type system refers to the fact that GraphQL service defines a set of types which completely describe the set of possible data you can query on the service.
+The incoming queries are validated by way of the schema definition language, which is programming language agnostic.
+
+Schema definition language is a JSON like language for defining the schema for the GraphQL apis.
+A schema consist of two parts.
+The first part are the operations supported by the GraphQL server.
+These operations can be queries, mutations and subscriptions.
+The other part has the types which are the server defined objects and each of these objects have fields of specific types supported by the GraphQL schema.
+
+In the context of schema definition, language operations are referred to as the route types.
+The route type query is used by the client for retrieval of objects defined on the server in the schema definition language.
+The route type query lists out all of the named queries.
+
+Each query is defined with a list of arguments.
+These arguments are the query criteria.
+
+A graphQL server may allow the client to modify the state of objects maintained on the server and it does this by defining the route types mutation.
+The route type mutation is similar to the route type query in the sense that there are named mutations in the specification and these named mutations also take argument sand return objects like named queries.
+- The last route type is the subscription route type, which is different from the query and mutation in the sense that subscription operation is not initiated by the client.
+- The client subscribes to the events on the server and the server pushes the data to the client in response to the events.
+- Types are used for defining the structure of the domain objects.
+- The scala types are the standard types defined in the schema definition.
+- Language integer, float, string and boolean are foundational scalar types.
+- ID is a special type which is not part of the business domain data but is primarily used for managing the caching of the query data.
+
+The GraphQL service defines the complex type by combining the standard scalar types.
+This no different from the way you define objects in any object orientated programming language.
+Language fields may be thought of as attributes in an object.
+These attributes have a type which may be a scalar or complex type.
+
+% TODO include an example
+
+The provider type is defined separately in the schema definition by the server.
+What this means is that complex types maybe nested and contain other complex types.
+
+Key point: Deep nesting of object definitions can impact the performance of the server. (Lenses)
+This is because deeply nested complex types would require hierarchical resolver implementations and that will in turn also lead to the complexity of implementing the GraphQL server.
+These are certain things that you need to keep in mind when designing your types.
+
+Client query execution on GraphQL server.
+The first thing the client needs to do is prepare the request payload.
+This request payload is a JSON like document.
+The structure of this document is defined by GraphQL and the client has to comply with it.
+The first thing you see here is the route type which is set to query.
+This could be mutations or this could be subscription as well.
+Then there is a named query.
+
+The products query is defined in the schema definition to take multiple optional arguments since for the products all of the arguments are optional.
+The client may specify zero or more argument values.
+These arguments act as the criteria for the query.
+
+What makes GraphQL different from a restAPI query.
+The client can specify the fields that it desired to receive from the server in the response.
+-- This is a key point of GraphQL.
+----- This cannot be done in REST APIs
+
+Example flow
+GraphQL server will first validate the reqeust.
+The server will delegate the reqeust processing to the microservices components.
+The microservice will the create the resolver instances and pass those back to the GraphQL server
+The graphQL server in turn will create the response payload based on the reqeust from the client and the reqeust from the client.
+
+GraphQL ecosystem has evovled (check this)
+Tools exist to assist with GraphQL development. Example graphQL playground.
+
+Summary:
+Think of schema for your graphQLs APIs.
+Think of schema definition as a shared language.
+Don't forget the ubiquitous language for the domain.
+Make sure that you schema definitions are mapping to the terms in the ubiquitous language <------
+Take an evolutionary approach to create the API <--------
+Don't try to do everything at the same time <-------
+
+Idea is to publish version on of the API and then look at how the clients or the consumers of the API are using your servcice.
+And base on that, evolve the schema for your APIs
+
+Key Points
+- Schema definition language is used by the server to define the schema or the contract for the API server.
+- Uses the schema to validate the incoming request for operations
+- Server also uses the schema for creating the responses thaat it sens back to the client.
+- Client uses the schema to create the reqeust payload and to parse the responses it receives from the server.
+
+%TODO Add UML and Example ---- or my own Example and something like Mermaid :D
