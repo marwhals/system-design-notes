@@ -1333,7 +1333,6 @@ These components communicate with each other by way of some kind network protoco
 This network communication protocol may be synchronous or asynchronous in nature.
 - By Synchronous, the caller statys blocked until it received a response from the other component.
 - Examples: HTTP, RPC
-
 - by Asynchronous communication, the caller does not wait for a response
 - Examples: Advanced Message Queueing Protocol
 
@@ -1459,7 +1458,6 @@ Formal definition of domain event.
 - A quick way to identify events in a domain is to look for statements like when this has happened then do this.
 - This part represents the event and this part represents the reaction to the event that is the business logic.
 - This reaction is known as a side effect......!!!
-
 
 Language plays an important role in domain driven design. Important to be very careful when you are naming you events.
 Always use past tense as event has already happened.
@@ -1699,7 +1697,6 @@ Must have the tools for the collaboration setup, create a board and make sure al
 --> Avoid addressing technical challenges faced by the participants. This can be a dampener.
 ---> make sure everything is working from day one before the workshop starts.
 
-
 May have a group of participants who are already experienced with the event storming, but there is no harm in spending a few minutes reminding everyone as to what is involved in the workshop and as part of this education do not use any technical terms.
 Specifically do not talk about domain driven design.
 Keep it business focused.
@@ -1827,7 +1824,6 @@ There are good things.
 First thing is that it will lead to simplified data management process.
 Second is that since the database engine is shared by multiple applications, the cost of the solution will go down.
 The third is that a single team of database administrators can manage the database for all applications.
-
 
 Challenges with the shared database pattern.
 The first challenge is that database challenges need to be managed very carefully.
@@ -1964,21 +1960,244 @@ When using the shared database, the objective of the microservice designer is to
 If possible the microservices designer should use the database features to achieve the highest level of isolation between the microservices own data within the database instances.
 
 \chapter{Microservices DB Performance Management}
-%TODO consider value......
+%TODO consider hands on and examples
 \section{Need for more Data Patterns}
+One common technique used for addressing the database bottleneck is to separate the database instance into write optimised and read optimised and read optimised database instances.
+It is very common to see multiple read instances in large scale applications.
+Clarity: This separation the databases is different from separate databases for the microservices.
+This mechanism of separating the databases into read and write optimised instances will work as long as the data integrity is maintained across the multiple instances of the databases.
+In other words, when the data gets written to the write optimised database, that data is consistently reflected across all the copies of the read optimised database.
+To achieve this, there is a need for additional patterns.
+
+Patterns to ensure data integrity across multiple databases.
+Command query separation, command query responsibility segregation pattern (CQRS), Event Sourcing.
+Potential tools: RabbitMQ, PostgreSQL and MongoDB
 
 \section{Commands Query Separation (CQS)}
+An operation is either a command or a query.
+An operation refers to a message that tells the application or system to do something.
+If this message leads to the change in state of a domain object then this message is referred to as a command.
+If the intent behind the message it o get the state of the domain object, then that message is referred to as a query.
+A query message does not change the state of a domain model.
+
+The command Query Separation principle also known as the command query separation pattern suggests that the designer of the domain object shoudl demarcate the methods as either commands or as queries.
+In other words, same method cannot be used for both command and queries.
+Idea was suggested by Burton Myers in early 2000
+
+Since this principle leads to the simplification of the domain model, it has been very well received by the practitioners.
+
+Refresher - Command as part of the lectures on an event.
+Storming a command is an action initiated by user system service or is triggered by some mechanism in time.
+A command is imperative, meaning that the action or the intent in the command must be carried out in the domain.
+
+Commands are always named as verbs.
+Similarly, read models also referred to as the query models are used for projecting domain data on the user interface.
+The reasons behind the command query separation is the fact that there is a different set of concerns to be kept in mind when you are implementing the command and the query operations.
+When executed these command should not lead to any kind of data integrity issues.
+Last but not the least these fucntions also have to deal with the challenges of scalabilty.
+
+At this point, you must be clear that commands are the ones that write to a database and the queries are the ones that read from the databases.
+
+Typically, the commands and queries are part of the same component and they are built and managed by a common team.
+
+Key points from this lesson.
+Commands represent the key points from this lesson.
+Commands represent actions or intent.
+
+Queries service domain data and the command query separation pattern suggests that operation exposed by the domain object should either be a command query.
+%Hands on SQL
 
 \section{Realisation of Commands and Queries}
 
+The commands and queries may be exposed by way of synchronous as well asynchronous protocols.
+In this microservice there may be a domain aggregate that is exposing the commands and the queries which may be invoked by way of a HTTP or gRPC API
+Some of these commands and commands and queries may also be executed by way of a messaging protocol.
+The format of the reqeust and responses for commands and queries is flexible.
+It may be JSON, CSV or XML protocol, buffer format or any other format that the designer of the microservice format that the designer of the microservice finds to be suitable for the requirement.
+A command writes to the database and the query reads from the database and the query reads from the database before the command writes to the database.
+It needs to translate from the command domain model object to the language that database understands in the context of the commands.
+The common model is referred to as the right model or sometimes just right side.
+Similarly, when the query is read, the data from the database it converts from database representation to the common domain model object representation.
+In the context of queries, the domain model is referred to as the read model or just the read side.
+
+Pseudocode for the command and they query processor actor invokes the command, which is received by the command processor.
+The first thing the command processor does is it converts the reqeust data to domain model as a next step.
+It executes the business logic and then converts the model to the database representation and then writes the data to the database.
+
+On the query side, the query processor receives the request and converts the and converts the recevied request to domain model.
+Then it gets the data from the database, converts the response data to domain model and then sends its back to the caller of the query.
+
+One point to note is that in a typical system a common read write model and a common write database is used for both commands and queries.
+It is commonly seen that there are more query requirements that the write requirements.
+
+It is more commonly seen that there are more query requirements that then write requirements.
+
+Typically you would find that systems provide multiple queries that serves up the same data in multiple formats or multiple views.
+The challenge with this is that there is a need for the common model to be changed for meeting all of these requirements.
+To achieve an optimal performance level for the various read requirements or the query requirements, the microservices designer needs to think about the indexes they need to create in the database.
+The challenge with indexing is that it leads to negative impact on the performance of the writes.
+
+Now for most systems ther performance hit on the writes may be acceptable but for internet scale systems or high volume systems.
+The performance hit on the writes may be acceptable, in which case alternate designs may need to be considered.
+
+Term collaborative domain.
+A collaborative domain is a domain in which multiple actors invoke commands in parallel on the same data.
+Collaborative domains have low tolerance for performance degradation.
+Commands in such systems have complex business logic and the commands are implemented with finer level of granularity.
+Also, the business logic and the change frequently in collaborative domains.
+
+Key points
+Common model is used for commands and queries.
+It is common for most systems to have multiple query requirements and these multiple query requirements may need to a change in the common model.
+Indexes are commonly used for making the queries performant but that impacts the performance of the write collaborative domains have little tolerance for performance degradation and so for collaborative domains, alternate designs need to be considered for implementing commands and queries.
+
+%TODO Hands on.
+
 \section{CQRS - Command Query Responsibiltiy Segragation}
+Applies the CQS idea to Domain Model rather than operations.
+Here instead of splitting the operations in to command and query, the suggestion is to split the domain model into the command and query models.
+The command model is also referred to as the right model and the query model is referred to as the read model.
+Idea was suggested by Greg Young.
+
+A more formal definition of CQRS suggests the use of separate read and write models for the realisation of collaborative domains.
+The typical characteristics required form the command model are finer granularity and support for ever changing business rules.
+Similarly the desired characteristics for the read model are that it should be able to meet different read requirements and provides very high levels of query performance.
+The read and write models may use the common instance of the data store.
+This may lead to the loss of ability to optimise the database for reads and writes.
+Note: If you create too many indexes on a database then the performance on the write side will degrade.
+----- If you remove indexes from the database if will impact the query performance.
+----- Balancing/ Optimisation act for use case.
+
+What if you need both?
+One solution to both would be to use independent data store for the read and the write side.
+Not only that, depending on the use cases for the read and the write side, different database technolgies may be used.
+Use of different database technologies within the same domain is sometimes referred to as the polyglot persistence.
+
+Example of why it may make sense to go with different database technologies.
+- Say requirements for the write side is to have ACID properties for the transactions and the desire is that no indexes should be created on the database tables to achieve high throughput for the writes.
+- On the read side, say the requirement is to have highly performant relationship queries.
+In this scenario, the developers may decide to go with a RDBMS database on the right side and a graph database on the read side.
+With this setup the developers will be able to achieve the requirements for both the read and write models.
+Another advantage of using independent data stores on the read and write side is that each side may scale independently.
+- Example, developers are dealing with a read heavy application.
+--- In that scenario they have the choice of horizontally scaling the read side or if that does not suffice then they can consider the read replicas for the read database or use sharding.
+--- Since the two sides are independent, actions performed on one side would not impact the other side.
+
+Read performance considerations.
+Typically there are more reads than writes in applications.
+Authors Experience: 85\% reads to 15\% writes as a result.
+Application developers are always looking for options to achieve highest read performance.
+Common ways by which it is achieved is by way of caching or by they way of materialised views that would not require model translation or use complext joins as the data is already persisted in the format in which it will be served to the requester.
+Sometimes this may not suffice.
+Example:
+There may be multiple different types of queries that need to be fulfilled by the read side.
+For example, there may be multiple different types of queries that need to fulfilled by the read side.
+-- Example of such queries are free text queries and reports form multiple data sources.
+In this scenario, the same type of database on the read side will not be able to efficiently handle all different types of queries.
+-- In such cases we may need to further break the read model into independent models and use different data stores.
+
+In certain scenarios involving collaborative and dynamic applications, there may be a need to frequently make changes to the read and the write models for such applications.
+Firstly consider leveraging different teams for managing the read and write models independently.
+With this kind of a setup, the teams can manage their own code base.
+They do not need to collaborate with other teams to make changes to the code bases that they're managing and all other deployments can be independently carried out by the owner team.
+
+This is an extreme case of an application that may have some stringent requirements in terms of availability, speed to market and performance.
+
+Common misconception
+- The common misconception is that in domain driven design CQRS must always be used. This is not correct.
+--- Depends on the use-case and yor objectives.
+
+Certain consideration that you need to keep in mind when deciding between using or not using CQRS.
+
+The first one is that you must be able to define the advantages of using CQRS.
+Bear in mind that using CQRS would mean a higher cost solution with more moving parts and components would need to be managed over the lifetime of the application.
+
+Key points
+May consider using CQRS for collaborative domains with
+- The write side and the read side may independently managed form the performance scalability and changes perspective.
 
 \section{Data Replication between WRITE-READ sides}
+Needed for independent READ and WRITE data stores
+
+This data replication may be synchronous or it be asynchronous.
+In the case of synchronous replication, there may be some technical challenges as synchronous replication may not be available natively for the database tha you are using.
+Or if you are using different database technologies, it may not be possible.
+Event with natively available synchronous replication technology there may be impact on write performance.
+
+Example: AWS DB that supports read replicas in the same AZ with synchronous replication.
+This kind of mechanism is supported for multiple databases such PostgreSQL, MySQL and SQL Server and Oracle.
+
+Asynchronous replication.
+- The write side writes to its data store and then some kind of asynchronous replication mechanism kick in, picks up the data from the write side and updates it on the read side.
+As a result there may be some lags and the data is eventually consistent.
+The implication of eventual consistency is that the read side may not reflect the current state of data.
+There are multiple data replication options available and the decision on which on to use will depend on the use can and the non-functional requirements such as the consistency of the data.
+- Some applications may not fulfill the requirement if they have eventual consistency from the read end.
+In that case you would have to go with some kind of synchronous replication technology.
+
+Data replication options.
+Capture changes in one data store and store in the other data store.
+Can use native replication such as Amazon RDS, MySQL replicas.
+Third party tools: Such as AWS data migration services.
+There is messaging streaming based replication in whcih the write side emits the data updates as events and the read side recieves these events to update its own data store. (EDA)
+
+Summary
+Data replication between read and write data store is needed when you segregate the command and the query and use different data stores.
+This application may be synchronous or asynchronous.
+Would need to look at specific requirements and supporting technologies to decide which replication technology which would make most sense for a use case.
+
+%TODO excercise and Hands on.
 
 \section{Event Sourcing and Event Store consideration}
 
+State Management
+- State-Orientate persistence system maintains only the current state
+- Event sources persistence systems persist all state changes.
+--- Domain events are stores as they are received
+
+Event Sourcing
+- Event Sourcing suggests persisting the domain events in an Event store and using it for recreating the state of the domain objects at any point in time.
+- Event store is an append only event log used for persisting the received events
+
+Performance consideration - Recreating the state from events will lead to bad performance
+Can be fixed by storing the state in a separate data store
+Multiple data views may be created for optimising queries
+
+Benefits
+- Event replay to create "point in time state"
+- Multiple read models views
+- Accurate out of the box auditing
+- Simplified Reconciliation
+- Temporal and Complex historical queries
+
+CQRS and Event Sourcing
+- Commonly used together
+- Purpose built data store can be added for specific requirements
+
+When to use Event Sourcing?
+- Evaluate use case from the event sourcing benefits perspective
+--- Event replay to create "point in time state"
+--- Multiple read models | views
+--- Accurate out of the box auditing
+--- Simplified reconciliation
+--- Temporal and Complex historical queries
+
+Realization of Event Store
+- Traditional datastore's may be used.
+--- RDBMS - PostgreSQL
+--- NoSQL Database - MonogoDB
+--- Specialised databases - EventStore - http://eventstore.com
+
+Quick Review
+- Event-Sourced persistence systems persist all state changes
+---- Current state managed in a separate data store for performance
+---- Out of the box Audit, Reconciliation, Temporal Queries
+
+Events are stored in Event Stores that my be traditional DBs
+
 \chapter{Microservices and Kafka}
-%TODO Skip for now.....do hands on.
+
+%TODO do hands on.
 \section{Use of Kafka in Microservices}
 
 \section{Kafka Overview}
@@ -2029,8 +2248,6 @@ Summary
 - A Saga pattern is used for managing data consistency across microservices.
 - Involves the use of local transactions data to the databases, and it involves use of compensating transactions for reverting the database changes in case of failures.
 - The reason compensating transactions are used is because it is not possible to use database transaction rollback for reverting the database changes.
-
-
 
 \section{SAGA Choreography vs Orchestration}
 
@@ -2187,7 +2404,6 @@ Six constraints - consider researching if required.
 To summarise - as long as your implementation is following the first five constraints you architecture will be considered as Restful.
 - Recall that Rest APIs are no restricted to HTTP protocol.
 ----- So if your API is using HTTP and it is following rest architectural constraints then it is said to be an HTTP REST API or REST of HTTP.
-
 
 \section{REST API Resources and Design Constriaints}
 All real world objects or resources may be described by way of attributes.
@@ -2348,7 +2564,6 @@ There are multiple frameworks available for different languages.
 Each of these frameworks have a different requirement from the application perspective.
 Most frameworks require the developers to create GraphQL components that get wired to the GraphQL server, so the components that the developer need to put together depend on the framework.
 
-
 GraphQL operation flow.
 In a typical implementation of the GraphQL server client invokes the operation on the endpoint exposed by the GraphQL server.
 The GraphQL server on receiving this invocation validates the request against schema definition.
@@ -2367,12 +2582,12 @@ Link for further research (https://graphql.org/code/)
 GraphQL Advantages
 Recap - Already learned that GraphQL addresses the over fetching and under fetching issues faced by the rest API clients.
 The graphQL API client is in full control of the responses.
-Documentation for the GraphQL is provided in the form of schema, so there is not need for seprate documentation.
-The graphQL server layer provides very descriptive error information to the clients which can be used by the client side whicch can be used but the client side to understand the exact issue in their requests to the GraphQL server.
+Documentation for the GraphQL is provided in the form of schema, so there is not need for separate documentation.
+The graphQL server layer provides very descriptive error information to the clients which can be used by the client side which can be used but the client side to understand the exact issue in their requests to the GraphQL server.
 
 GraphQL Disadvantages
 Biggest one is that there may be performance challenges with complex queries.
---- Web caching is not as straightforware to implement with GraphQL as it is with the RestAPIs
+--- Web caching is not as straightforward to implement with GraphQL as it is with the RestAPIs
 
 - REST Apis are easy to learn compared to GraphQL APIs from the design perspective.
 - REST APIs are defined in terms of resources and endpoints, whereas the GraphQL APIs are exposed over a single endpoint and the contract is in the form of a schema definition from the control perspective.
@@ -2383,7 +2598,7 @@ There are three types of operations, query, mutation and subscription.
 
 REST API client needs to make multiple network calls to gather the required information, whereas GraphQL API leads to reduced network traffic and that may lead to better performance from use cases.
 
-From usecases perspective, REST APis are suited for resource driven applications whereas GraphQL are more suited for data driven applications (very important.....)
+From use-cases perspective, REST APis are suited for resource driven applications whereas GraphQL are more suited for data driven applications (very important.....)
 
 Summary
 GraphQL is a specification for APIs
@@ -2461,7 +2676,7 @@ The server will delegate the reqeust processing to the microservices components.
 The microservice will the create the resolver instances and pass those back to the GraphQL server
 The graphQL server in turn will create the response payload based on the reqeust from the client and the reqeust from the client.
 
-GraphQL ecosystem has evovled (check this)
+GraphQL ecosystem has evolved (check this)
 Tools exist to assist with GraphQL development. Example graphQL playground.
 
 Summary:
@@ -2472,13 +2687,13 @@ Make sure that you schema definitions are mapping to the terms in the ubiquitous
 Take an evolutionary approach to create the API <--------
 Don't try to do everything at the same time <-------
 
-Idea is to publish version on of the API and then look at how the clients or the consumers of the API are using your servcice.
+Idea is to publish version on of the API and then look at how the clients or the consumers of the API are using your service.
 And base on that, evolve the schema for your APIs
 
 Key Points
 - Schema definition language is used by the server to define the schema or the contract for the API server.
 - Uses the schema to validate the incoming request for operations
-- Server also uses the schema for creating the responses thaat it sens back to the client.
+- Server also uses the schema for creating the responses that it sens back to the client.
 - Client uses the schema to create the reqeust payload and to parse the responses it receives from the server.
 
 %TODO Add UML and Example ---- or my own Example and something like Mermaid :D
