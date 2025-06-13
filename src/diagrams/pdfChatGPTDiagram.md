@@ -1,3 +1,11 @@
+# Learning about machine learning using machine learning
+
+Initial design.
+Idea use customGPT assistant to carryout research into AI progress.
+
+TODO - Consider using what is already available.
+
+---
 
 ```mermaid
 graph TD
