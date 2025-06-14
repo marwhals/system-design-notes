@@ -168,7 +168,7 @@ Potentially useful reading list
 
 ## 💸 Behavioral & Experimental Economics
 
-31. *Thinking, Fast and Slow* – Daniel Kahneman
+31. *Thinking, Fast and Slow* – Daniel Kahneman 👌
 32. *Misbehaving* – Richard H. Thaler
 33. *Nudge* – Thaler & Sunstein
 34. *Predictably Irrational* – Dan Ariely
