@@ -440,7 +440,6 @@
     The motivation behind versioning APIs is to allow for non-backward compatible changes, thus allowing for two versions of "the same" API\@.
     Meanwhile we can deprecate the old once gradually with good communication to the clients who are still using it.
 
-
     \section{API Best Practices}
     APIs can be defined in any way but some best practices have emerged.
 
@@ -592,7 +591,6 @@
         \item - Final step - assign HTTP methods to actions.
     \end{itemize}
 
-
     \section{REST API Design in Depth}
     %TODO combine notes
 
@@ -699,7 +697,7 @@
     Actions
     --- API Operation $ \neq $ CRUD
 
-    OK to use action as part of resource hierachy or create an action with subquery
+    OK to use action as part of resource hierarchy or create an action with subquery
 
     1) Create, a simple base URL; subdomain; separate domain
     2) Resources names should be nouns; Use of plurals is fine
@@ -739,14 +737,14 @@
     Rougly speaking restrict the number of HTTP codes to a maximum of 8
     ---> 200/400/500 \textbf{MUST} be used
 
-    \subsubsection{An alternative approache}
+    \subsubsection{An alternative approaches}
     Always send back HTTP Status = 200 OK
     --- Place details in the payload
 
     \subsubsection{API Changes}
     Non - Breaking
     - Adding a new operation or resource
-    - Adding optinal parameters or properties
+    - Adding optional parameters or properties
 
     Breaking
     - Change the HTTP verb or methods
@@ -755,7 +753,7 @@
     \paragraph{Handling Change}
     - Avoid Changes : Is the change really adding value?
     \begin{itemize}
-        \item Eliminate or miniises impact on app developers
+        \item Eliminate or minimises impact on app developers
         \item Provider planning opportunity to the app developers
         \item Support backward compatibility (if possible)
         \item Provide support to app developers with the changes
@@ -766,7 +764,7 @@
     \subsubsection{Version information}
     %TODO add code listings
     HTTP Header
-    Query Paramenter
+    Query Parameter
     URL
 
     \subsubsection{Multiple Version Support Key points}
@@ -890,7 +888,7 @@
     \subsubsection{API Security}
     Leverage API management platforms for security
     Authentication and Authorisation - OAuth Server, Key/Secret Management
-    Funtional Attacks - Protection from known and future threats
+    Functional Attacks - Protection from known and future threats
 
     \subsubsection{API Security practices}
     Educate the API developers
@@ -994,7 +992,7 @@
     Another drawback of the DNS load balancing strategy is that the round robin method doesn't consider the hardware resources of different servers.
     Some servers may have more powerful hardware than others, nor can it detect that one server is overloaded than others.
     Another drawback.
-    The appliicatoins gets the IP address of all the servers, exposing implementation details whichi make the system less secure.
+    The application gets the IP address of all the servers, exposing implementation details which make the system less secure.
     Nothing stop a malicious client application from sending requests to a single IP address in order to overload \textbf{it}
 
     \subsection{Addressing these drawbacks}
@@ -1176,7 +1174,6 @@
         \item Azure
     \end{itemize}
 
-
     \section{Cloud Delivery Network Solutions and cloud}
     Can be considered to be more of a service.
     The problem being solved.
@@ -1240,10 +1237,8 @@
     Even if they system goes down, users can still get data from the CDN and won't be affected by our systems internal issues at all.
     If content does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.
 
-
     \chapter{Data storage at Scale}
     Motivations: Choosing the right databases amongst many options.
-
 
     \section{Relational Databases and ACID Transactions}
 
@@ -2036,7 +2031,7 @@
     Important principles
     Each microservice needs to be cohesive, which means all the elements that change together stay together within the boundaries of one microservice
     Each microservice should follow the single responsibility principle
-    Each microservice should be loosely coupled from all other microservices to minimise runtime communicatoion.
+    Each microservice should be loosely coupled from all other microservices to minimise runtime communication.
 
     Also microservices don't have to be small....depends on the functionality.
 
@@ -2044,7 +2039,7 @@
     Three methods
 
     First method to decompose a system into microservices is by business capabilities.
-    In this method we observe and analyse out system from a purely business perspective, a business capability is any copre capability that provides value to the business or its customers.
+    In this method we observe and analyse out system from a purely business perspective, a business capability is any core capability that provides value to the business or its customers.
     This can include things like revenue, marketing, customer experience and so on.
     Once we identify those business capabilities, we can dedicate a separate microservice and a team to fully own it.
     -- There are ways to identify those business capability.
@@ -2095,8 +2090,8 @@
     - Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
     - ON the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
     When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
-    - The achitecture we get from the decomposition by business capabilities is usually more stable
-    ---- And thats because the core business is ***usually*** (pahahahhahahaha) much more stable than engineering and technology.
+    - The architecture we get from the decomposition by business capabilities is usually more stable
+    ---- And that's because the core business is ***usually*** (pahahahhahahaha) much more stable than engineering and technology.
 
     On the flip side, the composing business capabilities requires much better understanding of the business.
     This means that this process will produce a less intuitive design for engineers that the composition by subdomain
@@ -2198,7 +2193,6 @@
     defining the API,
     isolating the components from the rest of the application and finally using the strangler fig pattern to chip out the different parts of
     the monolith and migrate them into separately deployed microservices and managed microservices.
-
 
     \section{Principles and Best Practices}
 
@@ -2489,7 +2483,6 @@
 
     \subsection{Message delivery semantics In event driven architectureó}
 
-
     \section{Event driven microservices}
     %TODO consider skipping or going through for thoroughness / refresher
 
@@ -2498,7 +2491,6 @@
     \subsection{CQRS Pattern}
 
     \subsection{Event sourcing pattern}
-
 
     \section{Testing Microservices and Event-Driven Architecture}
 
@@ -2912,7 +2904,6 @@
     -- In theory and in practice that impact is still there
     ----> For very latency sensitive systems like high frequency trading systems, gaming or video streaming multitenant deployments with cloud VMs is not the best option
 
-
     \section{Single tenant}
     Dedicated hosts or instances, ask cloud provider to run VMs on servers that are dedicated to the account that belongs to our VMs on servers that are dedicated to the account that belongs.
     This means that the only tenants will have on the same host are instances of our microservices databases for our organisation only.
@@ -2921,7 +2912,6 @@
     ------ Some cloud providers, even allow us to rent or reserve and entire host just for our organisation
     -- This gives us direct access to the hosts hardware resources, which can eliminate the noisy neighbor effect and reduces the impact of virtualization by the hypervisor
     -- Main downside is that this is way more costly than multi tenant cloud VMs
-
 
     \section{Summary}
     - Multi tenant VM deployment provides us with the best pricing but doesn't provide us with the most optimal security or performance
@@ -3427,7 +3417,6 @@
     All the communication among the service sis typically done through asynchronous events.
     While this pattern is very scalable and cost effective, it may get a little challenging when things go wrong.
     Especially when we ned to pinpoint a problem with a particular service.
-
 
     \section{Performance Patterns for Data Intensive Systems}
 
@@ -4346,20 +4335,20 @@
     \subsubsection{Injecting failures into systems}
     Firstly, take the biased human factor out of the equation
     We need to either build or use automated tools to randomly cause those failures.
-    ---- An example --- Netflix Chaos Monkey
+    An example: Netflix Chaos Monkey
 
     Another failure that can be introduced is latency injection either between multiple services or between a service and its database.
     We can temporarily restrict access to a database, instance and test if our system can gracefully fail over to another of its replicas in another cloud zone or region.
 
     Another failure we can inject is called resource exhaustion.
-    -- Could deliberately fill up the disk space on a particular service instance or even a database and see how our system behaves.
+    Could deliberately fill up the disk space on a particular service instance or even a database and see how our system behaves.
 
     Could go as far as disabling traffic to an entire zone or region and make sure that out system fails over to the other zone or region gracefully and transparently to the user.
 
     \subsubsection{General test steps for chaos engineering}
     Firstly, before a failure injection, we need to measure the baseline.
     Then we need to construct the hypothesis which basically formalising the desired correct behaviour we expect from the system.
-    After that, we inject the failure and monitor it for a predefined preiod of time.
+    After that, we inject the failure and monitor it for a predefined period of time.
     The we document all of our findings during the test and finally restore the system to its original state before the failure.
 
     After all those steps are complete, we identify the issues we found in our system and act upon them to improve the resiliency of our system.
@@ -4455,27 +4444,6 @@
     \paragraph{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
 
-    \part{Data Architecture}
-    %Place holder
-
-    \section{Intro}
-
-    \section{Data Types}
-
-    \section{Data warehouse}
-
-    \section{Data Lake}
-
-    \section{Data Lakehouse}
-
-    \section{Data Governance with the Data Mesh}
-
-    \section{Streaming data in Data Science}
-
-    \section{Data infrastructure for Machine Learning}
-
-    \section{Flowchart and Use case examples}
-
     \chapter{Components}
 
     \subsection{Load balancing}
@@ -4493,10 +4461,8 @@
     \section{Detailed Design}
 
     \subsection{Caching}
-    Redis
 
     \subsection{Queues}
-    Kafka
 
     \subsection{Protocols}
 
@@ -4532,7 +4498,6 @@
 
     \paragraph{Code performance}
     Hmmmm maybe JVM specific here
-
 
     \section{Distributed Systems}
 
