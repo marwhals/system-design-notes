@@ -39,8 +39,29 @@
 
     \section{Data Warehouse}
     
-    \subsection{Introduction to datawarehousing}
-    
+    \subsection{Introduction to Data Warehousing}
+    A data warehouse is the single source of truth for the entire organisation.
+    A data warehouse is generally used to store information from structured data sources.
+    An organisation collects data from its operational databases and organises it inside a data warehouse, in a format you can perform analytics on.
+    An operational database is one that holds transactions or data that is written by applications.
+    Examples to consider.
+    - Could have a web shop which collects its transactions in a sales database.
+    - CRM which stores all information in a customer databse.............
+
+    Could perform analytics directly on these operational databases.
+    However, this will impact the performance of your applications.
+    It will be detrimental to your business if you web shop is running slow, just because some data scientist was querying the data to explore the available features.
+    It's also the case that operational database are designed to store transactions and are not easy to query for analytical purposes. (Pretty key point)
+    Operational databases are designed to be written to, whereas analytical databases need to provide more read performance.
+    Analytical databases perform better when the data is stored in a columnar format, whereas operational databases are designed for storing transactions in rows.
+
+    Very key point.
+    Makes a lot of sense for any organisation to extract data from all its operational databases and store it in a data warehouse,
+    and store it in a way that makes it easy for querying by analysts and data scientists alike.
+
+    Companies also enrich their data warehouse with data from external sources.
+    Combine real time data from the internet with operational data.
+
     \subsection{Datawarehousing for data scientists}
     
     \subsection{Cloud datawarehousing}
