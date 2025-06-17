@@ -28,6 +28,36 @@
     \section{Data Type}
 
     \subsection{Structured data}
+    - Structured data typically constitutes only 20\% of the total data volume and organisation produces or has access to.
+    -- Many organisations have reached a reasonable level of maturity in dealing with structured data.
+    -- Its important to understand how structured data is managed by your data engineering team.
+
+    Structured data can be found in database tables, CSV files and Excel spreadysssss.
+    - Organised into rows and columns.
+    - The columns contain the features you need to train your model and the rows contain the observations.
+    --- Ultimate goal of a data architect or a data engineering team is to extract structured data from the different sources and load it into the data warehouse.
+    ----- Since a data warehouse is supposed to have a very accurate information it is not permitted to load data that is unclean or incomplete.
+    ----- Hence structured data is first loaded into staging tables where data engineers perform cleansing operation, such as replacing null values in all the columns.
+    ----- Staging tables may also be used to join data from different sources and unify them into a single table.
+    ----- They may be used to also enrich existing data with information from an external data source.
+
+    All in all the staging tables serve as a playground for the data engineer to transform the data and make it ready for loading the data into the warehouse.
+    The data engineer may choose to retain teh staging tables permanently or just generate them dynamically as needed.
+
+    Generally speaking, the data scientists will not have access to the staging tables.
+    Once the data is clean unified and enriched, it is read to be loaded into a data warehouse.
+
+    Very important: A data warehouse represents the single source of truth for the entire organisation.
+
+    Example:
+    Management of a company wants to know total sales for a month. The expect that business analysts can make a query to the data warehouse and get the answer.
+    The data scientist generally has just read access to the data warehouse and is allowed just conditional access to certain tables for exploring the possibility of finding features for data science use cases.
+    Once the features are found the data engineer and not the data scientist transfers the required data into what is called a data mart.
+    The data mart contains a copy of the data that is available in the data warehouse and is refreshed either on request or as per a predefined schedule.
+
+    Now, the data scientists usually has full access to the data mart and allowed to do further pre-precessing and manipulation of the contents.
+    Once the data scientist trains the models.
+    Data marts are again used to store the data that is used for making predictions and the predictions themselves are also stored inside the data mart from where it's picked up by applications or just the dashboarding tools.
 
     \subsection{Unstructured data}
 
