@@ -60,6 +60,38 @@
     Data marts are again used to store the data that is used for making predictions and the predictions themselves are also stored inside the data mart from where it's picked up by applications or just the dashboarding tools.
 
     \subsection{Unstructured data}
+    Most organisations are still learning to extract and derive business value form this type of data.
+    The most common types of unstructured data are images, video, audio and text.
+    %%%hahahaa example about recording people with consent
+    Organisations are starting to find a lot of value in analysing text.
+    - There is also computer vision
+    - There is text to speech or speech to text.
+    --- Can transcribe conversations into text for further analysis.
+    --- Natural language processing is trendy.........ChatGPT etc....
+
+    Unstructured data is more than 80\% of the data your organisation produces or has access to it needs a storage medium which iis economical easy to write to.
+    This is where the concept of a data lake comes into prominence.
+    Unstructured data typically lands into a data lake.
+    Once data lands in a data lake, it's available for pre-processing and processing by big data frameworks.
+
+    Unstructured data needs a lot of processing prior to being useful for data science projects.
+    Since the volume of this data is huge specialised processing frameworks have evolved over time to manage this challenge.
+    -- Typical processing activity includes the scaling of images to allow machine learning algorithms to viably learn from them or extraction if text from audio.
+    --- For video footage, video annotation is necessary prior to training models to learn from others.
+    --- For NLP use cases then tokenization of text is necessary to produce useful models.
+
+    To perform all these processing tasks, big data frameworks such as Hadoop, Spark and Apache Bean are commonly used.
+    All these frameworks are capable of reading data from the data lake, processing it and then writing the results back to the data lake.
+    It is important to know that they are capable or reading and writing to the data lake.
+
+    NoSQL
+    NoSQL databases are designed to handle a variety of data models and not just tables and rows with columns.
+    They can be used to store unstructured data.
+    --- This can become very expensive since data has to be stored on expensive disks for performance reasons.
+    Best Practice: is to keep unstructured data in a data lake and store the metadata in a NoSQL database.
+
+    This makes it faster to analyse the properties of the images and fetch only those images that fit the criteria.
+
 
     \subsection{Semi-structured data}]
 
