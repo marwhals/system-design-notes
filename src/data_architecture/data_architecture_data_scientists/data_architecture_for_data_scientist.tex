@@ -189,9 +189,34 @@
     The predictions are also then stored in a data mart which then serves dashboards or applications that utilise the predictive capabilities.
     Over of what data warehousing typically means and also how data scientists would typically interact with it.
 
-
-
     \subsection{Cloud datawarehousing}
+
+    Old way. Data centres. Hardware bundled with proprietary software.
+    Data centres were previously filled with these expensive stacks.
+    On premise data warehouses did perform very well, and they did help organisations derive massive value.
+    Companies need to make heavy upfront investments to buy, install configure and to maintain these systems and to maintain these systems.
+    -- There is also no flexibility either.
+    -- Had to size the data warehouse for your heavy month end or quarterly reporting jobs.
+    -- This meant that hardware was unused for the rest of the time.
+    Can trace back the origin of cloud data warehousing.
+    Cloud data warehouses are hosted natively on public cloud infrastructure as opposed to hardware hosted on premise.
+    -- By this, compute memory and storage managed by the cloud providers.
+    -- Moreover, they are usually fully managed and hence you don't need staff to manage this infrastructure or perform software updates for that matter.
+    All this is managed for you as a bundled service.
+    Means you can focus on the more important takes, such as loading the data warehouse and extracting the data out of it.
+    What differentiates cloud data warehousing from traditional data warehousing is, number one, the decoupling of compute and storage, which makes it flexible to have different sizes of data warehouses for different needs and that too is on demand.
+    -- Is you have to run a monthly reporting on your data, you can spin up a large data warehouse.
+    -- Once that report is done, you can terminate the instance or scale it down to a smaller instance for your day to day needs.
+
+    Snowflake is a popular cloud data warehousing technology. Uses t-shirt sizing for its sizing in order to make it easier for users to chose the appropriate size for the appropriate time.
+    Modern cloud data warehousing also support semi-structured data natively.
+    Software vendors are trying to support more and more data types making it easy for customers to have just one technology for all data types.
+    Technology like snowflake, also strives to cater to multiple use cases.
+    Instead of using a separate technology for configuring a data mart, feature store and a data warehouse. The flexibility snowflake provides allows you to use it for all three purposes.
+
+    While specialised feature stores do have an edge, snowflake offers to integrate with them and thus offers the best of both worlds.
+
+
 
     \section{Data Lake}
 
