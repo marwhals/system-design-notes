@@ -100,9 +100,9 @@
     --- Weblogs are generally produced in the JSON format where JSON stands for JavaScript object notation.
 
     Data from sensors is also generally produced in JSON and sometimes in the XML format.
-    Both these formates have implemented tags or markers which help define a structure and this makes it possible to read them.
+    Both these formats have implemented tags or markers which help define a structure and this makes it possible to read them.
 
-    No two datasets will have the exact same structure or even the same heirarchy.
+    No two datasets will have the exact same structure or even the same hierarchy.
 
     This makes it easy to write such datasets as developers do not need to confine themselves to a specific structure.
 
@@ -166,7 +166,31 @@
     Combine real time data from the internet with operational data.
 
     \subsection{Datawarehousing for data scientists}
-    
+
+    A data warehouse should have an almost perfect view of the entire organisations structured data estate.
+    Good place to find data to train you machine learning models.
+    Note: If you are struggling to improve the accurary of your model due to lack of feature, it is working looking into the data warehouse to find additional data.
+    Note: Genearlly speaking users only get read access to the data warehouse.
+    Also common to impose restrictions on the visibility of data....don't expect all access from day one.
+
+    Most organisations implement a data catalog to provide you with a preview of the data products available in your organisation.
+    A modern enterprise will note let the data scientists query the data directly but instead ask them to query the data directly, but instead ask them to explore the data sets via the data catalog.
+    -- Reality is that most enterprises are not there yet so data warehouse skills could be in demand........
+
+    Once the data scientist finds the data needed for training models, he or she will request data engineering team to transfer it to a data mart or even to a feature store.
+    This could be a one time transfer ot a transfer set on a schedule.
+    Example: a data scientist might request the data engineer to schedule the transfer every week so that fresh data is available on a weekly basis for model training.
+    -- The data scientists then uses a data science platform or his/her own development environment to engineer new features or pre-process the data for the purposes of model training.
+
+    From a data architecture perspective, its important to note that all these tasks are carried out inside the data mart or a feature store as opposed to inside a data warehouse.
+    Once a model is trained, the inference or predictions are also carried out against the data mart or a feature store and not the data warehouse directly.
+
+    Data is extracted on a set schedule, which is then sent to the model for predictions.
+    The predictions are also then stored in a data mart which then serves dashboards or applications that utilise the predictive capabilities.
+    Over of what data warehousing typically means and also how data scientists would typically interact with it.
+
+
+
     \subsection{Cloud datawarehousing}
 
     \section{Data Lake}
