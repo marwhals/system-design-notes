@@ -23,11 +23,13 @@ graph LR
     subgraph Python
         ML_Stuff
         MatplotLib
+        Seaborn
     end
 
     subgraph Message_Brokers
         Kafka
         Aeron
+        RabbitMQ
         end
 
     subgraph Databases
@@ -39,11 +41,15 @@ graph LR
 
     subgraph Frontend_Frameworks
         React
+        Angular
     end
 
     subgraph Data
         D3
-        Spark
+        Apache_Spark
+        Apache_Flink
+        Databricks
+        Cloud_Offerings
     end
 
     subgraph Stuff
@@ -52,6 +58,15 @@ graph LR
         Kubernetes
         Jenkins
         Maven/Gradle/SBT
-        Terraform/IAC
+        Terraform/IaC
     end
+    
+    subgraph microservices_off_shelf
+        ELK_Stack
+        Grafana
+        Eureka
+        Spring_Cloud_config
+        
+    end
+    
 ```
