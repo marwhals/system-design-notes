@@ -252,11 +252,101 @@
     \section{Data Lake}
 
     \subsection{Introduction to a data lake}
-    
+    A data lake serves as a central repository for all data types, structured semi-structured and unstructured.
+    Can store ANY type of file in this file system.
+    The difference though is that the data lake usually offers unlimited scalability, whereas single disk drives are limited.
+    Data lake is best suited for unstructured and semi-structured data.
+    There is nothing preventing you from storing structured data in a data lake.
+    When storing structured data in a data lake, you might wish to consider the pros and cons in comparison to storing it in a data warehouse.
+    The data lake is a concept (opinion).
+    There are three underlying principles that need to be fulfilled by any technology or architecture that calls itself a data lake.
+    The first principle is that the data lake should support schema on th read.
+    --- This means that data is not check for a certain structure or consistency during the write process.
+    --- The responsibility or the onus of verifying the data in its structure lies exclusively on the reader.
+    --- What this effectively does is that it lowers the difficultly in writing data to almost zero.
+    ------ As a result you are encouraging applications and users to write any data to the data lake.
+    ------ Now this does not have a downside.
+    ------ You data lake might start off as a clean and pristine storage for data and after a while it might end up being messy. See data governance
+
+    To collect data you need to lower the barrier by avoiding schemas on the write and rather applying the schema on the read.
+    Next principle.
+    --- In place analytics
+    ------ Instead of moving data from one database table to another, schema read makes it possible to read the same data file in different ways.
+    ------ In place analytics avoids the need for making several copies of the same data set and thus saves storage costs and also the time taken to make copies of the same files.
+
+    ETL vs ELT
+    ---- When writing data to a data lake in a data pipeline, data is first extracted and loaded into the data lake.
+    -- The loading takes place first and its only then that its transformed based on the requirements by different users for different use cases.
+    -- In comparison, data is extracted and transformed before its loaded into a data warehouse.
+    -- This is because the data warehouse is generally enforcing a certain structure or schema.
+    --- When you attempt to load the data, we say that a data warehouse enforces schema on write, while we say that a data lake enforces schema on read.
+
+    Authors opinion.
+    These three principles are the most essential principles that must be fulfilled for a technology offering to be classed as a data lake.
+
     \subsection{The technology used to build a data lake}
+    Most commonly used technology for implementing a data lake is cloud storage.
+    Cloud storage is offered by all cloud vendors and is sole under different brands.
+
+    Between some technologies some aspects are common.
+    - All these technologies offer unlimited scalability on demand so you have store terabytes or even petabytes of data without having to buy install or configure any hardware.
+    - Could keep loading data and the cloud storage is expected to keep accommodating it.
+    - Usually you would have to pay for what you store adn thus if you apply retention policies on data you can have a good grip on the costs associated with storing data for analytics.
+    --- These technologies also offer security mechanisms to protect data and prevent unauthorised access to it.
+
+    Problem with cloud storage is that its only available on public cloud.
+    --- Makes it challenging for customers who have data which requires a higher level of protection due to regulatory requirements.
+    --- For such customers the Hadoop distributed files system has been a popular choice for a long time
+    ----- Hadoop is a distributed computing framework which first appeared around 2006
+
+    Hadoop
+    - Hadoop is an open source software ecosystem that allows you to put together a bunch of computers and build a highly reliable distributed system on top of these computers.
+    --- reason for its popularity ^^^
+    - Do not need proprietary software nor expensive hardware, and you can easily create a storage repository which could store petabytes of data at a relatively cheap price.
+    --- Would be your own data centre.
+    -- The problem with hadoop was that inorder to increase the storage capacity you would need to add more computers or servers to the cluster.
+    -- This meant that you would inevitably need to add more CPU and memory which is much more expensive that disks making is hard to scala storage without scaling the other two or vice versa.
+    ------ This is where object storage offerings form popular hardware vendors start to be more appealing.
+    Important note: In order to avoid vendor lock in you can build your own object storage  using software like Minio or Ceph
+    -- These vendors I mentioned before provide proprietary hardware and software technology which bundle much denser and faster disks and are scalable independent of the computer power.
+    -- Not only that the object storage vendors usually provide the same protocol of access as the storage vendors.
+    -- In effect if you need cloud storage on premise then buying object storage technology is a good choice.
+
+    These are the technologies that are commonly used to implement a data lake.
     
     \subsection{Cloud Storage terminology - Buckets and blobs}
-    
+
+    The data lake is primarily used to load semi-structured and unstructured data.
+    - Nothing stopping you from loading structured data as well.
+    - All public cloud providers offer some sort of cloud storage as a service.
+    -- See AWS, AZURE etc. Data engineering team will provide a reccomendation for the one you wish to work with.
+    Cloud storage terminology.
+    - Buckets and blobs
+    A bucket which is also referred to as a container somtimes as the name suggests rae logical containers used to organised data.
+    -- Key point is that buckets cannot be nested.
+    You can have blobs inside a bucket, but you cannot have one bucket inside another.
+    -- Bucket names have to be unique globally.
+    ---- In amazon, not only does it have to be unique in your account but is also has to be unique globally across amazon.
+    Data engineers typically create a unique random identifier which is added to this logical name for a bucket.
+    Also, good to know that buckets cannot be renamed.
+    -- So if you were to create a bucket and then wish to rename it you would need to create a new bucket and move the contents form the old bucket there.
+    ---- This could prove to be a hassle if you have stored large quantities of data in the bucket.
+    Key point: Best thing to do is to write you code to be agnostic to bucket names.
+
+    Another important term is a blob which also sometimes known as an object.
+    All the contents inside a bucket are called blobs or objects and these are immutable.
+    If you were to try and overwrite an object, a new object get created and the old one gets deleted automatically.
+
+    You might see objects that look like directories, these are usually called prefixes.
+    - Behind the scene a prefix is also an object.
+    - Has some special attributed which make it look like a directory.
+%    Add useful diagram here --- how data scientists would incorporate cloud storage into their data science workflows.
+    One use-case
+    - Can read data directly from cloud storage into your data science platform for training models.
+    Another use case
+    - Could also use cloud storage for storing data that is used for making predictions, and you could even output the predictions into a file that will be stored in the data lake.
+    This data lake could be on cloud storage.
+
     \section{Data Lakehouse}
     
     \subsection{Challenges with the data lake}
