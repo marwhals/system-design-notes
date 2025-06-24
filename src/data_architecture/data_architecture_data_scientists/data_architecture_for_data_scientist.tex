@@ -8,17 +8,30 @@
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
+\usepackage[framemethod=tikz]{mdframed}
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
-% Set page margins (A4 paper)
+% ---- Set page margins (A4 paper)
 \geometry{top=1in, bottom=1in, left=1in, right=1in}
 
-% Set up the header
+% ---- Set up the header
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{Data Architecture Notes}
 %\fancyhead[C]{Your Name}
 \fancyhead[R]{\thepage}
+
+% ---- For Notes
+\newmdenv[
+    topline=false,
+    bottomline=false,
+    rightline=false,
+    innerrightmargin=0pt
+]{siderule}
+
+\newenvironment{note}{
+    \begin{siderule}\textbf{Note: }
+    }{\end{siderule}}
 
 % Document
 \begin{document}
@@ -41,19 +54,24 @@
     \tableofcontents
     \newpage
 
+    \section{Pre introduction}
+    These notes were taken from \href{https://www.udemy.com/course/data-architecture-for-data-scientists}{this course}.
+
     \section{Introduction}
     Motivations
     - Create models that have the potential to deliver high impact on an organisations performance
     - Many of these models fail to make an impact because you are unable to connect them to the right sources.
     - Connecting to the right data source is important so that the models train on the right data sets that represent the business problem and thereby improving their accuracy and also removing any bias they might display in production.
     - Data engineers and data architects are actually responsible for ensuring models get access to the right data.
-    - The reality though is that they require advice and guidance from the data scientists to ensure this does become a reality
+    - The reality though is that they require advice and guidance from the data scientists to ensure this does become a reality.
     - Knowing data architecture will also help plan projects in such a way.
 
     Important to plan ahead.
     Allows for notebook dreams to become highly impactful applications.
 
-    Note: Data architecture is outside the core competency of a data scientists roles and responsibility.
+    \begin{note}
+        Data architecture is outside the core competency of a data scientist’s roles and responsibility.
+    \end{note}
 
 %    TODO - Million dollaaaaah slide. LaTeX or mermaid
 
