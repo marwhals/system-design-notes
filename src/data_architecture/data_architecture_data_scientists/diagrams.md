@@ -1,17 +1,98 @@
 # Data Architecture for Data Scientists
 
 ---
+## The million dollar slide / the big picture. 
 
-Notes taken from - https://www.udemy.com/course/data-architecture-for-data-scientists
+*Only batch processing architecture here*
+
+- TODO include stream processing
+- TODO make prettier
+
+```mermaid
+graph LR
+
+    subgraph unstructured_data
+        Video
+        Audio
+        Speech
+        Social_Media
+    end
+
+    subgraph semi-structured_data
+        World-Wide-Web
+        Sensor
+        GeoJSON
+    end
+
+    subgraph structured_data
+        Databases
+        CSV_files
+        Excel_Spreadsheets
+    end
+
+    Data_Integration
+
+    structured_data --> Data_Integration
+    semi-structured_data --> Data_Integration
+    unstructured_data --> Data_Integration
+    Data_Integration --> data_orchestration
+    Data_Integration -->|Extract| Data_Lake
+    Data_Integration -->|Extract| Staging_Tables
+    Data_Integration -->|Extract/Load| NoSQL_DBs
+
+    subgraph data_orchestration_Data_pipelines
+        Staging_Tables --> Data_Warehouse --> Data_Marts
+        Data_Lake <---> Big_Data_Frameworks
+        Data_Lake --> NoSQL_DBs
+        Data_Lake -->|Load| Data_Lake
+        Staging_Tables -->|Transform| Staging_Tables
+        NoSQL_DBs -->|Transform| NoSQL_DBs
+        Big_Data_Frameworks --> NoSQL_DBs
+    end
+
+    subgraph Semantic_layer_and_governance
+        Data_Lake_Semantic
+        Data_Catalog
+        Cubes
+        Identity_Management
+    end
+
+    Data_Marts --> Semantic_layer_and_governance
+    NoSQL_DBs --> Semantic_layer_and_governance
+    Big_Data_Frameworks --> Semantic_layer_and_governance
+
+    subgraph Data_Science_Platforms
+        Python
+        Jupyter
+        R
+        DataBricks
+    end
+
+    subgraph Analytics_Platforms
+        Tableau
+    end
+
+    subgraph Users_applications_and_automation
+        SAP
+        Salesforce
+    end
+
+    Semantic_layer_and_governance --> Data_Science_Platforms
+    Semantic_layer_and_governance --> Analytics_Platforms
+    Users_applications_and_automation --> Analytics_Platforms
+    Users_applications_and_automation --> Data_Science_Platforms
+
+    Users_applications_and_automation:::users
+    classDef users fill:#283593,stroke:#000,stroke-width:3px,color:#42A5F5;
+
+    Semantic_layer_and_governance:::semantic
+    classDef semantic fill:#283593,stroke:#000,stroke-width:3px,color:#42A5F5;
+
+```
 
 ---
-# The million $dollah!$ slide
 
-[//]: # (# &#40;TODO&#41; Write diagram in mermaid)
-
----
-
-# Data warehouse
+## Data warehouse
 Diagram to accompany notes.
 
 ```mermaid
