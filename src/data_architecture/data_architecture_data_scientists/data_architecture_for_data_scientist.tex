@@ -807,6 +807,50 @@
     \section{Flowchart and Use case examples}
 
     \subsection{Data Architecture decision making flowchart}
+    See diagram.
+    First question - batch or real time.
+    If data needs to be precessed every day or evey few hours then this is  a batch scenario.
+    Where is if data processing is required every few seconds or minutes we looking at a case of real time data processing of streaming data.
+
+    Next question, what kind of data are we dealing with.
+    Could be structured, semi-structured unstructured or a mix of all these.
+    In the case of a mix it can be called multi modal data.
+
+    If its a use case that involves only structured data, then you could choose between a data-warehouse or a data lake house to store and process your data.
+    Theres nothing stopping you form using a data lake but these two will be much more efficient when dealing with structured date.
+
+    If you're dealing with semi-structured data or unstructured data then the choice is between a data lake and a data lake house.
+    So now some data warehousing technologies have also adapted very well to processing semi-structured data.
+    -- This is an option that is worth exploring
+
+    May come across NoSQL databases hosting semi-structured data but author has rarely come across them as being useful for performing analytics.
+    They are primarily used to serve data to applications.
+
+    If you data is a mix of different data types perhaps you have structured data in database tables and images form user reviewers.
+    Or may have a mix of geoJson and text.
+
+    In all these scenarios, it will be wise to choose between a data lake house or a data lake.
+    The data lakehouse obviously offers a lot of benefits over a simple data lake.
+    On the other end of the spectrum if your use case needs real time data processing then you need to consider the frequency of model training.
+
+    Does your use case require training and retraining models daily or every few hours?
+    Does it require training and retraining every few minutes.
+
+    Online training od models is still quite a complex process to build and is undertake quite rarely in the authors experience.
+
+    If you model training frequency is not so demanding then you could implement the Lambda architecture for processing streaming data.
+    If you use case demands online training or training directly on streaming data then the Kappa architecture would serve you well.
+
+    There is a push towards unifying batch and real time data processing with the Kappa architecture adn this is to avoid creating different tool sets for two different data processing patterns seen so far.
+
+    Worth enquiring about data governance in your organisation.
+    Does your organisation have a data mesh implemented or is there a data catalog where you could find data products.
+    How long does it take to get access to the data lake and many other aspects that could queried or inquired right at the onset of the use case development.
+    Note: Making these inquiries at a later stage could delay your model being productionsied.
+
+    Worth enquiring about the availability of specific data infrastructure.
+    Does your IT team have the possibility to provide you a feature store.
+    Because in some cases it would be imperative to use feature store to realise a use case.
 
     \subsection{Use case examples and applying the decision}
 

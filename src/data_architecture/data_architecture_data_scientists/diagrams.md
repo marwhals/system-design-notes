@@ -12,7 +12,6 @@ Notes taken from - https://www.udemy.com/course/data-architecture-for-data-scien
 ---
 
 # Data warehouse
-
 Diagram to accompany notes.
 
 ```mermaid
@@ -52,8 +51,6 @@ style DW fill:green,stroke:#333,stroke-width:2px
 ---
 [//]: # (keep this diagram incase i need to make mermaid look "good")
 ```mermaid
-
-
 flowchart TD
 %% Nodes
 Cloud[(☁️ Cloud Service)]
@@ -88,3 +85,35 @@ DB4[(🗄️ Database 4)]
 ```
 
 ---
+
+# Data Architecture flowchart
+
+```mermaid
+flowchart TD
+    A{Batch or Real Time?}
+    B{Which Datatype?}
+    C{Frequency of model training}
+    D([Start])
+    E(Choose between Data Lake or Data Lakehouse)
+    F(Choose between Data Lake or Data Lakehouse)
+    G(Choose between Data Warehouse or Data Lakehouse)
+    H(Kappa Architecture)
+    I(Lambda Architecture)
+    J[[Enquire about data governance]]
+    K[[Enquire about ML specific data infra]]
+
+    D -.-> J
+    D -.-> K
+    D --> A
+    A -->|Batch| B
+    A -->|Real Time| C
+    B -->|Semi-Structured or Unstructured| E
+    B -->|mixed or multimodal| F
+    B -->|Structured| G
+    C -->|In minutes or online training| H
+    C -->|Daily or every few hours| I
+
+    A:::important
+    classDef important fill:#283593,stroke:#000,stroke-width:10px,color:#42A5F5;
+
+```
