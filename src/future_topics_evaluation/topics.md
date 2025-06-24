@@ -12,13 +12,6 @@ Clean Architecture and Hexagonal Architecture
 
 ---
 
-Data Architecture for Data Scientists
-https://www.udemy.com/course/data-architecture-for-data-scientists
-
-- Low overlap
-
----
-
 Data Management Masterclass - The Complete Course
 https://www.udemy.com/course/data-management-masterclass-the-complete-course
 
