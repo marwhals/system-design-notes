@@ -350,8 +350,85 @@
     \section{Data Lakehouse}
     
     \subsection{Challenges with the data lake}
-    
+
+    As enterprises start finding more and more use cases to derive value from data, they start to explore the possibility of analysing all these data types with the same set of technology and tools.
+    The problem being solved here is the creation of data silos.
+    Data analysts are generally running their SQL (rigid structure data) queries on structured data and the data scientists are performing analytics using R or python code in the data lake.
+    - The data analysts are hence missing out on the enormous potential of deriving value from the unstructured data and semi-structured data.
+    --- The data scientists struggle to lay their hands on valuable historical information in the structured data sets.
+    --- One way to solve this problem is to also load the structured data into the data lake.
+    ------ This is technically possible
+
+    What happens if structured data is also loaded into a data lake?
+    First challenge we encounter is that the files we store in a data lake are immutable
+    - This means you \textit{cannot} modify them in place.
+    --- You cannot add rows to the same file or modify the roes inside a file without creating a totally new file.
+    - If you're just processing data in batches, this is not a problem.
+    ---- you can read the file into a computers memory, modify it and then write it back as a new file with new contents easily.
+
+    An organisation does not have just batch processing.
+    There is also the need to store and process data that is continuously streaming in, and data lakes are not natively designed to support streaming data transactions.
+    - ACID (again!!!!) - Atomic, Consistent, isolation and durability.
+    Atomicity means that transactions should either succeed or fail completely, or partial transactions can leave data corripted and unusable.
+    -- Consistency means that a file or a data set might be simultaneously updated by multiple applications.
+    -- We need some way of guaranteeing the current state of the file.
+    -- Isolation is again simultaneous operations. They shouldn't conflict with each other, that is what isolation implies.
+
+    Important: A data lake does not provide acid guarantees on data transactions made on it.
+
+    Finally: Data analysts who are equal stakeholders in deriving value from datasets are traditionally used to querying data using the SQL language and data.
+    - Lakes do not have native capability to allow such queries.
+    How to onboard data analysts to use the data lake and store their data?
+    - Build a data lake house on top of a data lake
+
     \subsection{Intoduction to the data lakehouse}
+
+    Coined by the founders of data bricks. The same company that also created Apache Spark.
+    The term data lake house refers to the combination of two architectures, data warehouses and data lakes.
+    By combining these two architectures we are enabling users to store and process large amounts of data with increased reliability, scalability and performance.
+    This concept is constantly evolving.
+
+    In its simplest form you need to have three components.
+    You need to have a Delta Lake
+    A SQL query engine
+    And a data catalog.
+
+    The delta lake
+    - The delta lake is an open source software that helps maintain a transaction log for all the writes being made on files stored in a data lake.
+    - When you write to a file in a data lake that is being access via the delta lake, what happens is that this write  is first logged into a transaction log.
+    ---- Instead of writing directly to the data file, you make a write first to the transaction log and once the transaction is logged to this file the delta lake updates the data file based on a group of transactions that is has collected.
+    ---- This way if multiple applications are making changes to the same data set, the Delta lake can decide the order in which the transaction are performed on the underlying files.
+
+    This approach provides a number of benefits.
+    - By writing to the transaction log first the Delta Lake ensures that all changes to the table are safely recorded, even in the event of system failures and errors.
+    - Also aids in data consistency.
+    The transaction log ensures that all changes to the table are written in a consistent order which helps to avoid conflicts and maintain the integrity of the table.
+    - Last but not leas we get transaction atomicity.
+    - By writing the transactions to the log before the data fil, Delta Lake ensures that each transaction is treated as an atomic unit of work, meaning that either all the changes in the transaction are written or none of them.
+
+    Overall, the write ahead logging approach used by Delta lake helps ensure the reliability and consistency of data in a large scala data lake environment.
+    - The delta lake essentially aids in making the transactions carried out on a data lake become ACID compliant.
+
+    Since the transaction lof aids in versioning, the Delta Lake makes it possible to time travel and rollback data to a certain point in time in the past.
+    - It also has a feature which provides the ability to make tables.
+    - You could even enforce the schema or the structure of data that you require applications to adhere to.
+    - This is in contrast to the principles of a data lake which is to have schema on read.
+    Note: The delta lake is also designed to query structured data and hence enforcing the scheme is sometimes very beneficial.
+    Along with the Delta Lake which we have already seen you need to add a SQL query engine to the stack,
+    - This can help you data analysts query the tables created in the Data Lake with a language like SQL and that should help in convincing them to use the data lake instead of the data warehouse to store and process structured data.
+
+    Finally, to make sure you have good visibility of the data that is landing inside the data lake, It's important to also include a data catalog to this solution.
+    - now this makes it a complete data lakehouse.
+    - You have the Delta Lake maintaining the log of all transactions.
+    - You have a SQL query engine which will facilitate your data analysts.
+    - You also have a data catalog so that everyone has visibility.
+    ---- Visibility to the data that is stored in the data lake.
+
+    Another Benefit.
+    - You can perform, merge, update and delete on the data files stored in the data lake.
+    - You can even use the data lakehouse to directly store streaming data.
+    - Not with the data lakehouse, you can store your batch data, your streaming data and this could possibly end all the data silos and collaborate better across the entire organisation.
+
 
     \section{Data Governance with the Data Mesh}
     
