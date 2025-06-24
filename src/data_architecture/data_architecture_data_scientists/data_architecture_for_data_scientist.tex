@@ -9,6 +9,8 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage[framemethod=tikz]{mdframed}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.multipart}
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % ---- Set page margins (A4 paper)
@@ -30,8 +32,10 @@
 ]{siderule}
 
 \newenvironment{note}{
-    \begin{siderule}\textbf{Note: }
-    }{\end{siderule}}
+    \begin{siderule}
+        \textbf{Note: }
+        }{
+    \end{siderule}}
 
 % Document
 \begin{document}
@@ -54,6 +58,9 @@
     \tableofcontents
     \newpage
 
+    \listoffigures
+    \newpage
+
     \section{Pre introduction}
     These notes were taken from \href{https://www.udemy.com/course/data-architecture-for-data-scientists}{this course}.
 
@@ -65,7 +72,7 @@
     - Data engineers and data architects are actually responsible for ensuring models get access to the right data.
     - The reality though is that they require advice and guidance from the data scientists to ensure this does become a reality.
     - Knowing data architecture will also help plan projects in such a way.
-
+%\bigskip ---add if I need the space
     Important to plan ahead.
     Allows for notebook dreams to become highly impactful applications.
 
@@ -73,7 +80,29 @@
         Data architecture is outside the core competency of a data scientist’s roles and responsibility.
     \end{note}
 
-%    TODO - Million dollaaaaah slide. LaTeX or mermaid
+    \begin{figure}[ht]
+        \centering
+        \begin{tikzpicture}[
+            node distance=2cm,
+            box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center},
+            arrow/.style={-Latex}
+        ]
+
+            \node[box] (data) {Raw Data};
+            \node[box, below=of data] (integration) {Data Integration};
+            \node[box, below=of integration] (lake) {Data Lake};
+            \node[box, right=of lake] (warehouse) {Data Warehouse};
+            \node[box, below=of lake] (analytics) {Analytics};
+
+            \draw[arrow] (data) -- (integration);
+            \draw[arrow] (integration) -- (lake);
+            \draw[arrow] (lake) -- (warehouse);
+            \draw[arrow] (lake) -- (analytics);
+
+        \end{tikzpicture}
+        \caption{Simplified Data Flow Diagram}
+        \label{fig:dataflow}
+    \end{figure}
 
     \section{Data Type}
 
@@ -189,6 +218,7 @@
 
 %    TODO see example of data being flattened in python
 
+
     \section{Data Warehouse}
 
     \subsection{Introduction to Data Warehousing}
@@ -267,6 +297,7 @@
 
     While specialised feature stores do have an edge, snowflake offers to integrate with them and thus offers the best of both worlds.
 
+
     \section{Data Lake}
 
     \subsection{Introduction to a data lake}
@@ -325,7 +356,7 @@
     -- The problem with hadoop was that inorder to increase the storage capacity you would need to add more computers or servers to the cluster.
     -- This meant that you would inevitably need to add more CPU and memory which is much more expensive that disks making is hard to scala storage without scaling the other two or vice versa.
     ------ This is where object storage offerings form popular hardware vendors start to be more appealing.
-    Important note: In order to avoid vendor lock in you can build your own object storage  using software like Minio or Ceph
+    Important note: In order to avoid vendor lock in you can build your own object storage using software like Minio or Ceph
     -- These vendors I mentioned before provide proprietary hardware and software technology which bundle much denser and faster disks and are scalable independent of the computer power.
     -- Not only that the object storage vendors usually provide the same protocol of access as the storage vendors.
     -- In effect if you need cloud storage on premise then buying object storage technology is a good choice.
@@ -364,6 +395,7 @@
     Another use case
     - Could also use cloud storage for storing data that is used for making predictions, and you could even output the predictions into a file that will be stored in the data lake.
     This data lake could be on cloud storage.
+
 
     \section{Data Lakehouse}
 
@@ -413,7 +445,7 @@
 
     The delta lake
     - The delta lake is an open source software that helps maintain a transaction log for all the writes being made on files stored in a data lake.
-    - When you write to a file in a data lake that is being access via the delta lake, what happens is that this write  is first logged into a transaction log.
+    - When you write to a file in a data lake that is being access via the delta lake, what happens is that this write is first logged into a transaction log.
     ---- Instead of writing directly to the data file, you make a write first to the transaction log and once the transaction is logged to this file the delta lake updates the data file based on a group of transactions that is has collected.
     ---- This way if multiple applications are making changes to the same data set, the Delta lake can decide the order in which the transaction are performed on the underlying files.
 
@@ -668,6 +700,7 @@
 
     TODO - checkout microsoft fabric ??????
 
+
     \section{Streaming Data in Data Science}
 
     \subsection{Introduction to streaming data}
@@ -762,8 +795,9 @@
     This means that you have additional overhead in developing and maintaining such applications.
     The belief is that we shall see more and more of the architecture being adopted.
     Expect to come across lambda architecture more often.
-    
+
 %    \subsection{Word of caution and Resources} --- TODO find my own
+
 
     \section{Data infrastrcture for Machine Learning}
 
@@ -822,12 +856,13 @@
     Can also be done with semantic content in documents.
     Can be used in law enforcement etc.
 
+
     \section{Flowchart and Use case examples}
 
     \subsection{Data Architecture decision making flowchart}
     See diagram.
     First question - batch or real time.
-    If data needs to be precessed every day or evey few hours then this is  a batch scenario.
+    If data needs to be precessed every day or evey few hours then this is a batch scenario.
     Where is if data processing is required every few seconds or minutes we looking at a case of real time data processing of streaming data.
 
     Next question, what kind of data are we dealing with.
