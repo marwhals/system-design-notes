@@ -127,10 +127,10 @@
     - Means that this coordination between the various teams will slow down the process of making changes to different parts of the application from the business perspective.
     - Slow to release new products in the market.
     -- This problem is addressed with microservices.
-    -- This monolithic architecture, when replaced with microservices architecture will look something like this, wherein each of the capbility will be relised in an independent microservice.
+    -- This monolithic architecture, when replaced with microservices architecture will look something like this, wherein each of the capability will be realised in an independent microservice.
     So what this means is that changes can be performed each of these services independently and that translate into a business benefit wherein faster responses can be achieved to changes in business environment.
 
-    Microservices architecture allows the business to make radical changes to how it operates. (Da speeeeel)
+    Microservices architecture allows the business to make radical changes to how it operates.
     As long as new microservices maintaining the same contracts as the old microservice, there will be no change required in other microservices.
     - Next benefit is that it makes it easier for the IT teams to understand the business.
     --- Overall IT teams don't need to dive deep into all business capabilities.
@@ -156,7 +156,7 @@
     \section{A Technical Perspective of Microservices}
 
     Microservices architecture suggests creation of loosely coupled set of services for building applications.
-    These services interact with each other over a network by way of a lightweight protocol such as HTTP.
+    These services interact with each other over a network by way of a lightweight protocol such as HTTP\@.
     Each of these services have an independent code base, i.e that means that they can be independently deployed.
     Teams owning these services are empowered to make decisions and what that means is that there is no centralised governance.
     Teams can make their own decisions on what works best for the services they own.
@@ -267,7 +267,7 @@
     Author example of building a business case.
     - Make clear message about business value
     - If possible it needs to be quantified
-    ---- Need to use the right numbers to be able to create an impactful staement from the business value perspective.
+    ---- Need to use the right numbers to be able to create an impactful statement from the business value perspective.
     - Put together a roadmap on how you expect the organisation to adopt microservices.
     --- Important to indicate time to value.
     --- Would it take you three months to deliver value or would it take 18 months to get there?
@@ -281,18 +281,18 @@
 
     There are two types of microservices projects.
     Brownfield microservices projects are where the existing monolithic application needs to be converted into microservices.
-    Greenfield microservices projects wheras a new application needs to be built from the ground up.
+    Greenfield microservices projects whereas a new application needs to be built from the ground up.
 
     A brownfield project team has to deal with legacy technologies and tech debt. They have two options.
     - First options is to refactor the application. That is to convert the monolithich application into microservices.
-    -- This can be carried out by way of a big bang approach where all the microservices are built in parallel or the organisation can take an evolutionary approach where they build the microservices by peeling off parts of the existing monolith applcation.
+    -- This can be carried out by way of a big bang approach where all the microservices are built in parallel or the organisation can take an evolutionary approach where they build the microservices by peeling off parts of the existing monolith application.
     -- The other options is to completely rebuild the brownfield application from the ground up.
 
     The greenfield project team has two options for building their application.
     The first one is they can build their application as a microservice application from the get go.
     A couple of considerations that the greenfield project team needs to keep in mind.
 
-    First one is that htey need to ensure that there are tools and technologies available to the for building these microservices adn the organisation.
+    First one is that they need to ensure that there are tools and technologies available to the for building these microservices adn the organisation.
     Readiness also play an important role.
     -- Does the organisation have mature DevOps practices and processes.
     -- This options is suggested for teams tha tare experienced with microservices and are working for organisations that have already adopted microservices.
@@ -365,8 +365,8 @@
 
     Architectural model - the visualisation of the system represented by the model.
 
-    A more formal definition of the architectural model or architecture is that is is a strcutured representation of a solution that meets the requirements in the problem space.
-    It is a high level abstraction of parts of the end solutions that presents a view or a perspective on how the requried payments will be met and it assists in answering the questions posed by different stakeholders.
+    A more formal definition of the architectural model or architecture is that is is a structured representation of a solution that meets the requirements in the problem space.
+    It is a high level abstraction of parts of the end solutions that presents a view or a perspective on how the required payments will be met and it assists in answering the questions posed by different stakeholders.
 
     What is the difference between architectural model or architecture and design?
 
@@ -773,8 +773,8 @@
     Teams must use this language in all of their conversations.
 
     What is the point?
-    Translation between busienss and tech is no longer needed.
-    Things become more conistent and easier to follow for both the domain expert as well as the IT expert.
+    Translation between business and tech is no longer needed.
+    Things become more consistent and easier to follow for both the domain expert as well as the IT expert.
     An interesting side effect is that it helps in identifying overlapping contexts.
     What that mean is that we can use ubiquitous language to break apart a business context into smaller parts.
     In domain driven design, these smaller parts or contexts are referred to as the bounded context.
@@ -825,14 +825,14 @@
 
     Need to partner with the domain experts.
     Start by looking at the organisational structure.
-    Typically they are available as diagrams that depict the various business capabilities or functional areas within the orgnisation.
-    Next step, identify the business experts in the core domains and partner with them to understand their responsibilities and they key activities they are invovled in.
+    Typically they are available as diagrams that depict the various business capabilities or functional areas within the organisation.
+    Next step, identify the business experts in the core domains and partner with them to understand their responsibilities and they key activities they are involved in.
     Go deeper into some of their key activities.
     Be on the lookout for clues in the business language used by the domain experts.
-    If you organisation has invested in well-designed, modular, monolighic applications they can also act as a starting point.
+    If you organisation has invested in well-designed, modular, monolithic applications they can also act as a starting point.
     Look at modules in the monolithic applicaiton and create the boundaries for the business contexts realised in those applications.
 
-    Overrall idea is to gather the clues from these excercises and then use these to mark the boudnaries for the bounded context to describe each one of these and the sue of these clues.
+    Overrall idea is to gather the clues from these exercises and then use these to mark the boudnaries for the bounded context to describe each one of these and the sue of these clues.
 
     Practically speaking. Do not think that the boundaries have to be perfect as this can take some time.
     Start with some boundary and then none.
@@ -874,12 +874,12 @@
     There are multiple types of relationships between the bounded contexts.
     In a symmetric relationship, two bounded contracts depend on each other.
     - In this scenario, bounded context A is dependent on bounded context B and bounded context B is dependent on Bounded Context A.
-    In a assymmetric relationship, one bounded context depeneds on another bounded context B in a one to many relationship. I.e multiple bounded context depend on a single bounded context.
+    In a assymmetric relationship, one bounded context depends on another bounded context B in a one to many relationship. I.e multiple bounded context depend on a single bounded context.
 
     There are multiple relationship patterns, these patterns define the dependency relationship between the bounded contexts.
 
     Note:
-    Big ball of mud is an anti pattern in software developement. As a designer of micrservices this should be avoided.
+    Big ball of mud is an anti pattern in software development. As a designer of micrservices this should be avoided.
     Context maps are visual representation of the relationship between the bounded contexts.
 
 
@@ -895,11 +895,11 @@
     Consider sceanario with BC-A and BC-B. Each has its own model.
     Say there is a dependency between A and B. Now A depends on B and will have a dependency on B's models.
     - The impact is that now linguistic boundaries within the bounded context A does not hold.
-    - There may be confusions in terms of the language used for A's and B's models, in otherwords the BC is no contaminated. This is referred to as loss of model integrity.
+    - There may be confusions in terms of the language used for A's and B's models, in other words the BC is no contaminated. This is referred to as loss of model integrity.
 
     Bounded contexts are translated into a one or more microservices.
-    Dependencies between the bounded context are eventually translated to the dependencies between the micrservices. (consider)
-    Changes will require some kind of collaboration between the teams owning these microservices APIs, this means that teams will lsoe their abiltiy to operate independently.
+    Dependencies between the bounded context are eventually translated to the dependencies between the microservices. (consider)
+    Changes will require some kind of collaboration between the teams owning these microservices APIs, this means that teams will lose their ability to operate independently.
     - This will lead to loss of agility which is counter to one of the reasons why microservices architecture is adopted.
 
     We know that bounded context dependencies or microservices dependencies cannot be avoided.
@@ -978,8 +978,8 @@
     The next one is the partnership pattern in which there are interdependencies between the bounded contexts.
     As a result, teams must coordinate with each other to make changes to their own bounded contexts.
 
-    The third one is the shared kernel in which it is suggested that the boundaries of the shared concepts and models be clearly demarcated and only the changes to these shared models need to be cordinated by the teams.
-    In other words, if the team is working on changes that are not related to the shared models or concepts, the it can carry out those changes withouth needing input from the other team.
+    The third one is the shared kernel in which it is suggested that the boundaries of the shared concepts and models be clearly demarcated and only the changes to these shared models need to be coordinated by the teams.
+    In other words, if the team is working on changes that are not related to the shared models or concepts, the it can carry out those changes without needing input from the other team.
 
 
     \section{Asymmetric Relationship Patterns}
@@ -1009,7 +1009,7 @@
     -- In this pattern, the downstream bounded context conforms to the upstream bounded context models.
     -- To depict this relationship %%TODO See or create diagram using TikZ
     -- BC A is conforming to the models exposed be BC B
-    ----- One important not here is that bouth the bounded contexts use the same model.
+    ----- One important not here is that both the bounded contexts use the same model.
 
 
     Consider a scenario in which the downstream bounded context decides not to conform to the upstream bounded context.
@@ -1346,7 +1346,7 @@
 
     Summary
     Domain services are technology agnostic.
-    There is a common misconception that all domain services should be exposed as APIs and that is not corect.
+    There is a common misconception that all domain services should be exposed as APIs and that is not correct.
     A domain service is independent of the technology used for the invocation.
     -- Could be a POJO or it may be carried out over a network protocol such as HTTP or a MQ
 
@@ -1528,7 +1528,7 @@
     - There is no hard and fast rule but certain consideration.
     - If the message size it too big, then there may be challenges related to latency.
     - In this scenario you may consider using only metadata in your messages.
-    - If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be agood idea to go with the state data in the event message.
+    - If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be a good idea to go with the state data in the event message.
 
     \subsubsection{API Versus Event Driven Architecture}
     APIs rae directed commands, whereas events are observables.
@@ -1539,7 +1539,7 @@
     In the case of EDA the orchestrator is replaces with event producer and event consumers.
     These event consumers are the observers of the events which are produced by the event producer.
 
-    One big difference between these two architectures is that the event producers and event consumers all have business logic and are repsonsible for achieving the desired results from the business process.
+    One big difference between these two architectures is that the event producers and event consumers all have business logic and are responsible for achieving the desired results from the business process.
     The event producer does not make a direct invocation on any component.
 
     Rather, it simply triggers an event, a message that is passed on to all the consumers.
@@ -1846,7 +1846,7 @@
     Keep it business focused.
     Note, participants are no necessarily technologists.
     Discuss, the purpose of colored stickies and the workspace, but you don't have to spend too much time on these aspects as participants will learn as you processed through the workshop.
-    Something that really helps is put all the colored stickies and what they represent somewhere in the workspace so that it is visible to anyone who has a question about what color to use, which is an extermely common question.
+    Something that really helps is put all the colored stickies and what they represent somewhere in the workspace so that it is visible to anyone who has a question about what color to use, which is an extremely common question.
 
     In the beginning of the wrokshop, after the general overview of event storming, it is time for the facilitator to define the workshop, after the general overview of event storming, it is time for the facilitator to define the scope of the workshop.
     The scope of the workshop may be a big picture from the domain perspective, or it may be a single business process.
@@ -1854,7 +1854,7 @@
     It is important for all participants in the room to be on the sme page and ensure that everyone stays on track.
     Place the high level objective for the workshop in the workspace so that it is visible at all times.
 
-    Another thing that is important is that as you will start going through the workshop, it is very much possible that there may be discussions around aspects which are out of scope from the workshop perspective, but they may be valueable from the domain perspective.
+    Another thing that is important is that as you will start going through the workshop, it is very much possible that there may be discussions around aspects which are out of scope from the workshop perspective, but they may be valuable from the domain perspective.
     As a result, you don't want to lose out those aspects, so create a dedicated space to list out all of these out of scope elements.
     You can follow up on these items after the workshop.
 
@@ -1910,7 +1910,7 @@
     Step number three.
     Participants need to think about commands policies and actors to identify the cause and the effect of events.
 
-    These concepts are a little tricky compared to the domain events, so the point the facilitator is encouraged to ask questions to help the particpants make some progress.
+    These concepts are a little tricky compared to the domain events, so the point the facilitator is encouraged to ask questions to help the participants make some progress.
 
     In step number four, the facilitator asks the participants to think about the business.
     This is the logic that responsible for creating the domain events.
@@ -1961,7 +1961,7 @@
     The persistence of data is achieve by way of writing to the file systems or by more commonly writing the data to databases.
     There are multiple types of databases available today, but the most commonly used databases are the relational databases and NoSQL databases
 
-    Legacy applications typically use RDBMS or relational databses for all types of data and this is because NoSQL databases were not available until the early 2000s.
+    Legacy applications typically use RDBMS or relational databases for all types of data and this is because NoSQL databases were not available until the early 2000s.
 
     A typical client server application development pattern used by these legacy applications involved multiple enterprise applications, sharing a common instance of the database,
     and the enterprise application would manage the data by way of SQL statements against this shared database.
@@ -2245,7 +2245,7 @@
     Typically there are more reads than writes in applications.
     Authors Experience: 85\% reads to 15\% writes as a result.
     Application developers are always looking for options to achieve highest read performance.
-    Common ways by which it is achieved is by way of caching or by they way of materialised views that would not require model translation or use complext joins as the data is already persisted in the format in which it will be served to the requester.
+    Common ways by which it is achieved is by way of caching or by they way of materialised views that would not require model translation or use complex joins as the data is already persisted in the format in which it will be served to the requester.
     Sometimes this may not suffice.
     Example:
     There may be multiple different types of queries that need to be fulfilled by the read side.
@@ -2386,24 +2386,24 @@
     Database may go down. Run out of resources, command object may not be able to push a message to the MQ due to the failure of the MQ server.
     May be failures on the read side.
 
-    As a designer, once you have identified the failrue points you need to think about the impact of those failure points.
+    As a designer, once you have identified the failure points you need to think about the impact of those failure points.
 
     Example solutions:
     Write to the database and publish a message to the MQ in a single unit of work or transaction.
     Two phase commit is a mechanism that can be used for carrying out the write and publish in a single unit of work or transaction.
     Popular for the last three decades.
-    In two phase commit a distributed algorithm is used for coordringating all processes involved in the distributed transaction.
+    In two phase commit a distributed algorithm is used for coordinating all processes involved in the distributed transaction.
     It is also referred to as the extended architecture or just ECS for short.
 
-    In the two phase commit, there is a transaction manager that coordingates the transaction across all of the involved resources.
+    In the two phase commit, there is a transaction manager that coordinates the transaction across all of the involved resources.
 
-    The challenge with two phase commit is that it is quite complext to implement.
+    The challenge with two phase commit is that it is quite complex to implement.
     A bigger issue is that a lot of distributed technologies do not support it.
 
-    Due to these challenges the two phase commit is not very popular with the designers of distributed systmes.
+    Due to these challenges the two phase commit is not very popular with the designers of distributed systems.
 
 
-    An alternative would be to break the database write and publish steps intwo steps and use local database transactions.
+    An alternative would be to break the database write and publish steps into steps and use local database transactions.
     In this courses it is called the "reliable mesagin pattern". In this pattern, the right side writes the domain objet data and the event data in the database tables with a local transaction.
     Then the evens are replayed against querying system in a separate step.
 
@@ -2486,7 +2486,7 @@
 %TODO add diagram --- do hands on
     So in this illustration for Partition one, let's say the leader node is broker one.
     In that case, whenever a message will be published to topic A, and if the data gets added to partition one then the broker node will be responsible for replicating
-    the data for parition one to otherr broker nodes in the cluster.
+    the data for partition one to other broker nodes in the cluster.
     In case of failure of the leader node one of the other available broker nodes take up the role of the leader for the partition.
 
     All of this happens behind the scenes and is transparent to the producers and the consumers of the messages.
@@ -2514,7 +2514,7 @@
     A kafka cluster allows maximum of one active consumer per partition.
 
     The reason for this is that with a single consumer the order of the messages is guaranteed.
-    Kafka cluster maintains the current offset of the emssage that has been read by consumer.
+    Kafka cluster maintains the current offset of the message that has been read by consumer.
     As new messages arrive, the current offset changes for consumer A and consumer B by maintaining the current offset on per consumer basis.
     Kafka is able to avoid sending duplicate messages to the consumer.
     Message reads in Kafka are non-destructive.
@@ -2761,7 +2761,7 @@
     Microservices expose APIs for consumption by other microservices.
 
     It is common for these APIs to be exposed over HTTP but messaging is preferred protocol for these interactions between APIs.
-    These APIs are a separate set of APIs that may be exposed to the external componetns such as user interfaces or legacy applications.
+    These APIs are a separate set of APIs that may be exposed to the external components such as user interfaces or legacy applications.
     Some of these consumers may even be outside of the organisation that own the microservice for such interactions.
 
     HTTP is commonly used and the reason for that is that messaging would require dependency on a specific messaging technology.
@@ -2829,7 +2829,7 @@
     All modern APIs use HTTP as the communication protocol and we call such APIs HTTP Rest APIs.
     The reason is because the rest APIs style itself is not tied to HTTP.
     You can bulid Rest APIs with other protocols as well.
-    Rest over HTTP APIs expose and endpoint and this endpoint is used for manageing the state of the resources.
+    Rest over HTTP APIs expose and endpoint and this endpoint is used for managing the state of the resources.
     -- Keyword here is managing the state.
     What that tells you is that you can carry out the CRUD operations on the resources exposed by the REST APIs.
 
