@@ -2,11 +2,13 @@
 
 ---
 
-Written in TeX
+Written in TeX using the IntelliJ IDE.
+
+Compiled PDFs are for my usage only, for now.
 
 ---
 
-Based of the following courses (*others to be added on the fly*):
+Based of the following courses (*others to be added as the repository grows*):
 
 - General Architecture - https://www.udemy.com/course/software-architecture-design-of-modern-large-scale-systems
 - Microservices and Event-Driven Architecture - https://www.udemy.com/course/the-complete-microservices-event-driven-architecture

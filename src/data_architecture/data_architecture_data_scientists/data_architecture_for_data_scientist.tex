@@ -10,9 +10,11 @@
 \usepackage{hyperref}
 \usepackage[framemethod=tikz]{mdframed}
 \usepackage{tikz}
+\usepackage[utf8]{inputenc}
+%\usepackage[toc]{glossaries} % 'toc' adds the glossary to the table of contents
+%\makeglossaries
 \usetikzlibrary{positioning, arrows.meta, shapes.multipart}
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
-
 % ---- Set page margins (A4 paper)
 \geometry{top=1in, bottom=1in, left=1in, right=1in}
 
@@ -64,6 +66,9 @@
     \section{Pre introduction}
     These notes were taken from \href{https://www.udemy.com/course/data-architecture-for-data-scientists}{this course}.
 
+%    \newglossaryentry{fancyterm}{name={A fancy term},description={A special technical term}}
+
+%    \gls{fancyterm}
     \section{Introduction}
     Motivations
     - Create models that have the potential to deliver high impact on an organisations performance
@@ -906,5 +911,8 @@
     Because in some cases it would be imperative to use feature store to realise a use case.
 
     \subsection{Use case examples and applying the decision}
+
+    \chapter{Glossary}
+%    \printglossaries
 
 \end{document}

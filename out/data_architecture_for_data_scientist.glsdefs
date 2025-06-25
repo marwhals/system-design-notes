@@ -1,0 +1,28 @@
+\glsdefs@newdocentry{fancyterm}%
+{%
+name={A fancy term},%
+sort={A fancy term},%
+type={main},%
+first={A fancy term},%
+firstplural={A fancy terms},%
+text={A fancy term},%
+plural={A fancy terms},%
+description={A special technical term},%
+descriptionplural={A special technical term},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
