@@ -18,7 +18,7 @@ graph LR
 A[React Frontend]
 B[Quarkus backend]
 
-A -->|REST call| B
+A -->|Websockets| B
 
 ```
 
