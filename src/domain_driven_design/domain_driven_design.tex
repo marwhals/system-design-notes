@@ -2759,7 +2759,6 @@
     \chapter{Microservices and API}
 %TODO Do excercises and hands if necessary --- or go do my own
 
-
     \section{Microservices - API Realisation}
 
     \subsection{API - Application Programming Interface}
@@ -2785,7 +2784,6 @@
     \paragraph{}
     Both have pros and cons.
 
-
     \section{Introduction to REST API}
 
     Is your architecture useful? - consider the Richardson maturity model.
@@ -2801,19 +2799,18 @@
         Described by Roy Fielding in his Dissertation in 2000.
     \end{note}
 
-
     Six constraints - consider researching if required.
     \begin{itemize}
-        \item - First constraint for rest is client server. This constraint suggests the use of client server design principles for impllementing the rest APIs
-        \item - Second one is the uniform interface that suggests use of well-defined contracts between the client and the server.
-        \item - The third one is the statelessness, which suggests that the server should not manage the state of the application.
-        \item - Fourth one is caching - the server should use HTTP cachin headers to cache responses to the requests received from the client.
-        \item - Fifth one is layering - This suggests that the architecture should be layered and each of these layers should be manageable independently
-        \item - Last one is code on demand - and this suggests that a server can not only send dataa to the client in response to the request but it can also send code that the client can execute
+        \item First constraint for REST is client server. This constraint suggests the use of client server design principles for impllementing the rest APIs
+        \item Second one is the uniform interface that suggests use of well-defined contracts between the client and the server.
+        \item The third one is the statelessness, which suggests that the server should not manage the state of the application.
+        \item Fourth one is caching - the server should use HTTP caching headers to cache responses to the requests received from the client.
+        \item Fifth one is layering - this suggests that the architecture should be layered and each of these layers should be manageable independently
+        \item Last one is code on demand - this suggests that a server can not only send dataa to the client in response to the request but it can also send code that the client can execute
     \end{itemize}
 
     \begin{note}
-        This final one is optional.......but interesting :D
+        The final one is optional.......but interesting :D
     \end{note}
 
     \subsection{Summary}
@@ -2825,33 +2822,33 @@
     \section{REST API Resources and Design Constriaints}
     All real world objects or resources may be described by way of attributes.
     In software systems, these attributes are managed in some kind of persistent storage.
-    - Could be an RDBMS or a NoSQL database.
-    - Certain attributes of the object may change over a period of time.
-    -- All state changes are captured in a persistent storage.
-    -- What we are saying here is that representational state of the car is managed in the database and multiple instances are uniquely identified by some kind of unique ID.
-    -- Each can have different attributes.
+    This could be an RDBMS or a NoSQL database.
+    Certain attributes of the object may change over a period of time.
+    All state changes are captured in a persistent storage.
+    What we are saying here is that representational state of the car is managed in the database and multiple instances are uniquely identified by some kind of unique ID.
+    Each can have different attributes.
 
     Think of a system that can query this database.
-    - The system may ask the database and will respond by sending back the representation state of an object or entity.
+    The system may ask the database and will respond by sending back the representation state of an object or entity.
     This is the foundational concept.
 
     From the source database, this representational state data may be in any format.
-    - Could be name value pairs or it may be in a database record format.
-    - This internal representational state is converted to other formats.
-    - Those are not the only format it can be converted to.
-    --- Representational state may be converted to JPEG, PDF, Excel, excerter.
+    This could be name value pairs or it may be in a database record format.
+    This internal representational state is converted to other formats.
+    Those are not the only formats it can be converted to.
+    Representational state may be converted to JPEG, PDF, Excel, excerter.
 
-    If we replace the logic with the Rest API, then it is a good representation of the restfulAPI from the data formats perspective.
-    - What this tells you is that a rest API is not tied to any specific data format.
-    - In fact the same instance of a RESTFUL API can convert and send back the representation state af a resource in different formats based on the clients needs.
+    If we replace the logic with the REST API, then it is a good representation of the restfulAPI from the data formats perspective.
+    What this tells you is that a REST API is not tied to any specific data format.
+    In fact the same instance of a RESTFUL API can convert and send back the representation state af a resource in different formats based on the clients needs.
 
     All modern APIs use HTTP as the communication protocol and we call such APIs HTTP Rest APIs.
     The reason is because the rest APIs style itself, is not tied to HTTP.
-    You can build RESR APIs with other protocols as well.
+    You can build REST APIs with other protocols as well.
     REST over HTTP APIs expose an endpoint and this endpoint is used for managing the state of the resources.
 
     \begin{note}
-        -- Keyword here is managing the state.
+        Keyword here is managing the state.
     \end{note}
 
     What that tells you is that you can carry out the CRUD operations on the resources exposed by the REST APIs.
@@ -2861,10 +2858,12 @@
 
     \subsection{An example}
     Consider ACME travel HTTP endpoint.
-    - Client will use this endpoint to perform CRUD operations to create a resource (POST)
-    - GET to retrieve the HTTP resource.
-    - PUT for updating the state of an resource (consider idempotency)
-    - DELETE - verb needs to be used for deleting a resource.
+    \begin{itemize}
+    \item Client will use this endpoint to perform CRUD operations to create a resource (POST).
+    \item GET to retrieve the HTTP resource.
+    \item PUT for updating the state of an resource (consider idempotency).
+    \item DELETE verb needs to be used for deleting a resource.
+    \end{itemize}
 
     \subsection{Summary - What makes an API Restful?}
     Summary - What makes an API Restful
@@ -2911,13 +2910,12 @@
         \item The API management platform applies the management control and based on the outcome of those controls, the API management platform either allows the invocation oif the API on the microservice or it denies the reqeust for invocation.
     \end{itemize}
 
-    \subsection{    Management control}
-    Management control
-    - Most API management platforms offer a declarative or policy based management features.
-    - What this means is that the developer of the microservice doesn't have to code any of these management controls.
-    - They can simply put together policies for defining these controls.
+    \subsection{Management control}
+    Most API management platforms offer a declarative or policy based management features.
+    What this means is that the developer of the microservice doesn't have to code any of these management controls.
+    They can simply put together policies for defining these controls.
 
-    Example - a policy may be defined for the internal or private consumer to be such that maximum flexibility is provided to the consumer.
+    \paragraph{Example} A policy may be defined for the internal or private consumer to be such that maximum flexibility is provided to the consumer.
     So in other words, most of their calls will go through the public domain developers, the policy may be extremely restructured to partner APIs.
     The policy may be such that it defines some kind of a SLA.
 
@@ -2928,16 +2926,17 @@
 
     For further research look at Apigee, Mulesoft etc.
     To understand these JSON policy documents. Also check out cloud equivalents.
-    -- Reccomended approach.....is to use an api management solution.
-    Multiple benefits but one of the biggest is....
-    - The team can focus on the domain or the business logic, rather than spending time on common concerns such as security logging etc.
-    - As a result microservice code is cleaner.
+    The reccomended approach is to use an API management solution.
+    There are multiple benefits, but one of the biggest is:
+    \begin{itemize}
+        \item The team can focus on the domain or the business logic, rather than spending time on common concerns such as security logging etc.
+        \item As a result microservice code is cleaner.
+    \end{itemize}
 
     Last but not least, since the consumers of the API do not connect directly to the microservice change management becomes easier.
-    - What that means is that the microservices development team can make the changes to the API and adjust the proxy on the API management platform to insulate the end consumer from those changes.
+    What that means is that the microservices development team can make the changes to the API and adjust the proxy on the API management platform to insulate the end consumer from those changes.
 
     \subsection{Key Points}
-    Key points:
     \begin{itemize}
         \item There are three types of APIs depending on the type of consumers
         \item The private API is consumed by the consumers within the same organisation.
@@ -2949,6 +2948,7 @@
 
 %TODO - example or create my own, design or create my own
 
+
     \section{Introduction to GraphQL}
 
     GraphQL is a query language for APIs that is not tied to any specific database or technology or network protocol.
@@ -2957,7 +2957,7 @@
     A GraphQL server exposes the GraphQL API endpoint that is used by the GraphQL clients to invoke GraphQL operations.
 
     \begin{note}
-        History: Developed by Facebook/Meta for use in mobile applications in 2012. Became open source in 2015.
+        History: Developed by Facebook/Meta for use in mobile applications in 2012 and then became open source in 2015.
     \end{note}
 
     The are many small to large organisations that have adopted GraphQL as a standard for their APIs
@@ -2983,10 +2983,9 @@
     \end{note}
 
     \subsection{API granularity}
-    API granularity
-    Generally the rest APIs are built as highly granular services and this is done to meet the needs of multiple types of clients.
+    Generally REST APIs are built as highly granular services and this is done to meet the needs of multiple types of clients.
     This leads to an issue.
-    Under fetching which results in more network calls from a microservice.
+    Under fetching, which results in more network calls from a microservice.
     \begin{note}
         This leads to latency and a performance hit.
     \end{note}
@@ -3030,35 +3029,28 @@
     \end{note}
 
     \subsubsection{GraphQL Advantages}
-    GraphQL Advantages
 
     \paragraph{Recap}
-    Recap - Already learned that GraphQL addresses the over fetching and under fetching issues faced by the rest API clients.
+    Already learned that GraphQL addresses the over fetching and under fetching issues faced by the rest API clients.
     The graphQL API client is in full control of the responses.
     Documentation for the GraphQL is provided in the form of schema, so there is not need for separate documentation.
     The graphQL server layer provides very descriptive error information to the clients which can be used by the client side which can be used but the client side to understand the exact issue in their requests to the GraphQL server.
 
     \subsubsection{GraphQL Disadvantages}
-    GraphQL Disadvantages
     Biggest one is that there may be performance challenges with complex queries.
     Web caching is not as straightforward to implement with GraphQL as it is with the REST APIs
-
     REST APIs are easy to learn compared to GraphQL APIs from the design perspective.
     REST APIs are defined in terms of resources and endpoints, whereas the GraphQL APIs are exposed over a single endpoint and the contract is in the form of a schema definition from the control perspective.
     The client side has no control on the response with a REST API, whereas the client has full control on the response in the case of graphQL.
-
-    REST APIs expose crud operations using HTTP verbs whereas in the case of graphQL all operations are invoked with either HTTP GET or POST.
-
-    There are three types of GraphQL operations, query, mutation and subscription.
-
+    REST APIs expose crud operations using HTTP verbs whereas in the case of GraphQL all operations are invoked with either a HTTP GET or POST.
+    There are three types of GraphQL operations: query, mutation and subscription.
     REST API client needs to make multiple network calls to gather the required information, whereas GraphQL API leads to reduced network traffic and that may lead to better performance from use cases.
 
     \begin{note}
-        From a use-cases perspective, REST APis are suited for resource driven applications whereas GraphQL are more suited for data driven applications (very important.....)
+        From a use-cases perspective, REST APIs are suited for resource driven applications whereas GraphQL is more suited for data driven applications %(very important.....)
     \end{note}
 
     \subsection{Summary}
-    Summary
 
     \begin{itemize}
         \item GraphQL is a specification for APIs
@@ -3080,14 +3072,15 @@
     The incoming queries are validated by way of the schema definition language, which is \textit{programming language agnostic}.
 
     \subsection{Schema Definition Language}
-    Schema definition language is a JSON like language for defining the schema for the GraphQL apis.
-    A schema consist of two parts.
+    Schema definition language is a JSON like language for defining the schema for the GraphQL APIs.
+    A schema consists of two parts.
 
-    The first part are the operations supported by the GraphQL server.
-    These operations can be queries, mutations and subscriptions.
-    The other part has the types which are the server defined objects and each of these objects have fields of specific types supported by the GraphQL schema.
+    \begin{itemize}
+        \item The first part are the operations supported by the GraphQL server. These operations can be queries, mutations and subscriptions.
+        \item The other part has the types which are the server defined objects and each of these objects have fields of specific types supported by the GraphQL schema.
+    \end{itemize}
 
-    In the context of schema definition, language operations are referred to as the route types.
+    In the context of schema definition, language operations are referred to as the \textit{route types}.
 
     \subsubsection{Route Types}
     The route type query is used by the client for retrieval of objects defined on the server in the schema definition language.
@@ -3099,11 +3092,11 @@
     A graphQL server may allow the client to modify the state of objects maintained on the server and it does this by defining the route types mutation.
 
     \subsubsection{Route Type Mutation}
-    The route type mutation is similar to the route type query in the sense that there are named mutations in the specification and these named mutations also take argument sand return objects like named queries.
+    The route type mutation is similar to the route type query in the sense that there are named mutations in the specification and these named mutations also take an argument and return objects like named queries.
     - The last route type is the subscription route type, which is different from the query and mutation in the sense that subscription operation is not initiated by the client.
     - The client subscribes to the events on the server and the server pushes the data to the client in response to the events.
     - Types are used for defining the structure of the domain objects.
-    - The scala types are the standard types defined in the schema definition.
+    - The scalar types are the standard types defined in the schema definition.
     - Language integer, float, string and boolean are foundational scalar types.
     - ID is a special type which is not part of the business domain data but is primarily used for managing the caching of the query data.
 
@@ -3122,7 +3115,7 @@
         This is because deeply nested complex types would require hierarchical resolver implementations and that will in turn also lead to the complexity of implementing the GraphQL server.
     \end{note}
 
-    \subsubsection{Things that you need to keep in mind when designing your types.}
+    \subsubsection{Things that you need to keep in mind when designing types}
 
     These are certain things that you need to keep in mind when designing your types.
 
@@ -3139,14 +3132,11 @@
     These arguments act as the criteria for the query.
 
     \subsubsection{What makes GraphQL different from a restAPI query?}
-    What makes GraphQL different from a restAPI query.
-    The client can specify the fields that it desired to receive from the server in the response.
+    The client can specify the fields that it desires to receive from the server in the response.
 
     \begin{note}
         This is a key point of GraphQL. \textit{This cannot be done in REST APIs}.
     \end{note}
-    -- This is a key point of GraphQL.
-    ----- This cannot be done in REST APIs
 
     \subsubsection{Example flow}
     Example flow
@@ -3161,16 +3151,18 @@
 
     \subsubsection{Summary and Key Points}
     Summary:
-    Think of schema for your graphQLs APIs.
-    Think of schema definition as a shared language.
-    Don't forget the ubiquitous language for the domain.
-    Make sure that you schema definitions are mapping to the terms in the ubiquitous language <------
-    Take an evolutionary approach to create the API <--------
-    Don't try to do everything at the same time <-------
+
+    \begin{itemize}
+        \item Think of the schema for your graphQLs APIs.
+        \item Think of a schema definition as a shared language.
+        \item Don't forget the ubiquitous language for the domain.
+        \item Make sure that you schema definitions are mapping to the terms in the ubiquitous language
+        \item Take an evolutionary approach to create the API
+        \item Don't try to do everything at the same time
+    \end{itemize}
 
     \begin{note}
-        Idea is to publish version on of the API and then look at how the clients or the consumers of the API are using your service.
-        And based on that, evolve the schema for your APIs.
+        There idea here, is to publish version on of the API and then look at how the clients or the consumers of the API are using your service and based of that, evolve the schema for your APIs.
     \end{note}
 
     \paragraph{Key Points}
