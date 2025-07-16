@@ -74,19 +74,21 @@
 
 
     \section{Introduction}
-    Motivations
-    - Create models that have the potential to deliver high impact on an organisations performance
-    - Many of these models fail to make an impact because you are unable to connect them to the right sources.
-    - Connecting to the right data source is important so that the models train on the right data sets that represent the business problem and thereby improving their accuracy and also removing any bias they might display in production.
-    - Data engineers and data architects are actually responsible for ensuring models get access to the right data.
-    - The reality though is that they require advice and guidance from the data scientists to ensure this does become a reality.
-    - Knowing data architecture will also help plan projects in such a way.
+    \subsection{Motivation - Why learn data architecture}
+    \begin{itemize}
+        \item Create models that have the potential to deliver high impact on an organisations performance
+        \item Many of these models fail to make an impact because you are unable to connect them to the right sources.
+        \item Connecting to the right data source is important so that the models train on the right data sets, that represent the business problem and thereby improving their accuracy and also removing any bias they might display in production.
+        \item Data engineers and Data architects are actually responsible for ensuring models get access to the right data.
+        \item The reality though is that they require advice and guidance from the Data scientists to ensure this does become a reality.
+        \item Knowing data architecture will also help plan projects in such a way.
+    \end{itemize}
 %\bigskip ---add if I need the space
     Important to plan ahead.
     Allows for notebook dreams to become highly impactful applications.
 
     \begin{note}
-        Data architecture is outside the core competency of a data scientist’s roles and responsibility.
+        Data architecture is outside the core competency of a Data scientist’s roles and responsibility.
     \end{note}
 
     \begin{figure}[ht]
@@ -118,7 +120,6 @@
 
     \subsection{Structured data}
 
-    \paragraph{}
     Structured data typically constitutes only 20\% of the total data volume an organisation produces or has access to.
     Many organisations have reached a reasonable level of maturity in dealing with structured data.
     It is important to understand how structured data is managed by your data engineering team.
@@ -157,10 +158,12 @@
     Most organisations are still learning to extract and derive business value form this type of data.
     The most common types of unstructured data are images, video, audio and text.
     Organisations are starting to find a lot of value in analysing text.
-    - There is also computer vision
-    - There is text to speech or speech to text.
-    --- Can transcribe conversations into text for further analysis.
-    --- Natural language processing is trendy.........ChatGPT etc....
+    There is also computer vision
+    There is text to speech or speech to text which can transcribe conversations into text for further analysis.
+
+    \begin{note}
+        Natural language processing is trendy.........ChatGPT etc....
+    \end{note}
 
     Unstructured data is more than 80\% of the data your organisation produces or has access to it needs a storage medium which iis economical easy to write to.
     This is where the concept of a \textit{data lake} comes into prominence.
@@ -170,56 +173,55 @@
     Unstructured data needs a lot of processing prior to being useful for data science projects.
     Since the volume of this data is huge specialised processing frameworks have evolved over time to manage this challenge.
     The typical processing activity includes the scaling of images to allow machine learning algorithms to viably learn from them or extraction if text from audio.
-    --- For video footage, video annotation is necessary prior to training models to learn from others.
-    --- For NLP use cases then tokenization of text is necessary to produce useful models.
+    For video footage, video annotation is necessary prior to training models to learn from others.
+    \textit{For NLP use cases then tokenization of text is necessary to produce useful models.}
 
     To perform all these processing tasks, big data frameworks such as Hadoop, Spark and Apache Beam are commonly used.
     All these frameworks are capable of reading data from the data lake, processing it and then writing the results back to the data lake.
     It is important to know that they are capable or reading and writing to the data lake.
 
-    \paragraph{NoSQL}
+    \subsubsection{NoSQL}
     NoSQL databases are designed to handle a variety of data models and not just tables and rows with columns.
     They can be used to store unstructured data.
     This can become very expensive since data has to be stored on expensive disks for performance reasons.
 
     \begin{note}
         Best Practice: is to keep unstructured data in a data lake and store the metadata in a NoSQL database.
-        This makes óit faster to analyse the properties of the images and fetch only those images that fit the criteria.
+        This makes it faster to analyse the properties of the images and fetch only those images that fit the criteria.
     \end{note}
 
     \subsection{Semi-structured data}
     This data has some structure but is not confined to just rows and columns.
     You can define the hierarchy and structure using tags and markers.
-
-    --- HTML is also a form of semi-structured data where various elements are separated by tags such as title and body.
-    --- Weblogs are generally produced in the JSON format where JSON stands for JavaScript object notation.
-
+    HTML is also a form of semi-structured data where various elements are separated by tags such as title and body.
+    Weblogs are generally produced in the JSON format where JSON stands for JavaScript object notation.
     Data from sensors is also generally produced in JSON and sometimes in the XML format.
     Both these formats have implemented tags or markers which help define a structure and this makes it possible to read them.
-
     No two datasets will have the exact same structure or even the same hierarchy.
-
     This makes it easy to write such datasets as developers do not need to confine themselves to a specific structure.
-
     Becomes challenging for those who read such files most of the time, since the structure needs to be inferred from the files by the reader.
 
     \begin{note}
-        Key Note: Since storing and processing semi structured data from plain text files makes it compute intensive to process, specialised file formats such as ORC, Parquet and Avro have eveolved.
-        -- These file formats are designed to store data in a columnar format which makes it easier and faster to perform analytics on.
-        -- Example, if you with to calculate the total temperature from data generated by a sensor it would be easier if the entire temperature was stored in the same file.
+        Key Note: Since storing and processing semi structured data from plain text files makes it compute intensive to process, specialised file formats such as ORC, Parquet and Avro have evolved.
+        These file formats are designed to store data in a columnar format which makes it easier and faster to perform analytics on.
     \end{note}
+\subsubsection{Example}
+         If you with to calculate the total temperature from data generated by a sensor it would be easier if the entire temperature was stored in the same file.
 
-    Important: If you are dealing with semi structured data in large volumes its best to store them in on of the big data formats.
+         \begin{note}
+         Important: If you are dealing with semi structured data in large volumes its best to store them in on of the big data formats.
+         \end{note}
 
-    Semi-structured data can be store in the data lake or in a NoSQL database.
-    -- Both are suitable for storing semi-structured data.
+    Semi-structured data can be store in the data lake or in a NoSQL database. Both are suitable for storing semi-structured data.
 
     \paragraph{Typical Flow}
     Typical flow:
-    - First store the semi-structured data in the data lake and then process it using big data frameworks and then store the data in a NoSQL database.
-    - Once the big data frameworks have cleaned and formatted the data from the data lake, it could then be stored in the NoSQL database.
-    - Storing semi-structured data in a NoSQL database makes it easily accessible by applications and users a like.
-    - Hence, the NoSQL database serves as a good serving layer for the semi strcutured data.
+    \begin{item}
+    \item First store the semi-structured data in the data lake and then process it using big data frameworks and then store the data in a NoSQL database.
+    \item Once the big data frameworks have cleaned and formatted the data from the data lake, it could then be stored in the NoSQL database.
+    \item Storing semi-structured data in a NoSQL database makes it easily accessible by applications and users a like.
+    \item Hence, the NoSQL database serves as a good serving layer for the semi strcutured data.
+    \end{item}
 
     \subsection{Short explaination of JSON and XML structures}
     JSON - Key value pairs.
@@ -230,25 +232,33 @@
     Semi-structured data is usually flattened into a structured format prior to being used in model training.
     Flattening is the process of inferring the schema of the dataset and then presenting the required fields in a structured format that is in rows and columns.
     Once the data set is flattened you can use the dataset for training models.
-    --- It is not essentially a flattened dataset.
+    It is not essentially a flattened dataset.
 
-    Inference
-    - Do predictions on a deployed model.
-    Most of the model serving frameworks accept JSON as an input and also generally ouput the predictions in the JSON format.
-    Hence no flattening is needed on the inference side of the machine learning workdlow.
+    \subsubsection{Inference - Do predictions on a deployed model}
+
+    Most of the model serving frameworks accept JSON as an input and also generally output the predictions in the JSON format.
+    Hence no flattening is needed on the inference side of the machine learning workflow.
 
 %    TODO see example of data being flattened in python
 
     \section{Data Warehouse}
 
     \subsection{Introduction to Data Warehousing}
+
+    \begin{note}
     A data warehouse is the single source of truth for the entire organisation.
+    \end{note}
+
     A data warehouse is generally used to store information from structured data sources.
     An organisation collects data from its operational databases and organises it inside a data warehouse, in a format you can perform analytics on.
     An operational database is one that holds transactions or data that is written by applications.
+
+    \paragraph{Examples to consider.}
     Examples to consider.
-    - Could have a web shop which collects its transactions in a sales database.
-    - CRM which stores all information in a customer database.
+    \begin{item}
+        \item Could have a web shop which collects its transactions in a sales database.
+        \item CRM which stores all information in a customer database.
+    \end{item}
 
     Could perform analytics directly on these operational databases.
     However, this will impact the performance of your applications.
@@ -282,6 +292,7 @@
     Once the data scientist finds the data needed for training models, he or she will request data engineering team to transfer it to a data mart or even to a feature store.
     This could be a one time transfer ot a transfer set on a schedule.
 
+    \paragraph{Example}
     Example: a data scientist might request the data engineer to schedule the transfer every week so that fresh data is available on a weekly basis for model training.
     The data scientists then use a data science platform or his/her own development environment to engineer new features or pre-process the data for the purposes of model training.
 
@@ -316,9 +327,9 @@
     Uses t-shirt sizing for its sizing in order to make it easier for users to choose the appropriate size for the appropriate time.
     Modern cloud data warehousing also support semi-structured data natively.
     Software vendors are trying to support more and more data types making it easy for customers to have just one technology for all data types.
-    Technology like snowflake, also strives to cater to multiple use cases.
+    Technology like Snowflake, also strives to cater to multiple use cases.
     Instead of using a separate technology for configuring a data mart, feature store and a data warehouse.
-    The flexibility snowflake provides allows you to use it for all three purposes.
+    The flexibility Snowflake provides allows you to use it for all three purposes.
 
     While specialised feature stores do have an edge, snowflake offers to integrate with them and thus offers the best of both worlds.
 
@@ -350,8 +361,8 @@
     \paragraph{Second Principle}
     Next principle.
     In place analytics
-    ------ Instead of moving data from one database table to another, schema read makes it possible to read the same data file in different ways.
-    ------ In place analytics avoids the need for making several copies of the same data set and thus saves storage costs and also the time taken to make copies of the same files.
+    Instead of moving data from one database table to another, schema read makes it possible to read the same data file in different ways.
+    In place analytics avoids the need for making several copies of the same data set and thus saves storage costs and also the time taken to make copies of the same files.
 
     \paragraph{Third Principle?}
     ETL vs ELT
@@ -432,7 +443,6 @@
     - Could also use cloud storage for storing data that is used for making predictions, and you could even output the predictions into a file that will be stored in the data lake.
     This data lake could be on cloud storage.
 
-
     \section{Data Lakehouse}
 
     \subsection{Challenges with the data lake}
@@ -460,7 +470,7 @@
     -- We need some way of guaranteeing the current state of the file.
     -- Isolation is again simultaneous operations. They shouldn't conflict with each other, that is what isolation implies.
 
-    Important: A data lake does not provide acid guarantees on data transactions made on it.
+    Important: A data lake does not provide ACID guarantees on data transactions made on it.
 
     Finally: Data analysts who are equal stakeholders in deriving value from datasets are traditionally used to querying data using the SQL language and data.
     - Lakes do not have native capability to allow such queries.
