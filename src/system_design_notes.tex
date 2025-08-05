@@ -14,8 +14,8 @@
 \usepackage{helvet}
 \usepackage{arydshln}
 \usepackage{wasysym}
-\usepackage{amstex}
 \usepackage{tikz} % Helvetica as a sans-serif font alternative
+\usepackage{mdframed}
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -27,6 +27,20 @@
 \fancyhead[L]{System Design Notes}
 \fancyhead[C]{Your Name}
 \fancyhead[R]{\thepage}
+
+% ---- For Note to highlight point
+\newmdenv[
+    topline=false,
+    bottomline=false,
+    rightline=false,
+    innerrightmargin=0pt
+]{siderule}
+
+\newenvironment{note}{
+    \begin{siderule}
+        \textbf{Note: }
+        }{
+    \end{siderule}}
 
 % Document
 \begin{document}
@@ -49,10 +63,12 @@
 
 %    \include{domain_drive_design/data_integrity} how to include a chapter etc
 
+
     \chapter{Introduction}
 
+
     \section{Goals of this document}
-    The goal of this document is to collate information that I think is useful in the area of software architecture.
+    A set of personally useful notes relating to software architecture
 
     \section{OSI Model}
     Very useful when operating on different levels of abstraction in a system
@@ -71,14 +87,16 @@
 
     \paragraph{Level 7} - Application
 
+
     \section{C4 Model}
     Very useful for handling different levels of abstraction
 
-    \paragraph{Motivations: Why should I care}
+    \paragraph{Motivations: Why should I care?}
     Drivers - Performance, Scalability, Fault Tolerance.
     How to measure.....latency, throughput, cost
     Consider SLA,SLO and SLI.
     Easier to code more complex stuff......
+
 
     \chapter{Gathering requirements}
     Asking is a user is not good practice.
@@ -97,8 +115,10 @@
     In each interaction we capture the action and take a note of the data that flows with it to and from the system.
     There are multiple ways to represent this, one way is a sequence diagram which is a part of UML. This is standard for visualising system design.
 
+
     \section{Non functional requirements}
     These requirements have an effect on the software architecture.
+
 
     \section{Why redesign?}
     The System is functionally correct but speed, scalability, maintenance or security is too hard for multiple reasons, like the number of users or data volume.
@@ -125,6 +145,7 @@
         \item Feasibility of quality attributes
     \end{itemize}
 
+
     \section{System constraints}
     Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
     Quality attributes will lead to tradeoffs and this is normal.
@@ -144,6 +165,7 @@
     If further in the project timeline it is found that some of those constraints were not really constraints, then the architecture will not make sense in the future.
     Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
     We need to avoid tight coupling with certain components or constraints to allow for change, otherwise whole system would need to be rearchitected. %TODO Check this
+
 
     \section{Gathering System Requirements}
 
@@ -191,7 +213,7 @@
     This time is usually spend in transit in the physical network or in software queues waiting to be handled or reach its destination.
     Waiting time is also known as latency.
 
-    Response time can also be called end to end latency and is an importnat metric.
+    Response time can also be called end to end latency and is an important metric.
 
     Another important metric is throughput, which is the amount of data a system can process in a given interval of time.
     The more per unit of time the higher the throughput.
@@ -251,15 +273,15 @@
     Availability is measured as a percentage representing the ration between the uptime and the ensure time out system is running.
     This is the total sum of uptime and downtime of the system.
     Availability is measured in percentages.
-    Other metrics are Mtbf and Mttr.
+    Other metrics are MTBF and MTTR.
 
-    Mtbf - the mean time between failures, represents the average time out system is operational.
+    MTBF - the mean time between failures, represents the average time out system is operational.
     This is useful when dealing with multiple pieces of hardware. Most stuff is on the cloud and this avialable upfront.
 
-    mTOR - mean time for recovery - the average time it takes to detect and recover from a failure, which is the average down time of our system.
-    Until failure is recovered from the system is essentially non-operational.
+    MTFR - mean time for recovery - the average time it takes to detect and recover from a failure, which is the average down time of our system.
+    Until failure is recovered from, the system is essentially non-operational.
 
-    Availability of a system is the mtbf divided by the sum of mtbf and mttr.
+    Availability of a system is the MTBF divided by the sum of MTBF and MTTR.
     Use formula to estimate availability.
 %    Add equation
     Note: If we minimise the average time to detect and recover from a failure theoretically all the wy to 0 we can essentially achieve 100\%
@@ -299,7 +321,7 @@
     To achieve this we need a monitoring service to monitor the health of our instances via health check messages.
     Alternatively can listen to periodic messags called heartbeats, that should come periodically from healthy instances.
 
-    In either strategy if monitoring service does not hear from the for a predefined duration of time, it can assume that the server is no longer avaiable.
+    In either strategy if monitoring service does not hear from the for a predefined duration of time, it can assume that the server is no longer available.
     Can lead to false positives.
     Doesn't need to be perfect, as long as there are not false negatives.
     False negatives mean that the monitoring service failed since it didn't detect it.
@@ -310,7 +332,7 @@
     \subsection{Failure recovery}
     Third tactic for fault tolerance.
     If we can detect and recover from each failure faster than the user can notice then our system will have high availability.
-    Once we detect the and isolate the faulty instance or server serveral actions can be taken.
+    Once we detect the and isolate the faulty instance or server several actions can be taken.
     Stop sending any traffic or workload to that host.
     Attempt to restart it with the assumption that the problem will be fixed after a restart.
     Perform a rollback.
@@ -548,7 +570,7 @@
     Each message should be served by the server in isolation without any information about previous requests.
     This allows for high availability and scalability.
     If there is no session information high groups of servers can be used and the load can be spread. Client will no notice.
-    Cacheability - Important requirement.
+    Cache-ability - Important requirement.
     This means the server either implicitly or explicitly defines each response as cacheable or non-cacheable.
     Allows the client to eliminate the potential round trip to the server and back if they response is cached somewhere closer to the client.
     This will also reduce system load.
@@ -617,7 +639,7 @@
     Over time the company will gain popularity and system will expand.
 
     \subsection{Evolution of RESTful Services}
-    API - user interface to data and systems that is conusmed by applications rather than himans.
+    API - user interface to data and systems that is consumed by applications rather than humans.
     A well define contract between provider and consumer
     \textit{Contract = Structure of Request and Response XML}
 
@@ -687,11 +709,11 @@
 
     \subsubsection{Caching - 4}
     Statelessness - Negative impact on performance
-    Chattieness
+    Chattiness
     Higher data traffic (impact's scalability
 
     Caching - Performance
-    - Scalabitlity
+    - Scalability
     - Reduce Chattiness
 
     Caching counter-balances some of the negative impacts of Statelessness
@@ -715,7 +737,7 @@
     1) Create, a simple base URL; subdomain; separate domain
     2) Resources names should be nouns; Use of plurals is fine
     3) Actions can be verbs, may be standalone
-    4) URI Pattern for associations; avoid nesting over three levels >_>
+    4) URI Pattern for associations; avoid nesting over three levels
 
     \subsubsection{CRUD operations}
     POST - Creates a resource,
@@ -785,7 +807,7 @@
         \item Support at least 1 previous version for a period of time ---- 3 months/ a year etc
         \item Mark the previous version as deprecated. \textit{New app developers can only access the latest version}
         \item Publish a roll out plan in advance
-        \item Manage the changlog that clearly shows the reason for the new version
+        \item Manage the change log that clearly shows the reason for the new version
     \end{itemize}
 
     \subsubsection{Design Decisions}
@@ -1188,24 +1210,25 @@
     \begin{itemize}
         \item Netflix Zuul (Open Source)
         \item Amazon API gateway
-        \item GCP - Apigee , Google Cloud plateform API Gateway
+        \item GCP - Apigee , Google Cloud platform API Gateway
         \item Azure
     \end{itemize}
 
 
-    \section{Cloud Delivery Network Solutions and cloud}
+    \section{Cloud Delivery Network Solutions and the Cloud}
     Can be considered to be more of a service.
-    The problem being solved.
+
+    \subsection{The problem being solved.}
     Even with GSLB there still latency between the end user and the locations of the hosting server.
     Each request has to go through multiple hops over the network between different routers etc adding even more latency.
     Users will abandon a website if it takes to long to load. (Think 3 seconds plus)
-    Can improve system performance etc but its content that needs to be closer to the users rather than business logic.
+    Can improve system performance etc but its the content that needs to be closer to the users rather than the business logic.
 
-    \subsection{What it is}
+    \subsection{What is it?}
     A globally distributed network of servers located in strategic places with the main purpose of speeding up the delivery of content to the end users.
     Solves bad user experience.
     CDNs cache website content on their servers.
-    Referred to as edge servers.
+    They are referred to as edge servers.
     They are physically close to the user and more strategically located in terms of network infrastructure.
     Allos for the transfer of content much quicker to the user and improve the perceived system performance.
     Can be used to deliver webpage contents and assets including video streams.
@@ -1220,7 +1243,9 @@
     Examples, GZIP and JavaScript minification.
 
     \subsection{Strategies when integrating with CDNs}
-    Pull strategy - tell CDN provider which content we want on our website to be cached and how often this cache needs to be invalidated.
+
+    \subsubsection{Pull strategy}
+    Tell CDN provider which content we want on our website to be cached and how often this cache needs to be invalidated.
     This can be configured in the time to live property on each asset or type of asset.
     In this model first time a user requests a certain asset the CDN will have to populate its cache by sending a reqeust to a server in our system.
     Once that asset is cached on the CDN, subsequent reqeust by users will be served by the edge servers directly.
@@ -1229,10 +1254,11 @@
     If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
     Otherwise, if a new version is available the CDN will receive the new version instead of the old one to the user.
 
-    Push strategy - Manually or automatically upload or publish the content that we want deliver through a CDN.
+    \subsubsection{Push strategy}
+    Manually or automatically upload or publish the content that we want deliver through a CDN.
     WHen the content changes, we are responsible for republishing the new versions to the edge servers.
     Some CDN providers support this model directly, other enable the strategy by setting a very long TTL for our assets so the cache never expires.
-    When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user reqeusts that content.
+    When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user requests that content.
 
     \subsection{Choosing the right strategy}
 
@@ -1241,8 +1267,8 @@
     Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
     Everything at that point will be taken care of by the CDN provider.
 
-    \paragraph{Drawbacks}
-    FFirst time there will be a longer latency as the CDN cache is populated from the server.
+    \subsubsection{Drawbacks}
+    First time there will be a longer latency as the CDN cache is populated from the server.
     If the time to live is the same for all assets there may be frequent traffic spikes when those assets expire at the same time.
     This would result in a large number of requests from the CDN to refresh its cache at one time.
 
@@ -1279,11 +1305,11 @@
     Avoids data duplication when memory is usage has to be considered (large scale)
     Use joins to combine information from multiple tables without duplication.
 
-    \subsection{Advantages}
+    \subsubsection{Relational Databases - Advantages}
     Carryout complex and flexible queries using SQL. Use for analysis
     Save memory because multiple tables can be joined ..... save costs.
     Easy to reason about, very natural for humans.
-    No sophisticated knowledge requried.
+    No sophisticated knowledge required.
     Most importantly, provides ACID transactions.
 
     \begin{itemize}
@@ -1301,8 +1327,8 @@
     Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state. They are separate.
     Durability - once a transaction is complete its final state will persist.
 
-    \subsection{Disadvantages}
-    Rigid structure enforced by database schema enforced by the schemeas
+    \subsection{Relational Databases - Disadvantages}
+    Rigid structure enforced by database schema enforced by the schemas
     Schemas has to be designed ahead of time before the table can be used.
     Future changes to the schemas can lead to down time.
     Changes ideally should be avoided and not done at all.
@@ -1310,13 +1336,14 @@
     Harder and more costly to scale because of their complexity.
     Providing SQL and ACID transactions is not straight forward and thus relational databases are harder to maintain.
     Due to ACID guarantees, reads are slower to perform compare to other types of databases.
-
     Different implementations have different performance optimisations and guarantees.
 
-    Generally, relational databases are slower than non relational ones.
+    \begin{note}
+        Generally, relational databases are slower than non relational ones.
+    \end{note}
 
     When choosing one consider pros/cons and the use case.
-    I.e is the data related, are read important.
+    I.e is the data related, are reads important?.
 
 
     \section{Non-Relational Databases}
@@ -1324,7 +1351,7 @@
     NoSQL databases \textit{generally} allow for the logical grouping or records without them having to conform to some kind of schema.
     Can easily add some kind of attributes to the different records without redesign or effecting other records.
 
-    \textit{Most} languages do not have tables as a structure....external libraries required.
+    \textit{Most} languages do not have tables as a structure, external libraries required.
     NoSQL uses more typical computer science data structure (arrays, trees etc).
     This eliminates the need for Object Relational Mappings ORM (Hibernate) to translate business logic for storage in a database.
 
@@ -1333,7 +1360,7 @@
     NoSQL databases on the other hand are typically optimised towards faster queries.
     Different types of non-relational databases are optimised for different types of queries based on the use-case.
 
-    \paragraph{Some issues with flexible schemas}
+    \subsection{Some issues with flexible schemas}
     The loss of ability to easily analyse those records since each record can have different structure and data.
     Joining becomes very hard, these operations are often not supported by NoSQL databases, or are hard.
     Each NoSQL database supports a different set of operations and different set of datastructures.
@@ -1343,15 +1370,13 @@
     Three types of NoSQL databases.
     The categories, however are somewhat blurry.
 
-    \subparagraph{First Type}
-    First type is simple key, value store.
+    \subparagraph{First Type - Simple Key/Value store}
     We have a key that uniquely identifies a record and value that represents the data.
     The value can be anything, primitive or a binary blob.
     Can be though of as a large scale hash table/dictionary with few constraints on the type of value that can be held for each key.
-    Good for caching pages or for quick fetching and ....easy.... querying.
+    Good for caching pages or for quick fetching and easy querying.
 
-    \subparagraph{Second Type}
-    Second type - A document store.
+    \subparagraph{Second Type - A document store }
     Collections are stored as documents.
     Documents have a bit more structure.
     Each document can be thought of as an object with different attributes.
@@ -1360,8 +1385,8 @@
     Documents are easily mapped to objects inside a programming language.
     Think JSON, YAML, XML
 
-    \subparagraph{Third Type}
-    Third Type - A graph database, an extension of a document store but with additional capabilities to traverse, link and analyse records more efficiently.
+    \subparagraph{Third Type - A graph database}
+    An extension of a document store but with additional capabilities to traverse, link and analyse records more efficiently.
     These types of databases are particularly optimised for navigating and analysing relationships between records in a database.
 
     \paragraph{Use Cases}
@@ -1400,14 +1425,14 @@
     \section{Techniques to improve performance, availability and scalbilty of databases}
     There are three techniques to improve the scalability, performance and availability of a database.
 
-    \subsubsection{Technique one - Indexing}
+    \subsection{Technique one - Indexing}
     Speeds up retrieval operations and locate the results in a sublinear time.
     Without indexing those operations could require a full table scan, which is bad for large tables.
     Example operations
     Sorting, search.
     If performed often this can lead to a performance bottleneck.
 
-    An index is helper that we create from particular column or group of columns.
+    An index is a helper that we create from particular column or group of columns.
     When the index is created from a single column, the index table contains a mapping from the column value to the record that contains the value.
     Once that index table is created, we can put that table inside a data structure (good structures - B-Trees(or any self balancing tree), or a Hashmap).
     This will keep the values sorted and thus makes searching more efficient (think big O complexity).
@@ -1422,13 +1447,13 @@
 
     %TODO add reminder on normal form........for relational databases
 
-    \paragraph{Tradeoffsó}
+    \subsubsection{Tradeoffs}
     Optimising for one operation can lead to a tradeoff elsewhere.
     Indexing increases memory and decreases the speed of writes but increases the speed of reads.
     Writing records become slower because each time a write or new record is added the index table must also be updated.
     Indexing is also used in non-relational databases to speed up queries.
 
-    \subsubsection{Database replication - single database, single point of failure.}
+    \subsection{Database replication - single database, single point of failure.}
     Solution, replicate data and run multiple instances of the database on different computers.
     This increases fault tolerance, availability.
     One replica goes down another can take its place and business is not effected.
@@ -1437,20 +1462,18 @@
     Get better performance and better throughput.
     Better throughput by distributing our queries across multiple computers/ replicas.
 
-    \paragraph{Tradeoffs}
+    \subsubsection{Tradeoffs}
     Introduces higher complexity especially with regards to write, update and delete operations.
-    (Non idempotent???)
     Making sure concurrent modifications to the same records don't conflict with each and providing predictable guarantees in terms of consistency and correctness is not a trivial task.
-    Distributed databases are very hard to design, configure and manage....especially at scale.
-    Requires knowledge of distributed systems....
+    Distributed databases are very hard to design, configure and manage, especially at scale.
+    Requires knowledge of distributed systems.
 
     Database replication is widely supported by most modern databases
     Non-relation databases support replication (high availability, large scale) out of the box as they were designed with that in mind.
 
     Support for replication with relational databases varies amongst different implementations.
 
-    \subsubsection{Database partitioning}
-    Also known as sharding.
+    \subsection{Database partitioning (Sharding)}
     Split data amongst different database instances for better performance.
     Each instance will run on a different computer typically.
     More computers, more data.
@@ -1472,20 +1495,25 @@
 
     This routing allows for understanding which users are affected during an outage.
 
-    \paragraph{Note}
-    These three techniques are orthogonal to each other.
-    They are often used together in real user use cases.
+    \begin{note}
+        These three techniques are orthogonal to each other.
+        They are often used together in real user use cases.
+    \end{note}
 
 
     \section{Brewers CAP Theorem}
     %TODO find a good diagram for this
 
-    ----- In the presence of a network partition, a distributed database cannot guarantee both consistency and availability.
+    \begin{note}
+    In the presence of a network partition, a distributed database cannot guarantee both consistency and availability.
+    \end{note}
 
     The scenario of database instances not being able to communicate with one another.
     When an isolated server cannot communicate with its replicas it can either return an error or produce inconsistent data.
 
-    Note: No network partition then no tradeoff and both consistency and availability can be offered.
+    \begin{note}
+No network partition then no tradeoff and both consistency and availability can be offered.
+    \end{note}
 
     \begin{itemize}
         \item Consistency - Every read request received the most recent write or an error regardless of which instance is serving when considering a network partition.
@@ -1495,7 +1523,7 @@
     \end{itemize}
 
     The theorem basically states one of these must be dropped when we are working with a database that may have to deal with a database partition.
-    Could have a single database to guarantee consistence and availability....ie no network involved with the database....but this would not scale.
+    Could have a single database to guarantee consistence and availability. I.e no network involved with the database, but this would not scale.
     When architecting for partition tolerance we either have to drop availability or consistency.
     Depends on the use case.
 
@@ -1514,15 +1542,17 @@
     Databases may allow for storage but they are not optimised for it.
     Limit on the object size with DBs otherwise we would encounter scalability and performance problems.
     Use cases
-    - Disaster recovery
-    - Archiving
-    - Web hosting media like videos etc
-    - Collecting data points for machine learning purposes
+    \begin{itemize}
+    \item Disaster recovery
+    \item Archiving
+    \item Web hosting media like videos etc
+    \item Collecting data points for machine learning purposes
+    \end{itemize}
 
     Huge datasets, storage solution needs to be scalable.
     Each object can also be big.
 
-    First solution - Distributed file system - network of storge devices
+    \subsection{First solution - Distributed file system - network of storge devices}
     We can get different replication consistency, and auto healing guarantees based on the file system.
     Main feature is that files are stored in a tree like structure.
     Benefit of storing unstructured data like this is that special APIs are not needed.
@@ -1530,12 +1560,11 @@
     Performance intensive operations such as big data analysis or transformations operations on data are very fast if we do it on a distributed file system.
     ----Very useful for machine learning projects.
 
-    Limitations of Distributed file systems
+    \subsubsection{Limitations of Distributed file systems}
     - limited in the number of files we can create which is scalability issue with relatively small files like images.
     - easy access to those files via web api is hard, Additional abstractions would be required.
 
-
-    Another solution - use an object store
+    \subsection{Another solution - use an object store}
     - A scalable storage solution designed for unstructured data at an internet scale.
     - Can scale linearly like a distributed file system by adding more storage devices.
     - Unlike a distributed file system we have virtually no limitation on the number of binary objects we casn store in it
@@ -1544,16 +1573,15 @@
     - Features of typical object stores can include HTTP rest API that makes them effective for storing multi media content - images etc that can be linked to a webpage
     - Object versioning is another feature, on a file system we would need to use an external versioning system.
 
-    Differences between object store and a distributed file system.
+    \subsection{Differences between object store and a distributed file system}
     - No directory hierarchy
     - Flat structure called buckets
     - main abstraction is an object
     - Typically key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
     - Objects can include an access control list who can access who has read/write permissions.
-    -
 
     Commonly provided by cloud providers.
-    Typicall broken into classes with each class prvoding different prices and SLA guarantess.
+    Typically broken into classes with each class providing different prices and SLA guarantees.
     Top tier is usually availability of a high percentage, offers lowest latency and highest throughput
     Top tier is best for data that will be frequently accessed lke content videos, images etc.
     Middle tiers have lower guarantees for viability and are cheaper.
@@ -1571,10 +1599,10 @@
     Just like distributed file systems, object stores use data replication although this is abstracted away.
     Ensure physical storage loss will not result in loss of actual data.
 
-    \paragraph{Object store downsides}
+    \subsection{Object store downsides}
     Data is immutable, no edits can only be replaced with a newer version.
-    Performance implications --- storing large documents that require amends would not be feasible
-    Needs a special API or a rest API unlike a distributed file system.
+    Performance implications: storing large documents that require amends would not be feasible
+    Needs a special API or a REST API unlike a distributed file system.
 
     Distributed systems are the preferred storage solution over object stores for high throughput solutions.
 
@@ -1597,61 +1625,53 @@
 
     \chapter{High-Level System Design}
 
-    \paragraph{Software Architecture Patterns} - General repeatable solutions to commonly occurring system design problems.
+    \section{Software Architecture Patterns}
+    General repeatable solutions to commonly occurring system design problems.
     Versus design patterns which are just about organising code within a single application.
     Software architectural patterns are blueprints for solutions that involve multiple software components.
     The purpose is to avoid repeating mistakes and anti patterns for large scale systems.
 
-    \paragraph{Business incentives for this approach} - One - Save time and resources for devs and the organisation
-    when building a solution on a similar scale.
-    Use already tested development practices rather than reinvent the wheel,
-    something completely new can potentially take up a lot of resources.
+    \subsection{Business incentives for this approach}
+    One: Save time and resources for devs and the organisation when building a solution on a similar scale.
+    Use already tested development practices rather than reinvent the wheel, something completely new can potentially take up a lot of resources.
 
-    \paragraph
+
     Two - Using an existing architecture avoids the \textit{big ball of mud}.
     The lack of structure on the system.
-    In this scenario every service talks to every other service, services are tightly coupled, information is global or duplicated
-    and there is no clear scope or responsibility for any of the components.
+    In this scenario every service talks to every other service, services are tightly coupled, information is global or duplicated and there is no clear scope or responsibility for any of the components.
 
-    \paragraph
     This situation can happen due to rapid growth of the company or a lack of architecture in general.
 
-    \paragraph
     In this situation a system can be hard to develop, maintain and scale which in turn can lead to the failure of business objectives.
 
-    \paragraph
     Third motivation - Other developers and architects can continue working on the system and can easily carry on and stick to the same architecture.
     Everyone will know the pattern that is being followed and understand what should and should not be done when adding to the system.
 
-    \paragraph
+    \subsection{Summary}
     These are just guidelines.
     Architecture is best defined per use case / unique situation.
     As systems evolve certain patterns that were appropriate to the system in the past may not make sense anymore.
     This is normal.
     At this point some restructuring would need to be done and a migration to a different architecture pattern should be considered.
 
-    \paragraph
     Motivations for patterns - many companies have already been through these migrations before so best practices can be adopted to make those migrations quickly and safely.
 
-    \subsection{N/Multi-Tier Architecture}
+    \section{N/Multi-Tier Architecture}
 
-    \paragraph{Intro}
+    \subsection{Intro}
     Organise the system into multiple physical and logical tiers.
     Logical separation limits the scope of responsibility.
     Physical tier allows each tier to be deployed, upgraded, scaled separately by different teams.
 
-    \paragraph{}
     Note: Multi-tier and Multilayer are two different concepts.
     Multi layered architecture usually refers to the internal separation inside a single application into multiple logical layers or modules.
     Even if the application is logically separated into multiple layers at runtime it will run as a single unit and will be considered a single tier.
 
-    Multi-tier architecture - applications on each tier run physically run on different infrastructure.
+    Multi-tier architecture - applications on each tier physically run on different infrastructure.
 
-    \paragraph{}
     Benefits of logical and physical separation-Allows us to develop update and scale each tier independently.
-    Restrictions in this architectural pattern.
 
-    \paragraph{}
+    \subsubsection{Restrictions in this architectural pattern.}
     First restriction is that each pair of applications that belong to adjacent tiers communicate with each other using the Client-server model.
     REST etc.
     Second restriction - discourages communication that skips through tiers.
@@ -1673,7 +1693,7 @@
     Data tier, this tier is responsible for storage and persistence of user and business-specific data.
     Tier may include files on a local file system or a database.
 
-    \paragraph{Why so popular?}
+    \subsubsection{Why so popular?}
     Fits a large number of use cases.
     A lot of web based services fit this model, shops, news sites etc etc.
     Very easy to scale horizontally to take large traffic volumes and handle more data.
@@ -1691,7 +1711,7 @@
 
     No need to worry about integration of different code bases, services or projects.
 
-    \paragraph{Weaknesses of this pattern}
+    \subsection{Weaknesses of this pattern}
 
     Major drawback, the monolithic structure of the logic tier.
     Business logic should not be placed in the presentation or data tier.
@@ -1703,15 +1723,15 @@
     This can lead to requiring an upgrade of the computer the application is running on.
     Vertical scaling is both expensive and limited.
 
-    \paragraph{}
+    \subsubsection{Low development velocity}
     The second impact of the monolithic application tier is low development velocity.
     More complex code base makes it harder to develop maintain and reason about the code.
     Hiring more developers to solve this problem will not solve the problem/ add value.
     Why?
     Because more concurrent developers will simply cause more merge conflicts and higher overhead.
 
-    \paragraph{}
-    Mitigation: Could split the code into modules based on logic.
+    \paragraph{Mitigation}
+    Could split the code into modules based on logic.
     The modules will be somewhat tightly coupled since we can release new versions of those modules only when the applications has been upgraded.
     I.e the organisational scalability of the Three-tier architecture is limited.
     Best when the code base is relatively small and not that complicated and will be maintained by a small team of developers.
@@ -1719,19 +1739,18 @@
     \paragraph{Examples}
     Early startups, well established companies that fit the criteria above.
 
-    \paragraph{Variations of the Multi-Tier Architecture}
+    \subsubsection{Variations of the Multi-Tier Architecture}
     One Tier
     Two tier - Business logic and presentation tier is combined.
     Think mobile or desktop application.
     Data tier handles persistence.
 
-    \hrule
+
     More complexity - four tier.
     Between the presentation tier and the business logic tier.
     Between this tier functionality that does not belong in either can be separated.
     Could introduce API Gateway tier that handles security,caching, data formats etc when communicating between different systems.
 
-    \hrule
     More than four tiers is rare since they do not usually provide more value and simply adds more performance overhead.
     The source of this overhead comes from not being able to bypass tiers so as to avoid tight coupling.
     Every request would have to pass through multiple services which can increase response time/latency.
@@ -1739,7 +1758,7 @@
 
     \subsection{Microservices}
 
-    \paragraph{Motivations}
+    \subsubsection{Motivations}
     The size and complexity of the code base has grown, troubleshooting and adding new features.
     building, testing and even loading code into the IDE is now cumbersome.
     Organizationally, we now have problems.
@@ -1750,7 +1769,7 @@
     Organises business logic as collection of loosely coupled and independently deployed services.
     Each service is owned by a small team and has a narrow scope of responsibility.
 
-    \paragraph{Advantages}
+    \subsubsection{Microservices - Advantages}
     Codebases are now \textit{smaller} .
     Development is a lot easier and faster along with deployment and testing.
     Simply because there are fewer things.
@@ -1763,36 +1782,37 @@
     Each team can be autonomous with regard to tech stack, release schedule or process they want to follow.
     Better security in the form of fault isolation, i.e if one service starts crashing its easier to isolate and solve.
 
+    \subsubsection{Dangers}
     \paragraph{Note} - Organisations can move to this architecture too quickly, without considering two factors.
     First - theoretically can achieve all those benefits from migrating to microservices, but they don't just happen and this can easily end up as a big ball of mud
     Second - microservices come with a fair amount of overhead and challenges.
 
-    \paragraph{Pre microservices}
+    \subsubsection{Pre microservices}
     To achieve full organisational decoupling so that each team can operate independently, services need to be logically separated in way that every changed in the system can happen only in one service.
     This is to avoid involving multiple teams.
     If a change requires multiple teams then not much is gained from this migration.
 
-    \paragraph{Microservices best practices}
+    \subsubsection{Microservices best practices}
     Single responsibility principle - each microservice needs to be responsible for one business capability domain resource or action.
     Monolithic API gateway can be decomposed into multiple microservices, making them more lightweight and specialised.
     Second practice is to make sure there is no coupling between different services, and this can be achieved by having a different database for each service.
     Note: If two services share a database then every single schema or document structure change will result in complex coordination between teams.
     If each service has its own DB then it just becomes an implementation detail that can be easily updated or replaced completely without impacting the rest of the system.
 
-    \paragraph{Splitting the data}
+    \subsubsection{Splitting the data}
     When splitting a monolithic database the data has to be split in a way that each microservice can be completely independent and fully capable of doing its work while minimising the need to call other services.
     Data duplication is expected and is normal in this scenario.
     Duplication is a tradeoff here and an overhead of using this architecture.
 
     Following best practices will help achieve a positive outcome when moving to microservices.
 
-    \paragraph{Practical note}
+    \subsubsection{Key point note}
     Microservices brings in additional complexity and overhead.
     This only brings business value when the system reaches a certain size and the organisation is of a certain scale.
     Start with a monolith approach first.
     When that is no longer working for the use case, then move to micro services.
 
-    \paragraph{Conclusion}
+    \subsubsection{Conclusion}
 
     The benefits of microservices architecture.
     Higher organisational and operation scalability, better performance, faster development, better security.
@@ -1805,7 +1825,7 @@
     Also, microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
     Microservice A has a dependency on microservice B\@.
 
-    \paragraph
+    \subsubsection{What is Event Driven Architecture?}
     In an event driven architecture, instead of direct messages that issue commands or request that ask for data, we have only events.
     An event is an immutable statement of a fact or a change.
     In an Event-Driven architecture we have three components.
@@ -1813,7 +1833,7 @@
     Receiving side - We have event consumers
     And inbetween we have the event channel (a message broker), Kafka?
 
-    \paragraph{Advantages}
+    \subsubsection{Advantages}
     When we use the Event-Driven Architecture style with microservices we can get a lot of benefits.
     Now the dependency between Microservice A and B is removed.
     Microservice A doesn't need to know anything about the existence of microservice B
@@ -1824,7 +1844,7 @@
     Horizontal and organisational scalability is achieved via EDA.
     This architecture also allows us to analyse streams of data, detect patterns and act up on them in real time.
 
-    \paragraph{Further advantages}
+    \subsubsection{Further advantages}
     When all events that occur in a system are stored in a message broker, in addition to data analysis an very powerful architecture pattern can be implemented.
     This is called event sourcing.
     By using event sourcing events can be replayed to identify the current state of a system rather than saving the state in a database.
@@ -1833,8 +1853,8 @@
     Using event sourcing we can store events for as long as we want.
     Querying can be made faster by adding snapshot events.
 
-    \paragraph{CQRS}
-    Another architectural pattern that can be implemented as a result of EDA
+    \subsubsection{CQRS - Command Query Responsibility Segregation}
+    Another architectural pattern that can be implemented as a result of Event Driven Architecture
     Command query responsibility segregation.
     This solves two problems.
 
@@ -1866,16 +1886,16 @@
     The other service will store what is called a materialized view of the joined read-to-query data from both service A and service B in its own read-only database.
     Whenever we need to get a join view we can just send a request to the joining service rather than send a request to two services.
 
-    \paragraph{summary of EDA}
+    \section{summary of EDA}
     When combined with microservices this allows for decoupling of services potentially allowing for horizontal and organization scalability.
     Event driven architecture allows us to analyse and respond to large streams of data in real time.
 
-    \paragraph{Pattern within EDA}
+    \subsection{Patterns within EDA}
     Event sourcing - allows for the auditing and storage of the current state of a business entity by only appending events and replaying them when needed.
     CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
     This allows for the efficient joining of data from separate services.
 
-    \paragraph{Note} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
+    \subsection{Clarifying point} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
     Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
     Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
     Solution, organise business logic as loosely coupled deployable independently deployable services.
@@ -1887,7 +1907,7 @@
     Refactoring is easier.
     Higher system stability, the damage caused by a bug etc is much smaller since each service is deployed separately.
 
-    \paragraph{Barriers to implementing microservices}
+    \subsection{Barriers to implementing microservices}
     Method calls have now become network calls between different computers bringing in latency issues.
     In distributed systems each component is unreliable.
     Although testing is faster no guarantee all the services will work when deployed together.
@@ -1899,9 +1919,7 @@
 
     \chapter{Microservices in depth}
 
-    \section{Introduction}
-
-    \subsection{Motivations}
+    \section{Motivations}
     In this style a system is organised as a collection of independent services.
     Each has a narrow scope or responsibility and is fully owned by a team of developers.
     Very popular with big, successful companies.
@@ -1912,12 +1930,14 @@
     Related but not a pre-requisite is Event Driven Architecture.
     - This combined with microservices is a very powerful design pattern.
 
+    \section{The problem being solved}
     Problem --- Scaling a three tier architecture / Monolith
     -- Typically has presentation tier, business logic tier and a data tier.
-    -- Still useful, easy to implement and use with a small team of developers. Two Pizza rule %..........
+    -- Still useful, easy to implement and use with a small team of developers.
     -- This is good enough for some companies.
 
     However as a company becomes more successful and the development team continues growing larger problems start appearing.
+    \subsection{Issues with Scaaling}
     - First issue is low organisational scalability. Too many engineers on the same code base leads to merge conflicts, toe stepping and other dramas.
     ---- Even a small feature can become slower and harder to deal with.
     ---- Results in more planning and meetings and coordination.
@@ -1926,7 +1946,7 @@
     ---- This makes it harder to reason about, takes longer to load in an IDE, slow to build and test........and riskier to deploy.
     ---- As a result, our release schedule becomes less frequent, which makes things even worse/
     ------ Every new release contains even more features, increasing the chances of bugs and outages.
-    ---- Finally, onboarding new developers now takes more time as it is much harder for them to get familliar with the large code base.
+    ---- Finally, onboarding new developers now takes more time as it is much harder for them to get familiar with the large code base.
     ---- Also with every additional engineer in a team we start seeing diminishing returns until we hit a point where adding more people actually reduces everyone's productivity.
     ---- Besides low organisational scalability, a large monolithic application can also have technical problems make the system less scalable.
     ---- Each application instance which contains our entire business logic, requires a lot of CPU and memory.
@@ -1943,40 +1963,45 @@
 
     \subsection{Microservice Architecture - Benfits and Challenges}
     With this architecture we gain a much higher organisational scalability since each service contains only a subset of the overall functionality, each service's code base is much smaller.
-    --- Allows each developer to load their code up in their IDE much faster
-    --- Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
-    --- Testing and reasoning about each service in isolation becomes much easier because there is much less logic to understand run and test.
-    --- This simplicity of the code in each microservice also speeds up the onboarding process of a new team, so a company can grow quickly and stay more efficient.
-    --- All this increases the development velocity of each team, which mean we can deliver more features and gain an advantage over our competitors
-    --- On system scalability, we also get a lot of benefits in the monolithic application
-    ---- Each instance had to run the entire code base which required very powerful and expensive hardware to run each instance.
-    ---- When we break our code base into microservices each service is much smaller, so each instance of a microservice consumers less memory and CPU
-    ----- As a result, it can run on cheap and widely available commodity hardware,
-    ----- Each team can also make the best judgement on what technologies would benefit their service and they can also respond to technology changes much faster by refactoring their already small code base.
-    -------- Could even rewrite the code base if necessary.
-    ----- Finally we get much higher stability for the entire system since each microservice is deployed as a separate runtime unit.
-    ----- The blast radius of a bug, memory leak or performance issue is much smaller.
-    ---- In most cases a bug in one microservice will impact only that microservice or just the ones that depend on it on some level.
-    ------ The rest of the system can continue operating on it just fine.
+    \begin{itemize}
+    \item Allows each developer to load their code up in their IDE much faster
+    \item Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
+    \item Testing and reasoning about each service in isolation becomes much easier because there is much less logic to understand run and test.
+    \item The simplicity of the code in each microservice also speeds up the onboarding process of a new team, so a company can grow quickly and stay more efficient.
+    \item All this increases the development velocity of each team, which mean we can deliver more features and gain an advantage over our competitors
+    \item On system scalability, we also get a lot of benefits in the monolithic application
+    \begin{itemize}
+    \item Each instance had to run the entire code base which required very powerful and expensive hardware to run each instance.
+    \item When we break our code base into microservices each service is much smaller, so each instance of a microservice consumers less memory and CPU
+    \item As a result, it can run on cheap and widely available commodity hardware,
+    \item Each team can also make the best judgement on what technologies would benefit their service and they can also respond to technology changes much faster by refactoring their already small code base.
+    \item Could even rewrite the code base if necessary.
+    \end{itemize}
+    \item Finally we get much higher stability for the entire system since each microservice is deployed as a separate runtime unit.
+    \item The blast radius of a bug, memory leak or performance issue is much smaller.
+    \item In most cases a bug in one microservice will impact only that microservice or just the ones that depend on it on some level. The rest of the system can continue operating on it just fine.
+    \end{itemize}
 
-    Essentially, microservices break the scalability barrier that we will hit with a monolithic architecture.
-    --- Monolith is good to get started......for continued growth microservice are a good option.
+    Essentially, microservices break the scalability barrier that we will hit with a monolithic architecture. A Monolith is good to get started but for continued growth microservices are a good option.
 
-    \subsubsection{Challenges}
-    - Now method calls that used to have predictable behaviours, success rates and latency became network calls between two different applications that may be running on different computers.
-    ---- Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
-    -- Beside the network itself, the nature of distributed system is that each component is inherently unreliable
+    \subsection{Challenges}
+    Now method calls that used to have predictable behaviours, success rates and latency have became network calls between two different applications that may be running on different computers.
+    Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
+    Beside the network itself, the nature of distributed system is that each component is inherently unreliable
 
     For instance, a reqeust from one service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenance from a testing perspective.
     We also now have testing challenges.
+    \subsubsection{Testing Challenges}
     Testing each microservice in isolation has became easier, faster.
     There is no guarantee that they will work when they have all been put together as a whole.
     When we make a change in one service, we have far less confidence that once the new version of our service is deployed in production, it won't break another service.
     This situation may lead to the creation of very complex and slow integration tests that can slow our productivity.
     Given that each service may belong to a different team, it's very hard to decide who owns those integration tests to begin with.
 
-    Finally, with microservices, its much harder to troubleshoot performance issues and bugs............
+    \subsubsection{Debugging issues}
+    Finally, with microservices, its much harder to troubleshoot performance issues and bugs.
 
+    \subsubsection{Scalability Challenges}
     May also experience challenges in organisational scalability.
     One of the biggest questions is how to set the scope of responsibility between microservices.
     If we set the boundaries incorrectly, we may actually have more organisational overhead than benefits.
@@ -1986,7 +2011,7 @@
     ---- Tools and practices we may have a lot of duplicated efforts and confusion when looking at code from other teams.
 
     Without careful consideration we can end up with more challenges that what we would get with a monolith.
-    -- This is some times referred to as a distributed monolith or a big ball of mud
+    This is some times referred to as a distributed monolith or a big ball of mud
 
     \subsubsection{Use other companies experiences}
     Many companies share findings from actually implementing microservices, mistakes and successes.
@@ -2002,13 +2027,12 @@
     - Unpredictability of running a distributed system with unreliable components on an unreliable network.
     - The risk of decreased organisational scalability if we do not set appropriate boundaries between microservices and their teams.
 
-
     \section{Migration to microservices architecture}
 
     \subsection{Microservice Boundaries - Core Principles}
     The scenario - A successful e-commerce company with a monolith.
     - Just breaking fown a large code base into an arbitrary set of microservices and hading each off to a separate team will not necessarily benefit the client
-    - Typical three tier
+    - Standard three tier
     -- Web application takes web requests form users running our front end code in their web browser and mobile apps -- Presentation tier
     -- in the data tier we have an internal database storing all of the transactions, products, reviews and inventory information
     -- Also have an external payment service that belongs to a third party which handles the billing
@@ -2045,7 +2069,7 @@
     Responsibilities are not clear.
     The terminology of each API is not very clear because we are mixing different contexts such as users, products, bank accounts and so on all in the same API
     The last microservice, which still has the most business logic has too much responsibility and is still too big.
-    -- It has the potential to be another monolithic application.
+    It has the potential to be another monolithic application.
 
     \subsubsection{Second Principle}
     The single responsibility principle.
@@ -2053,13 +2077,15 @@
     If each microservice follows this principle there is no ambiguity about where a new piece of functionality need to go and which team needs to own it.
     It also helps create a very clear an easy to follow API for each microservice because all the terminology entities or identifiers are bound to a particular context.
 
-    ---> This can potentially lead to interdependencies between services when executing a task.
+    \begin{note}
+    This can potentially lead to interdependencies between services when executing a task.
+    \end{note}
 
     \subsubsection{Third Principle}
     Microservices should be loosely coupled.
     Loosely coupled microservice have very little to no interdependencies.
     This means that each microservice can performa its functionality with minimal communication with other microservices.
-    --- Microservice size is generally unimportant
+    Microservice size is generally unimportant
 
     As long as microservices are cohesive, follow the single responsibility principle and are loosely coupled with each other, the size doesn't matter.
     Naturally some services will be bigger and some will be smaller.
@@ -2068,17 +2094,18 @@
     Those three principles are important pre-requisites for a successful microservices architecture.
     If they are not followed then we will encounter issues sooner or later.
 
-    \subsubsection{Summary}
+    \subsection{Summary}
     Important principles
     Each microservice needs to be cohesive, which means all the elements that change together stay together within the boundaries of one microservice
     Each microservice should follow the single responsibility principle
     Each microservice should be loosely coupled from all other microservices to minimise runtime communication.
 
-    Also microservices don't have to be small....depends on the functionality.
+    Also microservices don't have to be small, it depends on the functionality.
 
     \subsection{Decomposition of a Monolithic Application To microservces}
-    Three methods
+    There are three methods for this
 
+    \subsection{First Method - Using business capabilities}
     First method to decompose a system into microservices is by business capabilities.
     In this method we observe and analyse out system from a purely business perspective, a business capability is any core capability that provides value to the business or its customers.
     This can include things like revenue, marketing, customer experience and so on.
@@ -2088,32 +2115,38 @@
 %   TODO EXAMPLE? Online Store
 
     How do we know that those services follow three core principles?
-    - just by looking at the names of the services, we can see if this design fallows the single responsibility principle
+    - just by looking at the names of the services, we can see if this design follows the single responsibility principle
     and that's by design because each services is responsible for an entire business capability.
     - Can also easily check if each service is cohesive by considering the changes that need to happen to our system.
     - Can also verify that those services are not too independent and are loosely coupled by reviewing a few user journeys or use cases.
 
+    \subsection{De-composition by domain or sub domain}
     Decomposing a monolithic application into microservices.
     This technique is called the composition by domain or sub domain.
     Unlike the previous that looks at the system from the business side.
     This way we take the developers point of view of the system.
     In other words the criteria for setting the boundaries of sub domains is based on the engineers understanding of the system, which is generally more intuitive.
-    IN this method we decompose the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
+    In this method we decompose the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
 
     Those subdomains can be of three types
-    - A domain that represents a core business capability
-    - A domain which is supporting a business capability
-    - A generic subdomain.
+    \begin{itemize}
+    \item A domain that represents a core business capability
+    \item A domain which is supporting a business capability
+    \item A generic subdomain.
+    \end{itemize}
 
-    - A core business capability is a key differentiator of our business from any other competitor in the field.
+    \paragraph{A Core business capability}
+    A core business capability is a key differentiator of our business from any other competitor in the field.
     Its a capability that cannot be bought off the shelf or outsourced
     Its where the best effort and investment is placed.
     Without it out business doesn't provide any value.
 
-    - A supporting sub domain is still integral to our operation of our business and support the delivery of our core domains.
+    \paragraph{Supporting sub domain}
+    A supporting sub domain is still integral to our operation of our business and support the delivery of our core domains.
     But it is not something that differentiates us from out competitors.
 
-    - A generic sub domain is a capability that is not specific to any business.
+    \paragraph{Generic sub domain}
+    A generic sub domain is a capability that is not specific to any business.
     Many other companies use it and in many cases we could get that component of the shelf.
 
     This categorization of sub domains helps us prioritise the investment into each sub domain.
@@ -2122,12 +2155,14 @@
     Once we identify those sub domains we, have a few options.
     We can dedicate a separate microservice to each sub domain or ifg we set that certain sub domains are too tightly coupled with on another ot aren't cohesive enough, we can group several sub domains into one microservice.
 
-    NOTE: These two ways are not the only way to set boundaries of microservices.
+    \begin{note}
+    These two ways are not the only way to set boundaries of microservices.
     Another method includes the composition by action on or entities.
+    \end{note}
 
     However setting the boundaries by business capabilities or sub domains is the two of the most popular ways to do so.
 
-    Comparison of the two most popular methods.
+    \subsubsection{Comparison of the two most popular methods}
     - Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
     - ON the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
     When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
@@ -2137,8 +2172,8 @@
     On the flip side, the composing business capabilities requires much better understanding of the business.
     This means that this process will produce a less intuitive design for engineers that the composition by subdomain
 
-    \subsubsection{Final Notes}
-    Note: There is no one right way to set the boundaries of the microservices.
+    \subsection{Final Notes}
+    There is no one right way to set the boundaries of the microservices.
     What works now may not work in the future.
     So the architecture keeps evolving as new features come in and new business capabilities are added.
     There is also no perfect decomposition to microservices and some friction or coupling is inevitable.
@@ -2146,8 +2181,9 @@
 
     These techniques are not "bullet proof".
     They are just guidelines/tools that helps arrive at a good architecture.
-    --- It is not a substitute for good engineering judgment and intuition
+    It is not a substitute for good engineering judgment and intuition
 
+    \subsection{Summary - Decomposing a monolith into microservices}
     To summaries
     Two popular ways to decompose a monolithic application into microservices
     - The first is by business capabilities
@@ -2238,47 +2274,47 @@
     isolating the components from the rest of the application and finally using the strangler fig pattern to chip out the different parts of
     the monolith and migrate them into separately deployed microservices and managed microservices.
 
-
     \section{Principles and Best Practices}
 
-    \subsection{Databases in microservice architecture}
-    Principle - database per microservice.
-    -- Otherwise tight coupling between services can occur
-    In this principle, each microservice team fully owns it data and does not expose it directly to any other service, ---even at the cost of additional latency.
+    \subsection{Databases in microservice architecture - database per microservice}
+    Principle - database per microservice. Otherwise tight coupling between services can occur
+    In this principle, each microservice team fully owns it data and does not expose it directly to any other service, \textit{even at the cost of additional latency}.
     Whenever a given service requires data from another service, the reqeust has to go through the target service API.
     Additionally each service needs to abstract the actual database technology or structure at the API level.
     This way the team owning that microservice decides to change the database, technology or scheme, that change will be completely transparent to the consumers of that API
     Additionally if the changes also require some changes in its API, ew can always offer two versions of the API for few weeks or even months.
     This allows other teams enough time to make their changes and update to the new API without the need for any coordination.
 
-    \subsubsection{Downsides}
-    Added latency. Sending a network request to another service, parsing the reqeust, querying the database, sending it back and parsing it back defintely adds a performance overhead compared to a simple query agains the database directly.
-    - When this performance overhead becomes and issue it is okay to cache or even store some of the data that belong to another microservice in the datrabase that belongs to the microservice that needs that data.
+    \subsection{Downsides}
+    Added latency.
+    Sending a network request to another service, parsing the reqeust, querying the database, sending it back and parsing it back
+    adds a performance overhead compared to a simple query against the database directly.
+    - When this performance overhead becomes and issue it is okay to cache or even store some of the data that belong to another microservice in the database that belongs to the microservice that needs that data.
     - However it is important to ensure that the source of truth remains in only once microservice, if we do cache or store data that belongs to a different microservice, we lose strict consistency and have to settle for eventual consistency.
-    ---- And that's because th edata we store locally may be stale until we get the new data from the source of truth.
-    ---- The next downside is the loss of the ability to join data from multiple tables when all the data was represented as tables within the same database.
-    ---- We could easily perform the join operations based on a common key or column
-    ---- When we splut that data across different databases, some which may not even be relational databases
-    ------ No longer can we perform those join operations
-    The only way to achieve the same functionality would be to pull data from two different databases, then transform the data so both objects are represented in the same format and the perform that join programmatically.
-    - The next downside is the loss of transaction guarantees.
-    - Going back to single database, we could modify rows in multiple tables as part of a single transaction and guarantee that the change to all those tables would be atomic.
-    - Performing a distributed transaction across multiple services is very hard
-    ----> Even though it is theoretically possible in practice it is almost never used.
+    ---- And that's because the data we store locally may be stale until we get the new data from the source of truth.
 
-    \subsection{Summary}
-    Motivations for a single database per microservice
+    The next downside is the loss of the ability to join data from multiple tables when all the data was represented as tables within the same database.
+    - We could easily perform the join operations based on a common key or column
+    - When we split that data across different databases, some which may not even be relational databases
+    - No longer can we perform those join operations
+    - The only way to achieve the same functionality would be to pull data from two different databases, then transform the data so both objects are represented in the same format and the perform that join programmatically.
+
+    The next downside is the loss of transaction guarantees.
+    - Going back to single database, we could modify rows in multiple tables as part of a single transaction and guarantee that the change to all those tables would be atomic.
+    - Performing a distributed transaction across multiple services is very hard, even though it is theoretically possible in practice it is almost never used.
+
+    \subsection{Summary - Motivations for a single database per microservice}
     - Sharing databases causes tight coupling between services, code bases and teams causing a lot of coordination overhead.
     This overhead is eliminated when each microservice owns its own data and exposes it only through an abstraction API
 
-    Challenges and drawbacks
+    \subsubsection{Challenges and drawbacks}
     - Worse performance i.e latency
     - More complex join operations and the loss of transaction guarantees
 
     \subsection{The DRY principle in micrservices and shared libraries}
     The DRY principle doesn't always hold true in microservices, particularly in regards to shared libraries.
 
-    Why are shared libraries a problem in microservices.
+    \subsubsection{Why are shared libraries a problem in microservices?}
     First problem is tight coupling.
     When multiple microservices depend on the same library, those changes need to communicated to other teams that own those microservices.
     Those teams will have to make the appropriate chances in their codebase so they can continue using that library.
@@ -2304,7 +2340,7 @@
     Another situation is when we need to share common data models from communication between two microservices.
     ----> In this situation having shared libraries is actually a good practice.
     ----> The reason for that is when it comes to communication between two microservices, we actually want the two teams and codebases to be codependent.
-    ----> If tehy APi or data model of once microservice changes to the point that they cannot communicate, we actually do want to break the tests as soon as possible.
+    ----> If the APi or data model of once microservice changes to the point that they cannot communicate, we actually do want to break the tests as soon as possible.
     ----> Otherwise if we don't share but duplicate that code, the tests each may pass successfully and no detect the change in the other microservice.
     ----> So those two services may not be able to communicate at runtime and we'll only find out about it only in production
     ----> Another approach to this problem is using code generation tools based on data model or \textbf{schemas}
@@ -2315,8 +2351,8 @@
     -------> This way, each microservice can have it own more specific implementation of that logic optimised for its own use case.
     -------> also makes it easier to migration the entire code base of a microservice to another programming language if we want to.
 
-    If we absolutley don't want to duplicate a particular piece of code, there are two options.
-    ----USe a sidecar pattern
+    If we absolutely don't want to duplicate a particular piece of code, there are two options.
+    ----Use a sidecar pattern
     -----> this pattern, we package and deploy the shared functionality as a separate process
     ------> Instead of running it as a separate service, we run this process on the same hosts as the microservice instances.
     ------> This way we can share the same functionality across multiple instance of the same microservice and across multiple instances of different microservices.
@@ -2333,22 +2369,22 @@
     \subsubsection{Data duplication}
     Duplicate microservice data can seem like a waste of space but sometimes it is necessary to improve performance, if wee don't want to pay the price of sending a request to another service for data, then we can store a cache of that data inside of our microservices.
     In microservice architecture, this approach is acceptable as long as two things are considered.
-    - The first is only on eof the microservices need to be clear owner and source of truygh for that data.
+    - The first is only on eof the microservices need to be clear owner and source of truth for that data.
     - That means that only one microservice can get, write, update or delete operations to that data and the other microservice containing a copy of that data get only read operations.
     - The second thing to understand, when we duplicate microservice sdata across microservices we can only guarantee *eventual* consistency.
-    **** THis is very important for situations where strict consistency is important, data duplicate should be avoided.
+    **** This is very important for situations where strict consistency is important, data duplicate should be avoided.
 
     \subsubsection{Summary}
     DRY doesn't always apply to microservices
     Share libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unison as well as dependency hell.
     Alternatives to share libraries, separating complex business logic into a new microservice using the side care pattern, code generation and duplicating code across microservices.
     Duplicating data and code across microservices can be inevitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
-    ---> Also each microservice needs to remain clear for the owner for each piece of data.
+    Also each microservice it needs to remain clear for the owner for each piece of data.
 
     \subsection{Structured autonomy for development teams}
     The myth.
     Each team has full autonomy in choosing their technology stack, tools, databases, APIs and frameworks.
-    ---> Major pitfall
+    --- Major pitfall
     First reasons is the upfront cost of infrastructure
     Consider after a monolith to microservices migration each team has to pay that cost again and duplicate that same effort for their code base and ecosystem.
     To make things worse maintaining all the infrastructure is an ongoing effort.
@@ -2394,13 +2430,12 @@
 
     Most big companies use no more that a handful of programming languages across hundreds of microservices.
 
-
     \subsubsection{The last tier give each team complete autonomy.}
     This includes, the release process, schedule and frequency.
     This way each team can work entirely independently from other teams and release new feature based on their workload priorities and requirements and develop their own custom script and tools specifically for their need to make their local development and testing more efficient.
 
     Also each team should fully own its own documentation and onboarding process for new developers.
-    Its important to callout, that those are general guidelines and best practices and the actual boundaries of those three tiers differ slightly in different companies.
+    Its important to callouts, that those are general guidelines and best practices and the actual boundaries of those three tiers differ slightly in different companies.
 
     One factor is ths size and influence of DevOps or SRE teams.
     Typically companies with more dominant DevOps or SRE teams lean more towards common standards, which make their life managing the system easier.
@@ -2412,7 +2447,7 @@
 
     \subsection{micro frontends architecture pattern}
     The monolithic frontend.
-    One team maintains a single frontend while the backend uses microservics. A single team is currently looking after the frontend.
+    One team maintains a single frontend while the backend uses microservices. A single team is currently looking after the frontend.
     This can create a dependency on the frontend team when just one of the microservices wants to make a change causing the frontend team to become a bottleneck in the organisation.
     The frontend team can also end up developing expertise that belongs to other teams.
     This leads to tight coupling to the back end team and the already constrained front end team.
@@ -2449,9 +2484,9 @@
     Each micro-frontend has its own CI pipeline an deployment process and each team can release new features on its own schedule.
 
     \subsubsection{Best practices}
-    First - Ensure that hte Mircofrontends are loaded atr runtime and are not express as compile or build time dependencies of the container application
+    First - Ensure that hte Mirco-frontends are loaded atr runtime and are not express as compile or build time dependencies of the container application
     Otherwise all we did is just separate the code base logically, but at run time we would still have a monolithic frontend requiring complete redeployment for every new features.
-    Next best practice is to make sure that Microfrontds don't share state and the browser sharing state would be the equivalent of different microservices sharing a data base which is generally a bad approach.
+    Next best practice is to make sure that Micro-frontends don't share state and the browser sharing state would be the equivalent of different microservices sharing a data base which is generally a bad approach.
 
     If different microservices need to communicate with each other they can do it using on e of the following ways. Using cusotm ervents, passing callbacks or using the browsers address bar.
 
@@ -2499,6 +2534,7 @@
     This feature is also *******very important********* for mobile devices and IOT since each network reqeust of their end directly affects their battery life.
 
     \subsubsection{Load Balancer vs API Gateway in microservices}
+
     Both route incoming network requests from a client to a single destination.
     Similarities end \textbf{there}
 
@@ -2532,7 +2568,7 @@
 
     \subsection{Use Cases an Apttern of Event-Driven architecture}
 
-    \subsection{Message delivery semantics In event driven architectureó}
+    \subsection{Message delivery semantics In event driven architecture}
 
     \section{Event driven microservices}
     %TODO consider skipping or going through for thoroughness / refresher / revisit after coding in Kafka
@@ -2548,10 +2584,10 @@
     \paragraph{Motivation} Before deploying a system we to production we need to gain confidence through automated tests.
 
     \subsection{Monoliths}
-    TODO get testing pyramid picture
+    %TODO get testing pyramid picture
     Three categories - Unit, Integration and End to End tests
 
-    UNit tests - cheapest to maintain, they are small, easy to write and fast to execute because they are so cheap.
+    Unit tests - cheapest to maintain, they are small, easy to write and fast to execute because they are so cheap.
     Include a high number of them.
     Located at the bottom of the pyramid.
     Provide the least confidence about the overall system since they only test each unit in isolation.
@@ -2580,12 +2616,15 @@
     This should verify that all components work together as expected.
 
     \subsection{Challenges}
-    First challenge - end to end tests are hard to setup and maintain despite providing the most confidence
+    \subsubsection{First challenge - end to end tests are hard to setup and maintain despite providing the most confidence}
     It unclear what team should own this environment and when one of the microservice teams breaks their build the entire test pipeline will be broken.
     This can result in teams being blocked and unable to make any releases to production.
     Alternatively, developers may just start ignoring end to end tests lol and release their microservices anyway which makes tests a liability with no benefit.
     Very costly to run what is essentially a duplicate environment of the production environment even if the scale is smaller.
     - In practice some companies spend disproportionately too much effort building and maintaining those few tests while other companies decide to take the risk and simply don't bother investing in those tests at all.
+
+
+    \subsubsection{The second challenge}
     The second challenge of hte new pyramid is that even running integration tests can be quite difficult and creates a point of tight coupling between teams.
     --- When the that owns MMicroservice A that consumes the API of microservice B wants to run integration tests it needs to build, configure and run both microservice while Team A knows how to build and run their own microservice.
     -- It may be unclear to them how to setup microservice B, its even more difficult if microservice has many dependencies like a database or another service that needs to runnd or mocked.
@@ -2593,6 +2632,7 @@
     ---- To ensure that the changes that make in their API did not break all those API consumers they need to build, configure and run all those consumers to execute those tests.
     ---- This can easily get out of hand and slow down the development of our entire organisation.
 
+    \subsubsection{Third Challenge}
     Third challenge is when using event driven architecture to decouple microservices.
     - in this case we have a microservice that produces events to a message broker and it actually doesnt always know which microservice consume those events.
     - This kind of decoupling is one of the benefits we want from event driven architecture
@@ -2604,7 +2644,7 @@
     Many companies invest disproportionally high efforts into end to end tests or abandon them altogether.
     Other challenges between the integration of microservices, which included their complexity and tight coupling between teams.
 
-    \subsubsection{Testing challenges solutions}
+    \subsection{Testing challenges solutions}
     Integration tests
     - To deal with the complexity of integration tests is to use light weight mocking.
     - Mock the API layer of the microservice dependencies which we wish to integrate with and send it back a hard coded response if it receives the expected request.
@@ -2648,15 +2688,15 @@
 
     \section{Observability in Microservices Architecture}
 
-    \subsection{What is observabiilty}
+    \subsection{What is observabiilty?}
 
-    \paragraph{Three pillars}
-%
-%    \begin{itemize}
-%        \item Distributed Logging
-%        \item Metrics
-%        \item Distributed Tracing
-%    \end{itemize}
+    \subsubsection{The Three pillars}
+
+    \begin{itemize}
+        \item Distributed Logging
+        \item Metrics
+        \item Distributed Tracing
+    \end{itemize}
 
     Monitoring is the process of collecting and analysing and displaying a predefined set of metrics and by attaching those metrics to alerts.
     Via alerts we can find out if something has gone wrong.
@@ -2670,7 +2710,7 @@
     Observability is primarily critical for microservices architecture.
     Monoliths are easy to debug since it is effectively one application.
     Worst case scenario.
-    Can ssh into a monolith and inspect its logs and get an idea of what part of the code is causing the performance issues or is throwing the exception.
+    Can SSH into a monolith and inspect its logs and get an idea of what part of the code is causing the performance issues or is throwing the exception.
 
     On the other hand, in microservices architecture, a single user request may involve several microservices and databases.
     These can communicate through a message broker like kafka.
@@ -2738,13 +2778,13 @@
 
     A developer can look at all log events at a fine level to see details on the debug and trace levels.
 
-    \paragraph{Next best practice}
+    \subsubsection{Best Practice - Unique correlation ID}
     The next best practice is to use a unique correlation ID for every user request or transaction and adding this ID for each corresponding to an event or step and processing that request and transaction.
     Since each microservice instance is likely processing multiple user requests concurrently.
     This helps search and filter only the events related to teh request in question.
     Can also help us to see the sequence of events for a given request across multiple microservices.
 
-    \paragraph{Next best practice}
+    \subsubsection{Best Practice - Provide Contextual Information}
     Provide as much contextual information to each log line as possible
     - Want to include the parameters that led to this error.
     - If we have a database query that took a very long time to complete, logging the exact query and the content etc can help fix/mititgate.
@@ -2776,9 +2816,9 @@
     - what should we monitor
     - as well as why we can't collect all of them
 
-    Somthing to consider is that the number of signals we can collect is pretty large on the resource levle.
+    Somthing to consider is that the number of signals we can collect is pretty large on the resource level.
     We can measure many things but they are not helpful in certain situations.
-    Additionally we can instrument our application and measure anything starting from the number of requests we recieve per minute to the number of time a critical piece of logic is being executed.
+    Additionally we can instrument our application and measure anything starting from the number of requests we receive per minute to the number of time a critical piece of logic is being executed.
     However collecting anything and everything that can be measured is a big anti pattern.
 
     Storing so many signals from each server can be expensive.
@@ -2789,22 +2829,22 @@
     --- Makes it hard to find the anomalies
     --- even if do notice the anomalies it is hard to know which metric is the symptom and which is the cause
     --- Instead be smart about metrics.
-    --- Can leverage decades of experience from companies which have already been doing distributed systems and focus on the five most types of signals which will give us the most infromation and the least amount of noise.
+    --- Can leverage decades of experience from companies which have already been doing distributed systems and focus on the five most types of signals which will give us the most information and the least amount of noise.
 
     \paragraph{Five types of signals that will give us the most knowledge}
     The first is Google Searches for Gold and Signals, which focuses on user facing metrics
     The second is the use method (Brandon Gregg) which focuses more on system resources.
-    By combining these categories of singlals we have five categoies of signals whicih are
+    By combining these categories of signals we have five categories of signals which are
     - Traffic errors
     - Latency
     - Saturation
     - Utilization
 
     Traffic is the amount of demand being placed on our system per unit of time.
-    Number of HTTP request per second or minute that recevies Http traffic.
+    Number of HTTP request per second or minute that receives Http traffic.
     We can also measure the number of queries or transactions per second or per minute on the database or message broker.
     Can measure the number of events it receives adn the number of events it delivers to consumers.
-    --- In some cases a single request to a microservice results in many out going requests and incoming reqeusts separately.
+    --- In some cases a single request to a microservice results in many out going requests and incoming requests separately.
     --- That's because open connections to other services consume system resources and can directly impact the microservice performance.
 
     Next category of metrics is errors.
@@ -2812,9 +2852,9 @@
     - A good signal to setup an alert for because the error rate goes up.
     At this point users have already been impacted.
     - In the case of an increase in the number of exceptions in out application, we may not be able to show the error type as a number value, so we defer this information to logging.
-    -- However if we start receiving a HTTP response status code that is different from 200 from a service we depend on, we can use that as a metric which will be very helpfulin troubleshooting production issues.
+    -- However if we start receiving a HTTP response status code that is different from 200 from a service we depend on, we can use that as a metric which will be very helpful troubleshooting production issues.
     -- Also latency sensitive system swe can count successful responses as errors if they exceed so latency threshold that we set ahead of time for an even driven microservice
-    -- Can also measure the rate of events that it fails to process and the reason for the failure, if its possible to classify in a message broker, we can measure error singals like the number of events it failed to deliver to customer.
+    -- Can also measure the rate of events that it fails to process and the reason for the failure, if its possible to classify in a message broker, we can measure error signals like the number of events it failed to deliver to customer.
 
     On the database side, we can measure the number of aborted transactions, disk failures and so on.
 
@@ -2857,7 +2897,7 @@
     Usually distributed tracing is not enough to tell is what is happening exactly but it is enough to narrow down out search to a particular component or a communication problem between two componenets.
     After we know where the problem is happening we can use other observability pillars (logs, and metrics) to debug further.
 
-    \paragraph{How distributed tracing works}
+    \subsubsection{How distributed tracing works}
     When the initial reqeust is being made we generate a unique trace ID and place it into an object called a trace context
     This trace context object contains key data about the entire trace as the request flow through the services.
     That context is propagated through Http headers or message headers inside events.
@@ -2878,17 +2918,17 @@
 
     This way if one logical part seems slower than usual we can investigate it as a potential performance bottleneck.
 
-    If an expected span is missing we may have a bug we need to debug further to increase the granularity even futher.
+    If an expected span is missing we may have a bug we need to debug further to increase the granularity even further.
     Can connect related pieces of work together by organising spans in a hierarchy with a parent child relationship.
 
     \paragraph{Distributed tracing data collection}
     General approach.
     Once the trace data is collected inside each service instance, it is pulled by an agent which runs as a separate process on the same host with each service instance.
     Those agents then send the tracing data to a central queue or topic in a message broker.
-    The all the tracing data that comes from many services is analysed, aggregated and stored in a databse by a big data processor.
+    The all the tracing data that comes from many services is analysed, aggregated and stored in a database by a big data processor.
     Later a developer can query and visualise this data using a tracing UI in the browser.
 
-    \paragraph{Challenges}
+    \subsubsection{Challenges}
     Need to manually introduce code to collect the data for these systems.
     Usually requires dependency on a certain library and to learn how to use it correctly.
     If this is not done properly out spans may be too broad, lacking granularity or important data.
@@ -3006,6 +3046,7 @@
     - Also need to maintain script to build, package and deploy our microservice binary with all its dependencies to a cloud server.
     - A lot of effort for events that rarely happen
 
+    \subsection{Function as a service - FAAS}
     A solution is use a serverless offering called function as a service.
     - A cloud solution that allows for the architecting of a system in a fully even driven model, not only from the software perspective but also from the infrastrcutre perspective
     - Only need to provide cloud vendor with two things, the type of events we wanted to handle and the logic we wanted to executre when that event is triggered. Noting else
@@ -3026,7 +3067,7 @@
     -- Serverless deployments like function as a service are not the best option for latency sensitive workloads.
     -- This is also less secure type of deployment because not only does our code run in a multi-tenant environment, we also expose our source code to the cloud provider.
 
-    \paragraph{Summary}
+    \subsection{Summary}
     Function as a service for the correct workloads can be a very efficient way to deploy microservices.
     - If used incorrectly, or not for the right workload it can also be the most expensive options.
     - When it comes to security and performance this is also be the most expensive option.
@@ -3052,7 +3093,7 @@
     -- Benefits of containers go beyond this, they are useful in a CI/CD pipeline which may use a different OS and hardware that development computers.
     -- This does not matter since container images are completely decoupled from the OS and the hardware so we can create them once and run them on any hardware and operating system that supports containers and container runtime.
 
-    Disadvantages of using full VMs
+    \subsubsection{Disadvantages of using full VMs}
     -- If two microservice instances run on the same cloud server each VM runs and entirely separate copy of the same operating system.
     ---- This duplication means we lose valuable memory CPU and storage resources to the operating system
     ---- Deploying and starting each VM can take minutes before being ready to accept traffic.
@@ -3065,7 +3106,7 @@
     -- All we need to do is create those container images once and then deploy them on generic cloud VMs or even directly on dedicated hosts.
     -- In any environment the only requirement is to install the container runtime, which is the software that runs those containers and we're good to go.
 
-    \subsection{Summary}
+    \subsection{Summary - Why containers}
     Why containers
     -- Better portability between environments since we can build a microservice image once and then use it in development, QA, staging and production on any cloud provider hardware or operating system.
     -- Also get faster startup time because containers usually take a few milliseconds to deploy and run
@@ -3091,7 +3132,7 @@
     The big challenge - Managing, deploying and configuring thousands of containers, running hundreds of microservices potentially across different cloud providers.
     The solution is container orchestration (Kubernetes etc).
 
-    \paragraph{What is container orchestration}
+    \subsubsection{What is container orchestration?}
     A container orchestrator is a tool that managed the entire life cycle of all the microservice containers within our system.
     Can be thought of like an operating system.
     For microservices architecture deployed as a containers, the responsibilities of a container orchestrator include automation of deploying new microservices or new versions of microservices as containers.
@@ -3102,10 +3143,11 @@
     Then we have load balancing between containers of the same microservice scaling service out or in by adding or removing containers based on the traffic and teh resouce utilisation.
     And finally managing the discovering and network connectivity between services, containers and the outside world.
 
-    \paragraph{Kubernetes as an example}
+    \subsubsection{Kubernetes as an example}
     Other tools exist. See DevOps stuff for specific tools or more complex details
 
-    A typical container orchestration cluster will have a control plan deployed on at least one machine.
+    \paragraph{Control Plane}
+    A typical container orchestration cluster will have a control plane deployed on at least one machine.
     -- That machines is a controller node.
     -- The remaining VMs or servers that run out microservice containers are called the worker nodes
     -- The controller node runs all the processes that orchestrate and manage our cluster
@@ -3122,6 +3164,7 @@
     ----- This sidecar process can be a logging or monitoring agent or an in memory cache
     ----- Typically putting more than one process inside a single container is not a good practice.
 
+    \paragraph{Pod}
     Kubernetes allows us to bundle several containers inside another logical unit which is called a pod.
     -- A pod is the small's runtime unit that kubernetes will manage for us even if that pod only contains a single microservice container
     -- The description of all microservices architecture, their configuration with container images they use and how much CPU memory and storage they need is described in a declarative human readable way.
@@ -3141,26 +3184,27 @@
 
     This investment pays off because its cost is amortised across all the teams and microservices that are managed.
 
-    \paragraph{Important Note}
+\begin{note}
     If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the container orchestrator will outweigh its cost and complexity.
+\end{note}
 
     \chapter{Cloud Architecure patterns}
 
-    \paragraph{Motivations}
+    \section{Motivations}
     It is the business logic and the user that defines out software product to the outside world.
     When considering quality requirements, products that have functionally have nothing in common are facing the exact same challenges.
     This means they can benefit from the same solutions.
     While companies may not have anything in common externally, they can benefit from the same scalability, extensibility patterns internally.
     All companies are expected to be highly available and reliable.
 
-    \paragraph{Cloud computing}
+    \section{Cloud computing}
     Provides ...... infinite computation, storage and network capacity.
     Infrastructure as a service, without this every company would spend months hiring specialists and building infrastructures to deliver a basic product.
     Cloud charges only for the services that are used.
     This removes the barriers for startups since there is on high upfront cost.
     Cloud also provides message brokers, DBs etc.
 
-    Downside
+    \subsection{Downside}
     Non of that infrastructure is owned by the company.
     It is out of the companies control.
     Typically don't get the best hardware and a lot of it has already been used.
@@ -3175,15 +3219,16 @@
 
     \section{Scalabilty patterns}
 
-    \paragraph{Motivations}
+    \subsection{Motivations}
     These patterns allow us to architect important patterns that allow is to architect and deploy a highly scalable system for every domain and use case.
     This will enable out business to handle billions of requests per day process, petabytes of data and most importantly and do it ain a cost effective way in a cloud environment.
 
-    \subsubsection{Load Balancing Pattern}
-    Problem being solved.
+    \section{Load Balancing Pattern}
+    \subsection{Problem being solved}
     Simple web app with high traffic will eventually run out of CPU, memory or network capacity of single server will either crash or significantly degrade its performance.
     A situation we want to avoid and upgrading that server to a more powerful virtual machine will only delay this problem.
 
+    \subsection{Pattern Description}
     The load balancing as a pattern places a dispatcher between the source of the data or network requests to out system and the workers that process that data and send back out response.
     In this pattern, the dispatcher routes each request from the client to one of the available workers.
     This was if the number of clients grows or the rate at which those clients send us requests increases, we can add more workers and spread the load among all of them.
@@ -3197,7 +3242,8 @@
     -------> Example, if service one and service two get a lot of requests, we can scale them up and place more workers behind their load balancing dispatchers.
     -------> But if service three doesn't get that much traffic then we can scale it down, which will help us save money.
 
-    \paragraph{General Techniques}
+    \subsection{General Techniques}
+    \subsubsection{First Technique - Use a cloud load balancing service}
     The first one is by using a cloud load balancing service.
     -- This is a special cloud managed service whose entire purpose si to accept a high load of network requests and root them to our backend servers
     -- The implementation details of the cloud load balancing service are hidden from us and are considered proprietary tech lock in.
@@ -3205,26 +3251,30 @@
     -- However if we deploy out service instances in different isolation zones, then the load balancing service may also run as multiple instances, one in each zone and as the traffic grows that cloud load balancing service may scale itself up and run as a group of load balancer instances.
     -- Additionally each load balancer instance is monitored and is automatically restarted if something if something happens to it
     ----- This way we don't end up in a situation where there load balancer itself becomes a single point of failure or performance bottleneck.
-    ----- NOw we can use the cloud load balancing service to route requests from external clients to out backend servers, but we can also use it between different services internaly, just like we saw before.
+    ----- NOw we can use the cloud load balancing service to route requests from external clients to out backend servers, but we can also use it between different services internally, just like we saw before.
 
+    \subsubsection{Second Technique - Use a message queue or a distributed message broker}
     The second way to implement the load balancing pattern is using a message broker or a distributed message using the message broker.
-    -- We can have one or multiple publishers sending messages to the message broker, and on the receiving end, we can have a group of consumer workers that read those messages similary to the load balancer.
+    -- We can have one or multiple publishers sending messages to the message broker, and on the receiving end, we can have a group of consumer workers that read those messages similarly to the load balancer.
     -- Depending on the volume of message, we can scale those messages similarly to the load balancer.
     -- Depending on the volume of message we can scale those consumer instances up and down as we need to do so we can keep up with the rate of incoming messages
 
-    \subparagraph{Note} Worth noting that message brokers should only be used internally between services, while a load balancer is perfectly suited for taking requests from external services.
+
+    \begin{note}
+    Worth noting that message brokers should only be used internally between services, while a load balancer is perfectly suited for taking requests from external services.
     And just like in the case of a cloud load balancing service.
     Most modern message broker solutions are implemented as distributed systems that use replication, redundancy and run as a group of instances.
     This way the message broker is scalable on its own and transient failures within the message broker do not impact our system.
+    \end{note}
 
-    \paragraph{Software design and architecture considerations}
+    \subsection{Software design and architecture considerations}
     The first consideration or decision we need to make is the algorithm the load balancer uses to route each incoming reqeust to a given worker.
     This routing algorithm heavily depends on the design of the backend we're routing traffic to.
 
     The first algorithm is round robin algorithm, the load balancer is routing each incoming reqeust sequentially to the next worker instance.
     This algorithm is very simple and is usually the default for evey load balancer implementation.
 
-    \subparagraph{Important Note} This algorithm works well only under the assumption that our application is stateless.
+    \subsubsection{Important Note} This algorithm works well only under the assumption that our application is stateless.
     in other words the assumption is that each reqeust from a client can be handled in isolation by any on the target application servers.
     However, this isn't always possible and in many cases we need to maintain an active session between the particular client and the server its communicating with.
 
@@ -3247,7 +3297,7 @@
     Using this algorithm, the load balancer will route new requests to servers that have the least number of already established connections.
     Open the least connections algorithm is particularly useful tasks associated with long term connections, such as in the case SQL, LDAP and other similar scenarios
 
-    Another cloud computing feature that typically goes hand in hand with load balancing is a feature that is called '''''out of scaling'''''
+    Another cloud computing feature that typically goes hand in hand with load balancing is a feature that is called \textit{Auto scaling}
     Typically, every cloud computing instance, such as a physical or virtual machine, runs a few big run processes called agents.
     -- Those agents collect data about the network traffic, memory consumption or CPU utilisation on each host.
     -- Using this real time data collected from each server, we can define out of scaling policies to increase
@@ -3256,14 +3306,14 @@
     -- It is always aware of the size and addresses of the backend servers at any given moment.
     ---- This powerful combination between dynamic resizing and load balancing gives us the ability to automatically scale out system up when the traffic and demand is high and save costs by scaling it down when the traffic to out system is low.
 
-    \subsubsection{Pipes and Filters Pattern}
+    \subsection{Pipes and Filters Pattern}
     Follows the stream of water flowing through a series of pipes and getting filtered in multiple stages until it gets to the desired condition.
     Instead it is data and the filters are isolated components that process that data at different stages/
     -- A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
     -- The origin of the data is referred to as the data source and the final destination for that data after it gets through.
     -- All the desired processing stages is often called a data sink
 
-    \paragraph{Example}
+    \subsubsection{Example}
     Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that receives data samples from sensor or end devices/
     -- A few example of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
     -- The pipes that connect the filters in this pattern are typically distributed queues or message brokers
@@ -3276,6 +3326,7 @@
     -- If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
     --- First problem is the tight coupling between all different processing components.
     --- For example, since they're part of the same application, they will need to be implemented in the same programming language
+
     -- What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
     ----- While using Java or C-Sharp to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
     ---- This can no easily be done.
@@ -3292,11 +3343,11 @@
 
     Finally, we can also get higher throughput by executing independent tasks in parallel on separate computers.
 
-    \subsubsection{Real life example}
+    \subsection{Real life example}
     This pattern is extensively used for processing stream of data about user extensively for processing streams of data user activity, such as in the digital advertisement business.
     Its used to process data from end devices in the internet of things industry and its also popular in image and video processing pipelines.
 
-    \paragraph{Specific example - video sharing service........}
+    \subsubsection{Specific example - video sharing service}
     When a new video is uploaded, it needs to go through a few stages before it can be optimally streamed simultaneously to different devices in different geographical locations.
     -- First stage may be splitting the original potentially large video file into smaller chunks.
     -- This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
@@ -3359,7 +3410,7 @@
     Used primarily in microservices architecture
     In monolithic applications each operation can be described as a method or a function call.
 
-    In large scal systems that run in the cloud, the monolithic approach is too restrictive and doesn't scala well.
+    In large scale systems that run in the cloud, the monolithic approach is too restrictive and doesn't scale well.
 
     Many companies break the monolithic application logic into separately deployed and managed servie where each service is responsible for a particular subdomain or business logic.
 
@@ -3379,8 +3430,8 @@
     THose functions dont run until triggered by an event and they stop running when they finish their job.
     This way we can save a lot of money if we have some microservice that don't need to run very frequently.
 
-    \paragraph{Microservices Reminder}
-    A lot of benefits of this architecture/
+    \subsubsection{Microservices Benefits Reminder}
+    A lot of benefits of this architecture
     Those benefits include faster deployment, smaller code base and more importantly higher scalability since each microservice can be scaled independently.
 
     However when we use this type of architecture, we need to have all the business logic spread out across many services.
@@ -3424,15 +3475,15 @@
     Problem - We have a collection of microservices where each microservice is responsible for a particular type of operations for specific domain.
     the microservices are completely decoupled from each other and are potentially not even away fo each other based on an external trigger such as an even or request from a user.
 
-    We need a complete flow of transactions that span mlutple microservice.
+    We need a complete flow of transactions that span multiple microservice.
 
-    One solution we offered was the executiron orchestrator pattern, where we have a central service that executors a flow by communicating with the relevant services until the flow is complete.
+    One solution we offered was the execution orchestrator pattern, where we have a central service that executors a flow by communicating with the relevant services until the flow is complete.
 
     While the orchestration pattern is the most intuitive and easiest to implement it has a few drawbacks.
-    One of the drawbacks is the tigh coupling to all the microservices in the system.
+    One of the drawbacks is the tight coupling to all the microservices in the system.
     One of the drawbacks is the tight coupling to all the microservices in the system
     ----> moving to microservices is to speed up development by decoupling microservices from one another.
-    Because the orchestrator pattern is tightly coupled teams will need to coordinate with one another via the orchestration service. and make sure they dont break any flow.
+    Because the orchestrator pattern is tightly coupled teams will need to coordinate with one another via the orchestration service, and make sure they dont break any flow.
     --> This starts to share a lot of similarities with the monolithic application we moved away from.
     ---> This is more of a distributed monolith anti pattern.
     ---> In this anti pattern we getr all the problems of the monolithic architecture and lla the issues of the microservice architecture but without any of the benefits.
@@ -3452,7 +3503,7 @@
 
     All or some of those microservices can be implemented as function as a service, which means they don't consume any resources until an event.
 
-    They're interested in in the triggers of and execution, nad if they don't consume any resources, we don't have to pay for them which makes out syustem very cost effective.
+    They're interested in in the triggers of and execution, nad if they don't consume any resources, we don't have to pay for them which makes out system very cost effective.
     On the other hand if one service needs to handle frequent events in can scal automatically using out of scaling policies.
 
     \subsubsection{Downsides}
@@ -3472,7 +3523,6 @@
     While this pattern is very scalable and cost effective, it may get a little challenging when things go wrong.
     Especially when we ned to pinpoint a problem with a particular service.
 
-
     \section{Performance Patterns for Data Intensive Systems}
 
     \subsection{Map Reduce Pattern for Big Data Processing}
@@ -3482,15 +3532,15 @@
     The issues of personalising and distributing the data, scheduling execution, aggregating the results, handling and recovering from failures become the dominant factor event for the most straight forward computations.
     Also the code we ned to write as well fas the infrastructure we need to build for each tasks becomes a major overhead.
 
-    The MapReduces pattern offers the same programming model to implement every computations.
-    We can take any task and run it on the MapReduce framework that managers the execution of the entire computation.
+    The MapReduce pattern offers the same programming model to implement every computations.
+    We can take any task and run it on the MapReduce framework that manages the execution of the entire computation.
     The MapReduce framework takes care of parallelism and distributed the work, handling, failures and collecting the result.
 
     After the paper, there have been multiple open source and proprietary cloud implementations of this framework and its used by many different companies for big data processing, machine learning, distributed search, graph traversal etc.
 
     \subsubsection{Map reduce model}
     The programming model of MapReduce requires us to describe each computation we want in terms of two simple operations, map and reduce.
-    If we can't describe the desired computation in one set of map and reduce functions we can break it into multiple MapReduce executions and simpoly chain them together.
+    If we can't describe the desired computation in one set of map and reduce functions we can break it into multiple MapReduce executions and simply chain them together.
 
     First thing we ned to do as users of MapReduce is to describe out input data as a set of key value pairs, which in most cases is very straight forward.
     Then the MapReduce framework bypasses all the input key value pairs through the map function with define, which produces a new set of intermediate key value pairs.
@@ -3542,7 +3592,7 @@
     -- This way if the master fails, the backup worker can take the masters responsibility and ocnitneu orchestrating the entire execution.
 
     \subsubsection{Applying to a cloud environment}
-    The good for a cloud environment because ewe have instant access to almost as many machine as we need.
+    The good for a cloud environment because we have instant access to almost as many machine as we need.
     --- Cloud can handle the machine requirements, ie we need to process a large amount of data fast.
 
     Second reason, MapReduce is a batch processing pattern by design, meaning we run it on demand or on a schedule on huge data set as opposed to continuous real time processing of a stream of data.
@@ -3558,7 +3608,7 @@
     ........
 
     \subsection{The Saga Pattern}
-    Important principal of microservice is a database per service.
+    Important principle of microservices is a database per service.
     If this principle is not followed then service will become coupled.
     If one team want to change the schema for their service they will have to coordinate that work with other teams that maintain the other microservice which use \textbf{it}
     Two teams will need to have meeting to agree on changes.
@@ -3632,7 +3682,6 @@
     This may mean storing different data in separate relation databases tables, or even storing some data in a separate database for higher efficiently.
     However very often the way we store the data doesn't reflect the type of workload we have on that data.
     When we send a query to read aggregate and transform that raw data into something we can analyse or even present to the user we may find some issues.
-
 
     The first issue is performance.
     - When we performa complex query across multiple tables or even multiple databases the query may take a very long time to complete.
@@ -3772,7 +3821,7 @@
     \subsubsection{Summary}
     Using a combination of the CQRS pattern and the materialised view patterns.
     We can join data from multiple microservices stored in completely separate databases sing the materialised view pattern.
-    We place the joint data in a separate table or collection and using the CQRS pattern we are able to started that materialised view in a completely separate read opimtised database sitting behind its own microservice and using even driven architecture implemented by a message broker or cloud function as a servce, we are easily able to keep that external materialized view up to date with the original data.
+    We place the joint data in a separate table or collection and using the CQRS pattern we are able to started that materialised view in a completely separate read opimtised database sitting behind its own microservice and using even driven architecture implemented by a message broker or cloud function as a service, we are easily able to keep that external materialized view up to date with the original data.
 
     \subsection{Event Sourcing Pattern}
     In certain situations, we need to know not just the current state, but also ever step that led to it.
@@ -3869,14 +3918,14 @@
     On the other hand the ambassador implementation can take all the heavy lifting of handling, retries and disconnections, authentication, routing and the specifics of different communication protocol and versions.
     Now additionally, since all the communication from all the service is done through it co-located ambassador sidecar using this pattern, we can also easily instrument out network communication and perform distributed tracing across multiple services.
 
-    Ultimately this will help us islodate the use to a particular service.
+    Ultimately this will help us isolate the use to a particular service.
 
     \subsubsection{Summary}
-    Side car is a good way to extend the functionality of a service without having to re-implement the additional functionality to every programming language and also without having to provion additional hardware for a separate service by running the sidecar on the same host.
+    Side car is a good way to extend the functionality of a service without having to re-implement the additional functionality to every programming language and also without having to provision additional hardware for a separate service by running the sidecar on the same host.
     With the main application instance, we get the benefit sof the isolation between the sidecar and the core service, but also we get the benefits of running them close together in terms of access to the same resource and the low overhead of inter process communication.
 
     Ambassador pattern.
-    Using that pattern, we don't just extend the functionality of the core service instance but offload all the complexities of the network communication and security to the ambassatdor instance.
+    Using that pattern, we don't just extend the functionality of the core service instance but offload all the complexities of the network communication and security to the ambassador instance.
 
     \subsection{Anti Corruption Adapter Pattern}
     Applied when dealing with migration problems.
@@ -3917,7 +3966,7 @@
     -- Also in a cloud environment where we pay for every resource, having the anti-corruption adopter service permanently will cost us money.
 
     One way to mitigate this is to use a function as a service
-    So if the anti corruption adopter service is not used very often, then we will pay only for the time and resources it uses when it actualluy runs.
+    So if the anti corruption adopter service is not used very often, then we will pay only for the time and resources it uses when it actually runs.
     If it used very often then we will need to make peace with the cost of having that service for as long as we need it.
 
     \subsubsection{Summary}
@@ -3962,7 +4011,7 @@
     The reasons for that is that nay change in the shared library can affect all the backends that use it.
     -- Once again this requires coordination, meetings an through testing of all the microservices.
     -- Theres is also the lack of ownership when it comes to shared libraries.
-    ------- I.e hard to decide who owns what when it comes to code quality, consistency, release scehdule etc.
+    ------- I.e hard to decide who owns what when it comes to code quality, consistency, release schedule etc.
 
     Another approach is to have the shared functionality as a separate service with a clean and well-defined scope API and ownership by a team.
     The second consideration or question is how granular should we be when applying the backend for frontends pattern.
@@ -3981,7 +4030,6 @@
     -- Can use load balancing using parameters or HTTP headers.
     ----- Example we can use is the user agent header which can tell us what type of device or platform the request is coming from.
     Use of this pattern can help extend the functionality of our system to different front ends.
-
 
     \section{Reliability, Error Handling and Recovery Software Architecture Patterns}
 
@@ -4033,7 +4081,7 @@
     ---- Videos -- change the bitrate - avoid denying the service to the client.
 
     \subsubsection{Important considerations}
-    First consideration is whether we thro the requests on an API basis or a customer basis.
+    First consideration is whether we throttle the requests on an API basis or a customer basis.
     ==== API basis
     ----- Can easily makesure our system doesn't go over the reqeust rate that we budgeted for
     ----- Downside is that one client can send us a very high number of requests and therefor unfairly deprive the other clients of getting service.
@@ -4181,8 +4229,8 @@
     --- IF the health checks success rate is high, then we can immediately close the circuit.
     --- This variation of the circuit breaker has a few benefits
     ------ The first one is that we don't need to waste the users time sending real reqeust to the external service when the circuit breaker is in a half open state
-    --- The second benegit is this ping
-    ------ Half check reqeusts are very small and don't contain any payload, which isn't the case with the most real requests.
+    --- The second benefit is this ping
+    ------ Half check requests are very small and don't contain any payload, which isn't the case with the most real requests.
     ------ BY sending those pings instead of real requests, we save on network bandwidth, CPU and memory resources.
     ------ On the other hand, figuring out the number and the frequency of those pings is also not trivial, if we sent too many.
     ------ We may overwhelm the remote service that is already in a bad state, and if we don't send enough then we are preventing out suers from using a healthy service for no reason.
@@ -4202,7 +4250,7 @@
 
     Five important consideration when implementing circuit breaker
     - First one was deciding on what to do with the reqeust
-    - Teh second consideration was decding on the response that we provide to the caller when we don't send the reqeust through.
+    - The second consideration was deciding on the response that we provide to the caller when we don't send the reqeust through.
     - The third one was having a separate circuit breaker for each external service
     - The fourth one was replacing the half open state with asynchronous health checks, and the last one was deciding on whether to implement the circuit breaker as a library or as an ambassador or sidecar.
 
@@ -4266,7 +4314,7 @@
 
     \subsection{Rolling Deployment Pattern}
     When upgrading a server we typically rely on some kind of downtime window.
-    DUring tht window we can shut down the existing application instances and replace them with the new versions
+    During tht window we can shut down the existing application instances and replace them with the new versions
     However if something goes wrong and the new version cant start up or has some other issues we would need to shut down those instances and bring back the old version
 
     This works fine if we can find some time window when we either don't get any traffic or very little traffic
@@ -4329,7 +4377,7 @@
     Or we can start directing only specific users such as internal users or beta tester to those servers.
 
     THis can easily be achieve by configuring the load balancing service to inspect the origin of the reqeust and send it to a different set of servers.
-    During this time we monitor the performance of the conary verions and compare it in real time to the performance of the rest of the servers that run the old version.
+    During this time we monitor the performance of the canary versions and compare it in real time to the performance of the rest of the servers that run the old version.
     Once we gain enough confidence with the new version and we can see no degradation in functionality or performance, we can proceed with the release and update the rest of the servers with the new version using the rolling release pattern for example.
 
     \paragraph{Note} The canary deployment pattern is considered to be the safest and most risk free deployment patterns.
@@ -4343,19 +4391,18 @@
     The challenge of doing Canary deployment effectively is setting clea success criteria for the release so we can automate the monitoring.
     -- Otherwise an engineer will have to look at a lot of graphs on a lot of dashboards for hours to decide whether we should rol out the release globally or roll back.
 
-    \subsubsection{A B Testing or A B Deployment}
+    \subsubsection{A/B Testing or A/B Deployment}
     Very similar to canary deployment but the purpose is different to when doing a canary release.
-    - The goal is to safely release a new version of our application, eventually to the entire group of servers with canary release
-    - With AB testing the goal is to test a new feature on a portion of our users in production.
-    --- The information we gather from the comparison can inform out product or business development teams towards future work or feature.
-    ---- Unlike Canary release, after the AB testing is finished, the experimental version of our software is typically removed and replaced witht eh previous software version
-    ---- The important thing here is that users do not know that they are a part of an experimental release.
-    ------ This way we get genuine data from the experiment
+    The goal is to safely release a new version of our application, eventually to the entire group of servers with canary release
+    With AB testing the goal is to test a new feature on a portion of our users in production.
+    The information we gather from the comparison can inform out product or business development teams towards future work or feature.
+    Unlike Canary release, after the AB testing is finished, the experimental version of our software is typically removed and replaced with the previous software version
+    The important thing here is that users do not know that they are a part of an experimental release.
+    This way we get genuine data from the experiment.
 
-    Duration of the experiment is entirely up the developers and depends on the use case.
+    The Duration of the experiment is entirely up the developers and depends on the use case.
     Then when we conclude the experiment we diver traffic away form those experimental instances, deploy the main version fo our recommendation service bac to those servers and add the back to the load balancing rotation.
-    --- Later a group of engineers, business analyst or data scientists can look at all the metrics gathered and access if that change should be release as part of a future version.
-    --- Or strategy could be rethought.
+    Later a group of engineers, business analyst or data scientists can look at all the metrics gathered and access if that change should be release as part of a future version or if the strategy could be rethought.
 
     \subsubsection{Summary}
     Canary release allows us to dedicate a small portion of out servers to use a different version of our software.
@@ -4370,7 +4417,7 @@
     We can put huge effort into testing a system however when we deploy out system to production, many things can happen that we cannot test before hand.
     -- The infrastructure can break at any time.
     ---- Servers can lose power, network switches can break down, databases storage devices can become unusable due to their age and natural disasters can hit a data centre.
-    ------> Additionally natural third party API dependencies can break and there is nothign we can do about it.
+    ------> Additionally natural third party API dependencies can break and there is nothing we can do about it.
     ------> As much as we hope that we can deal with this, we won't know until it actually happens.
 
     \paragraph{Examples here ???????}
@@ -4428,68 +4475,87 @@
     Chaos Engineering is a pattern that allows us to increase confidence and protect out production system against critical failures by injecting failures deliberately in a controlled way.
     We can find single points of failure, scalability issues and make sure when a real traffic spike or hardware failure happens we have the logic in place to handle the situation gracefully.
 
-    \chapter{Big Data Architeciture}
 
-    \paragraph{Terminology} - Data sets which are too big or too complex or are produced at too fast that exceed the capacity of a traditional application.
+    \chapter{Big Data Architecture}
+
+
+    \section{Big Data meaning}
+    Data sets which are too big or too complex or are produced at too fast of a rate such they that exceed the capacity of a traditional application.
     Characteristics are typically volume, variety, rate/velocity.
     This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
     Can also be used to find anomalies, analysing logs.
 
+
     \section{Batch}
-    requires the storage of incoming data in a distributed database or a distributed files system.
+    Requires the storage of incoming data in a distributed database or a distributed files system.
     Data is never modified, it is only added to the end.
-    Key principal is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
+
+    \subsection{Batch - Key Principle}
+    The Key principle here, is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
     The schedule can be adapted for the users/clients needs.
     Each time a batch processing job runs in can process new data and produce and up-to-date view of all the current data.
     This can be stored in a well-structured and indexed database that can be queried to get insights.
     Could analyse recent data or the whole data set.
-
     This data is not processed in real time.
 
-    Note: This data can be used to create a Machine learning model.
+    \begin{note}
+        This data can be used to create a Machine learning model.
+    \end{note}
 
-    Batch processing provides the user with high availability, no downtime for users the old data view is still available.
+    \subsection{Batch - Pros}
+    Batch processing provides the user with high availability, no downtime for users and the old data view is still available.
+    Batch processing is more efficient versus processing each piece of data individually.
+    There also a higher tolerance towards human error, with regards to bad code / deployment issues.
+    Batch processing can be used to perform complex data analysis of large data sets.
 
-    Batch processing is more efficient vs processing each piece of data individually.
-    --- Also higher tolerance towards human error, with regards to bad code/ deployment issues.
-    Batch processing can be used to perform complex data analysis of large data sets.....
-
-    \paragraph{Drawbacks}
+    \paragraph{Batch - Cons}
     Long delay between data coming in and the result we get from the processing job.
     The view is not real time which can be an issue in some use cases (Trading, 24/7 systems etc).
     Forces users to wait a long time before they can act on the insights from the system.
     May not know that the data is not in real time.
 
-    \section{Real time processing / Streaming}
-    Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
-    After processing the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
 
-    \paragraph{Pros}
+    \section{Streaming - Real time processing}
+    Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
+    After processing, the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
+
+    \subsection{Streaming - Pros}
     Can respond to data immediately
 
-    \paragraph{Cons}
+    \subsection{Streaming - Cons}
     Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
     Hard to data fusion in real time, at different time points or analysing historic data.
-    ----- Only limited to recent data for predictions.
+    Only limited to recent data for predictions.
+
 
     \section{Lambda architecture}
-    May need processes of both strategies.
+    May need the approaches/processes of both strategies.
     Lambda architecture takes advantages of both.
     Aims to find the balance between fault tolerance and comprehensive analysis of the data from batch processing and the low latency that we get from real time.
+    In this architecture the infrastructure is divided into three layers:
+    \begin{itemize}
+        \item Batch
+        \item Speed
+        \item Serving Layer
+    \end{itemize}
 
-    In this architecture the infrastructure is divided into three layers, batch, speed, and serving layer.
+    \begin{note}
+        Data that enters the system is dispatched into both the batch layer and the speed layer simultaneously.
+    \end{note}
 
-    Data that enters the system is dispatched into both the batch layer and the speed layer simultaneously.
-    The purpose of the batch layer is to manage out data set and be the system of records.
+    \subsection{Batch Layer}
+    The purpose of the batch layer is to manage our data set and be the system of records.
     The data in our master set is immutable and new data is appended, never modified.
     This data is usually on a distributed files system, optimized for storing big files containing massive amounts of data.
     The second purpose of the batch layer is to pre computer our batch views.
     Every time we run out batch processing job, it processes all the data that we have in out master data set.
     Once the processing is complete it indexes and store the data in a read only database.
     Typically, this overrides the existing pre computed views that we created the previous time we ran the processing job.
-    Note: The batch layer aims at perfect accuracy and operates on the entire data set.
+    \begin{note}
+        The batch layer aims at perfect accuracy and operates on the entire data set.
+    \end{note}
 
-    \paragraph{Speed Layer}
+    \subsection{Speed Layer}
     Data is sent to this layer in parallel.
     Real time strategy is used here.
     All the data goes into a queue or a message broker and is then picked up as it arrives by the processing job.
@@ -4499,8 +4565,9 @@
 
     This layer exists between the last time a batch was run and the present moment/recent data.
 
-    \paragraph{Serving layer}
+    \subsection{Serving layer}
     The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
+
 
     \chapter{Components}
 
@@ -4516,6 +4583,7 @@
 
     \paragraph{Load Balancing}
 
+
     \section{Detailed Design}
 
     \subsection{Caching}
@@ -4530,55 +4598,50 @@
 
     \subsection{Threads and Concurrency}
 
-    \paragraph{Actor model and Akka}
-    Java low level and higher level
-
-    \paragraph{Functional}
-    Scala.....
-
-    \paragraph{Application level}
-    Scaling via instances
 
     \chapter{Databases}
 
     \paragraph{NoSQL}
-    MongoDB.....graph databases
 
     \paragraph{SQL}
 
     \subsection{Networks}
 
+
     \section{Performance and Scalability}
 
     \subsection{Testing}
 
-    \paragraph{Gatling}
-
     \paragraph{Code performance}
-    Hmmmm maybe JVM specific here
+
 
     \section{Distributed Systems}
 
-    \subsection{Clusters}
-    Kubernetes
-
     \subsection{Storage}
+
 
     \chapter{Performance}
 
+
     \chapter{Scalability}
+
 
     \chapter{Reliability}
 
+
     \chapter{Tech stacks}
+
 
     \chapter{Deployments}
     Docker, Jenkins
 
+
     \chapter{System design security concerns}
+
 
     \section{Introduction}
     Cover security from a system design point of view.
+
 
     \section{OWASP Top 10}
 
@@ -4602,13 +4665,18 @@
 
     \subsection{Server Side Request Forgery}
 
+
     \section{Network security}
+
 
     \section{Encryption}
 
+
     \section{Digital signatures}
 
+
     \section{Authentication}
+
 
     \chapter{Useful resources}
     %TODO --- consider how to link to sources effectvely
@@ -4620,6 +4688,7 @@
     \newpage
 
 % Example of including a code snippet
+
 
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
