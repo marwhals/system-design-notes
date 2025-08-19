@@ -75,8 +75,10 @@
     See examples.
 
     \subsection{Why do businesses need to transform}
-    - Environmental changes - new regulations may force the organisation to change how they do business.
-    - Competitive pressure - think of an organisation that is dealing with a competitor that is rolling out innovative products at a very rapid pace.
+    \begin{itemize}
+    Environmental changes - new regulations may force the organisation to change how they do business.
+    Competitive pressure - think of an organisation that is dealing with a competitor that is rolling out innovative products at a very rapid pace.
+    \end{itemize}
 
     What is the choice for these organisations?
     They must transform.
@@ -128,37 +130,41 @@
     This in turn helps the organisation respond faster to changes in business.
     Overall, this will lead to the technology becoming a competitive edge for an organisation. (Worked for amazon apparently)
 
-    Benefits of microservices
-    - The first benefit of organizing microservices around business capabilities is that each service can evolve independently.
+    \subsection{Benefits of microservices}
+    The first benefit of organizing microservices around business capabilities is that each service can evolve independently.
 
-    Business perspectives of changes in a monolith
-    - Means that this coordination between the various teams will slow down the process of making changes to different parts of the application from the business perspective.
-    - Slow to release new products in the market.
-    -- This problem is addressed with microservices.
-    -- This monolithic architecture, when replaced with microservices architecture will look something like this, wherein each of the capability will be realised in an independent microservice.
+    \subsection{Business perspectives of changes in a monolith}
+    Means that this coordination between the various teams will slow down the process of making changes to different parts of the application from the business perspective.
+    Slow to release new products in the market.
+    This problem is addressed with microservices.
+    This monolithic architecture, when replaced with microservices architecture will look something like this, wherein each of the capability will be realised in an independent microservice.
     So what this means is that changes can be performed each of these services independently and that translate into a business benefit wherein faster responses can be achieved to changes in business environment.
 
     Microservices architecture allows the business to make radical changes to how it operates.
     As long as new microservices maintaining the same contracts as the old microservice, there will be no change required in other microservices.
-    - Next benefit is that it makes it easier for the IT teams to understand the business.
-    --- Overall IT teams don't need to dive deep into all business capabilities.
-    --- They can focus on the business capability that they are building in their microservices with microservices built around the business capability.
-    --- The IT teams are able to achieve higher alignment with business priorities.
-    --- What this boils down to is that since each of the microservices team is operating independently, they do not spend time on managing the conflicting business priorities.
-    --- This will lead to faster speed to value for the business.
 
+    The next benefit is that it makes it easier for the IT teams to understand the business.
+    Overall IT teams don't need to dive deep into all business capabilities.
+    They can focus on the business capability that they are building in their microservices with microservices built around the business capability.
+    The IT teams are able to achieve higher alignment with business priorities.
+    What this boils down to is that since each of the microservices team is operating independently, they do not spend time on managing the conflicting business priorities.
+    This will lead to faster speed to value for the business.
+
+    \subsection{Summary}
     Summarise discussion.
-    - Businesses need to stay competitive by way of rapid transformations and this rapid transformations require support from the IT teams to deliver value to the market at a faster pace.
-    - Microservices architecture is an enabler or a catalyst for continuous business transformation as it helps the IT teams to move at the same speed as the business.
-    - One important thing to keep in mind is that to get the most benefit from the microservices architecture it is critical for the microservices teams to carve out of an appropriate business scope for each of the microservices.
-    - If not done correctly, it will lead to teams being interdependent and that will lead to loss of advantages of microservices architecture.
-    - This is where domain driven design comes into picture.
-    - The domain driven design bounded context is a representation of the business scope for the microservice.
+    Businesses need to stay competitive by way of rapid transformations and this rapid transformations require support from the IT teams to deliver value to the market at a faster pace.
+    Microservices architecture is an enabler or a catalyst for continuous business transformation as it helps the IT teams to move at the same speed as the business.
+    One important thing to keep in mind is that to get the most benefit from the microservices architecture,
+    it is critical for the microservices teams to carve out of an appropriate business scope for each of the microservices.
+    If not done correctly, it will lead to teams being interdependent and that will lead to loss of advantages of microservices architecture.
+    This is where domain driven design comes into picture.
+    The domain driven design bounded context is a representation of the business scope for the microservice.
 
-    Key points
-    - From this lesson
-    - Smaller teams translate to faster speed to market
-    - Microservices are organised around business capabilities and the benefit of this approach is that enables the IT teams to operate independently.
+    \subsubsection{Key points}
+    \begin{note}
+    \item Smaller teams translate to faster speed to market
+    \item Microservices are organised around business capabilities and the benefit of this approach is that enables the IT teams to operate independently.
+    \end{note}
 
 
     \section{A Technical Perspective of Microservices}
@@ -184,15 +190,16 @@
 
     Kafka, RabbitMQ and ActiveMQ are some of the commonly used technologies for building these messaging based interactions.
 
-    Advantages of microservices architecture compare to monolithic applications.
+    \subsection{Advantages of microservices architecture compare to monolithic applications}
+    \begin{itemize}
     - It is easier to manage changes in a microservice when there is a change in one services.
     - There is no impact on other services within the application since the codebases for each of the microservices is independent, little or no coordination is needed between the teams and the refression.
     - Testing needs to be carried out only for the microservice case that is getting changed.
     - Other microservices need not be tested.
     - Deployment for each of the microservices may be carried out independently.
-    - Each team decides on the frequency of deployments, depending on their requirements and other constraints.
-    - I.e teams do not follow a common deployment plan, which is very common in the case of monolithic applications.
+    - Each team decides on the frequency of deployments, depending on their requirements and other constraints. I.e teams do not follow a common deployment plan, which is very common in the case of monolithic applications.
     - This independent deployments lead to higher productivity and faster delivery of software.
+    \end{itemize}
     - Talk about polyglot microservices.
     --- The idea behind polyglot microservices is that the team owning the microservice may decide on the technology stack for their service.
 
@@ -202,7 +209,7 @@
 
     Another benefit of microservices is that each of the services may be scaled independently.
 
-    Disadvantages of microservices.
+    \subsection{Disadvantages of microservices.}
     Since microservices interact with each other over a network protocol, an application built with microservices architecture may exhibit poor performance compare to the same application implemented with a monolithic architecture.
     In a microservices application, each microservice manages its own database.
     This leads to complexity in managing the data integrity.
