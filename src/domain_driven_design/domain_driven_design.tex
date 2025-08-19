@@ -8,6 +8,8 @@
 \usepackage{hyperref}
 \usepackage[framemethod=tikz]{mdframed}
 \usepackage{tikz}
+\usepackage{biblatex}
+\usepackage{wasysym}
 \usetikzlibrary{positioning, arrows.meta, shapes.multipart}
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
@@ -1451,16 +1453,16 @@
     \section{Intro}
     Relationships between bounded contexts.
     Bounded contexts get translated into microservices and these relationships get translated into interactions between the microservices.
-    Rest over HTTP APIs are a common synchronous mechanism by which microservices interact.
+    REST over HTTP APIs are a common synchronous mechanism by which microservices interact.
 
-    Microservices also produce different types of events.
+    Microservices can also produce different types of \textit{events}.
     These are consumed by other microservices as well as the components within the bounded context where the event was produced.
 
-    Event driven architecture is an architecture paradigm promoting the production detection, consumption of, and reaction to events.
+    \textit{Event driven architecture} is an architecture paradigm promoting the production detection, consumption of and reaction to events.
     Microservices are producers and consumers of events.
     As a result, event driven architecture is commonly used for building applications with microservices.
     Events are asynchronous in nature and realisation of events based interactions require the use of some messaging technology.
-    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ) %TODO consider where Aeron etc fits into this
+    There are multiple messaging technologies available for this purpose. (Kafka / RabbitMQ)
 
 
     \section{Monolithic and Distributed Communication Patterns}
@@ -1469,37 +1471,42 @@
     This is typical of a monolithic application.
     Referred to as a monolithic object communication pattern.
 
-    \paragraph{Note}
-    In distributed applications or systems the components reside in their own process space.
+    \begin{note}
+        In distributed applications or systems the components reside in their own process space.
+    \end{note}
     In other words there is no sharing of compute or memory resources between the components.
     These components communicate with each other by way of some kind network protocol.
     This network communication protocol may be synchronous or asynchronous in nature.
-    - By Synchronous, the caller statys blocked until it received a response from the other component.
-    - Examples: HTTP, RPC
-    - by Asynchronous communication, the caller does not wait for a response
-    - Examples: Advanced Message Queueing Protocol
+    \begin{itemize}
+        \item Synchronous - the caller statys blocked until it received a response from the other component. Examples: HTTP, RPC
+        \item Asynchronous communication - the caller does not wait for a response. Examples: Advanced Message Queueing Protocol
+    \end{itemize}
 
     These are not mutually exclusive.
     Communication may be between two endpoints.
     Referred to as 1 to 1 communication, also known as single receiver communication.
     Common example is HTTP, wherein the communication is between two endpoints.
-    With synchronous protocols you wil always have 1 to 1 communication (Reactive :D)
+    With synchronous protocols you wil always have 1 to 1 communication.
 
     This communication pattern may also be realised by using the asynchronous messaging mechanism.
     It will look synchronous but the underlying protocol is asynchronous
 
     In a one to many communication pattern, there are multiple components that are interested in receiving messages from the sender.
     This is commonly achieved by way of a pub sub messaging pattern.
-    - A message is published by a publisher to a topic
-    - Other components will subscribe to the topic and receive messages.
-    - Each of these components will carry out a specific task assigned to it.
+    \begin{list}
+        \list A message is published by a publisher to a topic
+        \list Other components will subscribe to the topic and receive messages.
+        \list Each of these components will carry out a specific task assigned to it.
+    \end{list}
 
     Common protocols for this kind of communications is REST over HTTP for these microservices.
 
-    For messaging there are two types of products. Products that are AMPQ compliant such as ActiveMQ and RabbitMQ.
+    \subsection{Messaging Products - Two types}
+    For messaging there are two types of products.
+    Products that are AMPQ compliant such as ActiveMQ and RabbitMQ.
     Then there are products that are non AMPQ compliant such as Kafka, Amazon, SQS, Amazon, SNS. These are only examples.
 
-    \paragraph{Consider Adding Reactive Patterns}
+%    TODO Consider Adding Reactive Patterns
 
 
     \section{Event driven architecture}
@@ -1510,39 +1517,44 @@
     When an event occurs, one or more consumers are notified about the event.
     On receiving the event, the consumer may carry out processing, and this processing of the event is independent of the producer of the event and other consumers of the event.
     An event driven architecture is a software architecture paradigm that promotes the designing of systems as loosely coupled components that act as event producers and event consumers.
-    Central to the event driven architecture is an event backbone.
-    This event backbone is an infrastructure component.
-    It is referred to by multiple names, event bus, event broker events, router events and mediator events hub.
-    - Common terms used for this component.
-    - Name depends on the product features and functions and the vendor """marketing""" these products. (Warrants research)
-    - Important to keep in mind that conceptually they are similar.
-    - They all provide a way for routing of the events from producers to the consumer.
-    - Producer of the event inform the event backbone of something of interest happening.
-    - They do this by way of synchronous mechanism exposed by the events backbone.
-    - When the events backbone receives the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
+    Central to the event driven architecture is an \textbf{event backbone}.
 
-    The important thing to keep in mind here form the event consumer perspective is that they are not polling for these events. They are notified.
+    \begin{note}
+        This event backbone is an infrastructure component.
+    \end{note}
+
+    It is referred to by multiple names, event bus, event broker events, router events and mediator events hub.
+    These are common terms used for this component.
+    The name depends on the product features and functions and the vendor """marketing""" these products.
+    An important to keep in mind that conceptually they are similar.
+    They all provide a way for routing of the events from producers to the consumer.
+    The producer of the event informs the event backbone of something of interest happening.
+    They do this by way of synchronous mechanism exposed by the events backbone.
+    When the events backbone receives the event, it figures out where that event needs to be routed depending on the consumers that are interested in that event.
+
+    The important thing to keep in mind here form the event consumer perspective is that they are not polling for these events.
+    They are notified.
     Same as the pub sub messaging pattern.
     Commonly used for realising event driven architectures.
 
-    Data in the event messages.
-    - The content of the event message may be the state data or the metadata.
-    - The consumers receiving the message representing the event will get all the relevant state data and they can carry out the processing using the state data that they will recieve in the event messasge.
-    - It is also possible to design the event structure such that it contains only the metadata.
-    - Some may need meta data only others may somehow return to the publisher and retrieve the detailed information.
-    - You would have to use both the state data and metadata in your event messages.
-    - There is no hard and fast rule but certain consideration.
-    - If the message size it too big, then there may be challenges related to latency.
-    - In this scenario you may consider using only metadata in your messages.
-    - If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be a good idea to go with the state data in the event message.
+    \subsection{Data in the event messages.}
+    The content of the event message may be the state data or the metadata.
+    The consumers receiving the message representing the event will get all the relevant state data and they can carry out the processing using the state data that they will receive in the event message.
+    It is also possible to design the event structure such that it contains only the metadata.
+    Some may need metadata only others may somehow return to the publisher and retrieve the detailed information.
+    You would have to use both the state data and metadata in your event messages.
+    There is no hard and fast rule but certain things which should be taken into consideration.
+    If the message size it too big, then there may be challenges related to latency.
+    In this scenario you may consider using only metadata in your messages.
+    If the consumers are leading to a lot of chattiness in your application because they are reaching out to the producer for getting the state data, then it will be a good idea to go with the state data in the event message.
 
     \subsubsection{API Versus Event Driven Architecture}
-    APIs rae directed commands, whereas events are observables.
+    APIs are directed commands, whereas events are observables.
     The central theme in an architecture that depends on APIs is an orchestrator.
-    Ano orchestrator may be thought of as a centralised component that holds the business logic and the flow decisions.
+    An orchestrator may be thought of as a centralised component that holds the business logic and the flow decisions.
     When the orchestrator needs to do something it invokes an API, waits for the response, then invoke other APIs to carry out the required business processing.
 
-    In the case of EDA the orchestrator is replaces with event producer and event consumers.
+    In the case of EDA the orchestrator is replaced with an event producer and event consumers.
     These event consumers are the observers of the events which are produced by the event producer.
 
     One big difference between these two architectures is that the event producers and event consumers all have business logic and are responsible for achieving the desired results from the business process.
@@ -1551,23 +1563,25 @@
     Rather, it simply triggers an event, a message that is passed on to all the consumers.
     Keep in mind that even producers may also be event consumers and event consumers may also be event producers.
 
-    Differences between API and Event Driven Architectures
-    - In the case of APIs, the caller has a knowledge of the API endpoint, whereas in the case of events the producer doesn't know any consumer.
-    - APIs are synchronous, meaning that the caller has to wait for the response to come back. The caller is blocked.
-    - In the case of events, a producer just produces an event and moves on. Not it does not even depend on the availability of the consumers.
-    - What this means is that it can lead to higher availability in the case the consumer is not available
-    - The producer moves on and when the consumers comes up it receives the event data.
-    - APIs are based on the reqeust response paradigm wheres in the case of events the message consists of event data, which can be the state data or the metadata in the case of the API.
-    - Even with the distributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events, the event producers and the event consumers are highly decoupled and the architecture itself is extensible.
-    - The reason is that you may add or remove consumers without impacting the consumer in any way.
-    - Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread across multiple components.
-    - Each of these components, the producers and the consumers have the autonomy to make business decisions.
-    - With APIs, it is easy to understand the flow because the business logic is centralised.
-    - With event driven architecture, it is relatively difficult to follow the business logic.
+    \subsection{Differences between API and Event Driven Architectures}
+    In the case of APIs, the caller has a knowledge of the API endpoint, whereas in the case of events the producer doesn't know any consumer.
+    APIs are synchronous, meaning that the caller has to wait for the response to come back. The caller is blocked.
+    In the case of events, a producer just produces an event and moves on. Note it does not even depend on the availability of the consumers.
+    What this means is that it can lead to higher availability in the case the consumer is not available
+    The producer moves on and when the consumers comes up it receives the event data.
+    APIs are based on the reqeust response paradigm wheres in the case of events the message consists of event data, which can be the state data or the metadata in the case of the API.
+    Even with the distributed architecture, there is a relatively high level of coupling between the API caller and the API endpoint, whereas in the case of events
+    , the event producers and the event consumers are highly decoupled and the architecture itself is extensible.
+    The reason is that you may add or remove consumers without impacting the consumer in any way.
+    Typically with APIs, the business logic is centralised, whereas in the case of events the business logic may be spread across multiple components.
+    Each of these components, the producers and the consumers have the autonomy to make business decisions.
+    With APIs, it is easy to understand the flow because the business logic is centralised.
+    With event driven architecture, it is relatively difficult to follow the business logic.
 
-    EDA is preferred for microservices but both APis and events can be used. The decision depends on your use case and your requirements.
+    EDA is preferred for microservices but both APis and events can be used.
+    The decision depends on your use case and your requirements.
 
-    \subsubsection{Summary}
+    \subsection{Section Summary}
     Events indicate that something of significance has happened.
     Event driven architecture is a software architecture paradigm which is based on events.
     By nature, EDA uses asynchronous communication between consumers and producers.
@@ -1577,35 +1591,41 @@
 
     \section{Domain Events - Pattern}
     Events are an integral part of the model defined for the bounded context.
-    - It is important to capture all the relevant events within a bounded context, as a part of the model and the ubiquitous language for that bounded context.
-    - These evetns are raised by the model components, when there is some kind of a state change.
-    - Each of these components can raise events to indicate some kind of state change.
-    - There may be other sources of events within a micro service.
-    - There may be application monitoring but this is not emitting events related to the bounded context.
-    - These are technical events and are not a part of the bounded context.
-    - Components that are emitting events are referred to as the event sources.
-    - Event constumers are the consumers of those events and these event consumers may be a part of the same microservice.
-    - In that case the events emitted by the event source are referred to as the domain events.
-    - Events commited by the event source may be consumer by other microservices.
-    - What that means is that an event defined in one bounded context is getting consumed in a different bounded context.
-    - In such cases, the event is referred to as an integration event.
-    - Event consumer may also be part of an external services. Basically can be thought of as a legacy service, APIs or any other service not implemented as a microservice in such cases.
-    - Semantically there is no difference between domain events and integration events.
-    - Its just the consumer that decided whether the event will be referred to as the domain event or the integration event.
+    It is important to capture all the relevant events within a bounded context, as a part of the model and the ubiquitous language for that bounded context.
+    These events are raised by the model components, when there is some kind of a state change.
+    Each of these components can raise events to indicate some kind of state change.
+    There may be other sources of events within a microservice.
+    There may be application monitoring but this is not emitting events related to the bounded context.
+    These are technical events and are not a part of the bounded context.
+    Components that are emitting events are referred to as the event sources.
+    Event consumers are the consumers of those events and these event consumers may be a part of the same microservice.
+    In that case the events emitted by the event source are referred to as the domain events.
+    Events commited by the event source may be consumer by other microservices.
+    What that means is that an event defined in one bounded context is getting consumed in a different bounded context.
+    In such cases, the event is referred to as an integration event.
+    Event consumer may also be part of an external services. Basically can be thought of as a legacy service, APIs or any other service not implemented as a microservice in such cases.
+    Semantically there is no difference between domain events and integration events.
+    Its just the consumer that decided whether the event will be referred to as the domain event or the integration event.
 
+    \subsection{Formal definition of domain event.}
     Formal definition of domain event.
-    - A domain event is a message that informs other parts within the same bounded context that something of significance has happned.
-    - This is the key part within the same bounded context.
-    - Now, when a domain event is triggered, it indicated a state change within the bounded context and the consumers of the event revieve the event message and execute some busines logic within the same bounded context.
-    - Note: The domain event is triggered within a bounded context and it is consumed within that same bounded context.
-    - The reason why events have become an integral part of the domain driven design is that events occur naturally.
-    - Important Note: That is all domains have concept of events.
-    - A quick way to identify events in a domain is to look for statements like when this has happened then do this.
-    - This part represents the event and this part represents the reaction to the event that is the business logic.
-    - This reaction is known as a side effect......!!!
+    A domain event is a message that informs other parts within the same bounded context that something of significance has happened.
+    This is the key part within the same bounded context.
+    Now, when a domain event is triggered, it indicated a state change within the bounded context and the consumers of the event receive the event message and execute some busines logic within the same bounded context.
+    \begin{note}
+        Note: The domain event is triggered within a bounded context and it is consumed within that same bounded context.
+    \end{note}
+    The reason why events have become an integral part of the domain driven design is that events occur naturally.
+    Important Note: That is all domains have concept of events.
+    A quick way to identify events in a domain is to look for statements like when this has happened then do this.
+    This part represents the event and this part represents the reaction to the event that is the business logic.
+    This reaction is known as a side effect......!!!
 
-    Language plays an important role in domain driven design. Important to be very careful when you are naming you events.
+    Language plays an important role in domain driven design.
+    Important to be very careful when you are naming you events.
     Always use past tense as event has already happened.
+
+    \subsubsection{Best Practices}
     Best Practices:
     - Ubiquitous language so that there is not need of translation between IT teams and Business teams
     - Do not add "event" as a suffix to the event name or do not add "operation" as a suffix.
@@ -1619,24 +1639,24 @@
 
     Common misconception about event realisation is that events have to be managed with messaging but that is not true for domain events.
     Domain events may be emitted and consumed synchronously, for example by way of direct function calls.
-    - Note: Domain event producer and the handler are in the same process.
-    - You can use asynchronous mechanism such as in-memory messaging or even an external message broker.
-    - State changes and raising of the events need to happen atomically.
-    - In the case of synchronous calls, its easier to implement such mechanisms, whereas with asynchronous you will need to use the appropriate patterns.
+    Note: Domain event producer and the handler are in the same process.
+    You can use asynchronous mechanism such as in-memory messaging or even an external message broker.
+    State changes and raising of the events need to happen atomically.
+    In the case of synchronous calls, its easier to implement such mechanisms, whereas with asynchronous you will need to use the appropriate patterns.
 
-    \subsubsection{Summary}
-    - Two types of events - domain and integration events.
-    - Domain events are emitted and handled within the same bounded context, whereas integration events are handled outside of the bounded context.
-    - Domain events may be handled synchronously as well as a asynchronously appropriate.
-    - Naming conventions should be used for naming events and the event handlers.
-    - State updates and raising of the event must be done in a unit of work or in a transaction.
+    \subsection{Section Summary}
+    Two types of events - domain and integration events.
+    Domain events are emitted and handled within the same bounded context, whereas integration events are handled outside of the bounded context.
+    Domain events may be handled synchronously as well as a asynchronously appropriate.
+    Naming conventions should be used for naming events and the event handlers.
+    State updates and raising of the event must be done in a unit of work or in a transaction.
 
 
     \section{Integration Events - Pattern}
-    - Event consumers are outside the source Bounded Context
-    - Can be consumed by external services
-    - An integration event is a message that informs components outside of the source Bounded Context that something of significance has happened
-    - A integration even does not lead to any state changes in the source Bounded Context
+    Event consumers are outside the source Bounded Context
+    Can be consumed by external services
+    An integration event is a message that informs components outside of the source Bounded Context that something of significance has happened
+    A integration even does not lead to any state changes in the source Bounded Context
 
     \subsubsection{Domain versus Integration Events}
     - Domain
@@ -1669,10 +1689,12 @@
     Integration Event consumer
     - Consumer may leverage anti corruption layer
 
-    \subsubsection{Summary}
-    - Domain events may be published as integration events
-    - Integration events published asynchronously
-    - Consumer bounded context may use ACL
+    \subsection{Section Summary}
+    \begin{itemize}
+        \item Domain events may be published as integration events
+        \item Integration events published asynchronously
+        \item Consumer bounded context may use ACL
+    \end{itemize}
 
 
     \chapter{Event Storming for creating shared knowledge}
@@ -2759,6 +2781,7 @@
     \chapter{Microservices and API}
 %TODO Do excercises and hands if necessary --- or go do my own
 
+
     \section{Microservices - API Realisation}
 
     \subsection{API - Application Programming Interface}
@@ -2783,6 +2806,7 @@
 
     \paragraph{}
     Both have pros and cons.
+
 
     \section{Introduction to REST API}
 
@@ -2859,10 +2883,10 @@
     \subsection{An example}
     Consider ACME travel HTTP endpoint.
     \begin{itemize}
-    \item Client will use this endpoint to perform CRUD operations to create a resource (POST).
-    \item GET to retrieve the HTTP resource.
-    \item PUT for updating the state of an resource (consider idempotency).
-    \item DELETE verb needs to be used for deleting a resource.
+        \item Client will use this endpoint to perform CRUD operations to create a resource (POST).
+        \item GET to retrieve the HTTP resource.
+        \item PUT for updating the state of an resource (consider idempotency).
+        \item DELETE verb needs to be used for deleting a resource.
     \end{itemize}
 
     \subsection{Summary - What makes an API Restful?}
