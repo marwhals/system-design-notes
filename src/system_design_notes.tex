@@ -16,6 +16,51 @@
 \usepackage{wasysym}
 \usepackage{tikz} % Helvetica as a sans-serif font alternative
 \usepackage{mdframed}
+\usepackage{pdflscape}
+\usepackage{lscape}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetikzlibrary{shapes, arrows}
+
+% Clients & actors
+\tikzstyle{external}   = [ellipse, draw, fill=blue!20, text centered, minimum height=2em]
+\tikzstyle{actor}      = [circle, draw, fill=orange!20, text centered, minimum size=1cm]
+
+% Services & processes
+\tikzstyle{service}    = [rectangle, draw, rounded corners, fill=yellow!20, text centered, minimum height=2em]
+\tikzstyle{gateway}    = [trapezium, trapezium left angle=70, trapezium right angle=110, draw, fill=gray!20, text centered]
+\tikzstyle{process}    = [rectangle, draw, fill=green!10, text centered, minimum height=2em]
+
+% Data & storage
+\tikzstyle{database}   = [cylinder, draw, shape border rotate=90, aspect=0.5, fill=white, text centered]
+\tikzstyle{queue}      = [tape, draw, tape bend top=none, tape bend height=0.4cm, fill=red!20, text centered]
+\tikzstyle{storage}    = [folder, draw, fill=green!10, text centered]
+\tikzstyle{document}   = [document, draw, fill=cyan!10, text centered]
+
+% Infra & cloud
+\tikzstyle{cloud}      = [cloud, draw, fill=gray!10, text centered, minimum height=2em]
+\tikzstyle{server}     = [rectangle, draw, fill=gray!20, text centered, minimum height=2em, minimum width=2cm, drop shadow]
+\tikzstyle{monitor}    = [rectangle, draw, fill=cyan!10, minimum width=3cm, minimum height=2cm, text centered]
+\tikzstyle{bus}        = [rectangle, draw, fill=purple!10, minimum width=6cm, minimum height=0.5cm, text centered]
+
+% Connections
+\tikzstyle{arrow}      = [->, thick]
+\tikzstyle{darrow}     = [<->, thick]
+
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\small,             % font
+    keywordstyle=\color{blue}\bfseries,     % keywords
+    commentstyle=\color{gray}\itshape,      % comments
+    stringstyle=\color{red},                % strings
+    numbers=left,                           % line numbers
+    numberstyle=\tiny,
+    frame=single,                           % box around code
+    breaklines=true,
+    showstringspaces=false
+}
+
 \renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
 
 % Set page margins (A4 paper)
@@ -59,13 +104,20 @@
     \newpage
 
     \tableofcontents
+
+    \newpage
+
+    \listoffigures
+
+    \newpage
+
+    \lstlistoflistings
+
     \newpage
 
 %    \include{domain_drive_design/data_integrity} how to include a chapter etc
 
-
     \chapter{Introduction}
-
 
     \section{Goals of this document}
     A set of personally useful notes relating to software architecture
@@ -4689,6 +4741,186 @@ No network partition then no tradeoff and both consistency and availability can 
 
 % Example of including a code snippet
 
+    \begin{tikzpicture}[node distance=2.5cm]
+
+% Nodes
+        \node (client) [external] {Client};
+        \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+        \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+        \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+        \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+        \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+% Databases
+        \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+        \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+        \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+        \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+% Message Broker
+        \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+% Connections
+        \draw [arrow] (client) -- (gateway);
+        \draw [arrow] (gateway) -- (svc1);
+        \draw [arrow] (gateway) -- (svc2);
+        \draw [arrow] (gateway) -- (svc3);
+        \draw [arrow] (gateway) -- (svc4);
+
+        \draw [arrow] (svc1) -- (db1);
+        \draw [arrow] (svc2) -- (db2);
+        \draw [arrow] (svc3) -- (db3);
+        \draw [arrow] (svc4) -- (db4);
+
+% Event-driven communication
+        \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+        \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+        \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+    \end{tikzpicture}
+
+    \begin{figure}[ht]
+        \centering
+        \resizebox{0.95\textwidth}{!}{%
+            \begin{tikzpicture}[node distance=2.5cm]
+
+                % Nodes
+                \node (client) [external] {Client};
+                \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                % Databases
+                \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                % Message Broker
+                \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                % Connections
+                \draw [arrow] (client) -- (gateway);
+                \draw [arrow] (gateway) -- (svc1);
+                \draw [arrow] (gateway) -- (svc2);
+                \draw [arrow] (gateway) -- (svc3);
+                \draw [arrow] (gateway) -- (svc4);
+
+                \draw [arrow] (svc1) -- (db1);
+                \draw [arrow] (svc2) -- (db2);
+                \draw [arrow] (svc3) -- (db3);
+                \draw [arrow] (svc4) -- (db4);
+
+                % Event-driven communication
+                \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+            \end{tikzpicture}%
+        }
+        \caption{Microservices Architecture}
+        \label{fig:microservices}
+    \end{figure}
+
+    \begin{landscape}
+        \begin{figure}[ht]
+            \centering
+            \resizebox{0.9\linewidth}{!}{%
+                \begin{tikzpicture}[node distance=2.5cm]
+
+                    % Nodes
+                    \node (client) [external] {Client};
+                    \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                    \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                    \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                    \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                    \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                    % Databases
+                    \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                    \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                    \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                    \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                    % Message Broker
+                    \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                    % Connections
+                    \draw [arrow] (client) -- (gateway);
+                    \draw [arrow] (gateway) -- (svc1);
+                    \draw [arrow] (gateway) -- (svc2);
+                    \draw [arrow] (gateway) -- (svc3);
+                    \draw [arrow] (gateway) -- (svc4);
+
+                    \draw [arrow] (svc1) -- (db1);
+                    \draw [arrow] (svc2) -- (db2);
+                    \draw [arrow] (svc3) -- (db3);
+                    \draw [arrow] (svc4) -- (db4);
+
+                    % Event-driven communication
+                    \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+                \end{tikzpicture}%
+            }
+            \caption{Microservices Architecture}
+            \label{fig:microservices}
+        \end{figure}
+    \end{landscape}
+
+    \begin{landscape}
+        \begin{figure}[ht]
+            \centering
+            \resizebox{0.9\linewidth}{!}{%
+                \begin{tikzpicture}[node distance=2.5cm]
+
+                    % Nodes
+                    \node (client) [external] {Client};
+                    \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                    \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                    \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                    \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                    \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                    % Databases
+                    \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                    \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                    \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                    \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                    % Message Broker
+                    \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                    % Connections
+                    \draw [arrow] (client) -- (gateway);
+                    \draw [arrow] (gateway) -- (svc1);
+                    \draw [arrow] (gateway) -- (svc2);
+                    \draw [arrow] (gateway) -- (svc3);
+                    \draw [arrow] (gateway) -- (svc4);
+
+                    \draw [arrow] (svc1) -- (db1);
+                    \draw [arrow] (svc2) -- (db2);
+                    \draw [arrow] (svc3) -- (db3);
+                    \draw [arrow] (svc4) -- (db4);
+
+                    % Event-driven communication
+                    \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+                \end{tikzpicture}%
+            }
+            \caption{Microservices Architecture}
+            \label{fig:microservices}
+        \end{figure}
+    \end{landscape}
 
     \section{Code Example}
     \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
