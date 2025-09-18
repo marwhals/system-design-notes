@@ -1,7 +1,7 @@
 \chapter{Microservices Managing the Data integrity}
 Using messaging there is potential loss of the message if the MQ or the messaging broker is unavailable.
 The write side, writes the data to its database but is unable to put the message on the queue.
-Now the read side will never recieve the message.
+Now the read side will never receive the message.
 
 As a result the data across the two database instances is now in an inconsistent state.
 This kind of data loss may be prevented by using a reliable messaging pattern.
@@ -18,34 +18,36 @@ The concept of design for failure suggests that you should always anticipate tha
 As a designer of the software, you should identify the failure points in your architecture.
 
 Consider where are the failure points?
-Data base may go down or even the network may not be available to a microservice inorder to connect with the message bus etc.
+Database may go down or even the network may not be available to a microservice inorder to connect with the message bus etc.
 Even if the network is available, the external service may not be available.
 So the suggestion is that once you have identified the failure points in your architecture, proactively address the failure poitns.
 
 Note:
 The best way to find out all the failure points in an architecture are to assume that there will be failures in all interfaces and components.
-Database may go down. Run out of resources, command object may not be able to push a message to the MQ due to the failure of the MQ server.
+Database may go down.
+Run out of resources, command object may not be able to push a message to the MQ due to the failure of the MQ server.
 May be failures on the read side.
 
-As a designer, once you have identified the failrue points you need to think about the impact of those failure points.
+As a designer, once you have identified the failure points you need to think about the impact of those failure points.
 
 Example solutions:
 Write to the database and publish a message to the MQ in a single unit of work or transaction.
 Two phase commit is a mechanism that can be used for carrying out the write and publish in a single unit of work or transaction.
 Popular for the last three decades.
-In two phase commit a distributed algorithm is used for coordringating all processes involved in the distributed transaction.
+In two phase commit a distributed algorithm is used for coordinating all processes involved in the distributed transaction.
 It is also referred to as the extended architecture or just ECS for short.
 
-In the two phase commit, there is a transaction manager that coordingates the transaction across all of the involved resources.
+In the two phase commit, there is a transaction manager that coordinates the transaction across all the involved resources.
 
-The challenge with two phase commit is that it is quite complext to implement.
+The challenge with two phase commit is that it is quite complex to implement.
 A bigger issue is that a lot of distributed technologies do not support it.
 
-Due to these challenges the two phase commit is not very popular with the designers of distributed systmes.
+Due to these challenges the two phase commit is not very popular with the designers of distributed systems.
 
 
-An alternative would be to break the database write and publish steps intwo steps and use local database transactions.
-In this courses it is called the "reliable mesagin pattern". In this pattern, the right side writes the domain objet data and the event data in the database tables with a local transaction.
+An alternative would be to break the database writes and publish steps into two steps and use local database transactions.
+In this course it is called the "reliable messaging pattern".
+In this pattern, the right side writes the domain objet data and the event data in the database tables with a local transaction.
 Then the evens are replayed against querying system in a separate step.
 
 Key points.
