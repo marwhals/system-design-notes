@@ -1,0 +1,195 @@
+\chapter{Quality attributes in large scale systems}
+
+
+\section{Performance}
+Some performance metrics
+Response time - Time between client sending a request and receive a response
+Two parts, the processing time with code and databases applying business logic.
+And the waiting time.
+The duration of time that the request or response inacitvely spends in the system.
+This time is usually spend in transit in the physical network or in software queues waiting to be handled or reach its destination.
+Waiting time is also known as latency.
+
+Response time can also be called end to end latency and is an important metric.
+
+Another important metric is throughput, which is the amount of data a system can process in a given interval of time.
+The more per unit of time the higher the throughput.
+
+\subsection{Measuring}
+Consider the end to end response time.
+Consider the distribution of response times and set a measure around it.
+Use a histogram, chart etc, statistics etc.
+Especially consider tail latency, the responses that take the most time in comparison to the rest of the values.
+This tail latency needs to be as short as possible.
+Another consideration is the performance degradation point and how fast or steep the degradation is.
+This is the point in the performance graph where the performance is starting to get significantly worse as the load increases.
+Usually this means a resource is fully utilised, could be hardware resource etc or a software queue.
+
+
+\section{Scalability}
+Load and traffic patterns never stay the same.
+Seasonal, time etc.
+Scalability is a measure of a systems ability to handle a growing amount of work in an easy and cost effective way by adding resources to the system
+Optimistic scenario is linear scalability but in practice this is hard to acheieve.
+Three ways to scale
+\begin{itemize}
+    \item Horizontal scaling - Add more units of the resources that we have like multiple computers.
+    Spread the load.
+    No limit to scala.
+    Can easily add and remove systems as required.
+    Provides fault tolerance and high availability straight away.
+    Not every application can support this and will require code changes.
+    Changes will usually be once.
+    Groups of instances require more coordination and is complex.
+    \item Vertical Scaling - add more CPU, higher bandwidth etc.
+    Upgrade a computer.
+    No code changes required.
+    This has a limit and can easily reached on a global / internet system.
+    Easy to do with a cloud provider.
+    This can centralise the system and fail to provide fault tolerance and availability.
+    \item Organisational scaling - Add more engineers.
+    Before a certain point, the more engineers, the more work gets done, the more productivity is increased.
+    Eventually we get less when we add too many.
+    Meetings become more frequent and crowded.
+    Code and merge conflicts.
+    Code base will grow too large, harder for new engineers to learn the code base.
+    Testing becomes hard and slow since there is no isolation, a minor change can break everything.
+    Releases become risky since they include many changes.
+    This impacts team scalability and engineering velocity.
+\end{itemize}
+One solution is to separate code into separate services which their own code base and tech stack, release schedule etc.
+
+These scalability solutions are orthogonal to each other.
+
+
+\section{Availability}
+Bad availability - Business loses money, bad things happen on important systems.
+Availability is either the fraction of time the probability that our service is operationally functional and accessible to the user.
+That time that out system is operationally functional and accessible to the user is often referred to as the uptime of the system.
+The time-out system is unavailable is referred to as downtime.
+Availability is measured as a percentage representing the ration between the uptime and the ensure time out system is running.
+This is the total sum of uptime and downtime of the system.
+Availability is measured in percentages.
+Other metrics are MTBF and MTTR.
+
+MTBF - the mean time between failures, represents the average time our system is operational.
+This is useful when dealing with multiple pieces of hardware.
+Most stuff is on the cloud and this available upfront.
+
+MTFR - mean time for recovery - the average time it takes to detect and recover from a failure, which is the average down time of our system.
+Until failure is recovered from, the system is essentially non-operational.
+
+Availability of a system is the MTBF divided by the sum of MTBF and MTTR.
+Use formula to estimate availability.
+%    Add equation
+Note: If we minimise the average time to detect and recover from a failure theoretically all the wy to 0 we can essentially achieve 100\%
+availability regardless of the average time between failures.
+This is not practical but detectability and fast recovery has a positive impact on availability.
+
+
+\section{Fault tolerance and high availabilty}
+Three categories of failures.
+Human error, software errors like garbage collections and hardware failures.
+
+Best way to achieve high availability in our system is through fault tolerance.
+This enables the system to remain operational and available to the users despite failures within one or multiple components.
+When failure happen fault tolerance will allow the system to continue operating at the same level of performance or reduced performance.
+But it will prevent the system from being entirely unavailable.
+
+Fault tolerance revolves around three major tactics.
+Failure prevention, failure detection and isolation and recovery.
+
+First thing to stop a system going down is to eliminate any single point of failure in our system.
+Best way to do this is through replication and redundancy.
+Replicas, spatial redundancy and time redundancy.
+
+Two strategies for redundancy and replication.
+
+\paragraph{}
+Active-active architecture - Requestions fo to all the replicas, replacement is available immediately.
+This allows for horizontal scalability but also coordination between all the replicas since they are taking requests.
+Not easy to keep in sync and has additional overhead.
+
+\paragraph{}
+Active-passive - one primary instance, passive instances take periodic snapshots.
+Lose ability to scale out system, all the requests go to one machine.
+Implementation is a lot easier, one instance is the most up to date, the rest or followers.
+
+Second tactic for fault tolerance - failure isolation and detection
+To achieve this we need a monitoring service to monitor the health of our instances via health check messages.
+Alternatively can listen to periodic messages called heartbeats, that should come periodically from healthy instances.
+
+In either strategy if monitoring service does not hear from the for a predefined duration of time, it can assume that the server is no longer available.
+Can lead to false positives.
+Doesn't need to be perfect, as long as there are not false negatives.
+False negatives mean that the monitoring service failed since it didn't detect it.
+
+Monitoring service can be more complex
+Can monitor for certain conditions, can collect data like number of exceptions, latency etc.
+
+\subsection{Failure recovery}
+Third tactic for fault tolerance.
+If we can detect and recover from each failure faster than the user can notice then our system will have high availability.
+Once we detect the and isolate the faulty instance or server several actions can be taken.
+Stop sending any traffic or workload to that host.
+Attempt to restart it with the assumption that the problem will be fixed after a restart.
+Perform a rollback.
+i.e go to a previous version that was stable and correct. Useful for deploying updates.
+
+
+\section{SLA. SLO, SLI}
+Aggregates of quality attributes: SLA, SLOs and SLIs.
+
+\subsection{SLA}
+An agreement between the service provider and clients/users with regards to quality attributes like availabilty, performance and data durabilty and the time it takes to respond to failures.
+Includes penalties if those agreements are breached.
+
+Example penalties include: Refunds and service credits.
+
+Usually exists for external paying users but sometimes for free users.
+Occasionally for internal users but the penalties are minor if they exists.
+Free services don't usually publish SLAs.
+
+If other users rely on the service then it is important that they know the SLAs.
+Example users have their own SLAs
+
+\subsection{SLO}
+Service level objective - Individual goals that we set for the system.
+Each SLO represents a target value/ range of values that the service needs to meet.
+Quality attributes will make their way into the SLOs. Availability, end to end latency etc.
+
+SLOs are within a SLA.
+
+\subsection{SLI}
+Service level indicator - A quantitative measure of a SLO using a monitoring system. Logs could be used to calculate this.
+Once calculated this can be compared to the SL Objectives.
+
+\subsection{}
+SLA are usually created by business and legal teams.
+SLOs are defined by the architects and software engineers as well as the indicators.
+
+\paragraph{Considerations}
+Think about the metrics the user cares about.
+Don't measure everything.
+Define service level objectives around those metrics.
+From the SLO we can consider SL indicators to track the SLOs.
+
+Another consideration is the les SLOs the better.
+Too many SLOs make it hard for prioritisation.
+With a few SLOs its easier to focus software architecture around goals.
+
+Another - set realistic goals and allow room for error.
+Save costs and deal with unexpected issues.
+Commit to less than what can be provided.
+Important for external SLAs especially to avoid penalties.
+Internally these goals can be more aggressive.
+
+Another consideration, create a recovery plan when SLIs are indicating that SLOs are not being met.
+I.e - decide what to do if they system is down for long periods of time, performance degradation or bugs.
+This plan could include automatic alerts, automatic fail-overs, rollbacks, restarts, etc.
+and handbooks for certain situations.
+This avoids having to improvise in an emergency.
+
+
+\section{Performance testing}
+Placeholder for stuff to do with performance testing.....

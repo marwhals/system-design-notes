@@ -1,0 +1,1298 @@
+\chapter{Cloud Architecure patterns}
+
+\section{Motivations}
+It is the business logic and the user that defines out software product to the outside world.
+When considering quality requirements, products that have functionally have nothing in common are facing the exact same challenges.
+This means they can benefit from the same solutions.
+While companies may not have anything in common externally, they can benefit from the same scalability, extensibility patterns internally.
+All companies are expected to be highly available and reliable.
+
+\section{Cloud computing}
+Provides infinite computation, storage and network capacity.
+Infrastructure as a service, without this every company would spend months hiring specialists and building infrastructures to deliver a basic product.
+Cloud charges only for the services that are used.
+This removes the barriers for startups since there is on high upfront cost.
+Cloud also provides message brokers, DBs etc.
+
+\subsection{Downside}
+Non of that infrastructure is owned by the company.
+
+It is out of the companies control.
+
+Typically don't get the best hardware and a lot of it has already been used.
+Runs the risk of failing and there is nothing that can be done about it.
+The bigger the system the higher the probability of failure is.
+Monthly bill will get bigger and bigger as the company grows.
+As an architect need to manage cost, scalability and profitability.
+
+Cloud architecture can be though of building reliable systems using unreliable components.
+
+This type of architecture will have to account for reliability and handling failures a lot more seriously.
+
+\section{Scalabilty patterns}
+
+\subsection{Motivations}
+These patterns allow us to architect important patterns that allow is to architect and deploy a highly scalable system for every domain and use case.
+This will enable out business to handle billions of requests per day process, petabytes of data and most importantly and do it ain a cost effective way in a cloud environment.
+
+\section{Load Balancing Pattern}
+
+\subsection{Problem being solved}
+Simple web app with high traffic will eventually run out of CPU, memory or network capacity of single server will either crash or significantly degrade its performance.
+A situation we want to avoid and upgrading that server to a more powerful virtual machine will only delay this problem.
+
+\subsection{Pattern Description}
+The load balancing as a pattern places a dispatcher between the source of the data or network requests to out system and the workers that process that data and send back out response.
+In this pattern, the dispatcher routes each request from the client to one of the available workers.
+This was if the number of clients grows or the rate at which those clients send us requests increases, we can add more workers and spread the load among all of them.
+This allows for the scaling of our system very quickly without the need to make any significant changes to out system.
+
+A very common use case of load balancing is balancing HTTP requests from the front end to the backend.
+The front end can be either a mobile app installed on end users devices or run as a client side JavaScript on the user's web browsers,
+and the back end is a set of application instances we run on the cloud infrastructure
+
+Those applications instances typically run as identical copies of the same application on separate physical or virtual machines.
+This way, instead of the clients sending a reqeust from the front end directly to our backend servers, their requests all go to the load balancing dispatcher and this dispatcher routes each request to one of the application instances.
+
+Example, if service one and service two get a lot of requests, we can scale them up and place more workers behind their load balancing dispatchers, but if service three doesn't get that much traffic then we can scale it down, which will help us save money.
+
+\subsection{General Techniques}
+
+\subsubsection{First Technique - Use a cloud load balancing service}
+The first one is by using a cloud load balancing service.
+This is a special cloud managed service whose entire purpose si to accept a high load of network requests and root them to our backend servers
+The implementation details of the cloud load balancing service are hidden from us and are considered proprietary tech lock in.
+They may start with a single load balancer instance that takes all the incoming requests from the client and based on the configurable, the algorithm routes those requests to a group of out servers.
+
+However if we deploy our service instances in different isolation zones, then the load balancing service may also run as multiple instances, one in each zone and as the traffic grows that cloud load balancing service may scale itself up and run as a group of load balancer instances.
+Additionally each load balancer instance is monitored and is automatically restarted if something if something happens to it.
+This way we don't end up in a situation where there load balancer itself becomes a single point of failure or performance bottleneck.
+Now we can use the cloud load balancing service to route requests from external clients to out backend servers, but we can also use it between different services internally, just like we saw before.
+
+\subsubsection{Second Technique - Use a message queue or a distributed message broker}
+The second way to implement the load balancing pattern is using a message broker or a distributed message using the message broker.
+
+We can have one or multiple publishers sending messages to the message broker, and on the receiving end, we can have a group of consumer workers that read those messages similarly to the load balancer.
+Depending on the volume of messages, we can scale those messages similarly to the load balancer.
+Depending on the volume of messages we can scale those consumer instances up and down as we need to do so we can keep up with the rate of incoming messages.
+
+\begin{note}
+    Worth noting that message brokers should only be used internally between services, while a load balancer is perfectly suited for taking requests from external services.
+    And just like in the case of a cloud load balancing service.
+    Most modern message broker solutions are implemented as distributed systems that use replication, redundancy and run as a group of instances.
+    This way the message broker is scalable on its own and transient failures within the message broker do not impact our system.
+\end{note}
+
+\subsection{Software design and architecture considerations}
+The first consideration or decision we need to make is the algorithm the load balancer uses to route each incoming reqeust to a given worker.
+This routing algorithm heavily depends on the design of the backend we're routing traffic to.
+
+The first algorithm is round robin algorithm, the load balancer is routing each incoming reqeust sequentially to the next worker instance.
+This algorithm is very simple and is usually the default for evey load balancer implementation.
+
+\subsubsection{Important Note} This algorithm works well only under the assumption that our application is stateless.
+in other words the assumption is that each reqeust from a client can be handled in isolation by any on the target application servers.
+However, this isn't always possible and in many cases we need to maintain an active session between the particular client and the server its communicating with.
+
+Classic example of such a scenario is if after authenticating a suer we keep the users credentials on the server side to make every subsequent request faster.
+
+Now, if we use the round robin algorithm to route requests to such an application, the client would have to re authenticate every time for every single requests.
+Similarly, if a client is uploading a very broken down into multiple requests.
+We want to make sure that all those requests are going to the same server.
+
+And here again if we use the round robin algorithm, our system will just not work.
+In those cases, we can use a different algorithm which is called sticky session or session affinity.
+Using the algorithm, the load balancer tries its best to send traffic from a given client to the same server as long as that server is healthy.
+This can be achieve by placing a cookie on the clients devices, which will be sent with every request to the load balancer.
+
+Another way to do this is simply using the clients IP address as the identifying attribute in each request.
+From that point on, every reqeust that comes from that particular client can be tracked and routed to the same server for the duration of the session.
+However, this algorithm works great only for relatively short sessions, but if one particular server gets stuck with too many long sessions, then it will have a disproportionately larger number of requests to handle.
+
+For these situations, there is another algorithm which is called least connection.
+Using this algorithm, the load balancer will route new requests to servers that have the least number of already established connections.
+Open the least connections algorithm is particularly useful tasks associated with long term connections, such as in the case SQL, LDAP and other similar scenarios
+
+Another cloud computing feature that typically goes hand in hand with load balancing is a feature that is called \textit{Auto scaling}
+
+Typically, every cloud computing instance, such as a physical or virtual machine, runs a few big run processes called agents.
+Those agents collect data about the network traffic, memory consumption or CPU utilisation on each host.
+Using this real time data collected from each server, we can define out of scaling policies to increase or decrease the number of services based on those metrics
+Additionally, all cloud vendors allows us to tie those auto scaling policies to the load balancing service.
+It is always aware of the size and addresses of the backend servers at any given moment.
+
+This powerful combination between dynamic resizing and load balancing gives us the ability to automatically scale out system up when the traffic and demand is high and save costs by scaling it down when the traffic to out system is low.
+
+\subsection{Pipes and Filters Pattern}
+Follows the stream of water flowing through a series of pipes and getting filtered in multiple stages until it gets to the desired condition.
+Instead it is data and the filters are isolated components that process that data at different stages/
+-- A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
+-- The origin of the data is referred to as the data source and the final destination for that data after it gets through.
+-- All the desired processing stages is often called a data sink
+
+\subsubsection{Example}
+Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that receives data samples from sensor or end devices/
+-- A few example of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
+-- The pipes that connect the filters in this pattern are typically distributed queues or message brokers
+-- Its also worth pointing out that the entire data doesn't have to flow through those so called pipes.
+-- Can store data in a temporally location on the distributed files system or even a database and simply send notifications about the new data and where to find it
+
+\subsubsection{Examples and scenarios}
+Can start with a simple application that takes either a particular type of even or input request as a trigger.
+That event can carry some information that we need process through multiple stages before we make some kind of decision or get that data into a state that we can store in a database.
+-- If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
+--- First problem is the tight coupling between all different processing components.
+--- For example, since they're part of the same application, they will need to be implemented in the same programming language
+
+-- What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
+----- While using Java or C-Sharp to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
+---- This can no easily be done.
+
+Second problem is each processing gtype may require a completely different type of hardware to perform it processing most effectively.
+--- Hardware for machine learning, fast CPU cores etc, lots of memory, a high bandwidth network card
+
+If we have all the takes implemented in a single application, we can't ever getr to a point where each task is running on the most optimal hardware for its needs.
+Finally, each task may require a completely different number of instance to provide a good enough throughput and be able to handle the incoming data.
+-- If we split the processing pipeline into separate independently deployed software components, we can use the best programming language, or ecosystem for each type of operations.
+-- And since each such component can run on its own type of hardware we can guarantee that the entire pipeline runs optimally, not only from the performance perspective, but also in terms of the cost of infrastrcuture.
+-- Because in a cloud environment, each type of hardware is priced different based on its features and capabilities.
+-- We can easily scale the number of instances for each processing component as we need, while saving costs on more processing lightweight processing units for the others.
+
+Finally, we can also get higher throughput by executing independent tasks in parallel on separate computers.
+
+\subsection{Real life example}
+This pattern is extensively used for processing stream of data about user extensively for processing streams of data user activity, such as in the digital advertisement business.
+Its used to process data from end devices in the internet of things industry and its also popular in image and video processing pipelines.
+
+\subsubsection{Specific example - video sharing service}
+When a new video is uploaded, it needs to go through a few stages before it can be optimally streamed simultaneously to different devices in different geographical locations.
+-- First stage may be splitting the original potentially large video file into smaller chunks.
+-- This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
+-- Then once we have the individual chunks separated, wenne to select a single frame form each chunk to be the thumbnail
+-- This way when user wants to jump to a different part of the video, they can have those thumbnails as guidelines.
+-- In the next stage, we resize each chunk to different resolutions and bit rates
+----- This allows us to use a technique called adaptive streaming with the adaptive streaming technique
+----- We can change the resolution of the video dynamically while streaming the video to the user depending on their network conditions
+------ Example when they have a good connection we can send them high quality high resolution chunks of the video, and if their connection speed drops, all of a sudden we can seamlessly switch to the lower quality chunks to avoid buffering delays
+-- Finally a tht elast stage we encode each chunk in each of the different resolutions to different formats, so we can support multiple types of devices and video players.
+-- Audio parts
+---- video needs to be resized frame by frame to different resolutions and bit rates
+--- Audio doesnt need that
+---- However we can pass the audio through a parallel pipeline of filters where we can use natural processing libraries and specialised hardware to transcribe any speech present in the audio into text at the next stage
+-- We can either provide caption to translate the text to different languages and then feed that to the captioning filter as well
+-- So at the end of this pipeline, we'll have the audio accompanied by text files that represent captions of that audio in different languages.
+-- Finally we can have another branch in out pipeline which can sample sections of the video or audio and run proprietary algorithms that detect whether this content is copyrighted or consider to be inappropriate for out targer audience.
+-- In that case, it can either alert a special team of specialists to manually review it or simply reject the video altogether
+
+\subsubsection{Important considerations}
+Firstly, its important to note that there is quite a fair amount of overhead and complexity involved in maintaining this architecture, especially if the individual filters are too granular
+- Its important to balancer between that overhead and the benefits we get from having this clean separation
+- The second thing is to keep in mind is making sure that each filter is stateless and is provided with enough information as part of its input to perform it tasks.
+- The last important consideration si that this pattern is not a good fit for situation where all the operations within the pipeline need to be performed as part of a transaction
+-- The reasons for that is performing a distributed transaction across multiple independent components is extremely difficult and inefficient, especially if we need to abort and redo them frequently.
+
+\subsubsection{Summary}
+======================================================================
+
+\subsection{Scatter Gather Pattern}
+%TODO fix this
+
+Similarly to the load balancing pattern in the scatter gather pattern, we also have the client or the requester who sends their request to out system.
+Then on the other hand, we have a group of workers that respond to those senders requests.
+In the middle we have the dispatcher, which dispatches the reqeust form the sender to the workers and aggregates their results.
+Unlike the load balancing pattern, where each reqeust from the sender is dispatched to only one worker, in the scatter gather pattern, the dispatch error allows the request to all the workers.
+Later the dispatcher gathers the response from all the workers, aggregates them into a single response and sends it back to the sender.
+Another difference between the load balancing pattern and the scatter getter pattern is that unlike in the load balancing pattern where the workers are actually different.
+Those workers can either be instances of the same application but have different data.
+They can be different service within our company that provide different functionality, or they can be external services owned by different companies that partner with us.
+The core principle of the scatter getter pattern is that each reqeust sent to a different worker is entirely independent of the other requests sent to the other workers
+Due to this process we can perform a large number of request completely in parallel, which has the potential to provide a large amount of information in a constant time that is independent of the number of workers.
+
+\paragraph{Examples}
+%TODO examples
+
+\subsubsection{Considerations}
+
+Each worker can become unreachable or unavailable at any given moment due to issues in the network or infrastructure.
+This can be an even greater issue if their workers were communicating outside of our organisation.
+
+The second thing to consider is decoupling out dispatcher from the workers.
+Use a message queue between the dispatcher and the workers to remove the dependency between knowing the existence anf the number of currently available workers.
+
+The final consideration is whether they expected the result from applying the scatter gather pattern is expected to be immediate or take a long time to accomplish.
+If the result is expected to be immediate, generally within a few millisecond or a hundreds of milliseconds then everything we describe should work just fine.
+However, if the service we're providing is some sort of deep analysis or reporting of big data which can take minutes or even hours to complete, then in this case, it may be beneficial to separate the dispatcher from the aggregator into separate services.
+
+\subsection{Execution Orchestrator Pattern for Microservices Architecture}
+Used primarily in microservices architecture
+In monolithic applications each operation can be described as a method or a function call.
+
+In large scale systems that run in the cloud, the monolithic approach is too restrictive and doesn't scale well.
+
+Many companies break the monolithic application logic into separately deployed and managed servie where each service is responsible for a particular subdomain or business logic.
+
+In this pattern we have an extra service called the Execution Orchestrator.
+The service follows the analogy of a conductor of a symphony in an orchestrator in the sens that the conductor doesn't produce any song from an instrument themselves.
+.....etc ........etc
+The orchestrator pattern doesnt do any business logic.
+Instead, its job is to manage potentially complex or long flows by calling different service through different APIs in the right order
+
+Its also responsible for handling exceptions and retries and maintain the state of flow until it gets the final result.
+
+Can think of the orchestration pattern as an extension of the scatter getter patter, but in this case, we don't have one operation to perform in parallel but instead we have a sequence of operations.
+Certain stages of the sequence may be performed in parallel, if possible while others may be performed sequentially in a cloud environment.
+
+This pattern is used very frequently when we have a microservice arhitecture where each service is very limited in functionality to its domain by design and is typically unaware of other microservices to avoid coupling.
+In many cases, those microservice are even implemented as functions and deployed as a function as a service with the cloud vendor.
+THose functions dont run until triggered by an event and they stop running when they finish their job.
+This way we can save a lot of money if we have some microservice that don't need to run very frequently.
+
+\subsubsection{Microservices Benefits Reminder}
+A lot of benefits of this architecture
+Those benefits include faster deployment, smaller code base and more importantly higher scalability since each microservice can be scaled independently.
+
+However when we use this type of architecture, we need to have all the business logic spread out across many services.
+So having on centralised service that acts as the brain for this architecture is often the most natural approach.
+And this is why this pattern is used very frequently.
+
+This doesn't prevent the orchestrator from being deployed as multiple application instances on multiple computers behind a load balancer.
+So we don't have to compromise on scalability or reliability when using this pattern.
+
+On the other hand using this pattern, we can scala out architecture very easily by adding more services if we need to.
+
+The only place that needs to be modified if we make any API or architecture changes in the orchestrator service.
+
+\paragraph{Examples}
+%TODO examples
+
+\subsubsection{Failures and Recoveries}
+Since the orchestration service is the only service aware of the only service aware of the text and the execution steps.
+It is also responsible for dealing with errors or issues that may happen during the execution flow.
+Since the orchestrator is managing the entire flow, its also easy to trace and debug such failures.
+-- Reasons for this is that we always have the orchestrator logs as the reference which can easily point use to the faulty service or bug.
+
+What happens if the orchestration service itself dies in the process.
+-- The load balancer will reroute the request to another instance without any extra care.
+-- This new instance won't know that the registration with the user is already completed so it may attempt send another registration reqeust which will of course fail.
+So one way the orchestration service can track the progress in the registration process by maintain its own database inside the database?
+The orchestration service can persist the state of th eprocess for each user.
+-- This way a new instance of the orchestration service can always pick up the task at any stage.
+
+\subsubsection{Summary}
+There is one important consideration to keep in mind when using this software architecture pattern.
+its easy to make the mistake and start adding business logic into the orchestration service.
+Sometimes its inevitable because certain functionality may be too small for creating their own separate services.
+
+The resik here is that if the orchestration service becomes too smart and performs too much business logic it basically becomes this big monolithic application that also happens to talk to microservices.
+
+Its important to keep a pulse on every addition to the orchestration service and make sure that the scope of its work starts within the boundaries of orchestration.
+
+\subsection{Choreography Pattern for Microservices}
+Can be though of as a sibling of the orchestrator pattern.
+Problem - We have a collection of microservices where each microservice is responsible for a particular type of operations for specific domain.
+the microservices are completely decoupled from each other and are potentially not even away fo each other based on an external trigger such as an even or request from a user.
+
+We need a complete flow of transactions that span multiple microservice.
+
+One solution we offered was the execution orchestrator pattern, where we have a central service that executors a flow by communicating with the relevant services until the flow is complete.
+
+While the orchestration pattern is the most intuitive and easiest to implement it has a few drawbacks.
+One of the drawbacks is the tight coupling to all the microservices in the system.
+One of the drawbacks is the tight coupling to all the microservices in the system
+----> moving to microservices is to speed up development by decoupling microservices from one another.
+Because the orchestrator pattern is tightly coupled teams will need to coordinate with one another via the orchestration service, and make sure they dont break any flow.
+--> This starts to share a lot of similarities with the monolithic application we moved away from.
+---> This is more of a distributed monolith anti pattern.
+---> In this anti pattern we getr all the problems of the monolithic architecture and lla the issues of the microservice architecture but without any of the benefits.
+
+When we have frequent changes happening in multiple microservices, their is a better software architecture called choreography.
+In the choreography patter we remove the smart orchestrator service and replace it with a dumb distributed message queue or message broker that stores all the invoking events at the same time.
+All the microservices in out system subscribe to relevant events form the message broker where they need to get involved.
+Once the microservice process and incoming event, it emits a result as another event to a different channel or topic, which in turn triggers another servers to take an action and produced another event.
+
+This chain of events keeps going all the way until the completion of the flow of transactions.
+---- The analogy, a sequence of steps in a dance.
+
+\subsubsection{Advantages}
+The advantages of this pattern in microservice architecture rae evident in terms of the loose coupling between services.
+Since the communication happens through asynchronous events, we can easily make changes and add or remove service completely independently from each other.
+This allows us to scal any flow to as many services as we want, and also we can scala out organisation much easily since we can have many teams operating autonomously with very little friction in the cloud environment.
+
+All or some of those microservices can be implemented as function as a service, which means they don't consume any resources until an event.
+
+They're interested in in the triggers of and execution, nad if they don't consume any resources, we don't have to pay for them which makes out system very cost effective.
+On the other hand if one service needs to handle frequent events in can scal automatically using out of scaling policies.
+
+\subsubsection{Downsides}
+Since we don't have a centralised orchestrator rit is a lot harder to troubleshoot things if they go wrong as part of the execution of a flow.
+its also very hard to trace the flow of events since all of those events are asynchronous.
+Consider these things when planing in using that pattern.
+
+Note - since the messages are done via a message broker the messages are not lost.
+The messages can be processed when the service is back online in the event it is lost.
+
+In an effort to catch issues before they go into production, we will need to write more complex integration tests when using the choreography pattern.
+This becomes an even bigger challenge as well add more services.
+
+\subsubsection{Summary}
+In this pattern all the microservices work together, following a sequence of steps to complete a certain flow.
+All the communication among the service sis typically done through asynchronous events.
+While this pattern is very scalable and cost effective, it may get a little challenging when things go wrong.
+Especially when we ned to pinpoint a problem with a particular service.
+
+\section{Performance Patterns for Data Intensive Systems}
+
+\subsection{Map Reduce Pattern for Big Data Processing}
+MapReduce is a simplified processing model that came from Jeff Dead and SJ Gigawatt via Google in 2004
+Describers the complexity involved in running computations on very large inputs.
+The challenge of processing large data sets is that in order for use to precess them in a reasonably short time we need to distributed bother computation and the data across hundreds or even thousands of machines.
+The issues of personalising and distributing the data, scheduling execution, aggregating the results, handling and recovering from failures become the dominant factor event for the most straight forward computations.
+Also the code we ned to write as well fas the infrastructure we need to build for each tasks becomes a major overhead.
+
+The MapReduce pattern offers the same programming model to implement every computations.
+We can take any task and run it on the MapReduce framework that manages the execution of the entire computation.
+The MapReduce framework takes care of parallelism and distributed the work, handling, failures and collecting the result.
+
+After the paper, there have been multiple open source and proprietary cloud implementations of this framework and its used by many different companies for big data processing, machine learning, distributed search, graph traversal etc.
+
+\subsubsection{Map reduce model}
+The programming model of MapReduce requires us to describe each computation we want in terms of two simple operations, map and reduce.
+If we can't describe the desired computation in one set of map and reduce functions we can break it into multiple MapReduce executions and simply chain them together.
+
+First thing we ned to do as users of MapReduce is to describe out input data as a set of key value pairs, which in most cases is very straight forward.
+Then the MapReduce framework bypasses all the input key value pairs through the map function with define, which produces a new set of intermediate key value pairs.
+After that, the MapReduce framework shuffles and group all those intermediate key value pairs by key and passes them to the reduced function which we also provide.
+The reduced function then merges all the values for each such intermediate key and produces a typically smaller result of either rzerio or one value.
+
+\paragraph{Examples}
+%TODO examples
+
+If we apply this programming model, we can define the general software architecture of the MapReduce using two main componentes.
+The first component is the master which is the computer that schedule and orchestrated the entire MapReduce computation.
+The second component is a large group of work machine which can be in the hundreds or even thousands.
+The master then breaks the entire set of key value pairs into chunks.
+This way we can splint the entire data set across different machines and run the developer supplied map function on those machines completely in parallel.
+
+Each map worker runs the map function on every key value pair that was assigned to it as part of its chunk and periodically stores the results on its local storage.
+However instead of storing all the intermediate key value pairs in one file, it partitions the output pairs into outr reftions.
+
+Across all the map workers, can be a simple hash function over output key modulo R at the same time.
+The master also picks another R workers, and when the result of the ide computers do stand by and be ready to execute the reduced function.
+
+When the master notifies a reduced worker that the data for it is ready, reduced workers takes the data from the map, workers, intermediate location groups all the same key value pairs together and also sorts it by key for consistency.
+That is called shuffling.
+
+Finally, the reduced workers invoke the developer supplied reduced function on each key and list of value and outputs the results to a globally accessible location.
+
+Notice that the reduced workers are also entirely independent of each other can can run entirely in parallel.
+Also notice that the reduced workers don't need to wait for all the map workers to finish.
+Each reduced worker can start processing data immediately as soon as at lead one map worker finished its work.
+This is why we made the effort to describe out original problem in terms of map and reduce functions.
+
+Because of this programming mode, we can use this very software architecture to scale processing tasks to run in parallel on as many worker machines as we'd like.
+This allows us to process massive amounts of data in a relatively short period of time.
+
+\subsubsection{Failures and Recovery}
+Since we have potentially 100s and 1000s of worker computers, the chances that one or even some of them break in the middle of processing out data is pretty significant.
+A few things we can do.
+First of all, after the master schedules a mpa or reduced task on a work, in can ping it periodically every certain amount of time.
+If the worker stops responding, the master can mark it as failed and reschedule the task to a different worker.
+If the failed worker is a map worker, then besides rescheduling the allocated chunk of data to a new worker, it also need to notify the reduced workers about the new location for the future, intermediate key value pairs.
+
+Now while the failure of the master is statistically less likely, since theres only one of the, its still a possibility.
+So there are few ways the MapReduce framework can deal with it.
+One option is to simply abort the entire MapReduce computation and start over again with a new master.
+If out MapReduces implementation is deterministic the only penalty we pay here is the loss of time.
+Another option is to make the master take frequent snapshots of the current scheduling and log them to some place of storage.
+Then if the master fails, we can run a new master which will start by replaying the log of events and quickly pick up from where the old master left off.
+-- If we can't afford to los any time, we can have another backup worker following and be in sync with the master at all times.
+-- This way if the master fails, the backup worker can take the masters responsibility and continue orchestrating the entire execution.
+
+\subsubsection{Applying to a cloud environment}
+The good for a cloud environment because we have instant access to almost as many machine as we need.
+Cloud can handle the machine requirements, ie we need to process a large amount of data fast.
+
+Second reason, MapReduce is a batch processing pattern by design, meaning we run it on demand or on a schedule on huge data set as opposed to continuous real time processing of a stream of data.
+THis means that when we do run it on the cloud, we pay only for the resources we use during the processing onf the data, and we don't need to pay for maintaining thoughts of worker machines on a constant basis.
+Worth noting tha twe do need to pay for storing and accessing that data, but generally storage is much cheaper than computation resources.
+
+\subsubsection{Implementation}
+In practice this would never be implemented on its own.
+Instead, we either pick one of the available open source implementation of this pattern or use one that is provided to us by the cloud vendor.
+In either case, we still follow the same general process of modelling out data, writing the map and reduce functions and additionally deciding on the different parameters so we can get the best throughput for our money.
+
+\subsubsection{Summary}
+........
+
+\subsection{The Saga Pattern}
+Important principle of microservices is a database per service.
+If this principle is not followed then service will become coupled.
+If one team want to change the schema for their service they will have to coordinate that work with other teams that maintain the other microservice which use \textbf{it}
+Two teams will need to have meeting to agree on changes.
+Then they have to coordinate the migration.
+Additionally those changes may have to be made for all the microservice at the same time which defeats the purpose of the microservice architecture
+This can lead back to the anti pattern of a distributed monolith which is a worst case scenario.
+If we have separate databases we will never have that problem.
+The database just becomes an implementation detail which is hidden behind the microservice API, if the team wants to make schema change or even replace the database entirely, it will not impact any other service.
+
+Since we have on database per microservice, we lose an important property, ACID transactions.
+
+A transaction is a sequence of operations that for an external observer should appear as a single operation.
+When we have one database, we could performa a sequence of operations potentially on different records or even tables as one transaction assuming that that database supports transactions to begin with.
+
+However, when we have a microservice architecture with a separate database for each microservice, we'll lose th ability to perform those operations as part of a single transaction.
+So how can we manage data consistency across microservice with a distributed transaction that spans multiple databases?
+
+This is the problem the Saga pattern solves.
+We perform the operations that are part of the transaction as a sequence of local transaction in each database.
+Each successful operation triggers the next operation in the sequence, and if a certain operation fails the pattern rolls back the previous operation or operations by applying compensating operations that have the opposite effect from the origin operation.
+After we roll back, we can either abort the transaction entirely or retry it multiple times until we succeed.
+The decision to try or retry depends on the context.
+
+\subsubsection{Implementation}
+The Saga pattern can be implemented using the orchestrator pattern or the choreography pattern.
+
+We have an orchestration service that managed the entire distributed transaction like flow by calling different service sin order and waiting for a response from all of them depending on the response from each service.
+The orchestrator service decides whether to proceed with the transaction and call the next service or roll back the transaction and call the previous service with a compensating operations.
+
+Similarly in a choreography implementation of the saga patter, we have a message broker in the middle and the service are subscribed to relevant events.
+But in the choreography pattern we don't have a centralised service to manage the transaction, so each service is responsible for either triggering the next event int hte transaction sequence or triggering a compensating event for the previous service in the sequence.
+
+In either of those implementation, we can successfully execute transaction that span multiple services without having a centralised database.
+
+\paragraph{Example}
+
+\subsubsection{Summary}
+
+\subsection{Transactional Outbox Pattern - Reliability in Event Driven Architecture}
+Statistically if we run a large scale system on commodity hardware in the cloud components can fail at any time.
+
+When we use the transactional outbox pattern in out database we add another table called the outbox table.
+Instead of sending an event to a message broker, we add the message to the outbox table as a new record.
+What is important is that we update the relevant table in the case the user stable and thoutbox table as part of a single database transaction.
+If the database we're using supports transactions then we are guaranteed that either both tables are update or none.
+But we will never be in a situation where only one of the tables was update and the other \textbf{wasn't}
+
+Now in addition, as apart ofd the transaction outbox pattern, we add another service which we call message sender or message relay.
+This service monitor the outbox table of the database and as soon as the new message appear in that table, it take that message and sends it to the message broker.
+Then marks it as sent and then deletes it.
+
+This way we solve the problem of losing data or not sending messages and we're guaranteed that for each database update, an appropriate event will be triggered.
+
+\subsubsection{Issue with this pattern}
+First issue is duplicate events.
+-- Consider \textit{At least once delivery semantics}
+-- Idempotent operations, i.e performing an operation once or multiple times do not make a difference.
+
+Another issue. Lack of suport for transactions in our database.
+-- Add additional field or attributes to an object.
+-- The addition of new object ot a noSQL database is typically a atomic operation.
+
+Another issue, the ordering of events.
+-- Assign each message sequenceID that is always higher than the previous message in the outbox table
+-- This way the send service can always sort the message in the outbox table by that sequence ID
+
+\subsubsection{Summary}
+%TODO - summary and add example
+
+\subsection{Materialised View Pattern - Architecting High-Performance Systems}
+When we have a lot of data that we need to store about out business or its customers, usually the priority for us is to store that data most efficiently and cost effectively.
+This may mean storing different data in separate relation databases tables, or even storing some data in a separate database for higher efficiently.
+However very often the way we store the data doesn't reflect the type of workload we have on that data.
+When we send a query to read aggregate and transform that raw data into something we can analyse or even present to the user we may find some issues.
+
+The first issue is performance.
+- When we performa complex query across multiple tables or even multiple databases the query may take a very long time to complete.
+ON the other hand, if we have a uer on the revieign end of the result of that query it becomes a big problem because we have very little patience for high latency.
+
+The second problem is efficiently and cost.
+If we run the same complex query that reads aggregates or transforms large data sets repeatedly we pay an unnecessary price fo the resources to perform the query.
+Since we are in a cloud environment and we payu for every resource we use, including resource like CPU, memory and sometimes network.
+This issue can become a major financial problem for our company.
+
+The materialised view pattern solves those two problems.
+As part of this pattern, we create a new read only table and pre populated with the result of one particular query.
+We want to optimized so each time we need to get the full or partial result of that query we can read it from the materialised view directly instead of performing the enter query on the origin based tables.
+This saves a lot of latency and overhead, especially if the query involves complex aggregation functions, data transformation or table join.
+
+Now, whenever the raw data in the base tables changes, we can either regenerate the materialised view immediately or on a fixed schedule, depending the use case.
+
+\paragraph{Example}
+
+\subsubsection{Considerations for Materialised view patterns}
+Extra space for the materialised view table.
+-- In this pattern we effectively trade space for performance
+-- Pretty standard in computer science.
+
+In the cloud we need to consider this.
+We need to care about which queries we want to optimised and reserve these queries for the cases where the benefits outweighs the cost.
+
+Second consideration is where to store those materialised view tables.
+Essentially we can store the materialised view anywhere or in anyway way we want.
+However the easiest and preferred way is to store the materialised view for a query in a separate table in the same database we use for the original data.
+The benefit of going it in the same database is when that database supports materialised views as a feature out of the box.
+-- In that case, we can get automatically and efficient update to the materialised view every time the origin data in the base tables changes without the need to do it manually or programmatically.
+
+Most modern databases that support materialised views can efficiently make those update by applying only the deltas from the previous state without the need to regenerate the entire materialised view from scratch, every time there is an update to the base table.
+
+Sometimes, the base tables get update very frequently but we don't necessarily need the most up to date data in the materialised view at all times.
+In those cases, we can limit the frequency of those update as we want.
+The downside of putting the materialised view in the same database is that the database where we want to store the base tables may not be the most optimal for reading and querying data.
+As an alternative, we can also store the materialised view in a separate read optimised database, such as in an in memory cache, since we can always reconstruct that materialised view from the raw data.
+
+At any point, we don't have to worry about losing that data and that in-memory cache which saves us a lot trouble and costs of backups and redundancy.
+
+Do need to take extra care and effort to keep the materialised view up to date with the original data and with an external database.
+This needs to be done programmatically ourselves which has its own complexities.
+
+\subsubsection{Summary}
+This pattern, we pre computer and pre populate a separate table wit the results of a particular query.
+When applied to complex and frequent queries, we can significantly improve the performance of those queries in the cloud environment where we pay for resource that we reserve or use.
+We can also save alot of money by applying this pattern to large data sets that we query very frequently.
+
+\subsection{CQRS Pattern}
+In typical system that involves data store in a data base we can group the possible operation of that data into two types.
+The first type is a command
+-- A command is an action we perform that results in a data mutation
+-- These actions involve insertions of new records, updates to existing records or deletions or existing records
+---- Adding new user, deleting user etc etc etc
+
+The second type of operation is a query
+The query only reads some data from the database and returns all of it or part of it to the caller.
+
+CQRS pattern has two purposes.
+
+With CQRS we completely separate or segregate the command of they system from the query part of the system into separate databases and service where each part is responsible only for one type of workload.
+This allows us to have all the complexities of the business logic, validations and permissions checks in the command service while keeping the query service clean, simple and highly performant.
+
+This separation of concerns on the service side allows us to easily evolve each part independently using optimal data model in our programming language for each workload.
+Also if one part is update with business logic the other part doesn't need to be retested or redeployed since it didn't change on the database side.
+We duplicate all the relevant data into two separate databases.
+
+All the command type operations that involve data mutations go to the right database through the query service to the read database.
+This way we can fully optimised the command database for write operations by picking the best database for this workload.
+We can also use the most optimal structure or schema for writing operations without working about the performance of queries.
+
+Similarly we can pick the most optimal database technology and ocndifurable queries without worrying about the command type operations.
+This way we can store our data in a way that makes all our queries faster and not just a few critical ones.
+
+Note - Basically we can optimised our system for both types of operation, which is otherwise impossible to to do if we have only one database for both workloads.
+This is particularly important when we hav a scenario that involves both frequent reads or frequent writes.
+As a single distributed database can be optimised only for one type of workload at the expense of the other.
+In terms of scalability, we also gain higher level of flexibility.
+We can adjust the number of instances for each service and also adjust the number of database instances for each distributed data.
+This all depending on the rate of requests we get for each type.
+
+Synchronisation.
+Since the command side of the system keeps getting data rights and update we need a way to propagate those update to keep the query side in sync.
+To keep the command and query databases in sync every time a data mutation request is receive by the command part we publish an event that the query site can consume and act accordingly in the cloud environment.
+
+We can implement this in a couple of ways.
+Once way is to place a message broker between the command service and the query service.
+Every time th command service gets a write or update reqeust, it will publish an event to a topic that the query service subscribes to.
+In addition to making the actual modification in its own database, when the query service revives that event, it know exactly how to read it and update its own database with that data.
+
+\paragraph{Note}
+how do we make sure that each command reqeust received by the command service ends up in teh database as well as in the message broker as a single transaction?
+We can achieve this using the transactional outbox pattern, since this message broker will not delete ethe event until the query service successfully consumes it and updates its database, we are guaranteed to not lose any update.
+
+Another way we can implement synchronisation in the cloud is by using function as a service.
+We cans create a function as a service to watch the command database for any data modifications.
+If no modifications happen, that function as a service never runs and therefor doesn't cost us anything.
+When some data does get modified,the function will run, read the new data from the command database and run out customer code which will update the relevant part of the query database.
+
+\subsubsection{Drawbacks}
+In either implementation of CQRS we can only guarantee eventual consistency
+In a lot of cases this is good enough.
+But is strict consistency is required that CQRS is not the best choice.
+Additionally CQRS adds overhead and complexity to out system.
+- Now we have two databases and two separate service with their own codebases to maintain, configure and deploy.
+In addition we have the synchronisation part which could be cloud, a message broker ; that will also require configuration, development and maintenance.
+
+Its important that the performance benefits we get from CQRS are well worth the overhead.
+Otherwise things should be kept simple and there should be one database and one service.
+
+\subsubsection{Example of CQRS}
+%TODO add example
+
+\subsubsection{Summary}
+THe separate service for commands and queries allows for each service to evolve differently.
+Leads to cleaner code and easier maintenance.
+Each database can be optimised for specific workloads.
+This comes with additional overheads
+We also have to compromise on consistency.
+This pattern only supports eventual consistency.
+
+\subsection{CQRS + Materialised View for Microservice Architecture}
+Combine CQRS with materialised view
+First create CQRS pattern and create a new microservice with a read optimised database sitting behind it.
+This microservice will receive only query request for that specific data we're trying to fetch to the user but this time we are going to create one materialised view of the data from bother microservice, that own the original data to keep the materialised view in sync.
+We either introduced a message broker and then each time Microservice A or Microservice B modifies its data, it published an even to particular topic.
+They query microservice subscribes to those events and makes the necessary updates to its own materialised view.
+The second approach is using a cloud function to watch either of those tables.
+Then whenever there is an update to those tables the function will run its custom code and update the materialised view in the query database.
+-- Like any CQRS implementation we only get eventual consistency between the base tables and the materialised view.
+
+\paragraph{Example}
+%TODO examples
+
+\subsubsection{Summary}
+Using a combination of the CQRS pattern and the materialised view patterns.
+We can join data from multiple microservices stored in completely separate databases sing the materialised view pattern.
+We place the joint data in a separate table or collection and using the CQRS pattern we are able to started that materialised view in a completely separate read opimtised database sitting behind its own microservice and using even driven architecture implemented by a message broker or cloud function as a service, we are easily able to keep that external materialized view up to date with the original data.
+
+\subsection{Event Sourcing Pattern}
+In certain situations, we need to know not just the current state, but also ever step that led to it.
+This is where the event sourcing pattern is useful.
+In this pattern instead of storing current state, we only have events.
+Each event describes either a change or a fact about a certain entity in out system.
+Most importantly events are immutable, meaning tha once we get an event into our system, it never changes.
+They only think we can do is append new events to the end of the log.
+
+Now to find the current state of an entity, we simply apply or replay all teh events that happen to that entity.
+A bit like version control, but for data where each event represent only the delta or the change from the previous state.
+
+Benefit of storing those transaction instead of the balance is not we have the complete history of how we got to that balancer which can be then used in report or audits.
+-- Can detect accidents and fraudulent transactions that a client may not have been aware of.
+-- Can provide advice or recommend products.
+
+\subsubsection{Storage of events}
+Can simply store these events as a separate record in a database
+Could store these events in a message broker and publish them for any one to consume.
+Unlike databases, message brokers are particularly optimised for handling a lot of events and also make it way to maintain the order between different events at the same entity.
+--- On the other hand, performing complex queries on streams of events in a message broker is a bit harder and less intuitive.
+
+An added benefit to using event sourcing is write performance.
+Without event sourcing, if we have an intensive workload, we get high contention over the same entities in a database which typically result in poor performance.
+Using event sourcing each item becomes an append only event, which doesn't require database locking and is a lot more efficient.
+
+\subsubsection{Efficient ways of reconstructing}
+Take snapshots of certain points of the events log.
+We can replay transaction from the snapshot rather than from the beginning.
+
+Use CQRS.
+Can separate the part that appends events to our system and store them from the query part which store the current state in a read optimised database that could even be in memory database making reads even faster.
+Every time a new event comes in the query service pulls that event and updates its own state for that entity.
+If we store those events in a message broker then the query service can subscribe to that same topic or channel and pull the data straight from it and the command side doesn't need any special database.
+
+The combination between CQRS and event sourcing is very popular in the industry since we get the best of both worlds.
+We get the history and audrigin.
+We get fast and efficient writes and fast and efficient reads.
+
+With CQRS we only get eventual consistency as always which needs to be considered for the use case.
+
+\subsubsection{Summary}
+Using this pattern instead of storing the current state or an entity, we store changes or facts about this entity using events.
+This can be done using a data base or a message broker, where each approach comes with is advantages and disadvantages.
+Side benefit is better performance for write intensive workloads.
+
+Benefits of CQRS with Event sourcing
+- Auditing
+- Performant writes
+- Efficient Reads
+
+
+\section{Software Extensibility Architecure Patterns}
+
+These patterns allow for the extension of the functionality and the capabilities of a system.
+The problem we are trying to solve here is that each service has a core function.
+Basically the reason for its existence.
+In addition to this the service may need to do other things, typically collect metric about performance and send them to a monitoring service.
+Periodically,it also needs ot log events and send them to a distributed login service.
+Also to communicate with other service , it typically need to connect o service registry where it gets the most upto date address of all the services.
+May need to pull configuration files and parse them so it can adapt its business logic on the fly without having to be restarted.
+Just few examples of functions required beyond the core business logic.
+
+These functionalities are needed by multiple services and not just one.
+Following code reusability principles, one solution can be implemented those functionalities as libraries or multiple libraries.
+Can import and reuse inside each service code base.
+--- However one major problem with this approach, in a typical microservice architecture or any multi service architecture, we may want to utilised different programming languages for different problems.
+--- Its not uncommon to have one service in Java and another in Python etc etc
+------ Can't really use the same library here, would require re implementation and they may be incompatible or inconsistent.
+-=----- This can be due to different language specific differences, data types, or bugs in the implementations.
+---- Otherwise, deploying those shared functionalities as separate service feels like an overkill and has its own problems.
+
+\subsection{Sidecar and Ambassador Pattern}
+In this pattern we take the additional functionality required by the application and run it as a separate process or a separate container on the same server as the main application.
+So we get the benefit of isolation between the main service instance in the sidecar process, but at the same time they are still sharing the same host.
+So the communication between them is very fast and reliable.
+In addition since the sidecar and the core application are running together they have access to the same resources, like the file system, CPU or memory.
+
+This way the sidecar can do things like monitor the hots CPU or memory and report it on the main applications behalf.
+
+Can also read the application log files and update its configuration files easily witholut the need for any network communication.
+Also the isolation we get from running the sidecar as a separate process allows us to implement the sidecar in one language once and reuse it in any other that needs it.
+If we need to make an update all we need to do is upgrade the side car code and deploy it all to the service instances at the same time.
+Sidecar changes don't happen very often.
+
+Every time there is a change in the core service functionality, the team that own that service need to test only the changes they made in the business logic and not the functionality of the side car.
+This makes testing and deploying new business feature must faster and easier.
+
+\subsubsection{Ambassador pattern}
+A special side car that is responsible for sending older network reqeust on behalf of the service.
+It is basically like aproxy but runs on the same host as the core application.
+The amin benefit of using this pattern is that we offload all the complex network communication logic outside of the service responsibility.
+This way the code base of the core service becomes a lot simple as it containers all the relevant business logic and nothing more.
+
+On the other hand the ambassador implementation can take all the heavy lifting of handling, retries and disconnections, authentication, routing and the specifics of different communication protocol and versions.
+Now additionally, since all the communication from all the service is done through it co-located ambassador sidecar using this pattern, we can also easily instrument out network communication and perform distributed tracing across multiple services.
+
+Ultimately this will help us isolate the use to a particular service.
+
+\subsubsection{Summary}
+Side car is a good way to extend the functionality of a service without having to re-implement the additional functionality to every programming language and also without having to provision additional hardware for a separate service by running the sidecar on the same host.
+With the main application instance, we get the benefit sof the isolation between the sidecar and the core service, but also we get the benefits of running them close together in terms of access to the same resource and the low overhead of inter process communication.
+
+Ambassador pattern.
+Using that pattern, we don't just extend the functionality of the core service instance but offload all the complexities of the network communication and security to the ambassador instance.
+
+\subsection{Anti Corruption Adapter Pattern}
+Applied when dealing with migration problems.
+Scenario
+Monolith is outdated, may be using old technologies or a very complex database scheme and its PAI is also very outdated.
+The development team became too big and the code base became too complex so we decided to start breaking this monolithic application into microservices.
+Also want to modernise the entire system and end up with a new modern technology stack.
+Can't just stop and focus on architecting a completely new system build with microservice, architecture and the latest technologies.
+-- Usually take a small isolated part of the monolithic application and create a brand new service with its own database for that functionality and run it together with the original monolith.
+Repeat this process over and over again until the original monolith is gone and we end up with a modern set of microservices with a brand new technology stack.
+
+Until then we still rely on the old monolithic application for some functionality and data.
+So the problem here is we have new part of our system them needs to support old protocols APIs and data models of the old part of the system.
+
+This leads to so called corruption of the new and clean services that now have carry this legacy stuff around its code base until the migration is complete.
+
+This is the use case of the anit corruption pattern.
+
+In this pattern we deploy a new service between the old system and the new system that acts as an adapter between them.
+The new part of our system talks to the anit corruption adopter service using only new data models, APIs and technologies as if the old system is just a part of a new system
+The anti corruption adopter service performance all the translation and forwards the reqeust ot the old monolithic applications.
+Similar, if the old monolithic application need to talk to any of the new microservices, it talks only to the anit corruption adopter service, which translate the communication to the new APIs and data models of the relevant microservices.
+
+This anti corruption adapter service exists for as as the old part of the system exists.
+Once the migration is done, we can get rid of the adopter service.
+In realise, we are often stuck with some part of the old system, which is referred to as legacy code.
+
+In many cases, we can't or don't want ot fully migrate it but we can't really get rid of it.
+
+\paragraph{Example}
+%TODO examples here
+
+\subsubsection{Challenges and overheads}
+Has the same needs as any other service in out system.
+-- Needs to be developed, tested and deployed just like any other service.
+-- Needs to be scalable so it doesn't become a bottleneck.
+-- Even if we make effort to make this performant service, it will still add a layer of latency due to the translation between APIs
+-- Also in a cloud environment where we pay for every resource, having the anti-corruption adopter service permanently will cost us money.
+
+One way to mitigate this is to use a function as a service
+So if the anti corruption adopter service is not used very often, then we will pay only for the time and resources it uses when it actually runs.
+If it used very often then we will need to make peace with the cost of having that service for as long as we need it.
+
+\subsubsection{Summary}
+Using this pattern we can isolate two parts of our system and prevent one from polluting or corrupting the other.
+Two scenarios
+- Have twos systems run side by side
+- A data migration
+
+Challenges
+-- Extra service with overhead, cost, development resources as well as extra latency.
+
+\subsection{Backends for Frontends Pattern}
+When a company becomes more successful the large scale systems problem come in.
+
+Monolithic backend is very big and has loads of different feature for different frontends....mobile/desktop etc etc
+
+Organic solution is to have extra teams of engineers to maintain the backend and then teams for maintain the different frontends.
+May work initially, but this organisation separation introduces other challenges.
+
+Every feature that a front end team want to introduce needs to be coordinated with and approved by the backend team.
+Then they need to work out the APi details, prioritise and coordinate the work so they can deliver that feature simultaneously.
+
+Backend engineers who prefer code and API reusability will often try to create as much shared functionality between all of the frontends.
+Trying to create a unified experience can result in being able to take advantage of all the capabilities of each front end or will end up with a sub optimal experience for one or even all of device users.
+
+Solution here is to use a pattern called backends for front ends.
+
+Using this pattern we break the monolithic backend service into separate backends, once for each type of frontend we support.
+Each of those backend services contains only the functionalities of the relevant front end, which make its code base a lot smaller and its runtime lighter as well as less resource intensive.
+More importantly, its code is fully dedicated to providing the best and most optimal experience for that particular front end only, which will ultimately give out customers the best and most optimal experience.
+
+On the organisational side, because the backend code is now a lot smaller and similar we can have a dedicated team of full stack developers dedicated to each pair of front end and backends.
+
+This way if a developer wants to deliver a new feature to the iOS version of an app for example they don't have to depend on another team.
+-- These developers can do all the API design and implementation work on both the front end and the back end without any friction.
+
+\subsubsection{Challenges}
+Need a way to avoid duplication shared functionality across multiple backends.
+-- May be tempting to organise all the shared logic and APIs as a shared library and reuse it across multiple backend services.
+------This can work if the logic doesn't change often.
+As a general rule, having shared code across multiple code basses in the form of a library is a point of tight coupling and friction between those teams.
+The reasons for that is that nay change in the shared library can affect all the backends that use it.
+-- Once again this requires coordination, meetings an through testing of all the microservices.
+-- Theres is also the lack of ownership when it comes to shared libraries.
+------- I.e hard to decide who owns what when it comes to code quality, consistency, release schedule etc.
+
+Another approach is to have the shared functionality as a separate service with a clean and well-defined scope API and ownership by a team.
+The second consideration or question is how granular should we be when applying the backend for frontends pattern.
+--- One for Android, iOS and desktop etc. One for mobile on for backend.
+--- It depends
+---- Main factor in making this decision is figuring out how different or unique the features and the code paths are.
+----- Important because we may not gain anything from additional granularity.
+
+\paragraph{Further example}
+%TODO further example
+
+\subsubsection{Application in a cloud environment}
+Since we can rent any kind of hardware an dpay accordingly, we can easily replace the original set of powerful virtual machines which we use for big back ends with multiple, more lightweight less powerful an cheaper virtual machines for the different backends.
+Can also choose the right hardware for each type of frontend if the resource demands turn out to be different
+-- I.e if we want to run more server side computations we may want more CPU etc.
+-- Can use load balancing using parameters or HTTP headers.
+----- Example we can use is the user agent header which can tell us what type of device or platform the request is coming from.
+Use of this pattern can help extend the functionality of our system to different front ends.
+
+
+\section{Reliability, Error Handling and Recovery Software Architecture Patterns}
+
+\subsection{Throttling and Rate Limiting Pattern}
+Problems that this pattern helps us address.
+First problem is the potential overconsumption of one or multiple resources in our system.
+-- Think API being bombarded at a very high rate with requests.
+This can lead to one of two scenarios.
+One scenario is that our system just can't handle this rate of incoming requests pr data.
+- The service instances run out of CPU or memory or both, and that results in extreme slowness in out entire system.
+- This also puts us at risk of violating the SLA for all of our clients which may have financial implications.
+
+Another scenario we may end up in is we do respond quick to this traffic spike and scale out our system using auto scaling policies.
+This scale out could cost us more money then we anticipate.
+
+Regardless if that client had malicious intentions or legitimate need to call at a high rate we must protect ourselves from such a traffic spike.
+Another potential risk for overconsumption is if out system calls external APIs of other companies or of a cloud provider that accidentally may go over budget.
+-- An example of this is some sort of big data analysis as part of a batch processing job that we run on a fixed schedule.
+Basically want to avoid a huge bill from over consumption.
+
+In these scenarios we can use the throttling or rate limiting pattern.
+Int his pattern we set a limit on the number of requests that can be made during a period of time.
+Similar in certain situations we can also impose limits on the bandwidth and set a maximum number of megabytes or gigabytes of data that can either be sent oread from out system at a given period of time.
+This limit, can be set for period of one second, one minute, one day and so on.
+
+Now the scenario where we are the service providers and need to protect out system from overconsumption is referred to as server side throttling.
+The other scenario is client side throttling.
+
+\paragraph{What should we do if the client exceeds the limit we set for them?}
+Few strategies.
+One is to simply drop requests.
+-- If we use this strategy it is a good practice send back a response with an error code that indicates ths reason why this reqeust was rejected.
+-- In HTTP this is 429 *Too many requests* --- this is communicated to the caller.
+
+\paragraph{Example}
+Some consumer asks for too much, we can just drop the requests on the server side while the client can still get what they need but not at the rate that exceeds the limit we set for them.
+
+Another strategy we can use is to queu up requests and process them later when we have capacity.
+%TODO Add online stock trading example........plenty of these lol
+Can simply queue the requests in a FIFO order and that execute those trades at a pace that does not exceed the limit we set for that client.
+So in this case, we simply slow down or degrade the service we provide to that client since they exceed the limit we set for them.
+
+We can combine these two strategies and set an upper limit.
+If that limit is exceeded then we start dropping those requests.
+
+This will prevent a situation where the client keeps sending us more and more trading requests which may in turn overload the capacity of the queue.
+
+In certain situation we can't drop or slow down the pace of handling reqeust but we can still degrade the service using other methods.
+---- Videos -- change the bitrate - avoid denying the service to the client.
+
+\subsubsection{Important considerations}
+First consideration is whether we throttle the requests on an API basis or a customer basis.
+==== API basis
+----- Can easily makesure our system doesn't go over the reqeust rate that we budgeted for
+----- Downside is that one client can send us a very high number of requests and therefor unfairly deprive the other clients of getting service.
+
+We can also implement throttling on a per customer basis.
+- This way we guarantee that each customer gets a fair share of our resources in an their level of service is isolated and independent from the other customers
+-- Downside of this approach is not its a lot harder for us to control the total reqeust rate form all the customers.
+-- Especially gets harder if we constantly get new customers signing up for out system.
+-- I can also get very complex if we have multiple tiers of customers where different customers get different quotas based on the level of subscription they are paying for
+
+Another consideration for implementing the throttling pattern is if our system has multiple services that may be used differently by different customers or API calls
+If we throttle externally on an API basis or customer basis, then we may end up overwhelming different parts of our system at different times depending on the workload.
+ON th other hand if we set separate limits on different services, then we need a much more complex throttling implementation that can track consumption across different services.
+
+\paragraph{Important note}
+The solution depends on the use case and the workload.
+
+\subsection{Retry Pattern}
+Note - If this pattern is not used correctly it can make things worse.
+
+The problem we are dealing with.
+System is calling another system through the network.
+In a cloud environment hardware or network errors can happen at any time and introduced delays, timeouts or failures that we don't have control over.
+
+Every time we make an external call to another resource, we always need to think about two scenarios.
+The first and easiest scenario is the successful response within the desired time frame.
+The second scenario is when we either get an explicit error with a message, an error code or our reqeust simply time sout.
+
+The successful scenario is great but what should we do in the unsuccessful scenario.
+
+First thing we need to do in this scenario is error categorisation.
+- Need to decide if this error is user error or a system error.
+- Example 403 user is not authorised to perform or access a particular resource
+-- In this case, we should simply sen the error back to the user with as much information as possible, that help the user with as much information as possible that will help the user correcting it if applicable.
+- However for internal system errors, we need to try our best to hide the error from the user and attempt to recover from it if possible.
+- One way to recover from an internal system error is by using the retry pattern, we simply retry the same operation by sending the same reqeust to the remote server.
+---- Or we can retry the operation by resending the reqeust as many time as we want until we get out successful response
+---- If we do get a successful response in a reasonable amount of time, then we succeeded in hiding our internal issues from the user, which is what we wanted.
+
+\subsubsection{Caveats and considerations}
+First consideration is deciding which errors we want to retry.
+The only time we should retry is when we have reason to believe that the error we encountered is short temporary and recoverable.
+---- Example can be HTTP status code 503 is unavailable
+---- This is a server side error that is used ot indicate the caller that the service is either busy or is done for maintenance temporarily.
+---- In that case, if after a short delay we resend the reqeust to the same service, out request may end up being routed by the load balancer to a different instance which is not busy.
+---- But even if the reqeust ends up in the same instance, there is a high chance that the instance has already recovered and is noe up and running.
+---- Another example can be request timeout to an internal service
+----- In this case, its possible that either the service instance we made the call to has crashed or the reqeust go lost in the network.
+
+Second consideration
+- the delay in back of strategy to use inbetween subsequent retries
+- CHosing the right delay and back off strategy is very important.
+If we aren't careful about it we may cause what's called a retry storm.
+---- This retry storm can cause an unrecoverable cascading failure in out system.
+- To make sure that we don't end uo in that situation we need to add a delay between subsequent retries.
+- This will allow the faulty servers to fully recover and get ready for the next requests when picking the delay between retries.
+
+\subsubsection{The approaches}
+There are three approaches
+
+Fixed delay. We pick a value, for example, 100 milliseconds and the wait the saem amount of time in between every subsequent retry.
+
+The second approach is an incremental delay.
+With this approach, we incrementally increase the delay with every failed retry.
+The idea behind this is if the service we're calling did not recover after the initial delay, the calling it again after the same delay make no sense and will likely just interfere with it while it's trying to get back up.
+
+The third approach is more extreme version of the incremental delay,is called exponential back off.
+We increase the delay between unsuccessful retries exponentially instead of linearly.
+
+It is important to point out that the approach you choose depends on your system, and there is no one size fits all for choosing those values and back off strategy.
+
+A third consideration is adding randomisation or whats called a jitter to the delay between retries.
+Why do we want that randomisation?
+Avoid sending retries in synchronisation.
+So even if we have a fixed incremental delay or even a exponential delay, if we send all of our retry requests from out service at the same time we can add a very high load on the remaining remote service instances.
+If delays are randomised, we are much more likely to distribute the retry traffic more.
+Even so, the remaining healthy servers do not get too many requests at the same time.
+
+The fourth consideration is how many time or for how long should we keep trying?
+--> Send a message back to the user to say try again later
+-->  At the same time need to alert the on call engineers, since now it is no longer a transient error we can hide from the user, but a long lasting error that impacts the users.
+--> The next consideration is the idempotency of the operation we're attempting to retry.
+-----> can retry the same operation twice etc safely.
+
+The last consideration is where to implement this retry logic in our services
+There are a few options.
+--- Implement this as a library or a shared module that multiple services can reuse.
+--- There are many different implementations of a retry pattern available for different programming languages.
+
+The other option is moving that logic entirely out of the service code and deploying it as a separate process running on the same server instance using the ambassador pattern.
+This wasy the application code is free from any trey logic, and all it sees is either successful response or a final failure.
+Seems deceptively simple.
+-- But we need to take all of those important considerations into account.
+
+\subsubsection{Summary}
+Using this pattern we can hide internal system errors by simply retrying and resending a reqeust to a remote service.
+Considerations
+- Firstly we retry only internal error that are short, temporary and recoverable.
+- Second consideration was introducing a delay between subsequent retry attempts to prevent a retry storm
+- Another consideration was to introduce randomisation or jitter to that delay to make the retry traffic to the healthy instances less spiky
+- Can also time box, and limit the number of retry attempts we allow
+- Consider idempotency when performing retries
+- Implementation details - shared libraries, ambassadors side car pattern.
+
+\subsection{Circuit Breaker}
+Not all failures are recoverable, short temporary and recoverable.
+---- Sending a reqeust again may not be the best solution.
+Retry patterns take the optimistic approach.
+The circuit breaker takes the pessimistic approach, since the error it handles are more server and long lasting.
+Its assumption is that if they first few requests failed, then the next reqeust will likely also fail.
+So there is not point in trying.
+---Follows the electronic circuit breaker analogy etc.
+
+Just like the retry pattern, the circuit breaker wraps the remote calls we make from one service to another in its normal operation.
+When the circuit is closed, the circuit breaker keeps track of the number of successful requests and failed requests for any given period of time.
+As long as the failure rate stays low, the circuit remains close and every reqeust from out service to the external service is allowed to go through.
+However, if at some point the failure rate exceeds a certain threshold, then the circuit breaker trips and goes into an open state.
+In the open state, it stops any reqeust to go through and returns an error or throws an exception immediately to the caller.
+
+Next question we need to address is if we stop sending any requests to the faulty service how will we know its back and healthy.
+For that the circuit breaker has third state which is called half open after being in the open state for some time.
+The circuit breaker automatically transition to the half open state, where it allows a small percentage of requests to go through and be sent to the remote service.
+This small percentage of requests act as a sample to probe the state of the remote service.
+If the success rate of those reqeust that do go through is high enough, then the circuit breaker assumes that the remote service recovered and transition back to the closed stated.
+--- Otherwise, if the success rate of those sample requests is still low, then the circuit breaker assumes that the remote service is unhealthy and transition back to the open state.
+It will repeat this process until the success rate is high enough for the circuit to go into the closed state.
+
+\subsubsection{Important Considerations}
+Teh first consideration is what to do with the reqeust that isn't sent to the external servers when the circuit breaker is in an open state.
+In most cases the sensible thing to do is drop it, with proper logging, so we can later analyse the number of reqeusts we lost because of those issues.
+
+An alternative approach when the reqeust cannot be ignored is log and replay. lol
+I.e we need to log this event in a special place where it can be manulally or automatically replayed later by an engineer or another service.
+
+Another consideration is when the circuit breaker is open.
+What response should we provide to the caller.
+-- The first option is fail silently - provide a dummy response
+-- Another option is best effort - provide an out of date old response instead of and empty response.
+
+Third consideration may seem trivial but we need to make sure that we have separate circuit breaker for the calls to the inventory service, the billing service and the shipping service.
+If one of the services is done, that doesn't mean that we should stop sending requests to the other services.
+
+The fourth consideration is replacing the half open state form the circuit breaker with asynchronous pings to the external service.
+-- In this implementation, when the circuit breaker is open, our service can send asynchronous health check requests to the external service.
+--- IF the health checks success rate is high, then we can immediately close the circuit.
+--- This variation of the circuit breaker has a few benefits
+------ The first one is that we don't need to waste the users time sending real reqeust to the external service when the circuit breaker is in a half open state
+--- The second benefit is this ping
+------ Half check requests are very small and don't contain any payload, which isn't the case with the most real requests.
+------ BY sending those pings instead of real requests, we save on network bandwidth, CPU and memory resources.
+------ On the other hand, figuring out the number and the frequency of those pings is also not trivial, if we sent too many.
+------ We may overwhelm the remote service that is already in a bad state, and if we don't send enough then we are preventing out suers from using a healthy service for no reason.
+
+Basically both solutions have their pros and cons and we need to pick the best one for our use case.
+
+Final consideration - Where do we wan to implement the circuit breaker pattern.
+--- WE cna use a library which we can get off the shelf, or if we have many microservices implemented in different programming languages we may also simply delegate that functionality to the Ambassador Sidecar which runs along without service instance on the same host.
+
+\subsubsection{Summary}
+Circuit breaker pattern - used for handling long lasting errors in our system.
+- This pattern is primarily useful for handling errors that we have no point in retrying or the cost of retrying them in term of time and resources is not justified.
+Three states of the circuit breaker
+- The closed sate in which we allow all the requests to go to the external service
+- The open state in which we fail fast and don't send any outbound requests
+- The half open state in which we allow a small number of requests to go through to see if the remote service we are trying to call is already healthy or not
+
+Five important consideration when implementing circuit breaker
+- First one was deciding on what to do with the reqeust
+- The second consideration was deciding on the response that we provide to the caller when we don't send the reqeust through.
+- The third one was having a separate circuit breaker for each external service
+- The fourth one was replacing the half open state with asynchronous health checks, and the last one was deciding on whether to implement the circuit breaker as a library or as an ambassador or sidecar.
+
+\subsection{Dead Letter Queue (DLQ)}
+
+This pattern can help us a handle a variety of errors that involve publishing and consuming message through a message broker or a distributed message queue.
+
+Reminder
+A typical even driven architecture has three components
+WE have the event publishers or emitters that produce messages or events.
+On the other hand we have the consumers which read and process incoming message and act upon them.
+And int the middel we have a message broker which is typically deployed as a distributed system of computers that provide an abstraction of channels, topics or queues that the consumers can subscribe to.
+
+This even driven architecture has many benefits such as decoupling of producers from the consumers, greater scalability and asynchronous communication.
+
+However now we have a lot more points where things can fail in the process.
+
+\paragraph{Example}
+%TODO example here
+
+\subsubsection{What it is}
+The dead letter Q is a special Q in the message broker for message that cannot be delivered to their destination.
+There are two ways the message can get into that queue.
+One way is programmatic publishing
+--- If a service doesn't know which topic to publish to it can just go to the dead letter queue
+If the consumers don't know how to handle a message they can republish it back into the message broker into the dead letter queue and remote it from the original queue
+
+The second option is to configure the message broker to move the problematic messages from the origin queue to the dead letter queue automatically.
+-- Can move problematic messages into the dead letter queue
+-- Need to make sure the message broker supports this feature, many cloud and open source brokers do support this.
+
+Using this pattern we can keep the normal real time pipeline in a healthy state and avoid clogging the queue due to a few problematic message at the same time by placing those message into the dead letter queue so we don't lose them.
+
+More importantly, depending on the configuration we use for the Q, we can also somewhat preserve the order of those message which in some cases may be important.
+
+Regardless of how we move the problematic messages into the dead letter queue.
+-----Its important to add additional information about the reasons for the failure and why they were moved to the dead letter queue to begin with.
+A common way to do this is to add a header to the message with the relevant details such as error code, stock, trace or message that explains the error.
+
+THis way, when we inspect them later we know exactly what went wrong and hot to fix it.
+
+\subsubsection{What to do with dead letter queue messages}
+Need to have aggressive monitoring and alerting on this, this way we guarantee that they don't just stay there and get forgotten.
+But also the fact that messages do end up in this queue is an indication of bug or an issue we have in out system.
+
+The fact that we place them in the special queue buys us some time to address those issues.
+Since we have the details about the error attached to the message, we also have the information to fix the issue right away.
+Then once the issue is resolved we can use a tool to process and move those message from the dead letter queue back to the original queue for normal processing.
+Alternatively, if those message represent a very rare case that wil either go way soon or we don't have any plans to address, we can have support engineer just fix or process them manually if they use case permits it.
+
+\subsubsection{Summary}
+This pattern can be used to gracefully deal with any type of failure in a delivery of message to their destination in an event driven architecture.
+Two ways we can publish message to the dead letter queue.
+-- One is the programmatic way and the other is the automatic way via the message broker
+-- Two ways to process message in the dead letter queue
+--- First way is fix an republish those message back to the original queue
+--- The second way was to manually handle them on a case by case basis
+
+
+\section{Deployment and Production Testing Patterns}
+
+\subsection{Rolling Deployment Pattern}
+When upgrading a server we typically rely on some kind of downtime window.
+During tht window we can shut down the existing application instances and replace them with the new versions
+However if something goes wrong and the new version cant start up or has some other issues we would need to shut down those instances and bring back the old version
+
+This works fine if we can find some time window when we either don't get any traffic or very little traffic
+So the impact on customers is very minimal
+
+If we get a large amount of traffic all the time or if we need to make an emergency release during a busy time or season, making our service unavailable in order to perform this upgrade is not an option.
+For these situation we can use the \textit{Rolling Deployment pattern} instead of taking down all the servers and deploying a new version on them.
+
+We can use the load balancing service to stop sending traffic to the application servers one at a time.
+Once no more traffic is going to a particular service we can stop out application instance on it and deploy a new instance with the new version of our software, before adding it back tot he rotations.
+Could also run tests if we wanted to.
+
+After everything is done, we add that server back to the load balancers group of backend servers and then we repeat the same process on all the servers until all of the are on the latest version
+
+If we see any errors via dashboards or otherwise we can roll back the release by following the same steps but in revers.
+
+One benefit to the strategy is that we have no downtime for out system and we can gradually release a new version which is a lot safer than a big bang approach.
+Its also check and very fast to release a new version as we don't need to provision any additional hardware.
+
+One downside of this pattern is there is no isolation between the servers running the new version of our application and the old version of our application
+So there is a risk of the new deployed instances starting a cascade of failures that may actually bring the entire service down.
+
+Another downside to this is that throughout the entire duration of the release rollout we have two software versions running side by side.
+-- If the new version of the change we introduced is fully compatible with the old version then it is not an issue
+-- If the API has drastically changed then having two versions of the same service may cause some issues.
+
+Despite downside this is a very simple deployment strategy.
+
+Using this pattern we can avoid having down time and do not need to pay for additional hardware.
+If something goes wrong we can roll back without effecting users.
+- However cascading failures, and running two versions of the same app may be an issue.
+
+\subsection{Blue Green Deployment Pattern}
+In this deployment pattern we keep the old version of our application instances running through out the entire duration of their release
+- The old version is referred to as the blue environment
+- At the same time we add a new set of servers called the green environment and deployed the new version of our application to those servers
+- After we verified that the new instances startup just fine, we can run tests one them
+- We use the load balancer to shift traffic for the blue environment to the green environment
+
+If during this transition we start seeing issue in the logs or in out monitoring dashboards, we can easily stop the release and shift the traffic back to the blue environment running the old version of our software.
+Otherwise we fully transfer to the new version, wait for a bit to make sure everything is okay, and then we either shut down the old environment completely or keep it available for the next release cycle.
+- If we make very frequent release, the advantage of this pattern is that we have an equal number of servers for both the blue environment and the green environment
+--- Is the green environment suddenly fails we can switch back to the blue environment that can take a full load of traffic right away.
+Second advantage over rolling deployment is that we can only use one version of the software at any given moment.
+This give all the customers the same experience except for maybe a very short period of transition that should generally unnoticeable.
+
+Downsides and limitations
+- During the deployment of the new release we may need to run as many as twice as many servers in the cloud environment.
+- That means we need to wait until all those new servers start up and get ready
+- And then we ned to pay for that additional hardware, which may be worth it to guarantee a safe release, it is still an additional cost however.
+---- If we use those additional servers during our release only, this cost may not be that high.
+
+This is another popular pattern for releasing new versions to production.
+
+\subsection{Canary Release and A/B Testing Deployment Patterns}
+Canary release borrows some elements from the rolling deployment pattern and some from the blue/green deployment pattern.
+
+Instead of deploying the application to a new set of servers we dedicate a small subset of the existing group of servers and update them with the new version of our software straight away.
+Once the canary version sis deployed we can continue sending normal traffic to it just like the rest of the servers.
+Or we can start directing only specific users such as internal users or beta tester to those servers.
+
+THis can easily be achieve by configuring the load balancing service to inspect the origin of the reqeust and send it to a different set of servers.
+During this time we monitor the performance of the canary versions and compare it in real time to the performance of the rest of the servers that run the old version.
+Once we gain enough confidence with the new version and we can see no degradation in functionality or performance, we can proceed with the release and update the rest of the servers with the new version using the rolling release pattern for example.
+
+\paragraph{Note} The canary deployment pattern is considered to be the safest and most risk free deployment patterns.
+The reason for that is after we deployed the new release to the Canary servers, we usually wait and monitor it performance for hours or even days before rolling out the new version to the rest of the servers.
+This allow us to gain confidence that we won't have cascading failure or other major issues once we roll out the release to all of our customers.
+
+Also the ability to chose the type of users with direct traffic to Canary version minimised the damage if something does goes wrong in the release.
+-- That because typical internal users or beta testers have a much higher tolerance to production issues, have better knowledge of how to properly report those issues accurately.
+
+\paragraph{Challenges}
+The challenge of doing Canary deployment effectively is setting clea success criteria for the release so we can automate the monitoring.
+-- Otherwise an engineer will have to look at a lot of graphs on a lot of dashboards for hours to decide whether we should rol out the release globally or roll back.
+
+\subsubsection{A/B Testing or A/B Deployment}
+Very similar to canary deployment but the purpose is different to when doing a canary release.
+The goal is to safely release a new version of our application, eventually to the entire group of servers with canary release
+With AB testing the goal is to test a new feature on a portion of our users in production.
+The information we gather from the comparison can inform out product or business development teams towards future work or feature.
+Unlike Canary release, after the AB testing is finished, the experimental version of our software is typically removed and replaced with the previous software version
+The important thing here is that users do not know that they are a part of an experimental release.
+This way we get genuine data from the experiment.
+
+The Duration of the experiment is entirely up the developers and depends on the use case.
+Then when we conclude the experiment we diver traffic away form those experimental instances, deploy the main version fo our recommendation service bac to those servers and add the back to the load balancing rotation.
+Later a group of engineers, business analyst or data scientists can look at all the metrics gathered and access if that change should be release as part of a future version or if the strategy could be rethought.
+
+\subsubsection{Summary}
+Canary release allows us to dedicate a small portion of our servers to use a different version of our software.
+During the Canary release, we monitor those servers closely and make sure there is no degradation in performance or functionality before we proceed and deploy the new version of our software to the rest of the servers.
+-- To make the process even safer, we can limit the users that send requests to the canary instance to either internal users or beta testers.
+-- On the other hand, during a \textquotesingle{B} deployment, we actually prefer to get the traffic from real users so we can get reliable information.
+-- And by the end of the AB deployment, we roll the experimental version back tot he origin software version.
+
+\subsection{Chaos Engineering Production Testing Pattern}
+Chaos engineering - a testing technique.
+In distributed systems running on the cloud, failures are inevitable in the development cycle.
+We can put huge effort into testing a system however when we deploy out system to production, many things can happen that we cannot test before hand.
+\begin{itemize}
+    \item The infrastructure can break at any time.
+    \item Servers can lose power, network switches can break down, databases storage devices can become unusable due to their age and natural disasters can hit a data centre.
+    \item -- Additionally natural third party API dependencies can break and there is nothing we can do about it.
+    \item -- As much as we hope that we can deal with this, we won't know until it actually happens.
+\end{itemize}
+
+\paragraph{Examples here ???????}
+%TODO add examples here
+
+\paragraph{Note}
+We don't know how a system behaves until those events happen.
+A big difficulty is that those events are very rare.
+However when they do happen, if our assumption was incorrect and they system does not response to that sudden event as we expected the result may be catastrophic.
+
+The philosophy of chaos engineering as a production testing pattern is embracing the inherent chaos present in a typical cloud based distributed system.
+
+The strategy of the engineering pattern is to deliberately and systematically inject random but controlled failures into our own production system.
+Then we monitor how our system response to those failures and analyse the results.
+If we find that out system did not respond the way we expected we create a plan to fix it and then continue testing.
+An added benefit to making those typically rare failures artificially more frequent is that we also force our engineers to think about those daily development.
+We also test the ability of the development team to monitor, recognise outages, analyse logs and discover those production issues.
+So in general, over time our system becomes more resilient and reliable and the development team is more proficient in monitoring and fixing production issues quickly.
+
+\subsubsection{Injecting failures into systems}
+Firstly, take the biased human factor out of the equation
+We need to either build or use automated tools to randomly cause those failures.
+An example: Netflix Chaos Monkey
+
+Another failure that can be introduced is latency injection either between multiple services or between a service and its database.
+We can temporarily restrict access to a database, instance and test if our system can gracefully fail over to another of its replicas in another cloud zone or region.
+
+Another failure we can inject is called resource exhaustion.
+Could deliberately fill up the disk space on a particular service instance or even a database and see how our system behaves.
+
+Could go as far as disabling traffic to an entire zone or region and make sure that out system fails over to the other zone or region gracefully and transparently to the user.
+
+\subsubsection{General test steps for chaos engineering}
+Firstly, before a failure injection, we need to measure the baseline.
+Then we need to construct the hypothesis which basically formalising the desired correct behaviour we expect from the system.
+After that, we inject the failure and monitor it for a predefined period of time.
+The we document all of our findings during the test and finally restore the system to its original state before the failure.
+
+After all those steps are complete, we identify the issues we found in our system and act upon them to improve the resiliency of our system.
+But even after we fixed all the issues, the key in chaos engineering is to keep performing those tests continuously.
+Only the continuous testing will ensure that new changes don't introduce single points of failure or performance bottlenecks
+
+Also by running those production tests periodically, we make sure the development team has enough tools, dashboards and sufficient logging to discover and fix those issues.
+
+Now, an important consideration when running those tests is minimising the blast radius of the failures we create.
+In other words, we also want to make sure that while continuously injecting those failures we stay well within our error budget.
+
+\paragraph{Important Note}
+This is why we should never promise 100\% availability or something close to that for our users.
+--- Even if we think that this is achievable.
+
+This leaves room for both unexpected and deliberate errors failures as a part of production testing.
+
+\subsubsection{Summary of Chaos Engineering}
+Chaos Engineering is a pattern that allows us to increase confidence and protect out production system against critical failures by injecting failures deliberately in a controlled way.
+We can find single points of failure, scalability issues and make sure when a real traffic spike or hardware failure happens we have the logic in place to handle the situation gracefully.

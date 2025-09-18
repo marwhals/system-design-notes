@@ -1,0 +1,293 @@
+\chapter{Large Scale Systems Architectural Building Blocks}
+
+
+\section{DNS, Load Balancing, GSLB}
+Basic role, balance the traffic load amongst a group of servers in a system.
+Helps with achieve horizontal and high scalability of a system when running an application on multiple computers.
+Without a load balancer the client application will need to know the addresses of the computers hosting the application.
+This tightly couples the client application to out system's internal implementation and this makes changes hard.
+Load balancers provide an abstraction as well as avoid overloading a single server with traffic.
+This abstraction makes the application look like a single server.
+
+\subsection{Quality attributes from a load balancer}
+Load balancers provide
+High scalability -> horizontal scaling is easy
+Even easier in the cloud.
+
+Provides high availability.
+Load balancers can be configured to stop sending traffic to servers which are not healthy.
+
+Performance - load balancers add a little bit of latency and increase the response time but is worth the tradeoff for increased performance in terms of throughput.
+The load balancer can cater for as many backend servers as desired with some reasonable limitations.
+Throughput is much large than what would be possible with a single server.
+
+Load balancers helps us achieve maintainability, since we can add, remove, upgrade servers in rotation without disrupting the client/ user.
+This would be done on a subset of the servers leaving another subset running.
+
+\subsection{Types of load balancers}
+DNS - internet infrastructure that maps human readable URLs to IP addresses that can be used by network routers to route to individual computers on the web.
+A single DNS record doesn't have to be mapped to a single IP address.
+They can be configured to return a list of IPs corresponding to different servers.
+The list returned may be in a random order.
+When receiving a list most client applications just pick the first one in the list.
+Technically this can be seen as load balancing
+Cheap and super simple but DNS doesn't know the health of servers.
+Requests may go to a down server and the DNS does't know.
+List of IP addresses changes only so often and si based on the time to live that was configured for that particular record.
+Additionally this list of addresses that a particular domain is mapped to, can be cached in different locations such as the clients computer.
+That makes the time between a server going down and the point that the requests are no longer sent to that server even longer.
+
+Another drawback of the DNS load balancing strategy is that the round robin method doesn't consider the hardware resources of different servers.
+Some servers may have more powerful hardware than others, nor can it detect that one server is overloaded than others.
+Another drawback.
+The application gets the IP address of all the servers, exposing implementation details which make the system less secure.
+Nothing stop a malicious client application from sending requests to a single IP address in order to overload \textbf{it}
+
+\subsection{Addressing these drawbacks}
+Two options.
+Hardware load balancers and software load balancers.
+All communication between the client and servers are done via both these types of load balancers.
+Individual servers, and IP addresses are hidden behind the load balancer and not exposed to the users making the system more secure.
+
+These load balancers can perform health checks on the servers and can detect if one has became unresponsive.
+
+BOth can balance load more intelligently across servers taking into account the different hardware application instances are running on.
+
+They can be used to balance requests from users, but they can also be used inside the system to create an abstraction layer between services.
+
+Superior to DNS in terms of load balancing but they are usually colocated with the group of servers they balancer the load on.
+If a load balancer is too far away from the actual servers, we are adding a lot of extra latency since all communication both to and from the application has to go through the load balancer.
+
+When running a system in multiple geographical locations having a load balancer between them will sacrifice the performance for at least one of these locations.
+
+These load balancers do not support the DNS resolution, so a DNS solution will also be required.
+
+\subsection{Global Server Load Balancer - GSLB}
+A hybrid between a DNS service and the hardware or software load balancer.
+Typically can provide a DNS service.
+In addition it can make more intelligent routing decisions.
+On on hand, the GSLB can figure out the users location based on the origin IP inside the incoming request.
+a GSLB service has similar monitoring capabilities to typical software or hardware load balancer.
+It knows the location and the state of each server we register with out GSLB.
+
+In a typical large-scale system deployment, those servers are load balancers located in different data centres in different geographical locations.
+GSLB may just return the locations of the nearest load balancer.
+The user will use that IP address from that point on to communicate with the system in that data centre through a collocated hardware or software loadbalancer.
+
+\subsubsection{Extra notes}
+They can be configured to route traffic on a multiple strategies.
+Not just geographic location.
+Since they know the health of different data centres, they can route traffic based on current traffic or load on each data centre.
+Or based on estimated response time, or bandwidth between the user and that particular data centre.
+
+This can allow for the best performance possible for each use regardless of their geographical location.
+
+They are also important in disaster recovery situations.
+If there is an issue in one data center users can be routed to another.
+This provides high availability.
+
+To prevent a load balancer from being a single point of failure, we can register all the addresses with the GSLB DNS service or any other DNS service.
+This allows clients to get a list of all the load balancers and either pick one or send their request randomly.
+
+\subsection{Load Balancing Solutions}
+\begin{itemize}
+    \item - HAProxy
+    \item - NGINX
+    \item - AWS - Application (Layer 7), Network (Layer 4), Gateway Load Balancer, Classic Load balancer (Layer 7 and 4)
+    \item - GCP %TODO add later
+    \item - Azure %TODO add later
+\end{itemize}
+
+\subsection{GSLB Solutions}
+\begin{itemize}
+    \item - Amazon Route 53
+    \item - AWS Global Accelerator
+    \item - GCP stuff
+    \item - Azure stuff
+\end{itemize}
+
+
+\section{Message Brokers}
+A building block for asynchronous architectures.
+
+\subsection{Drawbacks of synchronous communitcation}
+Both applications that establish communication have to be healthy and have to remain healthy while the transaction is completed.
+Easy when the messages are short.
+Becomes more complex with larger messages.
+There is no leeway in the system to absorb spike in traffic or load.
+Horizontal scaling is not an option since a transaction/ processing may take a long time on the system.
+The solution to this is to use a message broker.
+
+\subsection{What is a message broker}
+A queue data structure to store messages between senders and receivers.
+Used internally in a system, not to be exposed/interacted with by a user/client.
+Can provide additional functionality in addition to storing a buffering messages.
+Can perform message routing, transformation validation and even load balancing.
+Unlike load balancers, message queues decouple senders from receivers by providing their own communication protocols and APIs.
+They are a fundamental building block in any kind of asynchronous software architecture.
+
+When we have two services communicating with each other via message broker, the sender doesn't have to wait for confirmation from the reciever after it sends the message.
+The receiver doesn't even have to be available to receive the message when the message is sent.
+Very useful in breaking a service into multiple services.
+Another important benefit that message services provide is buffering of messages to absorb traffic spikes.
+
+Many message brokers additionally off the published subscribe pattern, where multiple services can publish messages to a particular channel and multiple services can subscribe to that channel and get notrified when a new event is published.
+This makes it very easy to add services that bring in additional functionality, with out modifying the system.
+
+\subsection{Quality attributes from adding a message queue}
+Adds fault tolerance, since it allows different services to communicate with one another while some may be unavailable temporarily.
+Message brokers prevent messages from being lost, a characteristic of a fault tolerant system.
+This in turn helps provide higher availability for our users.
+Since a message broker can queue up messages when there is a traffic spike, it allows our system to scala to high traffic withouth modifying the system.
+
+\paragraph{Drawbacks}
+Performance - Introduces latency through the indirect communication between services.
+Not much of an issue in most systems.
+
+\subsection{Message broker solutions}
+\begin{itemize}
+    \item Kafka
+    \item RabitMQ
+    \item AWS SQS
+    \item GCP
+    \item Azure %TODO add more info...?
+\end{itemize}
+
+
+\section{API Gateway}
+The problem being solved.....split the monolith in separate services....now there is a lot of service duplication and performance overhead.
+Each separate service needs to implement its own security, authorisation, authentication etc....
+To solve this decouple the client application from the internal organisation of the system and simplify out external API.
+This can be done via another abstraction called the API Gateway.
+An API Gateway is an API management service that sits between the client and the collection of backend services.
+API Gateway follows a software architectural pattern called API composition.
+
+In this pattern, we compose all all the different APIs of our services that we want to expose externally into a single API.
+This single API can be called by applications, by sending requests to one service.
+This vs sending multiple requests to different services to achieve a task.
+
+Provides an abstraction between the client and the rest of our system.
+
+\subsection{Pros}
+Allows for internal changes easily for API consumers.
+Can consolidate security issues into one place.....the API gateway.
+Bad requests get stopped at the gateway.
+Can allow a user to perform different operations depending on his permissions and role.
+Can implement rate limiting at the API Gateway to stop DDOS
+
+Can also improve performance of the system by saving a lot of overhead.
+Only have to do certain actions once.
+Can stop the user from making multiple requests to different places.
+This is request routing.
+With an API gateway the client makes a single request and all the backend services will have their responses aggreagatesd into a single response.
+
+Another performance gain is from caching certain responses for particular requests.
+Avoid making request to the backend systems.
+
+Another gain is monitoring and alerting is easier.
+By adding monitoring logic into the API gateway real time information can be gained on the traffic and load of they system..
+Can create alerts based on traffic variations.
+Improves observability and availability.
+
+Also allows for protocol translation from one place.
+Send JSON but work with RPC internally etc.
+Could communicate with legacy services the support older protocols.
+Some systems maybe reluctant to change this.
+Instead different API formats can be catered for at the API Gateway.
+I.e read some external format and translate it for the internal system.
+
+\subsection{Best practices and anti patterns}
+Do not include business logic here.
+Main purpose is API composition and routing of requests to different services.
+Those services are the services that make the business decisions and perform the actual tasks.
+If you add business logic to it that service will end up doing all the work.
+I.e a single service.
+In turn this will become an unmanageable amount of code.
+One of the problems we want to solve by splitting a service into multiple services.
+
+Next consideration, is that since all traffic goes through it, the API gateway may become a single point of failure.
+This can be solved by adding multiple instances of the API gateway service and placing them behind a load balancer.
+This solves scalability, availability and performance aspect.
+
+Another thing to consider is deployment.
+A bad release/ bug can crash the APi gateway service and the entire system can become unavailable to clients.
+Human error needs to avoided and deployments require thought.
+
+Additional latency is added as well since there is another service that request must go through before performing business actions.
+Avoiding the API gateways is an anti-pattern that should be avoided even though it may optimise the request processing.
+
+\subsection{API Gateway Solutions}
+\begin{itemize}
+    \item Netflix Zuul (Open Source)
+    \item Amazon API gateway
+    \item GCP - Apigee , Google Cloud platform API Gateway
+    \item Azure
+\end{itemize}
+
+
+\section{Cloud Delivery Network Solutions and the Cloud}
+Can be considered to be more of a service.
+
+\subsection{The problem being solved.}
+Even with GSLB there still latency between the end user and the locations of the hosting server.
+Each request has to go through multiple hops over the network between different routers etc adding even more latency.
+Users will abandon a website if it takes to long to load. (Think 3 seconds plus)
+Can improve system performance etc but its the content that needs to be closer to the users rather than the business logic.
+
+\subsection{What is it?}
+A globally distributed network of servers located in strategic places with the main purpose of speeding up the delivery of content to the end users.
+Solves bad user experience.
+CDNs cache website content on their servers.
+They are referred to as edge servers.
+They are physically close to the user and more strategically located in terms of network infrastructure.
+Allos for the transfer of content much quicker to the user and improve the perceived system performance.
+Can be used to deliver webpage contents and assets including video streams.
+Both live and on demand.
+Very widely used.
+
+Results in faster page loads, improves system security and helps protect against DDOS since malicious requests won't go to our system.
+They will be distributed amongst a large number of servers hosted by the CDN provider.
+
+In addition to physical closeness, they can also be hardware optimised. I.e better hardrives, CPU etc.
+Can also reduce bandwidth by compressing content delivered over a network.
+Examples, GZIP and JavaScript minification.
+
+\subsection{Strategies when integrating with CDNs}
+
+\subsubsection{Pull strategy}
+Tell CDN provider which content we want on our website to be cached and how often this cache needs to be invalidated.
+This can be configured in the time to live property on each asset or type of asset.
+In this model first time a user requests a certain asset the CDN will have to populate its cache by sending a reqeust to a server in our system.
+Once that asset is cached on the CDN, subsequent reqeust by users will be served by the edge servers directly.
+This saves the network latency associated with the communication with out servers.
+When requesting an asset that has already expired, CDN will check for a new version.
+If it has not changed the CDN will refresh the expiry time for that asset and serve it back to the user.
+Otherwise, if a new version is available the CDN will receive the new version instead of the old one to the user.
+
+\subsubsection{Push strategy}
+Manually or automatically upload or publish the content that we want deliver through a CDN.
+WHen the content changes, we are responsible for republishing the new versions to the edge servers.
+Some CDN providers support this model directly, other enable the strategy by setting a very long TTL for our assets so the cache never expires.
+When we want to publish a new version, we simply purge the content from the cache which forces the CDN to fetch that content from the servers whenever a user requests that content.
+
+\subsection{Choosing the right strategy}
+
+\subsubsection{Advantages of pull model}
+Lower maintenance on our part.
+Once configured which assets need to cached by the CDN and how often they need to expire nothing needs to be done to keep them up to date.
+Everything at that point will be taken care of by the CDN provider.
+
+\subsubsection{Drawbacks}
+First time there will be a longer latency as the CDN cache is populated from the server.
+If the time to live is the same for all assets there may be frequent traffic spikes when those assets expire at the same time.
+This would result in a large number of requests from the CDN to refresh its cache at one time.
+
+\paragraph{}
+Add to the availability of the system but the servers still need to maintain availability otherwise the CDN won't be able to pull the latest version of assets.
+
+\subsubsection{The push strategy}
+Good if the content doesn't change to frequently.
+Push to the CDN and then traffic will go the CDN servers.
+Will reduce traffic to out system and reduces the burden on out system to maintain high availability.
+Even if they system goes down, users can still get data from the CDN and won't be affected by our systems internal issues at all.
+If content does change frequently then we have to publish new versions to the CDN otherwise users will get stale and out of data content.

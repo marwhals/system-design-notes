@@ -1,0 +1,297 @@
+\chapter{High-Level System Design}
+
+
+\section{Software Architecture Patterns}
+General repeatable solutions to commonly occurring system design problems.
+Versus design patterns which are just about organising code within a single application.
+Software architectural patterns are blueprints for solutions that involve multiple software components.
+The purpose is to avoid repeating mistakes and anti patterns for large scale systems.
+
+\subsection{Business incentives for this approach}
+One: Save time and resources for devs and the organisation when building a solution on a similar scale.
+Use already tested development practices rather than reinvent the wheel, something completely new can potentially take up a lot of resources.
+
+Two - Using an existing architecture avoids the \textit{big ball of mud}.
+The lack of structure on the system.
+In this scenario every service talks to every other service, services are tightly coupled, information is global or duplicated and there is no clear scope or responsibility for any of the components.
+
+This situation can happen due to rapid growth of the company or a lack of architecture in general.
+
+In this situation a system can be hard to develop, maintain and scale which in turn can lead to the failure of business objectives.
+
+Third motivation - Other developers and architects can continue working on the system and can easily carry on and stick to the same architecture.
+Everyone will know the pattern that is being followed and understand what should and should not be done when adding to the system.
+
+\subsection{Summary}
+These are just guidelines.
+Architecture is best defined per use case / unique situation.
+As systems evolve certain patterns that were appropriate to the system in the past may not make sense anymore.
+This is normal.
+At this point some restructuring would need to be done and a migration to a different architecture pattern should be considered.
+
+Motivations for patterns - many companies have already been through these migrations before so best practices can be adopted to make those migrations quickly and safely.
+
+
+\section{N/Multi-Tier Architecture}
+
+\subsection{Intro}
+Organise the system into multiple physical and logical tiers.
+Logical separation limits the scope of responsibility.
+Physical tier allows each tier to be deployed, upgraded, scaled separately by different teams.
+
+\begin{note}
+    Note: Multi-tier and Multilayer are two different concepts.
+\end{note}
+Multi layered architecture usually refers to the internal separation inside a single application into multiple logical layers or modules.
+Even if the application is logically separated into multiple layers at runtime it will run as a single unit and will be considered a single tier.
+
+Multi-tier architecture - applications on each tier physically run on different infrastructure.
+
+Benefits of logical and physical separation-Allows us to develop update and scale each tier independently.
+
+\subsubsection{Restrictions in this architectural pattern.}
+First restriction is that each pair of applications that belong to adjacent tiers communicate with each other using the Client-server model.
+REST etc.
+Second restriction - discourages communication that skips through tiers.
+This keeps the tiers loosely coupled with each other allowing for easy changes between tiers without effecting the entire system.
+
+\paragraph{Three tier - Common variation}
+\hrule
+Top level contains UI aka presentation tier.
+Display information and take user input through a GUI\@.
+No business logic normally, this tier usually runs in the client browser.
+I.e. JavaScript etc.
+The code here should be assumed to be visible and accessible to the user.
+Bad place for business logic doing so is considered an anti-pattern.
+\hrule
+Application Tier / Business Tier/ Logic Tier.
+Provides the logic gathered from functional requirements.
+Responsible for processing the presentation tier and applying the relevant business logic to it.
+\hrule
+Data tier, this tier is responsible for storage and persistence of user and business-specific data.
+Tier may include files on a local file system or a database.
+
+\subsubsection{Why so popular?}
+Fits a large number of use cases.
+A lot of web based services fit this model, shops, news sites etc etc.
+Very easy to scale horizontally to take large traffic volumes and handle more data.
+
+\paragraph{How does it scale}
+The presentation tier runs on a users device so it scales by itself....get a better phone / computer etc.
+\hrule
+Application Tier - if it is kept stateless, application instances can be kept behind a load balancer and run as many instances as we need.
+\hrule
+Database / Persistence tier - can be easily scaled if a well established distributed data base is used. DB scala - replication, partioning, sharding etc.
+
+\hrule
+This architectural pattern is very easy to maintain and develop because all the logic is concentrated in one place; the application tier.
+Most backend development should happen in the application tier.
+
+No need to worry about integration of different code bases, services or projects.
+
+\subsection{Weaknesses of this pattern}
+
+Major drawback, the monolithic structure of the logic tier.
+Business logic should not be placed in the presentation or data tier.
+Issue is all the business logic is concentrated in a single user code base that runs as a single runtime unit.
+The implications of this, each instance of the application becomes too CPU intensive and will consume too much memory.
+This makes the application too slow and less responsive.
+This can especially be a problem with memory managed / GC language like Java and C\# (maybe add go to this list)
+As a result applications can have longer and more frequent garbage collections.
+This can lead to requiring an upgrade of the computer the application is running on.
+Vertical scaling is both expensive and limited.
+
+\subsubsection{Low development velocity}
+The second impact of the monolithic application tier is low development velocity.
+More complex code base makes it harder to develop maintain and reason about the code.
+Hiring more developers to solve this problem will not solve the problem/ add value.
+Why?
+Because more concurrent developers will simply cause more merge conflicts and higher overhead.
+
+\paragraph{Mitigation}
+Could split the code into modules based on logic.
+The modules will be somewhat tightly coupled since we can release new versions of those modules only when the applications has been upgraded.
+I.e the organisational scalability of the Three-tier architecture is limited.
+Best when the code base is relatively small and not that complicated and will be maintained by a small team of developers.
+
+\paragraph{Examples}
+Early startups, well established companies that fit the criteria above.
+
+\subsubsection{Variations of the Multi-Tier Architecture}
+One Tier
+Two tier - Business logic and presentation tier is combined.
+Think mobile or desktop application.
+Data tier handles persistence.
+
+More complexity - four tier.
+Between the presentation tier and the business logic tier.
+Between this tier functionality that does not belong in either can be separated.
+Could introduce API Gateway tier that handles security,caching, data formats etc when communicating between different systems.
+
+More than four tiers is rare since they do not usually provide more value and simply adds more performance overhead.
+The source of this overhead comes from not being able to bypass tiers so as to avoid tight coupling.
+Every request would have to pass through multiple services which can increase response time/latency.
+Rarely a request would have to do so much travelling.
+
+\subsection{Microservices}
+
+\subsubsection{Motivations}
+The size and complexity of the code base has grown, troubleshooting and adding new features.
+building, testing and even loading code into the IDE is now cumbersome.
+Organizationally, we now have problems.
+More developers leads to more merge conflicts, longer, larger and less productive meetings.
+At this point microservices should be considered.
+
+\paragraph{Microservices}
+Organises business logic as collection of loosely coupled and independently deployed services.
+Each service is owned by a small team and has a narrow scope of responsibility.
+
+\subsubsection{Microservices - Advantages}
+Codebases are now \textit{smaller} .
+Development is a lot easier and faster along with deployment and testing.
+Simply because there are fewer things.
+Code is easier to reason about and features can be added faster.
+New developers can become productive faster.
+Regarding performance and scalability, each microservice becomes less CPU intensive and takes less memory and can now run much more smoothly on commodity hardware (cloud).
+Can scala horizontally by adding more instances of low-end computers.
+Organizationally, the advantages are each service can be independently developed, maintained and deployed by a separate small team.
+This can lead to high throughput from the organisation as a whole.
+Each team can be autonomous with regard to tech stack, release schedule or process they want to follow.
+Better security in the form of fault isolation, i.e if one service starts crashing its easier to isolate and solve.
+
+\subsubsection{Dangers}
+
+\paragraph{Note} - Organisations can move to this architecture too quickly, without considering two factors.
+First - theoretically can achieve all those benefits from migrating to microservices, but they don't just happen and this can easily end up as a big ball of mud
+Second - microservices come with a fair amount of overhead and challenges.
+
+\subsubsection{Pre microservices}
+To achieve full organisational decoupling so that each team can operate independently, services need to be logically separated in way that every changed in the system can happen only in one service.
+This is to avoid involving multiple teams.
+If a change requires multiple teams then not much is gained from this migration.
+
+\subsubsection{Microservices best practices}
+Single responsibility principle - each microservice needs to be responsible for one business capability domain resource or action.
+Monolithic API gateway can be decomposed into multiple microservices, making them more lightweight and specialised.
+Second practice is to make sure there is no coupling between different services, and this can be achieved by having a different database for each service.
+Note: If two services share a database then every single schema or document structure change will result in complex coordination between teams.
+If each service has its own DB then it just becomes an implementation detail that can be easily updated or replaced completely without impacting the rest of the system.
+
+\subsubsection{Splitting the data}
+When splitting a monolithic database the data has to be split in a way that each microservice can be completely independent and fully capable of doing its work while minimising the need to call other services.
+Data duplication is expected and is normal in this scenario.
+Duplication is a tradeoff here and an overhead of using this architecture.
+
+Following best practices will help achieve a positive outcome when moving to microservices.
+
+\subsubsection{Key point note}
+Microservices brings in additional complexity and overhead.
+This only brings business value when the system reaches a certain size and the organisation is of a certain scale.
+Start with a monolith approach first.
+When that is no longer working for the use case, then move to micro services.
+
+\subsubsection{Conclusion}
+
+The benefits of microservices architecture.
+Higher organisational and operation scalability, better performance, faster development, better security.
+Best practices are required to realise these advantages and are only really applicable to systems and organisations of a certain size.
+
+\subsection{Event-Driven Architecture}
+
+\subsubsection{Motivation}
+If microservice A want to communicate with Microservice B, then not only does it require awareness of service B, it also needs to know how to call what API microservice B provides and how to call it at run time.
+Also, microservice A has to call microservice B synchronously and wait for its response (No always async etc????).
+Microservice A has a dependency on microservice B\@.
+
+\subsubsection{What is Event Driven Architecture?}
+In an event driven architecture, instead of direct messages that issue commands or request that ask for data, we have only events.
+An event is an immutable statement of a fact or a change.
+In an Event-Driven architecture we have three components.
+Sending side - We have event emitters, which are also referred to as producers.
+Receiving side - We have event consumers
+And inbetween we have the event channel (a message broker), Kafka?
+
+\subsubsection{Advantages}
+When we use the Event-Driven Architecture style with microservices we can get a lot of benefits.
+Now the dependency between Microservice A and B is removed.
+Microservice A doesn't need to know anything about the existence of microservice B
+And once microservice A produces the event, it doesn't need to wait for any response from any consumer.
+Because services don't need to know about each other's existence or API and all the messages are exchanged completely asynchronously, we can decouple microservices more effectively.
+This results in higher scalability.
+More services or integrations can be added to to the system without making any changes.
+Horizontal and organisational scalability is achieved via EDA.
+This architecture also allows us to analyse streams of data, detect patterns and act up on them in real time.
+
+\subsubsection{Further advantages}
+When all events that occur in a system are stored in a message broker, in addition to data analysis an very powerful architecture pattern can be implemented.
+This is called event sourcing.
+By using event sourcing events can be replayed to identify the current state of a system rather than saving the state in a database.
+Because events are immutable we're never modifying them.
+We simply append new events to the log as they come.
+Using event sourcing we can store events for as long as we want.
+Querying can be made faster by adding snapshot events.
+
+\subsubsection{CQRS - Command Query Responsibility Segregation}
+Another architectural pattern that can be implemented as a result of Event Driven Architecture
+Command query responsibility segregation.
+This solves two problems.
+
+First problem is optimizing a database that has a high read and update operations.
+In this scenario concurrent operations to the same record or tables contend with each other making the system slow.
+Additionally, if we use a distributed database, generally we can optimize it for one type of operation at the expense of teh other.
+(Cap theorem?)
+Ad-hoc solution - We can optimize one operation at the expense of the other when an application is read/write heavy.
+However, when the both operations are equally important we have a problem.
+CQRS architectural pattern allows us to separate Update and Read operations into separate databases, sitting behind separate services.
+In this case service A would take all the update operations and perform them in their own database, where it optimally stores the data for such updates.
+Additionally, every time an update operation is performed if publishes an event into a message broker.
+Meanwhile, service B will subscribe to those update events and applies those changes in its own read optimised database and now all read operations will go to service B.
+Both update and read operations can go to separate services without any contention/interference.
+
+Further, the data can be optimized for each type of operation.
+
+The second problem that CQRS helps solve is joining multiple tables that are located in separate databases that belong to two different microservices.
+Prior to monoliths all data was in one table.
+If that was a relational database all the records could be joined and then analysed.
+Post microservices, this is not the case assuming that best practice has been followed.
+Joins are harder now.
+Requests need to be sent to each service separately which is slower.
+This data needs to be combined programmatically because now we potentially have different types of databases.
+Some of these databases may not even be relational.
+
+CQRS solves this problem.
+Every time there is a change of data in a services database, those services would publish those changes as an event to which other services subscribe to.
+The other service will store what is called a materialized view of the joined read-to-query data from both service A and service B in its own read-only database.
+Whenever we need to get a join view we can just send a request to the joining service rather than send a request to two services.
+
+
+\section{summary of EDA}
+When combined with microservices this allows for decoupling of services potentially allowing for horizontal and organization scalability.
+Event driven architecture allows us to analyse and respond to large streams of data in real time.
+
+\subsection{Patterns within EDA}
+Event sourcing - allows for the auditing and storage of the current state of a business entity by only appending events and replaying them when needed.
+CQRS - Allows for database optimisation for both updates and reads by splitting the operations into separate services.
+This allows for the efficient joining of data from separate services.
+
+\subsection{Clarifying point} EDA and Microservices aren't a requirement for each other but they are commonly used together to achieve greater decoupling.
+Issues to address with Microservices, organisational scaling and technical problems relating to scaling.
+Refactoring is harder and application becomes less stable, small issues can jeopardise the whole system.
+Solution, organise business logic as loosely coupled deployable independently deployable services.
+Each service is owned by a small team and has narrow scope of responsibility.
+Now we have organisational scalability, building is faster, less burden on the developer, each binary is smaller in size.
+Testing and reasoning is easier, onboarding is faster and this development velocity is faster.
+Hardware demands are easier since commodity hardware can now be used due to less CPU and memory usage.
+Flexible tool choice for development teams.
+Refactoring is easier.
+Higher system stability, the damage caused by a bug etc is much smaller since each service is deployed separately.
+
+\subsection{Barriers to implementing microservices}
+Method calls have now become network calls between different computers bringing in latency issues.
+In distributed systems each component is unreliable.
+Although testing is faster no guarantee all the services will work when deployed together.
+This can lead to complicated integration tests than can impact productivity.
+Would be hard to understand which team owns the integration tests.
+Fixing bugs and troubleshooting performance is much harder in microservices
+Incorrect scope identification for a service can also cause additional organizational overhead.
+Could lead to duplicated effort.

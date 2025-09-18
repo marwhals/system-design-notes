@@ -1,0 +1,346 @@
+\chapter{Data storage at Scale}
+Motivations: Choosing the right databases amongst many options.
+
+
+\section{Relational Databases and ACID Transactions}
+
+\subsection{Relational Databases}
+Data is stored in tables.
+Each row in a table corresponds to a single record and all the records are related to each other through predefined columns they all have.
+Each column in a table has a name, a type and optionally a set of constraints .... NULL etc.
+The relationship between all records inside a table is what gives this type of database the name relational database.
+Structure of each table is decided ahead of time and is referred to as the schema of the table.
+We know what each record in the schema must have because because it is predefined.
+We can use a very robust language to query the data (analyse and update) in the table.
+This is SQL.
+Different implementation add their own features to this language.
+Oracle etc....
+Majority of operations are the same across all relational databases.
+Proven way of storing structured data.
+Avoids data duplication when memory is usage has to be considered (large scale)
+Use joins to combine information from multiple tables without duplication.
+
+\subsubsection{Relational Databases - Advantages}
+Carryout complex and flexible queries using SQL. Use for analysis
+Save memory because multiple tables can be joined ..... save costs.
+Easy to reason about, very natural for humans.
+No sophisticated knowledge required.
+Most importantly, provides ACID transactions.
+
+\begin{itemize}
+    \item Atomicity
+    \item Consistency
+    \item Isolation
+    \item Durability
+\end{itemize}
+
+In the context of transactions the sequence of operations should look like a single operation externally.
+Relational databases guarantee atomicity of transactions.
+Atomicity - transactions appear once or not at all.
+Consistency - guarantees that transaction that has been committed will be seen by all future queries and transactions.
+Also guarantees that data constraints that are set for the data, are met.
+Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state. They are separate.
+Durability - once a transaction is complete its final state will persist.
+
+\subsection{Relational Databases - Disadvantages}
+Rigid structure enforced by database schema enforced by the schemas
+Schemas has to be designed ahead of time before the table can be used.
+Future changes to the schemas can lead to down time.
+Changes ideally should be avoided and not done at all.
+Through planing is required for this.
+Harder and more costly to scale because of their complexity.
+Providing SQL and ACID transactions is not straight forward and thus relational databases are harder to maintain.
+Due to ACID guarantees, reads are slower to perform compare to other types of databases.
+Different implementations have different performance optimisations and guarantees.
+
+\begin{note}
+    Generally, relational databases are slower than non relational ones.
+\end{note}
+
+When choosing one consider pros/cons and the use case.
+I.e is the data related, are reads important?.
+
+
+\section{Non-Relational Databases}
+
+NoSQL databases \textit{generally} allow for the logical grouping or records without them having to conform to some kind of schema.
+Can easily add some kind of attributes to the different records without redesign or effecting other records.
+
+\textit{Most} languages do not have tables as a structure, external libraries required.
+NoSQL uses more typical computer science data structure (arrays, trees etc).
+This eliminates the need for Object Relational Mappings ORM (Hibernate) to translate business logic for storage in a database.
+
+Relational Databases are designed for efficient storage.
+That is they optimise for low memory availability and expensive memory.
+NoSQL databases on the other hand are typically optimised towards faster queries.
+Different types of non-relational databases are optimised for different types of queries based on the use-case.
+
+\subsection{Some issues with flexible schemas}
+The loss of ability to easily analyse those records since each record can have different structure and data.
+Joining becomes very hard, these operations are often not supported by NoSQL databases, or are hard.
+Each NoSQL database supports a different set of operations and different set of datastructures.
+ACID transactions guarantees are rarely supported by non-relational databases (but there are exceptions).
+
+\paragraph{Types of NoSQL Databases}
+Three types of NoSQL databases.
+The categories, however are somewhat blurry.
+
+\subparagraph{First Type - Simple Key/Value store}
+We have a key that uniquely identifies a record and value that represents the data.
+The value can be anything, primitive or a binary blob.
+Can be though of as a large scale hash table/dictionary with few constraints on the type of value that can be held for each key.
+Good for caching pages or for quick fetching and easy querying.
+
+\subparagraph{Second Type - A document store }
+Collections are stored as documents.
+Documents have a bit more structure.
+Each document can be thought of as an object with different attributes.
+Those attributes can be different types.
+Similar to classes and fields.
+Documents are easily mapped to objects inside a programming language.
+Think JSON, YAML, XML
+
+\subparagraph{Third Type - A graph database}
+An extension of a document store but with additional capabilities to traverse, link and analyse records more efficiently.
+These types of databases are particularly optimised for navigating and analysing relationships between records in a database.
+
+\paragraph{Use Cases}
+Fraud detection.
+Recommendation engines.
+
+\subsection{When should they be used?}
+Look at use case and analyse what is required from the database and what can be compromised.
+Non relational databases are better when it comes to query speed.
+They are also good for caching.
+They can store common query results that correspond to user views or pages.
+In memory "key,value" stores are optimised for this.
+Real time big data is a good use case, since relational databases are too slow and not scalable enough.
+Another use case is when the data is not structured and different records can contain different attributes.
+
+\subsection{Key-Value stores}
+\begin{itemize}
+    \item Redis
+    \item Aerospike
+    \item Amazon DynamoDB
+\end{itemize}
+
+\subsection{Document Stores}
+\begin{itemize}
+    \item Cassandra
+    \item MongoDB
+\end{itemize}
+
+\subsection{Graph Databases}
+\begin{itemize}
+    \item Amazon Neptune
+    \item NEO4j
+\end{itemize}
+
+
+\section{Techniques to improve performance, availability and scalbilty of databases}
+There are three techniques to improve the scalability, performance and availability of a database.
+
+\subsection{Technique one - Indexing}
+Speeds up retrieval operations and locate the results in a sublinear time.
+Without indexing those operations could require a full table scan, which is bad for large tables.
+Example operations
+Sorting, search.
+If performed often this can lead to a performance bottleneck.
+
+An index is a helper that we create from particular column or group of columns.
+When the index is created from a single column, the index table contains a mapping from the column value to the record that contains the value.
+Once that index table is created, we can put that table inside a data structure (good structures - B-Trees(or any self balancing tree), or a Hashmap).
+This will keep the values sorted and thus makes searching more efficient (think big O complexity).
+Searching is log n.
+Sorting is n log n.
+
+This will keep the values sorted and thus makes searching more efficient (think big‑$O$ complexity).
+Searching is $O(\log n)$.
+Sorting is $O(n \log n)$.
+
+Composite indexes can be created.
+
+%TODO add reminder on normal form........for relational databases
+
+\subsubsection{Tradeoffs}
+Optimising for one operation can lead to a tradeoff elsewhere.
+Indexing increases memory and decreases the speed of writes but increases the speed of reads.
+Writing records become slower because each time a write or new record is added the index table must also be updated.
+Indexing is also used in non-relational databases to speed up queries.
+
+\subsection{Database replication - single database, single point of failure.}
+Solution, replicate data and run multiple instances of the database on different computers.
+This increases fault tolerance, availability.
+One replica goes down another can take its place and business is not effected.
+Queries can continue going to available replicas while the faulty replica is fixed.
+
+Get better performance and better throughput.
+Better throughput by distributing our queries across multiple computers/ replicas.
+
+\subsubsection{Tradeoffs}
+Introduces higher complexity especially with regards to write, update and delete operations.
+Making sure concurrent modifications to the same records don't conflict with each and providing predictable guarantees in terms of consistency and correctness is not a trivial task.
+Distributed databases are very hard to design, configure and manage, especially at scale.
+Requires knowledge of distributed systems.
+
+Database replication is widely supported by most modern databases
+Non-relation databases support replication (high availability, large scale) out of the box as they were designed with that in mind.
+
+Support for replication with relational databases varies amongst different implementations.
+
+\subsection{Database partitioning (Sharding)}
+Split data amongst different database instances for better performance.
+Each instance will run on a different computer typically.
+More computers, more data.
+Queries which use different partitions can be done in parallel.
+We get both better performance and better availability.
+Sharing effectively turns the database into a distributed database.
+Add complexity and overhead since routing is required for the right shard/partition as well as making sure one shard does not become too large.
+
+Database sharding is a common feature in most non-relational databases.
+Since by design they they decouple different records from each other.
+Storing records on different computers is a lot more natural and easier to implement.
+
+For relational databases, it depends on the implementation.
+Relation database queries usually involve more than one record/ are more common.
+Splitting these across multiple machines is more challenging to implement in a performant way while supporting things like ACID transactions or table joins.
+When choosing a relational database for high volume of data use case check for partitioning support.
+Partitioning can also be used to split infrastructure like compute instances and redirect traffic to different machines.
+Can also do this based on mobile/browser etc running the same application.
+
+This routing allows for understanding which users are affected during an outage.
+
+\begin{note}
+    These three techniques are orthogonal to each other.
+    They are often used together in real user use cases.
+\end{note}
+
+
+\section{Brewers CAP Theorem}
+%TODO find a good diagram for this
+
+\begin{note}
+    In the presence of a network partition, a distributed database cannot guarantee both consistency and availability.
+\end{note}
+
+The scenario of database instances not being able to communicate with one another.
+When an isolated server cannot communicate with its replicas it can either return an error or produce inconsistent data.
+
+\begin{note}
+    No network partition then no tradeoff and both consistency and availability can be offered.
+\end{note}
+
+\begin{itemize}
+    \item Consistency - Every read request received the most recent write or an error regardless of which instance is serving when considering a network partition.
+    \item Availability - Every request receives a non error response without the guarantee that it contains the most recent write.
+    Occasionally different clients may get a different version of a record, some may be stale but all requests return a successful value.
+    \item Partition tolerance - means that the system continues to operate despite an arbitrary number of messages being delayed or lost by they network.
+\end{itemize}
+
+The theorem basically states one of these must be dropped when we are working with a database that may have to deal with a database partition.
+Could have a single database to guarantee consistence and availability. I.e no network involved with the database, but this would not scale.
+When architecting for partition tolerance we either have to drop availability or consistency.
+Depends on the use case.
+
+The choice is not so distinct, more of a spectrum.
+More availability less consistency, less consistency more availability.
+Depends on the tolerance requirements of the application.
+
+Important to get these tradeoffs in the architectural design phase, when we formalise non-functional requirements.
+
+
+\section{Scalable unstructured data storage}
+%TODO where does pine cone and vector data bases fit in...........
+Unstructured data, data that doesn't follow a model or schema.
+Non relational data still has keys and values and structure.
+Consider binary files.
+Databases may allow for storage but they are not optimised for it.
+Limit on the object size with DBs otherwise we would encounter scalability and performance problems.
+Use cases
+\begin{itemize}
+    \item Disaster recovery
+    \item Archiving
+    \item Web hosting media like videos etc
+    \item Collecting data points for machine learning purposes
+\end{itemize}
+
+Huge datasets, storage solution needs to be scalable.
+Each object can also be big.
+
+\subsection{First solution - Distributed file system - network of storge devices}
+We can get different replication consistency, and auto healing guarantees based on the file system.
+Main feature is that files are stored in a tree like structure.
+Benefit of storing unstructured data like this is that special APIs are not needed.
+Can easily modify these files.
+Performance intensive operations such as big data analysis or transformations operations on data are very fast if we do it on a distributed file system.
+\begin{note}
+    Very useful for machine learning projects.
+\end{note}
+
+\subsubsection{Limitations of Distributed file systems}
+\begin{itemize}
+    \item limited in the number of files we can create which is scalability issue with relatively small files like images.
+    \item easy access to those files via web api is hard, Additional abstractions would be required.
+\end{itemize}
+
+\subsection{Another solution - use an object store}
+\begin{itemize}
+    \item A scalable storage solution designed for unstructured data at an internet scale.
+    \item Can scale linearly like a distributed file system by adding more storage devices.
+    \item Unlike a distributed file system we have virtually no limitation on the number of binary objects we can store in it
+    \item High sizes on the size of a single object....can be terabytes.
+    \item Good for archiving and backups
+    \item Features of typical object stores can include HTTP rest API that makes them effective for storing multi media content - images etc that can be linked to a webpage
+    \item Object versioning is another feature, on a file system we would need to use an external versioning system.
+\end{itemize}
+
+\subsection{Differences between object store and a distributed file system}
+\begin{itemize}
+    \item No directory hierarchy
+    \item Flat structure called buckets
+    \item main abstraction is an object
+    \item Typically key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
+    \item Objects can include an access control list who can access who has read/write permissions.
+\end{itemize}
+
+Commonly provided by cloud providers.
+Typically broken into classes with each class providing different prices and SLA guarantees.
+Top tier is usually availability of a high percentage, offers lowest latency and highest throughput
+Top tier is best for data that will be frequently accessed lke content videos, images etc.
+Middle tiers have lower guarantees for viability and are cheaper.
+- These options have limited performance and sometimes have limits frequency of usage as well.
+- Good for data backups, i.e data not needed often
+Lowest tier is good for longer term archiving.
+Usually cheap and used for specific use cases.
+
+\subsection{Cloud vs OpenSource vs Third Party Managed}
+Cloud may not be an option for budget, legal or performance constraints.
+There are options for on premise storage devices.
+Some follow the same APIs as some cloud vendors, so they can easily be used in hybrid cloud environments (cloud + private data centre).
+Can use the same object ID to store data in both locations.
+
+Just like distributed file systems, object stores use data replication although this is abstracted away.
+Ensure physical storage loss will not result in loss of actual data.
+
+\subsection{Object store downsides}
+Data is immutable, no edits can only be replaced with a newer version.
+Performance implications: storing large documents that require amends would not be feasible
+Needs a special API or a REST API unlike a distributed file system.
+
+Distributed systems are the preferred storage solution over object stores for high throughput solutions.
+
+\subsection{Scalable Unstructured Data Storage Solutions}
+Cloud based
+\begin{itemize}%TODO look into differences
+    \item Amazon S3
+    \item GCP
+    \item Azure
+    \item Alibaba
+\end{itemize}
+
+Open source and third party
+\begin{itemize}
+    \item OpenIO - software defined
+    \item MinIO - S3 and native to kubernetes
+    \item Ceph - \textbf{Open-source} reliable and scalable.
+\end{itemize}

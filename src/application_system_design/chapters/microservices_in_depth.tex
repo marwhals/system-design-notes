@@ -1,0 +1,1450 @@
+\chapter{Microservices in depth}
+
+\section{Motivations}
+In this style a system is organised as a collection of independent services.
+Each has a narrow scope or responsibility and is fully owned by a team of developers.
+Very popular with big, successful companies.
+When done correctly, this architecture allows organisations to build highly scalable systems that reach billions of users while keeping their operational costs low, staying efficient and inovative.
+
+Note this has to be done under, the right conditions with a company that is ready for the change otherwise we introduce a large amount of overhead with no benefits.
+
+Related but not a pre-requisite is Event Driven Architecture.
+- This combined with microservices is a very powerful design pattern.
+
+
+\section{The problem being solved}
+Problem --- Scaling a three tier architecture / Monolith
+-- Typically has presentation tier, business logic tier and a data tier.
+-- Still useful, easy to implement and use with a small team of developers.
+-- This is good enough for some companies.
+
+However as a company becomes more successful and the development team continues growing larger problems start appearing.
+
+\subsection{Issues with Scaaling}
+
+\subsubsection{Low organisational scalability}
+
+\paragraph{}
+First issue is low organisational scalability.
+Too many engineers on the same code base leads to merge conflicts, toe stepping and other dramas.
+Even a small feature can become slower and harder to deal with.
+This results in more planning and meetings and coordination.
+The more people we have in those meetings the longer and less productive they become.
+The number of engineers is not the only issue, as we add more feature to the application, our code base becomes larger and more complex.
+in turn this makes it harder to reason about, makes it take longer to load in an IDE, slower to build and test as well as making it riskier to deploy.
+As a result, our release schedule becomes less frequent, which makes things even worse.
+
+\paragraph{}
+Every new release contains even more features, increasing the chances of bugs and outages.
+Finally, onboarding new developers now takes more time as it is much harder for them to get familiar with the large code base.
+Also with every additional engineer in a team we start seeing diminishing returns until we hit a point where adding more people actually reduces everyone's productivity.
+Besides low organisational scalability, a large monolithic application can also have technical problems make the system less scalable.
+Each application instance which contains our entire business logic, requires a lot of CPU and memory.
+Instead of using cheap commodity hardware, we need to run each instance on a more high end and expensive computers.
+We are also constrained by technology choices that may have been made many years ago and we can't take advantage of newer technologies.
+Refactoring our code base, from one library to another can be a huge effort, let alone considering a new programing language or a framework.
+Another problem is that our application becomes less stable
+Even a small memory leak, performance issue or a bug can affect out entire system and may require us to perform a rollback
+Logically separating the monolithic application into layers, modules, or even libraries can help only so much.
+At the end of the day those modules are still tightly coupled together.
+We're still constrained to using the same technologies and programming languages and the application still needs to be deployed as a single run time unit.
+
+\paragraph{}
+This sets the stage for the problems that microservices address
+
+\subsection{Microservice Architecture - Benefits and Challenges}
+With this architecture we gain a much higher organisational scalability since each service contains only a subset of the overall functionality, each service's code base is much smaller.
+\begin{itemize}
+    \item Allows each developer to load their code up in their IDE much faster
+    \item Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
+    \item Testing and reasoning about each service in isolation becomes much easier because there is much less logic to understand run and test.
+    \item The simplicity of the code in each microservice also speeds up the onboarding process of a new team, so a company can grow quickly and stay more efficient.
+    \item All this increases the development velocity of each team, which mean we can deliver more features and gain an advantage over our competitors
+    \item On system scalability, we also get a lot of benefits in the monolithic application
+    \begin{itemize}
+        \item Each instance had to run the entire code base which required very powerful and expensive hardware to run each instance.
+        \item When we break our code base into microservices each service is much smaller, so each instance of a microservice consumers less memory and CPU
+        \item As a result, it can run on cheap and widely available commodity hardware,
+        \item Each team can also make the best judgement on what technologies would benefit their service and they can also respond to technology changes much faster by refactoring their already small code base.
+        \item Could even rewrite the code base if necessary.
+    \end{itemize}
+    \item Finally we get much higher stability for the entire system since each microservice is deployed as a separate runtime unit.
+    \item The blast radius of a bug, memory leak or performance issue is much smaller.
+    \item In most cases a bug in one microservice will impact only that microservice or just the ones that depend on it on some level. The rest of the system can continue operating on it just fine.
+\end{itemize}
+
+Essentially, microservices break the scalability barrier that we will hit with a monolithic architecture. A Monolith is good to get started but for continued growth microservices are a good option.
+
+\subsection{Challenges}
+Now method calls that used to have predictable behaviours, success rates and latency have became network calls between two different applications that may be running on different computers.
+Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
+Beside the network itself, the nature of distributed system is that each component is inherently unreliable
+
+For instance, a reqeust from one service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenance from a testing perspective.
+We also now have testing challenges.
+
+\subsubsection{Testing Challenges}
+Testing each microservice in isolation has became easier, faster.
+There is no guarantee that they will work when they have all been put together as a whole.
+When we make a change in one service, we have far less confidence that once the new version of our service is deployed in production, it won't break another service.
+This situation may lead to the creation of very complex and slow integration tests that can slow our productivity.
+Given that each service may belong to a different team, it's very hard to decide who owns those integration tests to begin with.
+
+\subsubsection{Debugging issues}
+Finally, with microservices, its much harder to troubleshoot performance issues and bugs.
+
+\subsubsection{Scalability Challenges}
+We may also experience challenges in organisational scalability.
+One of the biggest questions is how to set the scope of responsibility between microservices.
+If we set the boundaries incorrectly, we may actually have \textit{more} organisational overhead than benefits.
+
+Examples
+\begin{itemize}
+    \item If every change in a system requires careful coordination between different teams then we are not better off that what we were in a monolithic architecture
+    \item Similarly if every team uses a different tech stack.
+    \item Tools and practices we may have a lot of duplicated efforts and confusion when looking at code from other teams.
+\end{itemize}
+
+Without careful consideration we can end up with more challenges that what we would get with a monolith.
+This is some times referred to as a distributed monolith or a big ball of mud.
+
+\subsubsection{Use other companies experiences}
+Many companies share findings from actually implementing microservices, mistakes and successes.
+Following industry proven principles the benefits of microservices can outweigh the organisational complexity and overhead.
+
+\subsubsection{Summary}
+Benefits of microservices architecture
+
+\begin{itemize}
+    \item Higher organisational scalability due to the smaller code base of each microservice
+    \item Allows for high system scalability, which allows for the use of the best technology for each microservice and to run it on cheaper hardware.
+\end{itemize}
+
+Challenges
+\begin{itemize}
+    \item Additional complexities and overhead
+    \item Unpredictability of running a distributed system with unreliable components on an unreliable network.
+    \item The risk of decreased organisational scalability if we do not set appropriate boundaries between microservices and their teams.
+\end{itemize}
+
+
+\section{Migration to microservices architecture}
+
+\subsection{Microservice Boundaries - Core Principles}
+The scenario - A successful e-commerce company with a monolith.
+Just breaking from a large code base into an arbitrary set of microservices and handing each off to a separate team will not necessarily benefit the client.
+
+\subsubsection{Standard three tier}
+\begin{itemize}
+    \item Web application takes web requests form users running our front end code in their web browser and mobile apps -- Presentation tier
+    \item in the data tier we have an internal database storing all of the transactions, products, reviews and inventory information
+    \item Also have an external payment service that belongs to a third party which handles the billing
+\end{itemize}
+
+A monolith was good at the start but now the code base is large and complex.
+The application binary size is too big and the application requires very expensive hardware and the development team is passed the two pizza rule.
+This has lead to lots of inefficiencies.
+We could split this into microservices but unsure on how to do the splitting.
+
+\paragraph{Approaches}
+One approach could be to follow the internal logic layers that already exist in the application code base.
+We can take the front layer of our code base that handles user requests, security and permission, validation and also services the HTML JavaScript and CSS to the web browser and split that into its own service.
+This service can be maintained by a separate team, and is physically deployed as a separate runtime unit.
+We could similarly take all the business functionality that handles checkouts, discounts seasonal sales and microservices and do the same.
+We could do the same with the data tier and run that as a separate service as well
+
+\paragraph{False intuition}
+Intuitively it seems like a good idea.
+Take advantage of the already existing separation within our application so very little refactoring is required.
+
+However this doesn't work very well in practice and doesn't provide much benefit.
+The reason for that is now every new features we develop within the application will likely require an API change, a business change and a data change.
+This now means that every microservice in our system will be involved in every feature requiring careful planning and release coordination between the different \textbf{teams}
+So we will not gain any benefit to organisational scalability using this approach.
+
+Breaking the monolithic application into more tiers will not work.
+
+\subsubsection{First principle}
+Each microservice needs to be cohesive.
+Cohesion mean that elements that are tightly related to each other and change together should stay together
+If all the logic that changes together stays within the boundaries of the same microservice, each team can truly operate independently. This is a pretty key point.
+
+\subsubsection{Another approach}
+Another migration approach based on technology boundaries.
+Good performance improvements due to more specialised use of different programming languages, tech stacks etc.
+Problem now is that Support engineers, product managers etc don't know which sub-team needs to get tasks.
+Responsibilities are not clear.
+The terminology of each API is not very clear because we are mixing different contexts such as users, products, bank accounts and so on all in the same API
+The last microservice, which still has the most business logic has too much responsibility and is still too big.
+It has the potential to be another monolithic application.
+
+\subsubsection{Second Principle}
+The single responsibility principle.
+Every microservice should do one thing and do it exceptionally well.
+If each microservice follows this principle there is no ambiguity about where a new piece of functionality need to go and which team needs to own it.
+It also helps create a very clear an easy to follow API for each microservice because all the terminology entities or identifiers are bound to a particular context.
+
+\begin{note}
+    This can potentially lead to interdependencies between services when executing a task.
+\end{note}
+
+\subsubsection{Third Principle}
+Microservices should be loosely coupled.
+Loosely coupled microservice have very little to no interdependencies.
+This means that each microservice can performa its functionality with minimal communication with other microservices.
+Microservice size is generally unimportant
+
+As long as microservices are cohesive, follow the single responsibility principle and are loosely coupled with each other, the size doesn't matter.
+Naturally some services will be bigger and some will be smaller.
+
+\paragraph{Important Note}
+Those three principles are important pre-requisites for a successful microservices architecture.
+If they are not followed then we will encounter issues sooner or later.
+
+\subsection{Summary - Important principles}
+\begin{itemize}
+    \item Each microservice needs to be cohesive, which means all the elements that change together stay together within the boundaries of one microservice
+    \item Each microservice should follow the single responsibility principle
+    \item Each microservice should be loosely coupled from all other microservices to minimise runtime communication.
+    \item Also microservices don't have to be small, it depends on the functionality.
+\end{itemize}
+
+\subsection{Decomposition of a Monolithic Application To microservces}
+There are three methods for this
+
+\subsection{First Method - Using business capabilities}
+First method to decompose a system into microservices is by business capabilities.
+In this method we observe and analyse out system from a purely business perspective, a business capability is any core capability that provides value to the business or its customers.
+This can include things like revenue, marketing, customer experience and so on.
+Once we identify those business capabilities, we can dedicate a separate microservice and a team to fully own it.
+There are ways to identify those business capability.
+One way is to run a thought experiment where you describe the system to a non technical person and try to explain what the system does and what value each of the capabilities provides.
+
+%   TODO EXAMPLE? Online Store
+
+\subsubsection{How do we know that those services follow three core principles?}
+\begin{itemize}
+    \item Just by looking at the names of the services, we can see if this design follows the single responsibility principle and that's by design because each services is responsible for an entire business capability.
+    \item We can also easily check if each service is cohesive by considering the changes that need to happen to our system.
+    \item We can also verify that those services are not too independent and are loosely coupled by reviewing a few user journeys or use cases.
+\end{itemize}
+
+\subsection{De-composition by domain or sub domain}
+
+Decomposing a monolithic application into microservices.
+This technique is called the composition by domain or sub domain.
+Unlike the previous that looks at the system from the business side.
+This way we take the developers point of view of the system.
+In other words the criteria for setting the boundaries of sub domains is based on the engineers understanding of the system, which is generally more intuitive.
+In this method we decompose the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
+Those subdomains can be of three types
+
+\begin{itemize}
+    \item A domain that represents a core business capability.
+    \item A domain which is supporting a business capability.
+    \item A generic subdomain.
+\end{itemize}
+
+\paragraph{A Core business capability}
+A core business capability is a key differentiator of our business from any other competitor in the field.
+Its a capability that cannot be bought off the shelf or outsourced
+Its where the best effort and investment is placed.
+Without it out business doesn't provide any value.
+
+\paragraph{Supporting sub domain}
+A supporting sub domain is still integral to our operation of our business and support the delivery of our core domains.
+But it is not something that differentiates us from out competitors.
+
+\paragraph{Generic sub domain}
+A generic sub domain is a capability that is not specific to any business.
+Many other companies use it and in many cases we could get that component of the shelf.
+
+This categorization of sub domains helps us prioritise the investment into each sub domain.
+Can also help us figure out where we want to allocate our top and most experienced engineers and where we can save time or costs and get off the shelf existing solutions.
+
+Once we identify those sub domains we, have a few options.
+We can dedicate a separate microservice to each sub domain or if we set that certain sub domains are too tightly coupled with on another ot aren't cohesive enough, we can group several sub domains into one microservice.
+
+\begin{note}
+    These two ways are not the only way to set boundaries of microservices.
+    Another method includes the composition by action on or entities.
+\end{note}
+
+However setting the boundaries by business capabilities or sub domains is the two of the most popular ways to do so.
+
+\subsubsection{Comparison of the two most popular methods}
+Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
+On the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
+
+When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
+\begin{note}
+    The architecture we get from the decomposition by business capabilities is usually more stable.
+\end{note}
+The reason for that is because the core business is \textit{usually} much more stable than engineering and technology.
+
+On the flip side, the composing business capabilities requires much better understanding of the business.
+This means that this process will produce a less intuitive design for engineers that the composition by subdomain
+
+\subsection{Final Notes}
+There is no one right way to set the boundaries of the microservices.
+What works now may not work in the future.
+So the architecture keeps evolving as new features come in and new business capabilities are added.
+There is also no perfect decomposition to microservices and some friction or coupling is inevitable.
+The goal of setting the boundaries correctly is to minimise this friction and no completely eliminate it.
+
+These techniques are not "bullet proof".
+They are just guidelines/tools that helps arrive at a good architecture.
+It is not a substitute for good engineering judgment and intuition
+
+\subsection{Summary - Decomposing a monolith into microservices}
+To summarise there are two popular ways to decompose a monolithic application into microservices
+
+\begin{itemize}
+    \item The first is by business capabilities
+    \item The second is by sub domains
+\end{itemize}
+In the second type there are three types of subdomains
+\begin{itemize}
+    \item Core subdomains supporting
+    \item Supporting sub domains
+    \item Generic subdomains
+\end{itemize}
+
+Using either of those techniques helped us set the boundaries for microservices.
+
+These will not lead to a flawless migration to microservices, some engineering judgment will be needed for the final design.
+
+\subsection{Migration to microservces - steps tips and patterns}
+A common approach is big bang approach.
+
+\paragraph{}
+In this approach the team maps out the desired boundaries for the future microservices architecture.
+Then they try and get management on board to stop any development of new features and focus on the migration.
+In theory this is a good idea if the entire team fully focuses on the migration and doesn't get distracted by adding new features.
+They should be able to finish much faster.
+That is in theory.
+\begin{note}
+    This approach is actually the worst in terms of productivity and impact on the business.
+\end{note}
+
+\paragraph{Why?}
+First of all having too many developers working on the same project, which in this case is the refactoring of the monolith into microservices, is a bad idea.
+
+\begin{note}
+    We mainly want to migrate to microservices because our team already has productivity and communication issues, which is what we call organisational scalability.
+\end{note}
+
+Having too many cooks in the kitchen will create alot of friction.
+The second reason is estimating the effort for such big project is very hard.
+Just like in the case of many big and ambiguous projects, we often encounter technical problems we didn't forsee.
+If management was promised a project would be done in four months and its not finished five months later the management will start getting nervous.
+This puts the entire process in danger of abandonment
+To minimise additional time loss, finally stopping any development of new feature for many months, can be detrimental to the business.
+Product managers may get bored and have no way to get promoted, which in turn may cause them to leave the company.
+Salespeople have nothing to sell or pitch to clients and users who don't care about the internal architecture may start thinking that out business is in trouble or our company is unwilling to improve their experience.
+
+\paragraph{The better approach}
+The better approach is incremental and continuous.
+In this approach, we identify the components within our code base that can benefit the most from migrating to separate microservices.
+The best candidates for the migration ranked by the benefit we get from migrating them are the following areas with the most development and frequent changes.
+Components that have high scalability requirements that cannot be met as long as they are part of the big monolithic application.
+Lastly, the components with very little technical debt and good logical separation that fits the scope of a microservice.
+We prefer to migrate code with the most development because migrating code that nobody touches doesn't really provide that much value because it isn't the source of any problem.
+On the other hand, the logic that is constantly evolving is the biggest source of merge conflicts.
+It is also the biggest contributor to releases of our entire monolithic application, so if we separate it into a microservice, those changes will not require us to redeploy a new version of out code that didn't change.
+Separating those parts of the code into a separate microservice wil help us disentangle its business logic from the rest of the application, making it much easier to reason about and less likely to introduce a bug.
+Once we migrate that part of the code into a microservice, we identify the next candidate and we keep going continuous until we reach a point where the original monolith is gone, or whats left in the monolith never changes, so there is no point in touching it further.
+
+\paragraph{Benefits of the incremental approach}
+This incremental approach has several important benefits.
+First, we don't have to set hard deadlines to complete the migration, even if it take a year or longer to reach the final point.
+We are constantly making visible and measurable progress
+Our business is also not disrupted and even if the migration of one part of our code exceeds the estimates, it will be in the order of days ro weeks and not months or years.
+
+\subsubsection{How to prepare for a migration?}
+How to prepare for a migration
+After identifying the component or the components we want to migrate, \textbf{we must ensure that we have good test coverage}.
+This step is critical because with good code coverage we have the confidence that we did not break any functionality during our refactoring.
+Otherwise the entire migration may get delayed if things start breaking.
+Once we have good test coverage, its important to define a clear well thought out API for the component we plan to migrate and in the last step we also want to isolate the component by removing any interdependencies to the rest of the application.
+
+\subsubsection{How to perform the actual migration?}
+How to perform the actual migration
+Use the Strangler Fig pattern
+
+\paragraph{The Strangler Fig pattern}
+The strangler fig pattern introduced by Martin Fowler is inspired by a plant that starts as a small vine growing on top and alongside an existing old tree, and then over time, it spreads and grows, completely consuming the old tree, taking its place.
+The idea behind this pattern is first to introduce the proxy in front of the monolithic legacy application that simply allows requests to pass through.
+The proxy is commonly called the \textbf{Strangler facade} and is typically implemented using an \textbf{API gateway}
+
+\subsubsection{What is an API gateway?}
+API Gateway reminder: An off the shelf open source or cloud based component that routes requests based on the API they are intended for.
+Once the newly created microservices has been thoroughly tested and deployed we divert the traffic for that API from the monolithic application and send it to the newly created microservice instead.
+This change happens completely transparently to the suers and minimises the risk of issues during the migration.
+After monitoring the performance and the functionality of the new microservice for some time, we can remove the old component with the same functionality inside the monolithic application.
+Then we repeat the same steps with new microservice until we're either left with an empty old application or with a legacy application to support old clients.
+
+\subsubsection{Conclusion}
+Final tip for a smooth bug free migration whe migrating an old monolithic application to a new and modern microservice architecture.
+
+A typical dev would probably would like to try new languages and technologies immediately.
+However the best approach while migrating to a new architecture, is to \textit{keep the code and the tech stack unchanged as much as possible}.
+The reason for that is that every additional change we make is a potential source for a bug and the migration itself is already complex and risky enough.
+We do not want to add even more risk factors to the process.
+
+Once the migration is complete and the new microservice is running and stable, we can easily start refactoring it to use newer technologies if necessary.
+
+\subsection{Summary}
+
+\paragraph{}
+How to identify the components that can be the best candidates for migration
+Those candidates included areas that changed the most frequently, require the higher scalability or have the least amount of technical debt.
+
+\paragraph{}
+Preparing and executing the migration which involved:
+
+\begin{itemize}
+    \item Adding test coverage,
+    \item Defining the API,
+    \item Isolating the components from the rest of the application
+    \item Finally using the strangler fig pattern to chip out the different parts of the monolith and migrate them into separately deployed microservices and managed microservices.
+\end{itemize}
+
+
+\section{Principles and Best Practices}
+
+\subsection{Databases in microservice architecture - Database per microservice principle}
+Principle - database per microservice. Otherwise tight coupling between services can occur
+In this principle, each microservice team fully owns it data and does not expose it directly to any other service, \textit{even at the cost of additional latency}.
+Whenever a given service requires data from another service, the reqeust has to go through the target service API.
+Additionally each service needs to abstract the actual database technology or structure at the API level.
+This way the team owning that microservice decides to change the database, technology or scheme, that change will be completely transparent to the consumers of that API
+Additionally if the changes also require some changes in its API, ew can always offer two versions of the API for few weeks or even months.
+This allows other teams enough time to make their changes and update to the new API without the need for any coordination.
+
+\subsection{Downsides}
+
+\subsubsection{Added latency}
+Added latency.
+Sending a network request to another service, parsing the reqeust, querying the database, sending it back and parsing it back
+adds a performance overhead compared to a simple query against the database directly.
+- When this performance overhead becomes and issue it is okay to cache or even store some of the data that belong to another microservice in the database that belongs to the microservice that needs that data.
+- However it is important to ensure that the source of truth remains in only once microservice, if we do cache or store data that belongs to a different microservice, we lose strict consistency and have to settle for eventual consistency.
+---- And that's because the data we store locally may be stale until we get the new data from the source of truth.
+
+\subsubsection{Inability to join data}
+The next downside is the loss of the ability to join data from multiple tables when all the data was represented as tables within the same database.
+- We could easily perform the join operations based on a common key or column
+- When we split that data across different databases, some which may not even be relational databases
+- No longer can we perform those join operations
+- The only way to achieve the same functionality would be to pull data from two different databases, then transform the data so both objects are represented in the same format and the perform that join programmatically.
+
+\subsubsection{Loss of transaciton guarantees}
+The next downside is the loss of transaction guarantees.
+- Going back to single database, we could modify rows in multiple tables as part of a single transaction and guarantee that the change to all those tables would be atomic.
+- Performing a distributed transaction across multiple services is very hard, even though it is theoretically possible in practice it is almost never used.
+
+\subsection{Summary - Motivations for a single database per microservice}
+Sharing databases causes tight coupling between services, code bases and teams causing a lot of coordination overhead.
+This overhead is eliminated when each microservice owns its own data and exposes it only through an abstraction API.
+
+\subsubsection{Challenges and drawbacks}
+\begin{itemize}
+    \item Worse performance i.e latency
+    \item More complex join operations
+    \item The loss of transaction guarantees
+\end{itemize}
+
+\subsection{The DRY principle in micrservices and shared libraries}
+The DRY principle doesn't always hold true in microservices, particularly in regards to shared libraries.
+
+\subsection{Why are shared libraries a problem in microservices?}
+
+\subsubsection{Tight coupling}
+First problem is tight coupling.
+When multiple microservices depend on the same library, those changes need to communicated to other teams that own those microservices.
+Those teams will have to make the appropriate chances in their codebase so they can continue using that library.
+Even if they API doesn't change, the microservices will still need to be built, retested and redeployed with every change in the shared library.
+Additionally a bug or a vulnerability in that shared library can potentially impact all the service that use it, which defeats the purpose of isolating those microservices as separate runtime units in the first \textbf{place}
+
+\subsubsection{Dependency Hell}
+Another issue when using a shared library is commonly referred to as dependency hell.
+Depending on the programming language or the runtime we may not be able to depend on two different versions of the same library.
+Additionally if we can we are breaking the DRY principle.
+Since our microservice, now has to load two version of the same library where most of the code is identical.
+
+\subsubsection{Application and binary size}
+Another downside is that it also increases the size of our binary and the time to build and test it.
+
+\subsection{Alternatives}
+
+\subsubsection{First scenario is when business logic is shared across multiple microservices.}
+First scenario is when business logic is shared across multiple microservices.
+This situation may indicate that we incorrectly set the boundaries between those two microservices.
+A core principle of microservices is the single responsibility principle.
+If we followed the decomposition by business capability or subdomain, it would be unlikely that we would end up in this situation.
+If we don we may want to consider re-evaluating those boundaries.
+One option would be to adjust the boundaries of those two microservices, so only one of them contains that business logic and the other doesn't.
+
+Another option is that business logic is complex enough is that we can separate it into its own microservice.
+
+\subsubsection{Sharing common data models between microservices}
+Another situation is when we need to share common data models from communication between two microservices.
+In this situation having shared libraries is actually a good practice.
+The reason for that is when it comes to communication between two microservices, we actually want the two teams and codebases to be codependent.
+If the APi or data model of once microservice changes to the point that they cannot communicate, we actually do want to break the tests as soon as possible.
+Otherwise if we don't share but duplicate that code, the tests each may pass successfully and no detect the change in the other microservice.
+So those two services may not be able to communicate at runtime and we'll only find out about it only in production
+
+\paragraph{}
+Another approach to this problem is using code generation tools based on data model or \textbf{schemas}
+In this case, we have a shared scheme representing the common data model between the two microservices.
+Depending on the type of the API language or technology we can use the appropriate tool to generate the corresponding data models and boilerplate code for the communication between the microservices.
+So long as the code is generated based on a shared interface definition and that generation is performed as part of the build and test process, its a very common and safe approach when it comes to other code, such as itility methods that frequently change.
+Its better to duplicate it across different microservices instead of trying to reuse it in a share library.
+This way, each microservice can have it own more specific implementation of that logic optimised for its own use case.
+This also makes it easier to migration the entire code base of a microservice to another programming language if we want to.
+
+\subsection{Avoiding code duplication}
+If we absolutely don't want to duplicate a particular piece of code, there are two options.
+
+\subsubsection{Sidecar pattern}
+Use a sidecar pattern
+In this pattern, we package and deploy the shared functionality as a separate process.
+Instead of running it as a separate service, we run this process on the same hosts as the microservice instances.
+This way we can share the same functionality across multiple instance of the same microservice and across multiple instances of different microservices.
+The microservice instance can communicate with its co-located sidecar process using standard,well known network protocols.
+Since the sidecar process and the microservice process are running on the same host, the performance overhead of this communication is relatively smaller that if we ran processing on different hosts.
+On the other hand this overhead is still higher than if we ran that logic as a shared library inside the microservice process.
+
+So as the second option, in the rare cases when we have very generic ans table code that rarely changes, such as logging, retrying and pattern matching its okay to use shared libraries as long as they don't lead to dependency hell.
+These libraries should be as self-contained and independent of on another as much as possible, but this should be a last resort.
+
+\begin{note}
+    Inside the code base of each individual microservice we should still follow the DRY principle as usual.
+    So code duplication within a microservice is unacceptable and we should always extract common logic into a single method class or modules.
+\end{note}
+
+\subsubsection{Data duplication}
+Duplicate microservice data can seem like a waste of space but sometimes it is necessary to improve performance, if we don't want to pay the price of sending a request to another service for data, then we can store a cache of that data inside of our microservices.
+In microservice architecture, this approach is acceptable as long as two things are considered.
+
+\paragraph{}
+The first is only one of the microservices need to be clear owner and source of truth for that data.
+That means that only one microservice can get, write, update or delete operations to that data and the other microservice containing a copy of that data get only read operations.
+
+\paragraph{}
+The second thing to understand, when we duplicate microservices data across microservices we can only guarantee \textit{eventual} consistency.
+
+\begin{note}
+    This is very important for situations where strict consistency is important, data duplicates should be avoided.
+\end{note}
+
+\subsubsection{Summary}
+DRY doesn't always apply to microservices
+Shared libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unison as well as dependency hell.
+Alternatives to shared libraries, separating complex business logic into a new microservice using the side care pattern, code generation and duplicating code across microservices.
+Duplicating data and code across microservices can be inevitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
+Also each microservice it needs to remain clear for the owner for each piece of data.
+
+\subsection{Structured autonomy for development teams}
+The myth.
+Each team has full autonomy in choosing their technology stack, tools, databases, APIs and frameworks.
+This is a major pitfall
+The first reasons is the upfront cost of infrastructure
+Consider after a monolith to microservices migration each team has to pay that cost again and duplicate that same effort for their code base and ecosystem.
+To make things worse maintaining all the infrastructure is an ongoing effort.
+
+So if we have a dedicated DevOps, QA, etc those engineers will have to migrate all the infrastructure of hundreds of microservices where each on is entirely different.
+Those teams will quickly get overwhelmed and have to hire more people to keep up with the jungle of technologies.
+Besides setup and maintenance cost there is also a cost associated with learning and becoming productive using all those tools.
+Any new developer on a given team, needs to read through the documentation, learn and memorise all their best practices and get used to following them in their daily work.
+What if they need to work on another teams code base to make a small change, see how they setup a particular integration tests or what their configuration looks like.
+It would be a huge learning curve and would not scale in a large organisation.
+
+\subsubsection{Non uniform APIs}
+There is also the problem of non uniform APIs
+In the end all these microservices need to come together as one system and communicate with each other to accomplish a common goal in an easy and performance way.
+Code what would happen if every team that owns a microservice could define their own API in their own style, following their own best practices.
+Frontend engineer would need to learn the API of each team and integrate with it.
+Call different endpoints with different styles, naming conventions etc.
+This will lead to a huge hard to maintain mess.
+
+Basically, this free reign will make an engineer have to read a bunch of documentation to ensure that their work adheres to best practices.
+
+By allowing each team full autonomy we are actually making things a lot worse and introducing a lost of overhead.
+We should really aim for structured autonomy.
+Each team is autonomous but only within certain boundaries which can be grouped into three tiers.
+
+\subsubsection{Tier one - most restructure and describes areas that should not be under each teams jurisdiction.}
+Instead those areas should uniform across the entire company.
+That includes infrastructure monitoring and alerting, as well as continuous integration and continuous deliver technologies and scripts.
+This way we can invest a lot of effort into adopting or building this infrastructure from scratch.
+That effort is going to be amortized across the entire organisation making this investment cost effective.
+
+Another reason that should be uniform across the company is guidelines and best practices for defining public and internal APIs
+This should be obvious because external clients don't care that they're sending requests that end up in different microservices inside our system and also internally.
+It makes integration and communication between different microservices belonging to different teams very easy.
+
+The final area that should be standard and uniform across all the microservices is security and data compliance processes.
+If one microservice becomes hacked then the entire system becomes vulnerable.
+If one of our microservices violates some local privacy or data retention policy our entire organisation will be held accountable.
+Nobody will care that it was the fault of a single small microservice.
+
+\subsubsection{The second tier - allows some freedom, but within some boundaries.}
+This includes choosing a programming language and database technologies.
+Each runtime and data storage solution is optimal for a different use case.
+However the set of approved programming languages and database technologies should be restricted.
+This is to prevent a complete jungle of technologies which can happen if every team *can choose the latest and most fashionable programming language for their microservice*
+It also takes a lot of time for each company to develop expertise in managing configuring and running each type of runtime and database in production.
+
+Most big companies use no more that a handful of programming languages across hundreds of microservices.
+
+\subsubsection{The last tier - give each team complete autonomy.}
+This includes, the release process, schedule and frequency.
+This way each team can work entirely independently from other teams and release new feature based on their workload priorities and requirements and develop their own custom script and tools specifically for their need to make their local development and testing more efficient.
+
+Also each team should fully own its own documentation and onboarding process for new developers.
+Its important to callouts, that those are general guidelines and best practices and the actual boundaries of those three tiers differ slightly in different companies.
+
+One factor is ths size and influence of DevOps or SRE teams.
+Typically companies with more dominant DevOps or SRE teams lean more towards common standards, which make their life managing the system easier.
+Another factor is the seniority of the developers hired in the company.
+Generally, the more senior developers are the more freedom they prefer in setting up or building their own infrastructure.
+
+Another factor is the companies culture.
+Some companies stick to one langauge, perk of this is they can hire developers once and move them between different teams with very little overhead.
+
+\subsection{Micro frontends architecture pattern}
+The monolithic frontend.
+One team maintains a single frontend while the backend uses microservices.
+A single team is currently looking after the frontend.
+This can create a dependency on the frontend team when just one of the microservices wants to make a change causing the frontend team to become a bottleneck in the organisation.
+The frontend team can also end up developing expertise that belongs to other teams.
+This leads to tight coupling to the back end team and the already constrained front end team.
+
+The monolithic front end code base has another problem.
+As a business grows so does the front end.
+So the single code base becomes very large and hard to maintain and reasons about.
+It also takes longer to test.
+IF we want to release a new UI feature the entire front end needs to be rebuilt, retested and redeployed.
+These are similar problems to a monolithic backend but now in the frontend.
+
+To solve this problem we can use the pattern.
+Micro-Frontends.
+
+\subsubsection{Microfrontends}
+In this pattern we split the monolithic web applicaiton into multiple front end modules an libraries that act as an independent single page applications.
+The splitting can be done by business capability or domain, just like in the back end.
+In most cases each page in the web application becomes a micro-frontend, by we can also have several micro-frontends visible on the same page.
+Each Micro-frontend is completely decoupled from the other micro-frontends and should know how to mount and unmount itself from the DOM in the browser.
+Each Micro-frontend can also be loading in the browser as a standalone web application for testing purposes.
+
+More importantly it is owned by a separate team with full stack capabilities and the domain knowledge to develop and maintain this Micro-frontend.
+All those micro frontends are then assembled together at run time by a container web application.
+When the user loads our site on their browser, the role of the container application is to render common elements like page headers and footers and take care of common functionality such as authentication and shared libraries and tell each micro-frontend when a where they need to be rendered on the page.
+
+Micro-frontend is an architectural pattern not a web framework or library.
+Many frameworks support it but it is not required.
+
+\subsubsection{Shared web components vs micro frontends}
+A micro-frontend is basically a single page application with very limited business functionality,
+Different micro-frontends may reuse common UI elements but the two concepts are unrelated.
+
+\subsubsection{Benefits}
+Replace the big complex monolith with a few small, more manageable code basses.
+Each for a different Micro-frotnend.
+Now each team fully owns its domain and technical stack end to end.
+Each micro front end is much easier and faster to test in isolation since its scope is a lot smaller
+Each micro-frontend has its own CI pipeline an deployment process and each team can release new features on its own schedule.
+
+\subsubsection{Best practices}
+First - Ensure that hte Mirco-frontends are loaded atr runtime and are not express as compile or build time dependencies of the container application
+Otherwise all we did is just separate the code base logically, but at run time we would still have a monolithic frontend requiring complete redeployment for every new features.
+Next best practice is to make sure that Micro-frontends don't share state and the browser sharing state would be the equivalent of different microservices sharing a data base which is generally a bad approach.
+
+If different microservices need to communicate with each other they can do it using on e of the following ways. Using cusotm ervents, passing callbacks or using the browsers address bar.
+
+\subsection{Summary}
+
+\subsection{API management for microservices architecture}
+Problems we are trying to solve.
+
+We have dozens of APIs endpoints exposed by different microservice that are hard coded across many frontend and client SDKs
+This tightly couples the client side code to the internal implementation of our system.
+Another problem is that different microservices may expose their API to different customers.
+
+While internally we may do our best to follow specific guidelines, it is not always possible to do this with external APIs
+For instance, in the same service we may have to expose one type of API for a partner company that only supports some old API technology but then we have to expose the same API functionality to two other companies that support newer but different API technologies.
+Additionally we may have different versions of the same PAI for different tiers fo clients with different capabilities based on their subscriptions level.
+
+This Jungle of APIs can become hard to manage and reason about.
+Another problem is controlling and monitoring how each client or device interacts with out system.
+Finally a lot of boiler plate code such as authorisation, rate limiting etc has to be implemented in each microservice.
+
+This can lead to a lot of effort, duplication and wastes a lot of time for each team that could instead focus on something else.
+
+So to decouple out client side from the internal architecture and make API management easier we can use the API gateway pattern.
+
+The API gateway pattern is particularly useful for microservices architecture and is ued by many companies.
+This pattern places a component called API gateway at the entry to our system and is responsible for all the API management.
+
+In the simplest scenario, the API gateway simply routes request for given API endpoint to the relevant microservice that handles it.
+In a lot of cases it can do more than just routing requests.
+Can also perform translation between data formats when that receiver and sender microservices can support.
+This can make the API definition and management much easier and cleaner for each microservice because they don't have to care about the different clients an their specific limitations.
+They can all follow one standard and utilise the same infrastructure in addition to routing the reqeust to the corresponding microservice.
+The API gateway can also perform traffic management and throttling.
+Can also delegate authorization and TLS termination to the API gateway.
+So microservice don't have to worry about it and can focus on business logic implementation.
+Also since all the traffic from our front ends is going through the API gateway, we can easily monitor it.
+This enable use to detect issues in particular APis or analyse the behaviour of our clients and partner companies.
+
+Finally, certain implementations of an API gateway can even allow fanning out a given request to multiple services and aggregating the result before sending it back to the client.
+This is a critical feature for multiple reasons.
+First reason is that it even further decouples the clients from out internal implementations.
+Example, internally we can refactor those service sby either combining several microservice into one or splitting an existing microservice into multiple microservices.
+And all of those implementation details will remain completely transparent to the suer.
+
+\begin{note}
+    This feature is also very important for mobile devices and IOT since each network reqeust of their end directly affects their battery life.
+\end{note}
+
+\subsubsection{Load Balancer vs API Gateway in microservices}
+
+Both route incoming network requests from a client to a single destination.
+Similarities end \textbf{there}
+
+Main difference is the purpose.
+The role of a load balancer to balancer traffic on a group of servers.
+Those servers usually run identical copies of the same application in the context of microservices.
+We typically have a load balancer in front of each microservice where each microservice is deployed as a group of identical instances.
+
+ON the other hand, the purpose of the API gateway is to be out systems public facing interface.
+Its role is to route requests, not to servers, but to services based on different criteria.
+
+Besides the difference in their purpose there is also a difference in their functionality.
+
+The load balancer aims to be as simple as possible to to reduce the performance overhead.
+It also usually performs health checks on its backend servers to ensure it doesn't route requests to unresponsive servers.
+Also offered different load balancing algorithms for different workload.
+
+On the other hand, the API gateway is expected to provide many other features such as throttling, monitoring, API versioning and management protocol and data from translation and so one.
+Since those components have different purposes, they're usually used together in microservices architecture.
+
+\subsubsection{Managing APIs in Microservices}
+Using the API gateway service at the entry point to ours system allows for the routing of requests to different microservices.
+Additionally, it provides us with many features like throttling clients that send us to many requests, handling authorization and TLS termination protocol and data translation monitoring in additional to other.
+Not the same thing as a load balancer incase I forget or they serve different purposes.
+
+
+\section{Event driven architecture}
+%TODO go through for thoroughness / refresher
+
+\subsection{Introduction to Event-Driven Architecture}
+
+\subsection{Use Cases an Apttern of Event-Driven architecture}
+
+\subsection{Message delivery semantics In event driven architecture}
+
+\section{Event driven microservices}
+%TODO go through for thoroughness / refresher
+
+\subsection{Saga Pattern}
+
+\subsection{CQRS Pattern}
+
+\subsection{Event sourcing pattern}
+
+\section{Testing Microservices and Event-Driven Architecture}
+
+\paragraph{Motivation} Before deploying a system we to production we need to gain confidence through automated tests.
+
+\subsection{Monoliths}
+%TODO get testing pyramid picture
+Three categories - Unit, Integration and End to End tests
+
+\subsubsection{Unit tests}
+Unit tests - cheapest to maintain, they are small, easy to write and fast to execute because they are so cheap.
+Include a high number of them.
+Located at the bottom of the pyramid.
+Provide the least confidence about the overall system since they only test each unit in isolation.
+Once we run the application we have no idea if those units will work together or not
+
+\subsubsection{Integration tests}
+Integration tests
+Those tests verify that different units and systems we integrate with such as database or message broker actually work together.
+Those tests are bigger and slower so we should have fewer of the than unit tests.
+After running them we have more confidence in our tests
+
+\subsubsection{End to end tests}
+End to end tests-- at the top
+These tests run the entire system including UI and database and verify they work as expected
+From an end user perspective each such test should represent a particular user journey or business requirement and ensure it matches the specification for the application
+Heaviest and most expensive tests to run.
+Minimise the amount of these tests.
+These tests provide the highest confidence that our system will work as intended in production
+
+\subsection{Translating testing pyramid into microservices}
+Each team should follow the same steps as the monolith, i.e pyramid for each microservice.
+Then we treat each microservice as a small unit that is part of the larger system and put it in a larger testing pyramid.
+So just like in case of unit tests testing each microservice in isolation is essential but not enough to increase the confidence that all the microservice will work together
+
+\subsubsection{Microservice level integration tests}
+Need another layer of integration tests.
+Those integration tests verify that every pair of microservices can talk to each other using the agreed API while mocking the rest of our system.
+To complete this pyramid we need to add system level end to end tests at the very top
+Those tests in theory should run all of our microservices, databases, message brokers and frontends in a test environment.
+This should verify that all components work together as expected.
+
+\subsection{Challenges}
+
+\subsubsection{First challenge - end to end tests are hard to setup and maintain despite providing the most confidence}
+It unclear what team should own this environment and when one of the microservice teams breaks their build the entire test pipeline will be broken.
+This can result in teams being blocked and unable to make any releases to production.
+Alternatively, developers may just start ignoring end to end tests lol and release their microservices anyway which makes tests a liability with no benefit.
+Very costly to run what is essentially a duplicate environment of the production environment even if the scale is smaller.
+In practice some companies spend disproportionately too much effort building and maintaining those few tests while other companies decide to take the risk and simply don't bother investing in those tests at all.
+
+\subsubsection{The second challenge}
+The second challenge of hte new pyramid is that even running integration tests can be quite difficult and creates a point of tight coupling between teams.
+When the that owns MMicroservice A that consumes the API of microservice B wants to run integration tests it needs to build, configure and run both microservice while Team A knows how to build and run their own microservice.
+It may be unclear to them how to setup microservice B, its even more difficult if microservice has many dependencies like a database or another service that needs to run or mocked.
+The team that owns Microservice B has a problem, this microservice may have multiple microservices that consume its API.
+To ensure that the changes that make in their API did not break all those API consumers they need to build, configure and run all those consumers to execute those tests.
+This can easily get out of hand and slow down the development of our entire organisation.
+
+\subsubsection{Third Challenge}
+Third challenge is when using event driven architecture to decouple microservices.
+In this case we have a microservice that produces events to a message broker and it actually doesnt always know which microservice consume those events.
+This kind of decoupling is one of the benefits we want from event driven architecture
+However now we can't really run any integration tests with those microservices
+Also have the same problem when we are a team that owns a microservice, that consumes events from other microservices.
+Here again we, need to run those microservices and a message broker just to test that our microservice is able to consume those events and that the events did not change without out knowledge.
+
+\subsection{Contract Tests and Production Testing}
+Many companies invest disproportionally high efforts into end to end tests or abandon them altogether.
+Other challenges between the integration of microservices, which included their complexity and tight coupling between teams.
+
+\subsection{Testing challenges solutions}
+
+\subsubsection{Integration tests}
+Integration tests
+To deal with the complexity of integration tests, use light weight mocking.
+Mock the API layer of the microservice dependencies which we wish to integrate with and send it back a hard coded response if it receives the expected request.
+Similarly other microservices can run mock consumers rather than running real microservices.
+They can write tests that make those mock consumers, send us requests and test that out microservice returns the expected service.
+The strategy reduces the coupling between the different teams because if one team breaks their build the other team can continue running its tests.
+It also reduces the overhead of running real instances of the other microservices.
+
+\subsubsection{Integration tests: Major issue}
+This strategy on its own has one major issue
+The issue is that the contract between an API consumer and the API provider can get out of sync without those teams ever detecting \textbf{it}
+
+\paragraph{Example}
+The API provider team may change its API update, its mock consumer and its tests and all their tests will pass successfully,
+However the communication about those changes may be lost or misunderstood by microservice A which consumes that API, so that they either make incorrect changes and their tests will also pass.
+Once in production those microservices won't be able to communicate with each other and cause an outage.
+This motivates the existence of contract tests.
+Contract tests work by using a dedicated tool to keep the mock API provider and the mock API consumer in sync through a shared contract.
+When the API consumer team runs their tests, they are run against their mock API provider is recorded along with the expected response into a contract file.
+This contract file is the shared with the team that owns Microservice B, which provides that API using this contract.
+The team that owns Microservice B replays all those recorded requests to the real microservice B and verifies that the responses it gets are the same as recorded in the contract and if microservice B has many consumers, it will take all their recorded contracts, create those mock consumers and run each one against their actual API implementation
+
+\paragraph{End goal}
+End Goal of this: each team can run its own integration tests without dealing with the complexities of building, configuring and running other microservices.
+The contract test tools guarantee that each team tests against the most up to date and correct contract shared between those microservices.
+We can also extend the idea of contract tests to integration tests between microservices. ****Insert concrete example****
+Contract tests can simplify running integration tests for microservices that communicate synchronously and asynchronously but still give us high confidence that when we deploy those microservices to production, they can communicate with each other as we can expect.
+
+\subsection{End to end tests}
+Contract tests can be a substitute for integration tests but they are not a substitute for end to end tests.
+If setting up end to end tests is is not feasible, the alternative is testing in production
+
+One way is using a gradual release using blue/green deployment in combination with canary testing.
+
+\subsubsection{Blue green deployment}
+A blue green deployment is a safe way to release a new microservice version to production using two identical production using two identical production using two identical production environments without any downtime during the release.
+The blue environment is a set of servers or containers that run out old version, and the green environment is a set of servers or containers that run the new version we want to release.
+Once we deploy the new version to the green environment, no real user traffic is going to it.
+This is an opportunity to increase our confidence by running automated and even manual tests against those servers without impacting real users.
+After we run those tests we can shift a portion of the production traffic to the green environment and monitor the new version for performance and functional issues.
+This process is called canary testing.
+If we detect an issue, we immediately direct the traffic back from the green environment to the blue environment with minimal impact on users.
+On the other hand, if no issues are detected we direct all the production traffic from the blue environment to the green environment and gradually decommission the blue environment since it's no longer needed/
+
+\subsection{Summary}
+
+These alternatives should be used only if they are setting up real microservices in development stage for testing purposes is too complex or expensive.
+
+
+\section{Observability in Microservices Architecture}
+
+\subsection{What is observabiilty?}
+
+\subsubsection{The Three pillars}
+
+\begin{itemize}
+    \item Distributed Logging
+    \item Metrics
+    \item Distributed Tracing
+\end{itemize}
+
+\subsubsection{Monitoring}
+Monitoring is the process of collecting and analysing and displaying a predefined set of metrics and by attaching those metrics to alerts.
+Via alerts we can find out if something has gone wrong.
+Monitoring tools and dashboards will only tell us when stuff goes wrong but they will not tell us what the problem is.
+
+\subsubsection{Observability}
+Observability allows for active debugging and searching for patterns, follow inputs and outputs, and get insights into the behaviour of our system.
+This allows us to follow the flow of individual transactions or events across the entire system.
+Can discover performance bottlenecks and find the source of the problem.
+
+\subsubsection{Monitoring}
+Monitoring is important for any system.
+Observability is primarily critical for microservices architecture.
+Monoliths are easy to debug since it is effectively one application.
+Worst case scenario.
+Can SSH into a monolith and inspect its logs and get an idea of what part of the code is causing the performance issues or is throwing the exception.
+
+On the other hand, in microservices architecture, a single user request may involve several microservices and databases.
+These can communicate through a message broker like kafka.
+If an issue happens at some point in the transaction, it can be difficult to find out which service is happened in.
+Its is further challenging as all those computers run as a group of instances on different computers thus making it harder.
+Many issues occur at the boundaries of microservices rather than in the microservice code itself.
+Being able to trace the path of requests through a set of microservices is very important.
+
+Typically, having just one type of ``signal'' is not sufficient to debug microservices or an EDA system.
+
+\subsection{Signals}
+When referring to signals three types of signal are referred to.
+Know as the three pillars of observability.
+One of those pillars are distributed logging metrics, distributed tracing logs and append only files that record individual events happening within an application process.
+Those events are accompanied by metadata such as the timestamp of the event, the reqeust that triggered it and the method class or application where the event happened and so on.
+
+Metrics are regularly sampled data points represented as numeric values such as counters, distributions or gauges.
+
+\subsubsection{Metric examples}
+Examples include counters of the number of requests per minute, errors per hour, distributions of latencies or gauges that represent the current CPU or memory usage.
+
+\subsubsection{Tracing}
+Traces represent the path a given request takes throughout several microservices and the time each microservice takes to process the request.
+Traces may include additional information such as response headers, response codes and so on.
+
+When receive an alert about an issue or manually detected issue using dashboards we can further debug the issue using a combination of those signals.
+Can trace individual requests, isolate the issue to a particular microservice or API and even down to an individual method even line of code that causes the bug of performance bottleneck.
+
+Using those signals, we can also get enough insight into how to solve that issue.
+Typical solutions can include a rollback, hotfix or changes to the infrastructure.
+Infrastructure changes can include things like adding more service instances, diverting, traffic to other regions, data centres....etc.
+
+\subsection{Distributed Logging}
+
+Logging is a basic way to provide insights into the current state of an application.
+Each log line can represent an applications even like receiving a new request or an action like performing a database query or starting a complex processing operation.
+It's also a way to record exceptions and errors in a method accompanied by the set of parameters that led to that issue.
+This information is useful to debug and fix the issue and fix bugs.
+
+Should be noted that in a microservices architecture we can have thousands of instances of different microservices producing millions of lines per day.
+Consider the practicality.
+
+A solution to this collection of large and very useful data is to collect them into a centralised and highly scalable logging system.
+The system needs to parse and index those logs so they can be easily searched by patterns of text and grouped and filtered by attributes like host, microservice, time period or region to make searching easy.
+
+Good practice to follow a predefined structure or schema and the same terminology across different events within a microservice and across separate microservices.
+
+Log lines should be easily readable by humans, but also easily readable by machines so they can be efficiently,parsed, grouped and analysed.
+
+Can be extremely important when we're faced with a time sensitive issue affecting users and we need to find a root cause solution quickly.
+
+Log structures include log FMT (key value pairs), Json and XML.
+
+Next best practice is to assign a log level or severity to each log line, depending on the framework or system we use.
+
+Typical log levels are trace, debug, infor, warn, error and fatal.
+Adds info that logs can be sliced on in order to reduce noise and alert fatigue.
+This is useful for the on call engineer.
+Can use automated tools to search and group events on those levels of severity.
+Those tools can alert us or create a ticket automatically for someone to work on.
+
+Events that indicate potential problems such as high processing time of outgoing or receiving requests containing unexpected values must be logged at the warn level
+
+This way we can filter on the log level and potentially prevent future issues by addressing those events.
+
+A developer can look at all log events at a fine level to see details on the debug and trace levels.
+
+\subsubsection{Best Practice - Unique correlation ID}
+The next best practice is to use a unique correlation ID for every user request or transaction and adding this ID for each corresponding to an event or step and processing that request and transaction.
+Since each microservice instance is likely processing multiple user requests concurrently.
+This helps search and filter only the events related to teh request in question.
+Can also help us to see the sequence of events for a given request across multiple microservices.
+
+\subsubsection{Best Practice - Provide Contextual Information}
+Provide as much contextual information to each log line as possible.
+We want to include the parameters that led to this error.
+If we have a database query that took a very long time to complete, logging the exact query and the content etc can help fix/mititgate.
+
+\paragraph{Common data we want to include}
+Common data we want to include in every log line is
+\begin{itemize}
+    \item Name of the service
+    \item The emitted log event
+    \item The host name where that happened
+    \item The userID or some other identifier that can add more context to who initiated the operation and of course the timestamp that that event happened
+\end{itemize}
+
+\subsubsection{Two considerations in mind}
+Two considerations in mind:
+
+First we should only log information that is critical for debugging because on a large scala system storage and processing can be very expensive.
+Second we should never log sensitive or personally identifiable information such as usernames, passwords, security numbers, emails, credit card numbers and so on.
+These details are sometimes helpful but can cause a huge legal risk for the company in the event of a security breach
+Add extra complexity in relation to security and data retention, compliance and generally is unethical
+Idea of a random engineer with access to personal information is not a good one
+
+\subsection{Metrics}
+A measurable or accountable signals of software that helps us monitor performance of a system and detect anomalies when they occur.
+Usually come in numerical values so we can easily quantify them and set alerts based on their direct or derived values because they are just numbers.
+
+Out of the three pillars of observability they are best collected, visualised and organised into dashboards.
+
+These production dashboards are a critical tool for us when a production issue needs our attention instead of having to search and read though hundreds of log lines, we can look at two.
+
+Questions to ask ask as a team about microservices.
+\begin{itemize}
+    \item Should ask what should we measure
+    \item What should we collect
+    \item what should we monitor
+    \item As well as why we can't collect all of them
+\end{itemize}
+
+Somthing to consider is that the number of signals we can collect is pretty large on the resource level.
+We can measure many things but they are not helpful in certain situations.
+Additionally we can instrument our application and measure anything starting from the number of requests we receive per minute to the number of time a critical piece of logic is being executed.
+However collecting anything and everything that can be measured is a big anti pattern.
+
+Storing so many signals from each server can be expensive.
+Talking about a large scale system with 10s of 100s of microservices.
+Even if cost is not an issue the next problem is information overload.
+
+\paragraph{}
+Consider an on call engineer
+What metrics should this person look at, so many metrics they won't fit on the screen, makes it hard to find the anomalies
+Even if do notice the anomalies it is hard to know which metric is the symptom and which is the cause.
+Instead be smart about metrics.
+Can leverage decades of experience from companies which have already been doing distributed systems and focus on the five most types of signals which will give us the most information and the least amount of noise.
+
+\paragraph{Five types of signals that will give us the most knowledge}
+The first is Google Searches for Gold and Signals, which focuses on user facing metrics
+The second is the use method (Brandon Gregg) which focuses more on system resources.
+By combining these categories of signals we have five categories of signals which are:
+
+\begin{itemize}
+    \item Traffic errors
+    \item Latency
+    \item Saturation
+    \item Utilization
+\end{itemize}
+
+\subsubsection{Traffic}
+Traffic is the amount of demand being placed on our system per unit of time.
+Number of HTTP request per second or minute that receives Http traffic.
+We can also measure the number of queries or transactions per second or per minute on the database or message broker.
+We can measure the number of events it receives adn the number of events it delivers to consumers.
+In some cases a single request to a microservice results in many out going requests and incoming requests separately.
+That's because open connections to other services consume system resources and can directly impact the microservice performance.
+
+\subsubsection{Errors}
+Next category of metrics is errors.
+When we measure errors, we are interested in the error rate and the type of errors we are getting if possible.
+A good signal to setup an alert for because the error rate goes up.
+At this point users have already been impacted.
+In the case of an increase in the number of exceptions in out application, we may not be able to show the error type as a number value, so we defer this information to logging.
+However if we start receiving a HTTP response status code that is different from 200 from a service we depend on, we can use that as a metric which will be very helpful troubleshooting production issues.
+Also latency sensitive systems we can count successful responses as errors if they exceed so latency threshold that we set ahead of time for an even driven microservice.
+We can also measure the rate of events that it fails to process and the reason for the failure, if its possible to classify in a message broker, we can measure error signals like the number of events it failed to deliver to customer.
+On the database side, we can measure the number of aborted transactions, disk failures and so on.
+
+\subsubsection{Latency}
+Next type of signal is latency
+The time it takes for a service to process a request.
+Seems straight forward but there are a few thing to consider to measure it correctly.
+The first important consideration is to not just look at the average latency, but always consider the full latency distribution, especially tail latency.
+This could help identify performance bottlenecks
+
+Another consideration is the separation the latency of successful operations from the failed operations.
+If we mix failed and successful operations we may get the wrong data or a misleading average
+
+\subsubsection{Saturation}
+Next type is saturation
+Measures how overloaded a full service or a given resource is.
+Important for a service that has a queue, whether its an external queue like a message broker, an microservice internal queue or CPU.
+Too many things in a queue means the system cannot keep up with the demand at present, this would indicate a scalability issue in the respective area: CPU, message broker,database etc
+If work in a microservice keeps growing it could mean that part of our microservice is too slow and this instance may crash too soon with an out-of-memory exception.
+Finally having visibility into saturation can also explain why out users have long latency or requests from other services that are timing out.
+
+\subsubsection{Utilisation}
+Final signal is utilisation
+How busy a resource is over a period of time
+Typically applies to resources with limited capacity like CPU, memory, disk space and so on.
+Its important to point out that in most cases we will see performance degradation before 100\% resource utilisation.
+It important to set critical alerts before we reach that critical level.
+CPU getting close to over utilisation, we need to scale out and add more service instances other wise we may get higher latency issues etc
+Similarly if we see out database is getting close to running out of storage, we need to add more database instances to keep up with the growing amounts of data
+We want to measure utilisation with high granularity, not just an average over minutes otherwise we will miss the short periods of utilisation that may be attributed to performance bottlenecks or other inefficiencies in out processing
+
+\subsubsection{Additional signals}
+These arent the only five signals that should be collected
+Consider business use case/scenario.
+Additional can be collected for observability depending on logic and the specifics of out microservice.
+
+Those five types of signals are the most common that apply to any system and give us the most value by tracking them.
+
+\subsection{Distributed Tracing}
+Distributed tracing is a method of tracking requests as they flow through the entire systems.
+Starts at the clients device all the through the backend services and databases.
+As the request is being traced we collect critical performance information about the time each part of the system is processing it
+Allows engineers to visualise the entire flow and understand all the components involved in processing the reqeust and the time it took for each component to do its work.
+Extremely valuable for troubleshooting bugs or errors tha lead to wrong behaviour or performance bottlenecks.
+Usually distributed tracing is not enough to tell is what is happening exactly but it is enough to narrow down out search to a particular component or a communication problem between two componenets.
+After we know where the problem is happening we can use other observability pillars (logs, and metrics) to debug further.
+
+\subsubsection{How distributed tracing works}
+When the initial reqeust is being made we generate a unique trace ID and place it into an object called a trace context
+This trace context object contains key data about the entire trace as the request flow through the services.
+That context is propagated through Http headers or message headers inside events.
+Just passing the tracing context from service to service is not enough for the application instances to collect the tracing data.
+Need to instrument them using a tracing instrumentation library or SDK
+
+Tracing libraries come in different languages so even in a polyglot system we can get a complete trace.
+
+Now as soon as the service instance receives the trace context, it collects the necessary data and propagates the context for the next service
+
+At the eng od the transaction, each service instance that was involved has its own measurements and data which can later aggregated by the trace ID to visualise all parts of the transaction and how long each part of the transaction took.
+
+Trace is broken into logical units of work which are called spans.
+Trace spans can be coarse grained like the processing of a request by a service or a query by a database
+
+They can be manually created by the developers using the instrumentation library.
+So different units of work within a service can be visualized and measured separately.
+
+This way if one logical part seems slower than usual we can investigate it as a potential performance bottleneck.
+
+If an expected span is missing we may have a bug we need to debug further to increase the granularity even further.
+Can connect related pieces of work together by organising spans in a hierarchy with a parent child relationship.
+
+\paragraph{Distributed tracing data collection}
+General approach.
+Once the trace data is collected inside each service instance, it is pulled by an agent which runs as a separate process on the same host with each service instance.
+Those agents then send the tracing data to a central queue or topic in a message broker.
+The all the tracing data that comes from many services is analysed, aggregated and stored in a database by a big data processor.
+Later a developer can query and visualise this data using a tracing UI in the browser.
+
+\subsection{Challenges - Distributed tracing}
+
+\subsubsection{Manually coding it}
+Need to manually introduce code to collect the data for these systems.
+Usually requires dependency on a certain library and to learn how to use it correctly.
+If this is not done properly out spans may be too broad, lacking granularity or important data.
+Can go as for making the traces useless.
+
+\subsubsection{Cost}
+The second challenge is cost
+Need to run an agent on each microservice host which consumes its own CPU and memory
+Then the collected data must be sent over the network which requires additional bandwidth
+The we need to run a big data pipeline with it own infrastructure to process those tracing logs that come from different services.
+This comes with its own cost
+
+Biggest cost is storing those traces in a database and retaining them for at least for a few weeks.
+This is so that developer can find them if they need to debug an issue
+Considering scala most companies use sampling on the client side which may mean we get one trace out of 10,000 or 1000 requests,
+this can lower our storage costs but with such a high sampling ratio sometimes it makes it difficult to find a trace we are trying to debug.
+
+Another problem is the size of the trace and the amount of information contained in them.
+Typical Microservice or EDA deployment involves so many components that it is difficult for even a human to read it.
+
+Despite the challenges distributed tracing is very useful when debugging microservices.
+Help developer have the confidence to debug issues in production, find the root cause.
+
+%    TODO add more details maybe????
+
+\subsection{Distributed Tracing Solutions}
+\begin{itemize}
+    \item OpenTelemetry
+    \item Jaeger
+    \item Zipkin
+    \item Uptrace
+\end{itemize}
+
+
+\section{Deployment of Microservices and Event-Driven Architecture in Production}
+
+\subsection{Microservices Deployments - Cloud Virtual Machine, Dedicated Hosts and Instances}
+First and most common way to deploy microservices in the cloud environment is by using cloud virtual machines.
+Virtual machine - an isolated environment, running on top of a real physical computer.
+Virtual machines act like a virtual computer with its own operating system and virtual resources like CPU memory network interface storage
+Those virtual resources are allocated, managed and mapped to real resources on the physical hardware by another layer called the hypervisor
+By using virtual machines, the cloud providers can split each physical server into multiple VMs depends on how we configure it and how much we pay for that VM
+
+In turn this allows for cloud providers to provide competitive prices, which makes cloud VMs a very attractive option for running microservices
+Main benefit of using cloud virtual machines for running microservices is the affordable and flexible pricing
+
+Typical pricing model is pay per use, we pay only for the cloud VMs that we're renting them, and the rate for each VM depends on the CPU memory and network bandwidth capabilities that we request
+
+Downside of this deployment is security risks due to multi tenancy
+Theoretically, when we run two VMs on the same server, those two VMs on the same server, those two VMs are completely isolated from each other
+If those two VMs are running two database instances and each instance belongs to completely different organisation, a security breach in one should not pose a risk to the other VM
+
+We need to consider that the hypervisor is a software that was written by human beings and all security configurations are managed and updated by human beings
+
+So in practice it is possible for a hacker to gain access to a VM that was poorly secured by the other software engineers / organisation and because the cloud vendor allocated out VM to run on the same host, that hacker may manage to hack into out system and steal our data
+
+Cloud vendors and the companies that own the hypervisor make great efforts to prevent this from happening,
+The probability of this happening is very small but it is still there.
+Due to compliance issues in certain industries, we may be unable to tolerate even that small risk.
+Example businesses: Banking, healthcare, government and national security related services.
+
+Second issue of running microservices in multi-tenant environments is potentially lower performance due to a \textit{Noisy Neighbor}
+Theoretically, the hypervisor should be able to completely isolate and allocate each hardware resource to each VM as configured ahead of time.
+However, in practice, not all resources can be accurately allocated.
+
+\paragraph{Example}
+A CPU has 16 cores, then the hypervisor could easily split those 16 cores evenly.
+However the network bandwidth of a network card or the access to an internal bus that transfers data to and from a storage device can't be easily rationed in an accurate way and many other physical resources.
+This is true for other aspects, this a physical server at the end of the day.
+Additionally, the hypervisor itself may consumer some CPU and memory for its own user.
+Not really a lot of data to suggest that running a very intensive workload on one VM can significantly impact the performance of the other VMs.
+
+In theory and in practice that impact is still there
+For very latency sensitive systems like high frequency trading systems, gaming or video streaming multitenant deployments with cloud VMs is not the best option
+
+
+\section{Single tenant}
+Dedicated hosts or instances, ask cloud provider to run VMs on servers that are dedicated to the account that belongs to our VMs on servers that are dedicated to the account that belongs.
+This means that the only tenants will have on the same host are instances of our microservices databases for our organisation only.
+More expensive alternative if we are in an industry that doesn't allow us to share infrastructure.
+They charge more because cloud providers can't allocate their hardware as efficiently as the multi tenant deployments.
+
+Some cloud providers, even allow us to rent or reserve and entire host just for our organisation
+This gives us direct access to the hosts hardware resources, which can eliminate the noisy neighbor effect and reduces the impact of virtualization by the hypervisor
+Main downside is that this is way more costly than multi tenant cloud VMs
+
+
+\section{Summary}
+\begin{itemize}
+    \item Multi tenant VM deployment provides us with the best pricing but doesn't provide us with the most optimal security or performance
+    \item If we need additional security, we can rent a single tenant dedicated instance which are a bit more expensive, but guarantee that only VMs of our organisation can run on the same physical hardware
+    \item If we also need the most optimal performance and want to eliminate the possibility of a noise neighbor we can rent dedicated hosts,which is also the most expensive option.ó
+\end{itemize}
+
+\paragraph{Multi-Tenant Virtual Machine Cloud Service}
+\begin{itemize}
+    \item Amazon Elastic Computer Cloud (EC2) Instances
+    \item GCP computer engineer
+    \item Microsoft Azure Virtual Machines
+\end{itemize}
+
+\paragraph{Dedicated Hosts and Single Tenant Virtual Machine Cloud Services}
+\begin{itemize}
+    \item Amazon Dedicated EC2 Instances
+    \item Amazon EC2 Dedicated Hosts
+    \item GCP Sole-Tenant Node
+    \item Microsoft Azure Dedicated Hosts
+\end{itemize}
+
+\subsection{Serverless Deployment for Microservices using Function as a Service}
+
+\begin{itemize}
+    \item AWS Lambda
+    \item Cloud Functions
+    \item Azure Functions
+\end{itemize}
+
+More event driven that other deployments.
+
+\subsubsection{Use-cases}
+Used when the service is rarely used / low traffic most of the time.
+\begin{itemize}
+    \item If a cloud VM/ dedicated host is used we will be paying for rented hardware during the down time as well.
+    \item When the rarely used service is used there will be a traffic spike.
+    \item Need to configure and pay for a load balancer and maintain autoscaling policies for this microservice, which adds more to the infrastructure running costs
+    \item Running a service for events that rarely occur is not very cost efficient
+    \item There is also the cost of maintaining it
+    \item The team that owns the microservice in addition to eh business logic will also need to maintain a lot of boiler plate code that handles http requests or events from another source that triggers that logic.
+    \item Also need to maintain script to build, package and deploy our microservice binary with all its dependencies to a cloud server.
+    \item A lot of effort for events that rarely happen
+\end{itemize}
+
+\subsection{Function as a service - FAAS}
+A solution is use a serverless offering called \textit{function as a service}.
+
+A cloud solution that allows for the architecting of a system in a fully even driven model, not only from the software perspective but also from the infrastructure perspective
+We only need to provide cloud vendor with two things, the type of events we wanted to handle and the logic we wanted to execute when that event is triggered.
+Nothing else
+Only when the event is triggered will the cloud provider take out code, package it, deploy it to physical hardware and execute it
+If the traffic follows a seasonal pattern where there are a lot of requests coming in a very short period of time, in that case the cloud provider will also handle the horizontal scalability.
+This allows for handling the traffic spike without the need to maintain any autoscaling policies of configuring a load balancer.
+The pricing model is based on the number of requests our microservice receives as well as the memory, time to handle each request by running out logic.
+If a request or event doesn't arrive we don't pay anything.
+
+A Clear benefit is that a lot of money can be saved for events that happen very rarely.
+This can save a lot of money on infrastructure for seasonal workloads with rare but very high traffic spikes.
+Cloud provider also handles all the operational scaling of that service.
+
+Another benefit for both those types of workloads is that it allows us to save a lot of development cost and overhead as the cloud provider takes care of building, packaging and deploying out microservice.
+
+\paragraph{Trade offs}
+If the traffic pattern changes the costs of the service may increase significantly
+If the business logic becomes more complex each time we receive a request or event handling it will require a lot more time and memory.
+As a result it will become more expensive for us to use this offering than deploying it on a cloud VM or even a dedicated host.
+Another downside is the performance of a serverless deployment is much less predictable than deploying business logic as part of a microservice we fully control.
+Serverless deployments like function as a service are not the best option for latency sensitive workloads.
+This is also less secure type of deployment because not only does our code run in a multi-tenant environment, we also expose our source code to the cloud provider.
+
+\subsection{Summary - Function as a service}
+Function as a service for the correct workloads can be a very efficient way to deploy microservices.
+If used incorrectly, or not for the right workload it can also be the most expensive options.
+When it comes to security and performance this is also be the most expensive option.
+When it comes to security and performance this is also the least optimal option of all the deployment types.
+
+\subsection{Containers for Microservices using Dev, Testing and Production}
+
+\paragraph{The problem to be solved}
+Lack of parity between development environment, production environment.
+A.k.a - works on my machine but not in prod problem due to the differences between the configs in the two
+
+\subsubsection{Solution - Virtual machines}
+One solution is to develop and test the microservice in a production like Virtual Machine on our development computer.
+
+This leads to a new problem, the host operating system need to run another software layer called a hypervisor.
+A hypervisor runs just like any other program on our host operating system with its own kernel and operating system.
+This kernel manages all the guest operating system application processes, file system and security networking, memory and many other components.
+This also uses device drivers to interact with virtual hardware which is emulated by the hypervisor
+
+We can see that we have a lot of unnecessary overhead just to run a single microservice instance.
+If we want to run and test the integration of a few microservices, we need to run multiple virtual machines, each with its own operating system and it own kernel.
+This creates a lot of overhead and makes everything slow and inefficient, which makes the development and testing very hard.
+
+\subsubsection{Solution - Containers}
+Containers (docker etc) solve this problem by isolating what we want to isolate and sharing everything else.
+When we package our microservices into containers, each container image includes our microservice binary, the command to run it and all the dependencies it requires in complete isolation from any other microservice.
+When we create multiple instances of that image, each container has its own isolated file system, network interface and runtime.
+The OS kernel drivers and everything else that we don't need to isolate are shared among all the containers.
+The overhead of running a few dozen of containers on our machine is minimal, making it attractive for developing and testing microservices
+Benefits of containers go beyond this, they are useful in a CI/CD pipeline which may use a different OS and hardware that development computers.
+This does not matter since container images are completely decoupled from the OS and the hardware so we can create them once and run them on any hardware and operating system that supports containers and container runtime.
+
+\subsubsection{Disadvantages of using full VMs}
+If two microservice instances run on the same cloud server each VM runs and entirely separate copy of the same operating system.
+This duplication means we lose valuable memory CPU and storage resources to the operating system
+Deploying and starting each VM can take minutes before being ready to accept traffic.
+
+Another issue is cloud vendor lock in and lack of portability
+When we create a VM image for a microservice,  the formate of this image may be cloud vendor specific, also the configuration describes the type of VM we want to rent is also cloud vendor specific.
+If we get an attractive offer from another cloud vendor and we want to migrate completely, we will have to do a lot of work creating those new images and even this is an even bigger problem when we have a a multi cloud environment/ hybrid cloud environment.
+
+Uses of hybrid cloud
+Higher performance and greater security.
+In these situations cloud VMs will be challenging to manage.
+
+This is all solved by using containers.
+All we need to do is create those container images once and then deploy them on generic cloud VMs or even directly on dedicated hosts.
+In any environment the only requirement is to install the container runtime, which is the software that runs those containers and we're good to go.
+
+\subsection{Summary - Why containers}
+Why containers
+Better portability between environments since we can build a microservice image once and then use it in development, QA, staging and production on any cloud provider hardware or operating system.
+Also get faster startup time because containers usually take a few milliseconds to deploy and run
+We can also save a lot of money on infrastructure because the hardware utilisation is much better when we use containers.
+
+Instead of renting multiple smaller VMs where we lose part of the CPU and memory to the operating system, we can rent larger VMs or even dedicated hosts
+When we deploy the containers of different microservices on a single VM or host we can better utilise the hardware because they share the same operating system kernel.
+In many cases this means that we can run more intensive microservice instances for the same amount of hardware than when we use cloud VMs.
+
+\paragraph{}
+We now have another problem to solve before being able to take advantage of containers in production
+The problem is that we have two layers of abstractions that need to be glued together
+We have cloud infrastructure abstraction, VMs etc which need to be rented and autoscaled based on the traffic or load on out system as well as other cloud managed systems like databases, message brokers and distributed logging.
+Also have container abstraction, where there are numerous abstractions representing different microservices.
+Each microservice image needs to be deployed as a group of containers instances on that infrastructure.....
+Then we need a way to discover and connect all those microservice containers to each other and the managed services through the network.
+We also need to manage the scalability and availability of each group of the containers so we can add more instances if the traffic goes up and remove instances when the traffic goes down.
+Additionally we need to automatically replace containers that crash and a way to update all the containers of the same microservice when a new version of the microservice is released.
+Doing this manually for 100s/1000s of container instances potentially running in different cloud providers is an incredibly difficult task.
+
+\subsubsection{Summary}
+.....................
+
+\subsection{Container Orchestration and Kubernetes for Microservices Architecture}
+The big challenge - Managing, deploying and configuring thousands of containers, running hundreds of microservices potentially across different cloud providers.
+The solution is container orchestration (Kubernetes etc).
+
+\subsubsection{What is container orchestration?}
+A container orchestrator is a tool that managed the entire life cycle of all the microservice containers within our system.
+Can be thought of like an operating system.
+For microservices architecture deployed as a containers, the responsibilities of a container orchestrator include automation of deploying new microservices or new versions of microservices as containers.
+Managing resource allocation among existing containers to ensure each container gets the right amount of CPI memory and storage to work properly.
+
+Monitoring the health of containers self healing, which allows automatic deployment of new containers to maintain a healthy number of instances of each microservice.
+We have automatic bin packing which mean scheduling containers in an efficient way to provide optimal utilisation of existing hardware.
+Then we have load balancing between containers of the same microservice scaling service out or in by adding or removing containers based on the traffic and the resource utilisation.
+And finally managing the discovering and network connectivity between services, containers and the outside world.
+
+\subsection{Kubernetes as an example}
+Other tools exist.
+
+\subsubsection{Control Plane}
+A typical container orchestration cluster will have a control plane deployed on at least one machine.
+That machine is a controller node.
+
+The remaining VMs or servers that run out microservice containers are called the worker nodes.
+The controller node runs all the processes that orchestrate and manage our cluster.
+
+All the information about the cluster configuration and current state is stored by another process, which are key value store databases.
+If we need to add another container of a particular microservice, we have another process that monitors the worker node resource and decides where to schedule that new container.
+
+We can have another process that monitors the health of our worker nodes or state changes within those nodes.
+Another process can manage all the cloud provider specific logic, such as deleting unresponsive worker nodes by the cloud provider, adding cloud managed load balancers, routing them to our containers etc.
+In addition to the processes running in the control plane, each worker node also runs a set of agens to manage the containers running only on that node.
+
+That includes the container runtime, which is the software engine running the containers on each host
+
+The we have the agent that monitors and actually start the microservice containers when it receives the appropriate command from the control plan.
+We also have another process which acts as a proxy.
+This proxy maintains a set of network rules to route requests between containers of different microservice and balances, the load on containers of the same microservice.
+Additionally we may need to run each instance of our microservice with a sidecar process.
+
+This sidecar process can be a logging or monitoring agent or an in memory cache
+
+Typically putting more than one process inside a single container is not a good practice.
+
+\subsubsection{Pod}
+Kubernetes allows us to bundle several containers inside another logical unit which is called a pod.
+
+A pod is the small's runtime unit that kubernetes will manage for us even if that pod only contains a single microservice container
+The description of all microservices architecture, their configuration with container images they use and how much CPU memory and storage they need is described in a declarative human readable way.
+
+This configuration also contains all the information about the services our microservices connect to outside the container cluster.
+Those include cloud functions, databases, object stores, message brokers and so on.
+
+This configuration is stored and maintained in a version control system just like any other code.
+Once a change is made to that configuration, it will be sent to the control Planes APi server which triggers the relevant updates within the closet.
+
+In a typical microservices architecture, we'll have 100s/1000s of such worker nodes running 1000s of containers belonging to different microservices.
+
+For higher availability and to keep up with everything going on in the cluster, we'll also typically have multiple replicas of the controller nodes inside the control plane.
+Even for higher availability we can have multiple clusters with the same or different configurations running on different cloud regions or even cloud providers.
+
+We can route traffic using a global load balancer.
+This routing can be based on criteria such as physical proximity to the user, the load or health of each cluster and so on.
+
+Container orchestration architecture can be pretty complex to set up and manage.
+
+Requires expertise from DevOps or Site Reliability Engineers
+Requires dedicated resources just for orchestration purposes, like controller instances.
+
+This investment pays off because its cost is amortised across all the teams and microservices that are managed.
+
+\begin{note}
+    If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the container orchestrator will outweigh its cost and complexity.
+\end{note}

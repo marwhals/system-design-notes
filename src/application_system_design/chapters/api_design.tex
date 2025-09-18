@@ -1,0 +1,589 @@
+\chapter{API Design}
+
+\section{Motivations} - After gathering requirements, the system can be thought of as a black box whose behaviour has a well-designed interface.
+An interface is a contract between the engineers who implement the system and the client applications which uses the system.
+Such an interface is a called an API since it is going to be called by other applications remotely through a network.
+Not to be confused with a programming library.
+Applications calling the Api could be front-end clients like mobiles and web browsers or they can be other backend systems including those from other companies.
+After internal design each component will be called by other applications within our system.
+
+\subsection{Categories of APIs}
+
+There are generally three categories of APIs
+
+\begin{itemize}
+    \item Public APIs
+    \item Private or Internal APIs
+    \item Partner APIs
+\end{itemize}
+
+\subsection{Public APIs}
+Exposed to the general public and any developer can use them and call them from their application.
+Good general practice for public APIs is requiring the users to register before being allowed to send requests and use the system.
+Allows for better control over who is using the system and how they are using it.
+This in turn provides better security.
+Can black list users who abuse the system.
+
+\subsection{Private APIs}
+Only exposed internally within the company.
+Allow other teams or part of our organisation to take advantage of our system and provide value without exposing the system directly outside the organisation.
+
+\subsection{Partner APIs}
+Similar to public APIs but are only exposed to companies and users with a business relationship.
+This can be in the form of buying a product or subscribing to a service.
+
+\subsection{Benefits of APIs}
+The benefits of APIs is that a client can enhance their business by using the system without knowing anything about the internal design or implementation.
+Once an API is defined and exposed clients don't have to wait until the systems implementation has been finished.
+Clients can start making immediate progress towards their integration goals.
+Once exposed, it is easier to design and architect the internal structure or our system because the API effectively defines the endpoints/the different routes in the system the users can use.
+
+\subsection{Desigining an API well}
+Encapsulate the internal design and implementation and abstract it away from the users/developers that want to use the system.
+Otherwise, it defeats the point of the API (I.e abstraction).
+An API needs to be completely decoupled from internal design and implementation inorder to allow for design to change in the future; without breaking contract with the client.
+The API needs to be easy to use and easy to understand, and impossible/hard to misuse on purpose.
+
+\subsubsection{How to achieve this}
+This can be achieved by having only one way to get certain data or perform a task rather than having many alternatives.
+Having descriptive names for actions and resources, exposing only the information that the users need and no more than that.
+Keep things consistent across our API will make using it a lot easier.
+Another good practice is keeping operations idempotent as where possible.
+I.e an operation that doesn't have any additional effect on the result, if it is performed more than once.
+Idempotency is preferred since the API is going to be used over the network (i.e the network can be unreliable).
+Messages can be lost or a critical component inside our system may go down and the message may or may not have been received.
+The client or user will have no idea but can resend the request with no change of effect.
+I.e same request will not be processed twice (i.e double transaction etc).
+
+\subsubsection{Good Practice: Pagination}
+Used when dealing with a large payload or dataset forming part of the reqeust.
+Without it most clients will not be able to handle such a large payload or dataset and this would result in a poor user experience.
+Pagination allows for the client to request only a small segment of the response by specifying the maximum size of each response from our system
+and an offset within the overall dataset.
+To receive the next segment increase the offset.
+
+\subsubsection{Good Practice: Asynchronous APIs}
+Another good practice for operations that take a long time to complete are asynchronous APIs.
+The Client application receives a response immediately without having to wait for the final result.
+The response usually includes some kind of identifier that allows the client application to track the progress
+and status of an operation and eventually receive the final result.
+
+\subsubsection{Very Important Practice: Explicit Versioning}
+Explicitly versioning an API so that the client knows which API version they are currently using.
+The motivation behind versioning APIs is to allow for non-backward compatible changes, thus allowing for two versions of "the same" API\@.
+Meanwhile we can deprecate the old once gradually with good communication to the clients who are still using it.
+
+
+\section{API Best Practices}
+APIs can be defined in any way but some best practices have emerged.
+
+\subsection{Remote Procedure Calls - RPC}
+Ability to call a client application to execute a sub routine on a remote server.
+Difference is that it looks like a remote method is being called in terms of the code the developer needs to write.
+This feature is called local transparency.
+Remote or local looks the same.
+Some RPC frameworks allow for multiple programming languages so applications written in different languages can communicate.
+
+\subsubsection{RPC: How it works}
+API as well as the data types that are used in the API methods are developed using a special interface description language.
+This is framework / implementation specific.
+Effectively a schema or the communication between a remote client and a server in the system.
+After this definition using the specialised language, a code generation tool or special compiler can be used to generate two separate implementations of the API tool.
+This tool is framework specific.
+One implementation is for the client, another is for the server.
+Server side is called the server stub.
+Client side is called client stub.
+Stubs take care of all the implementation details of the remote procedure invocation.
+All custom object types that we declare using the interface description language are compiled into classes or structs depending on the language.
+Auto generate objects are referred to as Data Transfer Objects or DTOs.
+
+Now at run time, whenever the client application calls that particular RPC method with some parameters the client stub takes care of coding the data.
+This is called serialization or marshalling.
+After serialisation, the connection to the remote server is initialised and the data is send over to the stub.
+
+On the other end the stub is listening to the clients application messages and when the message is received it
+unmarshalled/serialised and then the real implementation of the method is invoked on the server application.
+
+Once the server is finished, the result is passed back through via marshalling and unmarshalling, to the client stub.
+The client application receives the unmarshalled response as a return value.
+This will look like it was a local method call.
+
+Well established pattern.
+Frameworks, implementation details and performance are the only real changes.
+API developers need to pick the right framework, define the API as well as the relevant types using a RPC framework.
+The description then needs to be published.
+
+The client and server in the system are decoupled.
+
+When the system has been designed and implemented a stub can be generated for new clients.
+New clients just need to generate their client stub to use the server method based on the published API definition.
+
+Using RPC, client and server is not restricted to programming language.
+
+\subsection{RPC: Pros}
+CConvenient - generate stubs which look just like local methods on objects.
+Communication details, and data passing details are abstracted away from the developers.
+Any failures result in just exception or error depending on the programming language just like normal methods.
+
+\subsection{RPC: Cons}
+RPC methods are less reliable and are slower.
+This can lead to performance issues.
+Client will not know how long Procedure calls will take.
+
+\subsection{Considerations}
+API design will need to consider this.
+A solution is to use asynchronous versions for slow methods which is a best practice.
+Another consideration is idempotency in the case that a message is lost or slow.
+
+This is generally used when backend systems are communicated to one another but frontend systems can be considered.
+RPC is a good style when providing an API to a different company vs an end user or a webpage.
+Good for different internal components within a large scale system.
+
+The RPC API style is also a good way to abstract away the network communication and focus on the actions the client wants to perform on the server.
+
+This would be a bad fit if we want to use browser cookies or headers.
+There are other styles for this.
+RPC revolved more around actions rather than data and resources (Think CRUD applications).
+
+\begin{itemize}
+    \item gRPC
+    \item Apache Thrift
+    \item Java Remote Method Invocation (RMI)
+\end{itemize}
+
+
+\section{Representational State Transfer - REST}
+Set of architectural constraints and best practice for web APIs. It is just a style allowing / making it easier to achieve / improve quality attributes.
+A RESTful API meets a certain traits.
+More resource orientated.
+Encapsulates the different entities in a system and allows for the manipulation of those resources through only a small number of methods.
+In a REST api, a client requests a named resource and the server responds with the current state of that resource.
+Usually done using HTTP. The resource can be implemented in a completely different way, only a representation of the resource is sent.
+Resource is just an abstraction.
+Interface is more dynamic, actions are not statically defined like in RPC.
+This is through a concept called HATEOAS - hypermedia as the engine of the application state.
+This is achieved by accompanying a state representation reasoner to the client with hyper media links.
+The client can follow these links and progress its internal state.
+
+\subsection{Achieving quality attributes}
+Important requirement of a system that provides RESTful API is that the server is stateless and does not maintain any session information about the client.
+Each message should be served by the server in isolation without any information about previous requests.
+This allows for high availability and scalability.
+If there is no session information high groups of servers can be used and the load can be spread. Client will no notice.
+Cache-ability - Important requirement.
+This means the server either implicitly or explicitly defines each response as cacheable or non-cacheable.
+Allows the client to eliminate the potential round trip to the server and back if they response is cached somewhere closer to the client.
+This will also reduce system load.
+
+\subsection{Resources in RESTful APIs}
+Each resource is named and addressed using a URI.
+Resources are organised in a hierarchy where each resource is either a simple resource or a collection resource.
+The hierarchy is represented using forward slashes.
+A simple resource has a state and optionally can contain sub resources.
+A collection resource is a special resource that contains a list of resources of the same type.
+
+\subsubsection{Naming resources - best practices}
+Use nouns only.
+Provides distinction between actions and the resources the actions will be taken on.
+Make a distinction between collection resources, and simple resources using plural and singular.
+Use clear and meaningful names.
+This will make the API easier to use for developers, and avoid mistakes and incorrect usages.
+Final practice.
+Use Unique, URL friendly names for resource identifiers for usage via the web.
+
+\subsection{Methods and operations}
+REST API limits the number of methods we can perform on each resource to a few predefined options.
+Creating, Updating, Deleting and getting the current state.
+When the resource is a collection resource, getting its state usually means getting a list of its sub-resources.
+
+Since REST APIs are commonly implemented using HTTP the operations are mapped to HTTP methods as follows.
+
+\begin{itemize}
+    \item POST - Create an existing resource.
+    \item PUT - Update an existing resource.
+    \item DELETE - Delete an existing resource.
+    \item GET - Get the state of an existing resource.
+\end{itemize}
+
+Additional can be defined but the situation is uncommon.
+
+\subsection{HTTP Semantics}
+Guarantees from HTTP semantics.
+GET is considered safe i.e it will not change the state of the resource.
+GET, PUT, DELETE are idempotent.
+i.e same result if you apply those operations multiple times.
+GETs are considered cacheable by default while responses to POST requests can be made cacheable by setting the appropriate HTTP headers sent as part of the response to the client.
+This feature allows us to conform to the cachabilty requirements of a REST API.
+When the client needs to send additional information to the system via a POST or PUT command JSON can be used.
+XML is also usable.
+
+\subsection{Step to creating a RESTful API}
+\begin{itemize}
+    \item - Identify entities in a system to serve as resources
+    \item - Mapping the entities to URIs and organising the hierarchy of resources based on their relationships
+    \item - Choose a representation for each resource. Can use JSON for this and include links for HATEOS
+    \item - Final step - assign HTTP methods to actions.
+\end{itemize}
+
+
+\section{REST API Design in Depth}
+%TODO combine notes
+
+\subsection{Setting the stage}
+Apps has bad reviews and is dying as there are no active users.
+Management has become concerned.
+This decline has occurred because competition has better technologies that make their offering more attracted to consumers.
+Competitors are also stealing partners with affiliation deals.
+Management has now realised that they must invest in digital technologies or continue to lose market share.
+API is core to this businesses survival strategy.
+Over time the company will gain popularity and system will expand.
+
+\subsection{Evolution of RESTful Services}
+API - user interface to data and systems that is consumed by applications rather than humans.
+A well define contract between provider and consumer
+\textit{Contract = Structure of Request and Response XML}
+
+\subsubsection{JSON vs XML}
+XML is heavy in terms of network traffic
+Parsing of XML is CPU is Memory intensive
+Slow performance of XMl on browser front end is not desired
+Mobile devices batter performance reduced due to XML
+Standards \& versions of standards caused confusion and complexity
+
+XML-RPC and SOAP are API standards that use XML
+With the rise of mobile and single page apps REST/JSON have gained popularity
+APIs are leveraged across many industries
+
+\subsubsection{REST}
+Architectural style and Set of Principles not Technology specific or standard specific
+
+Resources are objects, things and entities
+Resources have representational state managed in backend
+REST is NOT a standard but an architectural style
+REST may use the HTTP application protocol
+
+\subsection{REST API Architectural Constraints}
+Six constraints for a API to be RESTful
+\begin{itemize}
+    \item 1) Client - Server
+    \item 2) Uniform Interface
+    \item 3) Statelessness
+    \item 4) Caching
+    \item 5) Layered System
+    \item 6) Code on demand (Optional)
+\end{itemize}
+
+\subsubsection{How to know if an architecture is RESTful?}
+Richardson Maturity model
+\begin{itemize}
+    \item Level 0: The Swamp of POX
+    \item Level 1: Resources
+    \item Level 2: HTTP Verbs
+    \item Level 3: Hypermedia Controls
+\end{itemize}
+
+\subsubsection{REST Architectural Constraints - 1 - Uniform Interface}
+Client and Server share a common technical interface
+Definition of an interface
+\begin{itemize}
+    \item Contract for communication between client-server
+    \item Contract has NO business context
+    \item Contract defined using HTTP methods and media types
+\end{itemize}
+Uniform Interface De-Couples the architecture; components can evolve independently
+
+There are four guiding principles
+- 1) Identity of the resource (URI / URL)
+- 2) Representation of the resource
+- 3) Self descriptive messages - metadata
+- 4) Hypermedia
+
+\subsubsection{Client Server - 2}
+Client and server do not reside in the same process
+- RPC over HTTP
+- Server Decoupled from CLIENT
+
+\subsubsection{Statelessness - 3}
+Each client request is independent
+Server receives all info it needs in the request
+
+\subsubsection{Caching - 4}
+Statelessness - Negative impact on performance
+Chattiness
+Higher data traffic (impact's scalability
+
+Caching - Performance
+- Scalability
+- Reduce Chattiness
+
+Caching counter-balances some of the negative impacts of Statelessness
+
+\subsubsection{Layered System - 5}
+- Client - Server architecture consist of multiple layers
+--- No one layer can see past the next
+--- Layers may be added, removed or modified based on needs
+
+\subsubsection{Code on demand (Optional)}
+Server can extend client's functionality by sending the code
+
+\subsection{Designing REST API}
+Design your API with the needs of the App Developers in mind
+Use nouns to identify resources, use of plural is suggested
+Actions
+--- API Operation $ \neq $ CRUD
+
+OK to use action as part of resource hierarchy or create an action with subquery
+
+1) Create, a simple base URL; subdomain; separate domain
+2) Resources names should be nouns; Use of plurals is fine
+3) Actions can be verbs, may be standalone
+4) URI Pattern for associations; avoid nesting over three levels
+
+\subsubsection{CRUD operations}
+POST - Creates a resource,
+201 is a success, may return a link (id) to new resource in Location header
+- May return the new object
+
+Failure - 4xx Bad Request ---- 400 missing field etc
+5xx Issue in processing - e.g 503 database unreachable
+
+GET - reads/ retrieves a resource collection or specific resource
+200 - Send back the response in reqeusted format
+Failure - 4xx Bad Request - e.g 404 Resource no found
+5xx - Issue in processing - e.g 500 Internal Server Error
+
+PUT/PATCH Request Handling - Updating a resource
+- PUT - Updates all attributes of existing resource - effectively replace. Can also CREATE if client provide ID (not suggested)
+- PATCH - Modifies parts of an existing resource
+
+Success - 200 - Resource in body of response - OPTIONAL
+204 - No Content
+201 - Created - No need to send the Link - OPTIONAL
+
+Failure - 4xx Bad Request - e.g 404 Resource Not Found
+5xx - 503 Database unreachable
+
+DELETE - Deleting a resource
+Success 200 - May return deleted resource in the response body
+204 - No returned content = 204
+Failure - 4xx Bad Request - 404 Resource Not Found
+5xx Issue in processing - 503 database unreachable
+
+Rougly speaking restrict the number of HTTP codes to a maximum of 8
+---> 200/400/500 \textbf{MUST} be used
+
+\subsubsection{An alternative approaches}
+Always send back HTTP Status = 200 OK
+--- Place details in the payload
+
+\subsubsection{API Changes}
+Non - Breaking
+- Adding a new operation or resource
+- Adding optional parameters or properties
+
+Breaking
+- Change the HTTP verb or methods
+- Delete an operation
+
+\paragraph{Handling Change}
+- Avoid Changes : Is the change really adding value?
+\begin{itemize}
+    \item Eliminate or minimises impact on app developers
+    \item Provider planning opportunity to the app developers
+    \item Support backward compatibility (if possible)
+    \item Provide support to app developers with the changes
+    \item Minimise the change frequency e.g (once per 6 months)
+\end{itemize}
+\textbf{Version your API right from day 1}
+
+\subsubsection{Version information}
+%TODO add code listings
+HTTP Header
+Query Parameter
+URL
+
+\subsubsection{Multiple Version Support Key points}
+\begin{itemize}
+    \item Support at least 1 previous version for a period of time ---- 3 months/ a year etc
+    \item Mark the previous version as deprecated. \textit{New app developers can only access the latest version}
+    \item Publish a roll out plan in advance
+    \item Manage the change log that clearly shows the reason for the new version
+\end{itemize}
+
+\subsubsection{Design Decisions}
+\begin{itemize}
+    \item Which component should control the caching
+    \item What to cache?
+    \item Who can cache?
+    \item For how long is the cached data valid?
+\end{itemize}
+
+\paragraph{Why cache?}
+Benefits - Enhances performance, Leads to higher scalability
+
+Data to cache depends on - Speed of change, Time Sensitivity, Security
+
+Design decisions - Who can cache?, for how long?
+
+\subsubsection{HTTP Cache control}
+Responses
+WHo can cache the response?
+FOr how long?
+Under what conditions?
+
+Request
+- Override the caching behaviour
+- Protect sensitive data from caching
+
+\paragraph{Practices}
+Take advantage of caching especially for high volume APIs
+Consider no-store and private for sensitive data
+Provide the validation tag (ETAG) especially for large responses
+Carefully decide on the optimal max-age
+
+\subsubsection{Partial Response}
+Better performance and optimised resource usage - CPU, memory, bandwidth
+API Consumer controls the granularity
+Common API version for all consumers
+---- E.g. to support multiple devices, use cases - form factors
+
+\subsubsection{Pagination}
+Cursor - "Control structure that enables traversal of records"
+Cursor based pagination considered most efficient
+
+Offset-based pagination - Commonly used approach %TODO add example /thing?offset=6&limit=5
+
+HTTP Link Header - Use of a Link header a.k.a web linking
+
+\paragraph{practices}
+- Consider pagination for avoiding large data sets
+---- Decide on the default page size may be different for API(s)
+- Support for multiple pagination for different resources
+
+\subsection{REST API Error Handling Patterns}
+
+\subsection{REST API Handling Change - Versioning Patterns}
+
+\subsection{REST API Cache Control Patterns}
+
+\subsection{REST API Response Data Handling Patterns}
+
+\subsection{REST API Security}
+
+Basic authentication ---- not a good idea with HTTP (sending encoded credentials over the network in Authorisation header in HTTP reqeust). Better to use with TLS/ HTTPS
+
+\subsection{REST API Specifications using Swagger 2.0 / OAI}
+
+\subsubsection{Contract creation approach}
+Contract Last - API developer -> code and then specs
+Contract First - API Developer -> Specs and then code
+
+\textbf{Adopt the Contract First approach for REST API design and development}
+
+Swagger is a standard to describe RESTful API
+Why?
+Developer documentation
+Automated Proxy Creation, Server code generation
+Client code generation
+Service Virtualization (Mocking)
+
+Defacto standard supported by multiple vendors
+
+- Multiple path definitions
+- Each path can have multiple operations
+
+Can be edited with any YAML tool
+
+\subsection{API Management}
+
+API Management Scope
+Lifecycle - Productivity
+Security
+Traffic - Analytics
+Productise - Monetization
+
+
+Lifecycle
+- Establish processes, practices and roles
+- Setup App developer communication
+- Publish roadmap in advance
+- Leverage and create tools
+
+\subsubsection{Productivity}
+App Developer
+- API Documentation
+- Self serve provisioning
+- Support
+
+API Developer
+- Development guidelines
+- Frameworks
+- Best practices
+
+\subsubsection{API Security}
+Leverage API management platforms for security
+Authentication and Authorisation - OAuth Server, Key/Secret Management
+Functional Attacks - Protection from known and future threats
+
+\subsubsection{API Security practices}
+Educate the API developers
+Provide development guidelines on security
+Stay up to date on security threats
+Have a well defined security policy
+Develop a contingency plan
+Work with the other stakeholders to infrastructure
+
+\subsubsection{API Traffic Management}
+- Response time consistency
+- Service Level Agreement
+- Protecting the backend
+
+\paragraph{Traffic management}
+Quota - Defines the maximum number of calls per unit time
+Rate Limiting - Lists number of concurrent connections to API
+Spike Arrest - Prevents calls beyond high water mark from reaching the backend %TODO see graph
+
+\paragraph{Analytics}
+Performance
+- Response Time
+- Throughput
+- Peaks/Valleys
+
+Errors
+- API Errors
+- Backend errors
+
+SLA
+- Calls / time
+- Response
+
+Usage?
+%TODO go through this in a bit more depth
+
+Transactions
+- Specific to the implementation
+- Logic built into the proxy
+
+\subsubsection{API Management: Product and Monetise}
+API = Product
+Business base ---- New revenue, brand awareness, partnership
+Research - Consumer, need and wants, why use the API
+Create - Delivery/planning and pilot
+Marketing - Events, Promote
+Launch Post Launch - Launch/ Support
+
+\textbf{You need to tread an API like a product}
+
+\subsubsection{Monetization}
+%TODO add a diagram describing
+
+\paragraph{Technology considerations}
+Tiered product definitions
+Usage metering/ subscription management
+Reporting / partner management
+
+
+\section{GraphQL}
+
+%\include{misc/graphQL}
+

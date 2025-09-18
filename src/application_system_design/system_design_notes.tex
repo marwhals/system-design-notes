@@ -1,0 +1,493 @@
+%! Author = Marjan
+%! Date = 02/02/2025
+% Preamble
+\documentclass[a4paper, 11pt]{book}
+
+% Packages
+\usepackage{amsmath}    % For math symbols and equations
+\usepackage{graphicx}   % For including graphics
+\usepackage{geometry}   % For adjusting page layout
+\usepackage{fancyhdr}   % For custom headers/footers
+\usepackage{hyperref}   % For hyperlinks
+\usepackage{listings}   % For code listing
+\usepackage{lipsum}     % For placeholder text (to test layout)
+\usepackage{helvet}
+\usepackage{arydshln}
+\usepackage{wasysym}
+\usepackage{tikz} % Helvetica as a sans-serif font alternative
+\usepackage{mdframed}
+\usepackage{pdflscape}
+\usepackage{lscape}
+\usepackage{xcolor}
+
+\usetikzlibrary{shapes, arrows}
+
+% Clients & actors
+\tikzstyle{external}   = [ellipse, draw, fill=blue!20, text centered, minimum height=2em]
+\tikzstyle{actor}      = [circle, draw, fill=orange!20, text centered, minimum size=1cm]
+
+% Services & processes
+\tikzstyle{service}    = [rectangle, draw, rounded corners, fill=yellow!20, text centered, minimum height=2em]
+\tikzstyle{gateway}    = [trapezium, trapezium left angle=70, trapezium right angle=110, draw, fill=gray!20, text centered]
+\tikzstyle{process}    = [rectangle, draw, fill=green!10, text centered, minimum height=2em]
+
+% Data & storage
+\tikzstyle{database}   = [cylinder, draw, shape border rotate=90, aspect=0.5, fill=white, text centered]
+\tikzstyle{queue}      = [tape, draw, tape bend top=none, tape bend height=0.4cm, fill=red!20, text centered]
+\tikzstyle{storage}    = [folder, draw, fill=green!10, text centered]
+\tikzstyle{document}   = [document, draw, fill=cyan!10, text centered]
+
+% Infra & cloud
+\tikzstyle{cloud}      = [cloud, draw, fill=gray!10, text centered, minimum height=2em]
+\tikzstyle{server}     = [rectangle, draw, fill=gray!20, text centered, minimum height=2em, minimum width=2cm, drop shadow]
+\tikzstyle{monitor}    = [rectangle, draw, fill=cyan!10, minimum width=3cm, minimum height=2cm, text centered]
+\tikzstyle{bus}        = [rectangle, draw, fill=purple!10, minimum width=6cm, minimum height=0.5cm, text centered]
+
+% Connections
+\tikzstyle{arrow}      = [->, thick]
+\tikzstyle{darrow}     = [<->, thick]
+
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\small,             % font
+    keywordstyle=\color{blue}\bfseries,     % keywords
+    commentstyle=\color{gray}\itshape,      % comments
+    stringstyle=\color{red},                % strings
+    numbers=left,                           % line numbers
+    numberstyle=\tiny,
+    frame=single,                           % box around code
+    breaklines=true,
+    showstringspaces=false
+}
+
+\renewcommand{\rmdefault}{phv} % Set the default font family to Helvetica
+
+% Set page margins (A4 paper)
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+
+% Set up the header
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{System Design Notes}
+\fancyhead[C]{Your Name}
+\fancyhead[R]{\thepage}
+
+% ---- For Note to highlight point
+\newmdenv[
+    topline=false,
+    bottomline=false,
+    rightline=false,
+    innerrightmargin=0pt
+]{siderule}
+
+\newenvironment{note}{
+    \begin{siderule}
+        \textbf{Note: }
+        }{
+    \end{siderule}}
+
+% Document
+\begin{document}
+
+% Title Page
+    \begin{titlepage}
+        \centering
+        \vspace*{2in}
+        \Huge \textbf{System Design Notes}
+        \vfill
+        \Large Your Name
+        \vfill
+        \Large Date: \today
+    \end{titlepage}
+
+    \newpage
+
+    \tableofcontents
+
+    \newpage
+
+    \listoffigures
+
+    \newpage
+
+    \lstlistoflistings
+
+    \newpage
+
+%    \include{domain_drive_design/data_integrity} how to include a chapter etc
+
+
+    \chapter{Introduction}
+
+
+    \section{Goals of this document}
+    A set of personally useful notes relating to software architecture
+
+
+    \section{OSI Model}
+    Very useful when operating on different levels of abstraction in a system
+
+    \paragraph{Level 1} - Physical
+
+    \paragraph{Level 2} - Data link
+
+    \paragraph{Level 3} - Network
+
+    \paragraph{Level 4} - Transport
+
+    \paragraph{Level 5} - Session
+
+    \paragraph{Level 6} - Presentation
+
+    \paragraph{Level 7} - Application
+
+
+    \section{C4 Model}
+    Very useful for handling different levels of abstraction
+
+    \paragraph{Motivations: Why should I care?}
+    Drivers - Performance, Scalability, Fault Tolerance.
+    How to measure.....latency, throughput, cost
+    Consider SLA,SLO and SLI.
+    Easier to code more complex stuff......
+
+
+    \chapter{Gathering requirements}
+    Asking is a user is not good practice.
+    A better and more methodical way of gathering the requirements for the desired system is through use-cases and user flows.
+    A use-case is a particular scenario or situation in which the system is used to achieve a users goal.
+    A user flow is a more detailed step by step graphical representation of a use-case.
+
+
+    \section{Gathering functional requriements}
+
+    \paragraph{In a formal way}
+
+    First we need to identify all the actors or users in our system otherwise relevant use-cases may not be caught.
+    The second step is to describe all the possible use-cases or scenarios in which an actor can use our system.
+    Finally, the third step is to take each use case and expand it through a flow of events or interactions between the actor and the system.
+
+    In each interaction we capture the action and take a note of the data that flows with it to and from the system.
+    There are multiple ways to represent this, one way is a sequence diagram which is a part of UML. This is standard for visualising system design.
+
+
+    \section{Non functional requirements}
+    These requirements have an effect on the software architecture.
+
+
+    \section{Why redesign?}
+    The System is functionally correct but speed, scalability, maintenance or security is too hard for multiple reasons, like the number of users or data volume.
+    The System is functionally the same after redesign.
+    Choosing the right architecture from the start is important.
+    Quality measures are used to measure how well the system performs and correlate with the architecture.
+    Quality attributes have to be measurable and testable; this must be consistent.
+
+    Something to note is that no single architecture can provide all the quality attributes.
+    Certain attributes may contradict each other and some combinations are hard if not impossible to achieve.
+    Tradeoffs are needed.
+
+    The third important consideration of the system is the feasibility of the quality attributes.
+    An Architect needs to ensure that the system is deliverable and is what the client is asking for.
+    The Client could actually ask for something that is not technical or not technically possible.
+    I.e something that is excessively expensive or not feasible.
+    An example could be unrealistic latency expectations.
+    Before approving a requirement, consulting with a domain expert to ensure that the requirement can actually be delivered should be considered.
+
+%    Three important quality attributes when desigining a system
+    \begin{itemize}
+        \item Testability and measurability
+        \item Make tradeoffs between quality attributes over others
+        \item Feasibility of quality attributes
+    \end{itemize}
+
+
+    \section{System constraints}
+    Once functional requirements are defined, system function is known there are usually multiple ways to achieve the desired system
+    Quality attributes will lead to tradeoffs and this is normal.
+    System constraints are referred to as \textit{pillars} of an architecture.
+    System constraints provide a starting point since they are usually non-negotiable and the rest of the system has to be designed around it.
+
+    \paragraph{Three types of system constraints}
+
+    \begin{itemize}
+        \item Technical - Being locked to hardware, cloud vendors etc, must be on prem, etc.
+        \item Legal - Geography, different rules in different countries where the system resides.
+        \item Business - Limited budget, strict deadlines.
+    \end{itemize}
+
+    Once constraints are identified, consider non-negotiable constraints and self-imposed constraints that can be removed.
+    Once a set of constraints have been agreed, it is hard to move away from them.
+    If further in the project timeline it is found that some of those constraints were not really constraints, then the architecture will not make sense in the future.
+    Another consideration is that when certain constraints are accepted, enough space needs to be left in the architecture to move away from those constraints in the future.
+    We need to avoid tight coupling with certain components or constraints to allow for change, otherwise whole system would need to be rearchitected. %TODO Check this
+
+
+    \section{Gathering System Requirements}
+
+    \paragraph{Requirements} - A description of what we needs to be built.
+    This is very different when approached from a system level.
+    A higher scope allows for freedom of tools but also requires a higher level of abstraction.
+    Requirements are often not from an engineer or even someone technical.
+    Requirements are only part of the solution.
+    Client only knows the problem they need solved.
+    Clarifying questions are required.
+
+    \paragraph{Importance} - Simply build something and then fix it, wrong requirements etc, easy to fix?
+    Large scale systems (i.e at this level) are big projects that cannot be changed easily.
+    Many engineers involved and many hours.
+    Hardware and Software costs.
+    Contracts and financial obligations.
+    Reputation and brand.
+
+
+    \section{Type of Requirements AKA Architectural Drivers}
+
+    \paragraph{}
+    Features of the System - Functional Requirements - Describe the system behaviour i.e what the system must do - Tied to the object of the system
+    This doesn't determine the architecture
+
+    \paragraph{}
+    Quality Attributes - Non-functional requirements
+    System properties - Scalability, Availability, Reliability, Security, Performance etc
+    This does dictate the architecture
+
+    \paragraph{}
+    System Constraints - Limitations and boundaries
+    Examples - Time Constraints and Deadlines, Financial Constraints, Staffing Constraints
+
+
+    %TODO add quality attributes chapter
+    \include{chapters/quality_attributes}
+    \include{chapters/api_design}
+    \include{chapters/building_blocks}
+    \include{chapters/data_storage_at_scale}
+    \include{chapters/high_level_system_design}
+    \include{chapters/microservices_in_depth}
+    \include{chapters/cloud_architecture}
+    \include{chapters/big_data_architecture}
+    \input{implementation/implementation_details}
+
+
+    \chapter{Useful resources}
+    %TODO --- consider how to link to sources effectvely
+    Stuff used to create these notes
+
+    https://www.udemy.com/course/software-architecture-design-of-modern-large-scale-systems
+    https://www.udemy.com/course/the-complete-microservices-event-driven-architecture
+
+    \newpage
+
+% Example of including a code snippet
+
+    \begin{tikzpicture}[node distance=2.5cm]
+
+% Nodes
+        \node (client) [external] {Client};
+        \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+        \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+        \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+        \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+        \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+% Databases
+        \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+        \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+        \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+        \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+% Message Broker
+        \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+% Connections
+        \draw [arrow] (client) -- (gateway);
+        \draw [arrow] (gateway) -- (svc1);
+        \draw [arrow] (gateway) -- (svc2);
+        \draw [arrow] (gateway) -- (svc3);
+        \draw [arrow] (gateway) -- (svc4);
+
+        \draw [arrow] (svc1) -- (db1);
+        \draw [arrow] (svc2) -- (db2);
+        \draw [arrow] (svc3) -- (db3);
+        \draw [arrow] (svc4) -- (db4);
+
+% Event-driven communication
+        \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+        \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+        \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+    \end{tikzpicture}
+
+    \begin{figure}[ht]
+        \centering
+        \resizebox{0.95\textwidth}{!}{%
+            \begin{tikzpicture}[node distance=2.5cm]
+
+                % Nodes
+                \node (client) [external] {Client};
+                \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                % Databases
+                \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                % Message Broker
+                \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                % Connections
+                \draw [arrow] (client) -- (gateway);
+                \draw [arrow] (gateway) -- (svc1);
+                \draw [arrow] (gateway) -- (svc2);
+                \draw [arrow] (gateway) -- (svc3);
+                \draw [arrow] (gateway) -- (svc4);
+
+                \draw [arrow] (svc1) -- (db1);
+                \draw [arrow] (svc2) -- (db2);
+                \draw [arrow] (svc3) -- (db3);
+                \draw [arrow] (svc4) -- (db4);
+
+                % Event-driven communication
+                \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+            \end{tikzpicture}%
+        }
+        \caption{Microservices Architecture}
+        \label{fig:microservices}
+    \end{figure}
+
+    \begin{landscape}
+        \begin{figure}[ht]
+            \centering
+            \resizebox{0.9\linewidth}{!}{%
+                \begin{tikzpicture}[node distance=2.5cm]
+
+                    % Nodes
+                    \node (client) [external] {Client};
+                    \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                    \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                    \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                    \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                    \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                    % Databases
+                    \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                    \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                    \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                    \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                    % Message Broker
+                    \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                    % Connections
+                    \draw [arrow] (client) -- (gateway);
+                    \draw [arrow] (gateway) -- (svc1);
+                    \draw [arrow] (gateway) -- (svc2);
+                    \draw [arrow] (gateway) -- (svc3);
+                    \draw [arrow] (gateway) -- (svc4);
+
+                    \draw [arrow] (svc1) -- (db1);
+                    \draw [arrow] (svc2) -- (db2);
+                    \draw [arrow] (svc3) -- (db3);
+                    \draw [arrow] (svc4) -- (db4);
+
+                    % Event-driven communication
+                    \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+                \end{tikzpicture}%
+            }
+            \caption{Microservices Architecture}
+            \label{fig:microservices}
+        \end{figure}
+    \end{landscape}
+
+    \begin{landscape}
+        \begin{figure}[ht]
+            \centering
+            \resizebox{0.9\linewidth}{!}{%
+                \begin{tikzpicture}[node distance=2.5cm]
+
+                    % Nodes
+                    \node (client) [external] {Client};
+                    \node (gateway) [gateway, right of=client, xshift=3.5cm] {API Gateway};
+
+                    \node (svc1) [service, below of=gateway, yshift=1.5cm, xshift=4cm] {User Service};
+                    \node (svc2) [service, below of=svc1, yshift=-1.5cm] {Order Service};
+                    \node (svc3) [service, below of=svc2, yshift=-1.5cm] {Inventory Service};
+                    \node (svc4) [service, below of=svc3, yshift=-1.5cm] {Payment Service};
+
+                    % Databases
+                    \node (db1) [database, right of=svc1, xshift=4cm] {User DB};
+                    \node (db2) [database, right of=svc2, xshift=4cm] {Order DB};
+                    \node (db3) [database, right of=svc3, xshift=4cm] {Inventory DB};
+                    \node (db4) [database, right of=svc4, xshift=4cm] {Payment DB};
+
+                    % Message Broker
+                    \node (broker) [queue, below of=svc2, xshift=-5cm, yshift=-1.5cm] {Message Broker};
+
+                    % Connections
+                    \draw [arrow] (client) -- (gateway);
+                    \draw [arrow] (gateway) -- (svc1);
+                    \draw [arrow] (gateway) -- (svc2);
+                    \draw [arrow] (gateway) -- (svc3);
+                    \draw [arrow] (gateway) -- (svc4);
+
+                    \draw [arrow] (svc1) -- (db1);
+                    \draw [arrow] (svc2) -- (db2);
+                    \draw [arrow] (svc3) -- (db3);
+                    \draw [arrow] (svc4) -- (db4);
+
+                    % Event-driven communication
+                    \draw [arrow] (svc2.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (svc3.west) -- ++(-2,0) -- (broker.north);
+                    \draw [arrow] (broker.south) -- ++(0,-1) -- ++(6,0) |- (svc4.west);
+
+                \end{tikzpicture}%
+            }
+            \caption{Microservices Architecture}
+            \label{fig:microservices}
+        \end{figure}
+    \end{landscape}
+
+
+    \section{Code Example}
+    \begin{lstlisting}[language=Java, caption=Java Code for a Simple Cache]
+public class SimpleCache {
+    private Map<String, String> cache = new HashMap<>();
+
+    public String get(String key) {
+        return cache.get(key);
+    }
+
+    public void put(String key, String value) {
+        cache.put(key, value);
+    }
+}
+    \end{lstlisting}
+
+
+    \chapter{Diagrams}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{diagrams/basic-architecture} % Change to your filename
+        \caption{Three tier architecture}
+        \label{fig:drawio-diagram}
+    \end{figure}
+
+
+    \chapter{Architecture examples}
+
+
+\end{document}

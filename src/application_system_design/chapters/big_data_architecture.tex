@@ -1,0 +1,90 @@
+\chapter{Big Data Architecture}
+
+\section{Big Data meaning}
+Data sets which are too big or too complex or are produced at too fast of a rate such they that exceed the capacity of a traditional application.
+Characteristics are typically volume, variety, rate/velocity.
+This data can be used to gain insights/conclusions via visualisation, querying or predictive analysis.
+Can also be used to find anomalies, analysing logs.
+
+
+\section{Batch}
+Requires the storage of incoming data in a distributed database or a distributed files system.
+Data is never modified, it is only added to the end.
+
+\subsection{Batch - Key Principle}
+The Key principle here, is that the data is processed in batches or records on a fixed schedule, or a fixed number of records that we want to process.
+The schedule can be adapted for the users/clients needs.
+Each time a batch processing job runs in can process new data and produce and up-to-date view of all the current data.
+This can be stored in a well-structured and indexed database that can be queried to get insights.
+Could analyse recent data or the whole data set.
+This data is not processed in real time.
+
+\begin{note}
+    This data can be used to create a Machine learning model.
+\end{note}
+
+\subsection{Batch - Pros}
+Batch processing provides the user with high availability, no downtime for users and the old data view is still available.
+Batch processing is more efficient versus processing each piece of data individually.
+There also a higher tolerance towards human error, with regards to bad code / deployment issues.
+Batch processing can be used to perform complex data analysis of large data sets.
+
+\paragraph{Batch - Cons}
+Long delay between data coming in and the result we get from the processing job.
+The view is not real time which can be an issue in some use cases (Trading, 24/7 systems etc).
+Forces users to wait a long time before they can act on the insights from the system.
+May not know that the data is not in real time.
+
+
+\section{Streaming - Real time processing}
+Each new event into the system is placed into a queue or a message broker, on the other end there is a processing job that processes each bit of data as it comes through.
+After processing, the processing job updates the database that provides querying capabilities for real time visualisation and analysis.
+
+\subsection{Streaming - Pros}
+Can respond to data immediately
+
+\subsection{Streaming - Cons}
+Hard to do any complex analysis in real time as a result insight may be poor compared to to batch.
+Hard to data fusion in real time, at different time points or analysing historic data.
+Only limited to recent data for predictions.
+
+
+\section{Lambda architecture}
+May need the approaches/processes of both strategies.
+Lambda architecture takes advantages of both.
+Aims to find the balance between fault tolerance and comprehensive analysis of the data from batch processing and the low latency that we get from real time.
+In this architecture the infrastructure is divided into three layers:
+\begin{itemize}
+    \item Batch
+    \item Speed
+    \item Serving Layer
+\end{itemize}
+
+\begin{note}
+    Data that enters the system is dispatched into both the batch layer and the speed layer simultaneously.
+\end{note}
+
+\subsection{Batch Layer}
+The purpose of the batch layer is to manage our data set and be the system of records.
+The data in our master set is immutable and new data is appended, never modified.
+This data is usually on a distributed files system, optimized for storing big files containing massive amounts of data.
+The second purpose of the batch layer is to pre computer our batch views.
+Every time we run out batch processing job, it processes all the data that we have in out master data set.
+Once the processing is complete it indexes and store the data in a read only database.
+Typically, this overrides the existing pre computed views that we created the previous time we ran the processing job.
+\begin{note}
+    The batch layer aims at perfect accuracy and operates on the entire data set.
+\end{note}
+
+\subsection{Speed Layer}
+Data is sent to this layer in parallel.
+Real time strategy is used here.
+All the data goes into a queue or a message broker and is then picked up as it arrives by the processing job.
+Processing job analyses the new even and adds the processed even to the real time view ready for querying.
+This layer compensates for the latency in the batch layer.
+Unlike the batch layer it only operates on the most recent data and doesn't attempt to provided a complete view or make any data corrections.
+
+This layer exists between the last time a batch was run and the present moment/recent data.
+
+\subsection{Serving layer}
+The serving layers purpose is to respond to queries and merge the data from both the batch and speed layer and update the real time views.
