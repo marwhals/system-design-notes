@@ -73,7 +73,7 @@ Tier may include files on a local file system or a database.
 
 \subsubsection{Why so popular?}
 Fits a large number of use cases.
-A lot of web based services fit this model, shops, news sites etc etc.
+A lot of web based services fit this model, shops, news sites etc.
 Very easy to scale horizontally to take large traffic volumes and handle more data.
 
 \paragraph{How does it scale}
@@ -81,7 +81,7 @@ The presentation tier runs on a users device so it scales by itself....get a bet
 \hrule
 Application Tier - if it is kept stateless, application instances can be kept behind a load balancer and run as many instances as we need.
 \hrule
-Database / Persistence tier - can be easily scaled if a well established distributed data base is used. DB scala - replication, partioning, sharding etc.
+Database / Persistence tier - can be easily scaled if a well established distributed database is used. DB scale - replication, partioning, sharding etc.
 
 \hrule
 This architectural pattern is very easy to maintain and develop because all the logic is concentrated in one place; the application tier.
@@ -96,7 +96,7 @@ Business logic should not be placed in the presentation or data tier.
 Issue is all the business logic is concentrated in a single user code base that runs as a single runtime unit.
 The implications of this, each instance of the application becomes too CPU intensive and will consume too much memory.
 This makes the application too slow and less responsive.
-This can especially be a problem with memory managed / GC language like Java and C\# (maybe add go to this list)
+This can especially be a problem with memory managed / GC language like Java and C\#
 As a result applications can have longer and more frequent garbage collections.
 This can lead to requiring an upgrade of the computer the application is running on.
 Vertical scaling is both expensive and limited.
@@ -110,7 +110,7 @@ Because more concurrent developers will simply cause more merge conflicts and hi
 
 \paragraph{Mitigation}
 Could split the code into modules based on logic.
-The modules will be somewhat tightly coupled since we can release new versions of those modules only when the applications has been upgraded.
+The modules will be somewhat tightly coupled since we can release new versions of those modules only when the applications have been upgraded.
 I.e the organisational scalability of the Three-tier architecture is limited.
 Best when the code base is relatively small and not that complicated and will be maintained by a small team of developers.
 
@@ -126,10 +126,10 @@ Data tier handles persistence.
 More complexity - four tier.
 Between the presentation tier and the business logic tier.
 Between this tier functionality that does not belong in either can be separated.
-Could introduce API Gateway tier that handles security,caching, data formats etc when communicating between different systems.
+Could introduce API Gateway tier that handles security,caching, data formats etc. when communicating between different systems.
 
 More than four tiers is rare since they do not usually provide more value and simply adds more performance overhead.
-The source of this overhead comes from not being able to bypass tiers so as to avoid tight coupling.
+The source of this overhead comes from not being able to bypass tiers to avoid tight coupling.
 Every request would have to pass through multiple services which can increase response time/latency.
 Rarely a request would have to do so much travelling.
 
@@ -188,7 +188,7 @@ Following best practices will help achieve a positive outcome when moving to mic
 Microservices brings in additional complexity and overhead.
 This only brings business value when the system reaches a certain size and the organisation is of a certain scale.
 Start with a monolith approach first.
-When that is no longer working for the use case, then move to micro services.
+When that is no longer working for the use case, then move to microservices.
 
 \subsubsection{Conclusion}
 
@@ -223,9 +223,9 @@ Horizontal and organisational scalability is achieved via EDA.
 This architecture also allows us to analyse streams of data, detect patterns and act up on them in real time.
 
 \subsubsection{Further advantages}
-When all events that occur in a system are stored in a message broker, in addition to data analysis an very powerful architecture pattern can be implemented.
+When all events that occur in a system are stored in a message broker, in addition to data analysis a very powerful architecture pattern can be implemented.
 This is called event sourcing.
-By using event sourcing events can be replayed to identify the current state of a system rather than saving the state in a database.
+By using event sourcing, events can be replayed to identify the current state of a system rather than saving the state in a database.
 Because events are immutable we're never modifying them.
 We simply append new events to the log as they come.
 Using event sourcing we can store events for as long as we want.

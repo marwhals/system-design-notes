@@ -1,6 +1,6 @@
 \chapter{Data storage at Scale}
-Motivations: Choosing the right databases amongst many options.
 
+Motivations: Choosing the right databases amongst many options.
 
 \section{Relational Databases and ACID Transactions}
 
@@ -10,7 +10,7 @@ Each row in a table corresponds to a single record and all the records are relat
 Each column in a table has a name, a type and optionally a set of constraints .... NULL etc.
 The relationship between all records inside a table is what gives this type of database the name relational database.
 Structure of each table is decided ahead of time and is referred to as the schema of the table.
-We know what each record in the schema must have because because it is predefined.
+We know what each record in the schema must have because it is predefined.
 We can use a very robust language to query the data (analyse and update) in the table.
 This is SQL.
 Different implementation add their own features to this language.
@@ -39,13 +39,14 @@ Relational databases guarantee atomicity of transactions.
 Atomicity - transactions appear once or not at all.
 Consistency - guarantees that transaction that has been committed will be seen by all future queries and transactions.
 Also guarantees that data constraints that are set for the data, are met.
-Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state. They are separate.
+Isolations - relates to concurrency, if two transactions are taking place the second transaction will not see an intermediate state.
+They are separate.
 Durability - once a transaction is complete its final state will persist.
 
 \subsection{Relational Databases - Disadvantages}
-Rigid structure enforced by database schema enforced by the schemas
-Schemas has to be designed ahead of time before the table can be used.
-Future changes to the schemas can lead to down time.
+Rigid structure enforced by database schema.
+Schemas have to be designed ahead of time before the table can be used.
+Future changes to the schemas can lead to downtime.
 Changes ideally should be avoided and not done at all.
 Through planing is required for this.
 Harder and more costly to scale because of their complexity.
@@ -54,11 +55,11 @@ Due to ACID guarantees, reads are slower to perform compare to other types of da
 Different implementations have different performance optimisations and guarantees.
 
 \begin{note}
-    Generally, relational databases are slower than non relational ones.
+    Generally, relational databases are slower than non-relational ones.
 \end{note}
 
 When choosing one consider pros/cons and the use case.
-I.e is the data related, are reads important?.
+I.e. is the data related, are reads important?.
 
 
 \section{Non-Relational Databases}
@@ -91,7 +92,7 @@ The value can be anything, primitive or a binary blob.
 Can be though of as a large scale hash table/dictionary with few constraints on the type of value that can be held for each key.
 Good for caching pages or for quick fetching and easy querying.
 
-\subparagraph{Second Type - A document store }
+\subparagraph{Second Type - A document store}
 Collections are stored as documents.
 Documents have a bit more structure.
 Each document can be thought of as an object with different attributes.
@@ -110,7 +111,7 @@ Recommendation engines.
 
 \subsection{When should they be used?}
 Look at use case and analyse what is required from the database and what can be compromised.
-Non relational databases are better when it comes to query speed.
+Non-relational databases are better when it comes to query speed.
 They are also good for caching.
 They can store common query results that correspond to user views or pages.
 In memory "key,value" stores are optimised for this.
@@ -149,7 +150,7 @@ If performed often this can lead to a performance bottleneck.
 
 An index is a helper that we create from particular column or group of columns.
 When the index is created from a single column, the index table contains a mapping from the column value to the record that contains the value.
-Once that index table is created, we can put that table inside a data structure (good structures - B-Trees(or any self balancing tree), or a Hashmap).
+Once that index table is created, we can put that table inside a data structure (good structures - B-Trees(or any self-balancing tree), or a Hashmap).
 This will keep the values sorted and thus makes searching more efficient (think big O complexity).
 Searching is log n.
 Sorting is n log n.
@@ -165,7 +166,7 @@ Composite indexes can be created.
 \subsubsection{Tradeoffs}
 Optimising for one operation can lead to a tradeoff elsewhere.
 Indexing increases memory and decreases the speed of writes but increases the speed of reads.
-Writing records become slower because each time a write or new record is added the index table must also be updated.
+Writing records becomes slower because each time a write, or new record is added the index table must also be updated.
 Indexing is also used in non-relational databases to speed up queries.
 
 \subsection{Database replication - single database, single point of failure.}
@@ -178,7 +179,7 @@ Get better performance and better throughput.
 Better throughput by distributing our queries across multiple computers/ replicas.
 
 \subsubsection{Tradeoffs}
-Introduces higher complexity especially with regards to write, update and delete operations.
+Introduces higher complexity especially in regard to write, update and delete operations.
 Making sure concurrent modifications to the same records don't conflict with each and providing predictable guarantees in terms of consistency and correctness is not a trivial task.
 Distributed databases are very hard to design, configure and manage, especially at scale.
 Requires knowledge of distributed systems.
@@ -198,11 +199,11 @@ Sharing effectively turns the database into a distributed database.
 Add complexity and overhead since routing is required for the right shard/partition as well as making sure one shard does not become too large.
 
 Database sharding is a common feature in most non-relational databases.
-Since by design they they decouple different records from each other.
+Since by design they decouple different records from each other.
 Storing records on different computers is a lot more natural and easier to implement.
 
 For relational databases, it depends on the implementation.
-Relation database queries usually involve more than one record/ are more common.
+Relation database queries usually involve more than one record / are more common.
 Splitting these across multiple machines is more challenging to implement in a performant way while supporting things like ACID transactions or table joins.
 When choosing a relational database for high volume of data use case check for partitioning support.
 Partitioning can also be used to split infrastructure like compute instances and redirect traffic to different machines.
@@ -290,7 +291,7 @@ Performance intensive operations such as big data analysis or transformations op
     \item Unlike a distributed file system we have virtually no limitation on the number of binary objects we can store in it
     \item High sizes on the size of a single object....can be terabytes.
     \item Good for archiving and backups
-    \item Features of typical object stores can include HTTP rest API that makes them effective for storing multi media content - images etc that can be linked to a webpage
+    \item Features of typical object stores can include HTTP rest API that makes them effective for storing multimedia content - images etc that can be linked to a webpage
     \item Object versioning is another feature, on a file system we would need to use an external versioning system.
 \end{itemize}
 
@@ -299,7 +300,7 @@ Performance intensive operations such as big data analysis or transformations op
     \item No directory hierarchy
     \item Flat structure called buckets
     \item main abstraction is an object
-    \item Typically key value pairs. value being the content. Additional key value pairs exist for meta data like file type and size.
+    \item Typically key value pairs, with value being the content. Additional key value pairs exist for meta data like file type and size.
     \item Objects can include an access control list who can access who has read/write permissions.
 \end{itemize}
 

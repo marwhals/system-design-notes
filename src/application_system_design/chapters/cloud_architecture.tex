@@ -1,13 +1,17 @@
 \chapter{Cloud Architecure patterns}
 
+
 \section{Motivations}
+
 It is the business logic and the user that defines out software product to the outside world.
 When considering quality requirements, products that have functionally have nothing in common are facing the exact same challenges.
 This means they can benefit from the same solutions.
 While companies may not have anything in common externally, they can benefit from the same scalability, extensibility patterns internally.
 All companies are expected to be highly available and reliable.
 
+
 \section{Cloud computing}
+
 Provides infinite computation, storage and network capacity.
 Infrastructure as a service, without this every company would spend months hiring specialists and building infrastructures to deliver a basic product.
 Cloud charges only for the services that are used.
@@ -15,7 +19,8 @@ This removes the barriers for startups since there is on high upfront cost.
 Cloud also provides message brokers, DBs etc.
 
 \subsection{Downside}
-Non of that infrastructure is owned by the company.
+
+None of that infrastructure is owned by the company.
 
 It is out of the companies control.
 
@@ -23,17 +28,19 @@ Typically don't get the best hardware and a lot of it has already been used.
 Runs the risk of failing and there is nothing that can be done about it.
 The bigger the system the higher the probability of failure is.
 Monthly bill will get bigger and bigger as the company grows.
-As an architect need to manage cost, scalability and profitability.
+As an architect need we to manage cost, scalability and profitability.
 
 Cloud architecture can be though of building reliable systems using unreliable components.
 
 This type of architecture will have to account for reliability and handling failures a lot more seriously.
+
 
 \section{Scalabilty patterns}
 
 \subsection{Motivations}
 These patterns allow us to architect important patterns that allow is to architect and deploy a highly scalable system for every domain and use case.
 This will enable out business to handle billions of requests per day process, petabytes of data and most importantly and do it ain a cost effective way in a cloud environment.
+
 
 \section{Load Balancing Pattern}
 
@@ -125,38 +132,43 @@ This powerful combination between dynamic resizing and load balancing gives us t
 
 \subsection{Pipes and Filters Pattern}
 Follows the stream of water flowing through a series of pipes and getting filtered in multiple stages until it gets to the desired condition.
-Instead it is data and the filters are isolated components that process that data at different stages/
--- A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
--- The origin of the data is referred to as the data source and the final destination for that data after it gets through.
--- All the desired processing stages is often called a data sink
+Instead it is data and the filters are isolated components that process that data at different stages
 
-\subsubsection{Example}
-Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that receives data samples from sensor or end devices/
--- A few example of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
--- The pipes that connect the filters in this pattern are typically distributed queues or message brokers
--- Its also worth pointing out that the entire data doesn't have to flow through those so called pipes.
--- Can store data in a temporally location on the distributed files system or even a database and simply send notifications about the new data and where to find it
+\begin{enumerate}
+    \item  A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
+    \item  The origin of the data is referred to as the data source and the final destination for that data after it gets through.
+    \item  All the desired processing stages is often called a data sink
+\end{enumerate}
+
+\subsubsection{An example}
+Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that receives data samples from sensors or end devices.
+A few examples of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
+The pipes that connect the filters in this pattern are typically distributed queues or message brokers.
+Its also worth pointing out that the entire data doesn't have to flow through those so called pipes.
+We can store data in a temporally location on the distributed files system or even a database and simply send notifications about the new data and where to find it
 
 \subsubsection{Examples and scenarios}
-Can start with a simple application that takes either a particular type of even or input request as a trigger.
+Can start with a simple application that takes either a particular type of event or input request as a trigger.
 That event can carry some information that we need process through multiple stages before we make some kind of decision or get that data into a state that we can store in a database.
--- If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
---- First problem is the tight coupling between all different processing components.
---- For example, since they're part of the same application, they will need to be implemented in the same programming language
+If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
 
--- What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
------ While using Java or C-Sharp to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
----- This can no easily be done.
+First problem is the tight coupling between all different processing components.
+For example, since they're part of the same application, they will need to be implemented in the same programming language
 
-Second problem is each processing gtype may require a completely different type of hardware to perform it processing most effectively.
---- Hardware for machine learning, fast CPU cores etc, lots of memory, a high bandwidth network card
+What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
+While using Java or C\# to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
+This can not be easily be done.
 
-If we have all the takes implemented in a single application, we can't ever getr to a point where each task is running on the most optimal hardware for its needs.
+Second problem is each processing type may require a completely different type of hardware to perform its processing most effectively.
+Hardware for machine learning, fast CPU cores etc, lots of memory, a high bandwidth network card
+
+If we have all the tasks implemented in a single application, we can't ever get to a point where each task is running on the most optimal hardware for its needs.
+
 Finally, each task may require a completely different number of instance to provide a good enough throughput and be able to handle the incoming data.
--- If we split the processing pipeline into separate independently deployed software components, we can use the best programming language, or ecosystem for each type of operations.
--- And since each such component can run on its own type of hardware we can guarantee that the entire pipeline runs optimally, not only from the performance perspective, but also in terms of the cost of infrastrcuture.
--- Because in a cloud environment, each type of hardware is priced different based on its features and capabilities.
--- We can easily scale the number of instances for each processing component as we need, while saving costs on more processing lightweight processing units for the others.
+If we split the processing pipeline into separate independently deployed software components, we can use the best programming language, or ecosystem for each type of operations.
+And since each such component can run on its own type of hardware we can guarantee that the entire pipeline runs optimally, not only from the performance perspective, but also in terms of the cost of infrastructure.
+Because in a cloud environment, each type of hardware is priced different based on its features and capabilities.
+We can easily scale the number of instances for each processing component as we need, while saving costs on more processing lightweight processing units for the others.
 
 Finally, we can also get higher throughput by executing independent tasks in parallel on separate computers.
 
@@ -166,33 +178,38 @@ Its used to process data from end devices in the internet of things industry and
 
 \subsubsection{Specific example - video sharing service}
 When a new video is uploaded, it needs to go through a few stages before it can be optimally streamed simultaneously to different devices in different geographical locations.
--- First stage may be splitting the original potentially large video file into smaller chunks.
--- This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
--- Then once we have the individual chunks separated, wenne to select a single frame form each chunk to be the thumbnail
--- This way when user wants to jump to a different part of the video, they can have those thumbnails as guidelines.
--- In the next stage, we resize each chunk to different resolutions and bit rates
------ This allows us to use a technique called adaptive streaming with the adaptive streaming technique
------ We can change the resolution of the video dynamically while streaming the video to the user depending on their network conditions
------- Example when they have a good connection we can send them high quality high resolution chunks of the video, and if their connection speed drops, all of a sudden we can seamlessly switch to the lower quality chunks to avoid buffering delays
--- Finally a tht elast stage we encode each chunk in each of the different resolutions to different formats, so we can support multiple types of devices and video players.
--- Audio parts
----- video needs to be resized frame by frame to different resolutions and bit rates
---- Audio doesnt need that
----- However we can pass the audio through a parallel pipeline of filters where we can use natural processing libraries and specialised hardware to transcribe any speech present in the audio into text at the next stage
--- We can either provide caption to translate the text to different languages and then feed that to the captioning filter as well
--- So at the end of this pipeline, we'll have the audio accompanied by text files that represent captions of that audio in different languages.
--- Finally we can have another branch in out pipeline which can sample sections of the video or audio and run proprietary algorithms that detect whether this content is copyrighted or consider to be inappropriate for out targer audience.
--- In that case, it can either alert a special team of specialists to manually review it or simply reject the video altogether
+
+\paragraph{First stage}
+The first stage may be splitting the original potentially large video file into smaller chunks.
+This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
+Then once we have the individual chunks separated, we need to select a single frame form each chunk to be the thumbnail
+This way when user wants to jump to a different part of the video, they can have those thumbnails as guidelines.
+
+\paragraph{Second stage}
+In the next stage, we resize each chunk to different resolutions and bit rates
+This allows us to use a technique called adaptive streaming with the adaptive streaming technique
+We can change the resolution of the video dynamically while streaming the video to the user depending on their network conditions
+
+Example when they have a good connection we can send them high quality high resolution chunks of the video, and if their connection speed drops, all of a sudden we can seamlessly switch to the lower quality chunks to avoid buffering delays
+
+\paragraph{Final Stage}
+Finally at the last stage we encode each chunk in each of the different resolutions to different formats, so we can support multiple types of devices and video players.
+Audio parts, video needs to be resized frame by frame to different resolutions and bit rates.
+Audio doesnt need that , however we can pass the audio through a parallel pipeline of filters where we can use natural processing libraries and specialised hardware to transcribe any speech present in the audio into text at the next stage
+We can either provide caption to translate the text to different languages and then feed that to the captioning filter as well
+So at the end of this pipeline, we'll have the audio accompanied by text files that represent captions of that audio in different languages.
+Finally we can have another branch in out pipeline which can sample sections of the video or audio and run proprietary algorithms that detect whether this content is copyrighted or consider to be inappropriate for out target audience.
+
+In that case, it can either alert a special team of specialists to manually review it or simply reject the video altogether
 
 \subsubsection{Important considerations}
 Firstly, its important to note that there is quite a fair amount of overhead and complexity involved in maintaining this architecture, especially if the individual filters are too granular
-- Its important to balancer between that overhead and the benefits we get from having this clean separation
-- The second thing is to keep in mind is making sure that each filter is stateless and is provided with enough information as part of its input to perform it tasks.
-- The last important consideration si that this pattern is not a good fit for situation where all the operations within the pipeline need to be performed as part of a transaction
--- The reasons for that is performing a distributed transaction across multiple independent components is extremely difficult and inefficient, especially if we need to abort and redo them frequently.
+Its important to balance between that overhead and the benefits we get from having this clean separation
+The second thing is to keep in mind is making sure that each filter is stateless and is provided with enough information as part of its input to perform it tasks.
+The last important consideration si that this pattern is not a good fit for situation where all the operations within the pipeline need to be performed as part of a transaction
+The reasons for that is performing a distributed transaction across multiple independent components is extremely difficult and inefficient, especially if we need to abort and redo them frequently.
 
 \subsubsection{Summary}
-======================================================================
 
 \subsection{Scatter Gather Pattern}
 %TODO fix this
@@ -225,15 +242,16 @@ However, if the service we're providing is some sort of deep analysis or reporti
 
 \subsection{Execution Orchestrator Pattern for Microservices Architecture}
 Used primarily in microservices architecture
+
 In monolithic applications each operation can be described as a method or a function call.
 
 In large scale systems that run in the cloud, the monolithic approach is too restrictive and doesn't scale well.
 
-Many companies break the monolithic application logic into separately deployed and managed servie where each service is responsible for a particular subdomain or business logic.
+Many companies break the monolithic application logic into separately deployed and managed service where each service is responsible for a particular subdomain or business logic.
 
 In this pattern we have an extra service called the Execution Orchestrator.
 The service follows the analogy of a conductor of a symphony in an orchestrator in the sens that the conductor doesn't produce any song from an instrument themselves.
-.....etc ........etc
+
 The orchestrator pattern doesnt do any business logic.
 Instead, its job is to manage potentially complex or long flows by calling different service through different APIs in the right order
 
@@ -269,14 +287,14 @@ The only place that needs to be modified if we make any API or architecture chan
 Since the orchestration service is the only service aware of the only service aware of the text and the execution steps.
 It is also responsible for dealing with errors or issues that may happen during the execution flow.
 Since the orchestrator is managing the entire flow, its also easy to trace and debug such failures.
--- Reasons for this is that we always have the orchestrator logs as the reference which can easily point use to the faulty service or bug.
+Reasons for this is that we always have the orchestrator logs as the reference which can easily point use to the faulty service or bug.
 
 What happens if the orchestration service itself dies in the process.
--- The load balancer will reroute the request to another instance without any extra care.
--- This new instance won't know that the registration with the user is already completed so it may attempt send another registration reqeust which will of course fail.
+The load balancer will reroute the request to another instance without any extra care.
+This new instance won't know that the registration with the user is already completed so it may attempt send another registration reqeust which will of course fail.
 So one way the orchestration service can track the progress in the registration process by maintain its own database inside the database?
 The orchestration service can persist the state of th eprocess for each user.
--- This way a new instance of the orchestration service can always pick up the task at any stage.
+This way a new instance of the orchestration service can always pick up the task at any stage.
 
 \subsubsection{Summary}
 There is one important consideration to keep in mind when using this software architecture pattern.
@@ -298,7 +316,6 @@ One solution we offered was the execution orchestrator pattern, where we have a 
 
 While the orchestration pattern is the most intuitive and easiest to implement it has a few drawbacks.
 One of the drawbacks is the tight coupling to all the microservices in the system.
-One of the drawbacks is the tight coupling to all the microservices in the system
 ----> moving to microservices is to speed up development by decoupling microservices from one another.
 Because the orchestrator pattern is tightly coupled teams will need to coordinate with one another via the orchestration service, and make sure they dont break any flow.
 --> This starts to share a lot of similarities with the monolithic application we moved away from.
@@ -332,7 +349,7 @@ Note - since the messages are done via a message broker the messages are not los
 The messages can be processed when the service is back online in the event it is lost.
 
 In an effort to catch issues before they go into production, we will need to write more complex integration tests when using the choreography pattern.
-This becomes an even bigger challenge as well add more services.
+This becomes an even bigger challenge as we add more services.
 
 \subsubsection{Summary}
 In this pattern all the microservices work together, following a sequence of steps to complete a certain flow.
@@ -362,12 +379,12 @@ If we can't describe the desired computation in one set of map and reduce functi
 First thing we ned to do as users of MapReduce is to describe out input data as a set of key value pairs, which in most cases is very straight forward.
 Then the MapReduce framework bypasses all the input key value pairs through the map function with define, which produces a new set of intermediate key value pairs.
 After that, the MapReduce framework shuffles and group all those intermediate key value pairs by key and passes them to the reduced function which we also provide.
-The reduced function then merges all the values for each such intermediate key and produces a typically smaller result of either rzerio or one value.
+The reduced function then merges all the values for each such intermediate key and produces a typically smaller result of either zero or one value.
 
 \paragraph{Examples}
 %TODO examples
 
-If we apply this programming model, we can define the general software architecture of the MapReduce using two main componentes.
+If we apply this programming model, we can define the general software architecture of the MapReduce using two main components.
 The first component is the master which is the computer that schedule and orchestrated the entire MapReduce computation.
 The second component is a large group of work machine which can be in the hundreds or even thousands.
 The master then breaks the entire set of key value pairs into chunks.
@@ -422,7 +439,6 @@ Instead, we either pick one of the available open source implementation of this 
 In either case, we still follow the same general process of modelling out data, writing the map and reduce functions and additionally deciding on the different parameters so we can get the best throughput for our money.
 
 \subsubsection{Summary}
-........
 
 \subsection{The Saga Pattern}
 Important principle of microservices is a database per service.
@@ -469,7 +485,7 @@ Statistically if we run a large scale system on commodity hardware in the cloud 
 
 When we use the transactional outbox pattern in out database we add another table called the outbox table.
 Instead of sending an event to a message broker, we add the message to the outbox table as a new record.
-What is important is that we update the relevant table in the case the user stable and thoutbox table as part of a single database transaction.
+What is important is that we update the relevant table in the case the user stable and outbox table as part of a single database transaction.
 If the database we're using supports transactions then we are guaranteed that either both tables are update or none.
 But we will never be in a situation where only one of the tables was update and the other \textbf{wasn't}
 
@@ -479,14 +495,14 @@ Then marks it as sent and then deletes it.
 
 This way we solve the problem of losing data or not sending messages and we're guaranteed that for each database update, an appropriate event will be triggered.
 
-\subsubsection{Issue with this pattern}
+\subsubsection{Issues with this pattern}
 First issue is duplicate events.
--- Consider \textit{At least once delivery semantics}
--- Idempotent operations, i.e performing an operation once or multiple times do not make a difference.
+Consider \textit{At least once delivery semantics}
+Idempotent operations, where performing an operation once or multiple times do not make a difference.
 
-Another issue. Lack of suport for transactions in our database.
+Another issue is lack of support for transactions in our database.
 -- Add additional field or attributes to an object.
--- The addition of new object ot a noSQL database is typically a atomic operation.
+-- The addition of new object to a noSQL database is typically a atomic operation.
 
 Another issue, the ordering of events.
 -- Assign each message sequenceID that is always higher than the previous message in the outbox table
@@ -502,8 +518,8 @@ However very often the way we store the data doesn't reflect the type of workloa
 When we send a query to read aggregate and transform that raw data into something we can analyse or even present to the user we may find some issues.
 
 The first issue is performance.
-- When we performa complex query across multiple tables or even multiple databases the query may take a very long time to complete.
-ON the other hand, if we have a uer on the revieign end of the result of that query it becomes a big problem because we have very little patience for high latency.
+When we perform a complex query across multiple tables or even multiple databases the query may take a very long time to complete.
+On the other hand, if we have a user on the receiving end of the result of that query it becomes a big problem because we have very little patience for high latency.
 
 The second problem is efficiently and cost.
 If we run the same complex query that reads aggregates or transforms large data sets repeatedly we pay an unnecessary price fo the resources to perform the query.
@@ -531,7 +547,7 @@ Second consideration is where to store those materialised view tables.
 Essentially we can store the materialised view anywhere or in anyway way we want.
 However the easiest and preferred way is to store the materialised view for a query in a separate table in the same database we use for the original data.
 The benefit of going it in the same database is when that database supports materialised views as a feature out of the box.
--- In that case, we can get automatically and efficient update to the materialised view every time the origin data in the base tables changes without the need to do it manually or programmatically.
+In that case, we can get automatically and efficient update to the materialised view every time the origin data in the base tables changes without the need to do it manually or programmatically.
 
 Most modern databases that support materialised views can efficiently make those update by applying only the deltas from the previous state without the need to regenerate the entire materialised view from scratch, every time there is an update to the base table.
 
@@ -552,14 +568,15 @@ We can also save alot of money by applying this pattern to large data sets that 
 
 \subsection{CQRS Pattern}
 In typical system that involves data store in a data base we can group the possible operation of that data into two types.
-The first type is a command
--- A command is an action we perform that results in a data mutation
--- These actions involve insertions of new records, updates to existing records or deletions or existing records
----- Adding new user, deleting user etc etc etc
+The first type is a command.
+A command is an action we perform that results in a data mutation
+These actions involve insertions of new records, updates to existing records or deletions or existing records
+Adding new user, deleting user etc etc etc
 
 The second type of operation is a query
 The query only reads some data from the database and returns all of it or part of it to the caller.
 
+\subsubsection{CQRS Purposes}
 CQRS pattern has two purposes.
 
 With CQRS we completely separate or segregate the command of they system from the query part of the system into separate databases and service where each part is responsible only for one type of workload.
@@ -670,7 +687,7 @@ Using event sourcing each item becomes an append only event, which doesn't requi
 Take snapshots of certain points of the events log.
 We can replay transaction from the snapshot rather than from the beginning.
 
-Use CQRS.
+Use CQRS\@.
 Can separate the part that appends events to our system and store them from the query part which store the current state in a read optimised database that could even be in memory database making reads even faster.
 Every time a new event comes in the query service pulls that event and updates its own state for that entity.
 If we store those events in a message broker then the query service can subscribe to that same topic or channel and pull the data straight from it and the command side doesn't need any special database.
@@ -962,7 +979,8 @@ If we aren't careful about it we may cause what's called a retry storm.
 \subsubsection{The approaches}
 There are three approaches
 
-Fixed delay. We pick a value, for example, 100 milliseconds and the wait the saem amount of time in between every subsequent retry.
+Fixed delay.
+We pick a value, for example, 100 milliseconds and the wait the saem amount of time in between every subsequent retry.
 
 The second approach is an incremental delay.
 With this approach, we incrementally increase the delay with every failed retry.
@@ -1289,7 +1307,7 @@ In other words, we also want to make sure that while continuously injecting thos
 
 \paragraph{Important Note}
 This is why we should never promise 100\% availability or something close to that for our users.
---- Even if we think that this is achievable.
+Even if we think that this is achievable.
 
 This leaves room for both unexpected and deliberate errors failures as a part of production testing.
 
