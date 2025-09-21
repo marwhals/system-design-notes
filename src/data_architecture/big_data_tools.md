@@ -8,6 +8,7 @@ TODO - explore what is available from Apache
 
 - Kafka
 - Apache Spark
+- Apache Flink
 - Apache Beam
 - Airflow
 - Hadoop
