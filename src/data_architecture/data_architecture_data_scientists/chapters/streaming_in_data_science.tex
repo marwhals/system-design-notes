@@ -1,0 +1,98 @@
+
+\subsection{Introduction to streaming data}
+
+Streaming data refers to the continuous real time flow of data from various sources.
+This produces data at a high velocity.
+Unlike batch data processing, streaming data \textit{has to be processed in real time}.
+Batch processing is done periodically.
+Could schedule a batch job to run every night or daily once or run every few hours and at best run every hour.
+
+\begin{note}
+    The expectation with real time data is that the data gets processed every few seconds or at least every few minutes.
+\end{note}
+
+Hence, the two techniques.
+They need different approaches.
+Typical uses cases where real time processing of streaming data play a big role are payment fraud and the finance domain.\ Particularly banks.
+AML is closely relate to payment fraud but only requires batch processing.
+
+Predictive maintenance use cases which involve anomaly detection is one of the common data science use cases which is found in the manufacturing industry.
+Data from senors has to be processed in real time and predictions made on the likelihood of failure of the equipment.
+Manufacturing and industrial IoT have a lot of other use cases as well where one has to deal with streaming data.
+
+\subsection{Kafka 101}
+
+Most streaming data use cases employ kafka in some form or the other.
+OS software for implementing a distributed platform for supporting high throughput streaming data.
+
+\subsubsection{Kafka - Terms}
+\begin{itemize}
+    \item Producers: Data sources which generate the streaming data. Configured to write data into several topics
+    \item Brokers: Topics are distributed on multiple kafka servers which are known as brokers. A kafka cluster will have at least three brokers to ensure fault tolerance and to prevent the loss of data in case of failure of the servers.
+    \item Consumers: Applications that read data from the topics which are hosted on the brokers are called consumers. Training models can be making predictions or what is called doing inference.
+\end{itemize}
+
+\subsection{Lambda architecture}
+The most commonly deployed architecture in the industry for real time or streaming data use cases is the lambda architecture.
+
+In this setup the streaming data is first ingested into distributed streaming platform such as Kafka.
+Data from different sources is stored in several topics hosted on the kafka brokers, inside a kafka cluster.
+Simultaneously we set up a data processing job that runs continuously, reading and processing data from the Kafka topics.
+The most commonly used frameworks for processing streaming data are Spark and Flink.
+The data processing job Utilising these frameworks will output the processed data into a data lake house and, simultaneously send this data to a deployed model for making predictions.
+
+\begin{note}
+    The properties of a data lake house make it suitable for streaming data.
+\end{note}
+
+The data in the data Lake house is then used for training the models.
+What this effectively means is that hte training does not happen directly by reading the data from kafka.
+Rather by utilising the data stored in a data lake house.
+Now, once the model is trained it can be deployed on to a model serving platform.
+The deployed model then makes predictions in real time on the data that is sent by the data processing application.
+The predictions can then be used by downstream applications.
+
+\subsubsection{Examples}
+Could be dashboard that displays anomalies, or it could be that we store the predictions in a database for use in the future.
+
+\subsection{Kapppa architecture and comparison}
+Lambda architecture has several limitations.
+Kappa architecture was evolved to solve these problems.
+General opinion is that Kappa architecture should be the default for Batch, Streaming and for all Data Science projects.
+
+Reasons for this is that it caters to both batch and read time uses cases within the same template.
+Its also believed that instead of extracting data from data sources in batches, the future entails all data sources to be streaming data in real time.
+
+\subsubsection{The Kappa architecture}
+Just like the Lambda architecture relies on data sources sending their data to a streaming platform, like Kafka and similar to the Lambda architecture.
+Here too, the data is stored inside Kafka topics and hosted on Kafka Brokers.
+The difference is that model training is performed by utilising frameworks like TensorFlow which can plug in directly into Kafka and read data from the topics hosted on it.
+Kafka has a very central role in the architecture and it's common to use a technology called kafka.????
+Streams also send the data to the model for making predictions.
+Now subsequently, the data is offloaded from Kafka and stored in a data lake house for use by applications performing batch data processing.
+This data can also be used to uncover trends in the data over a longer period.
+This is in contrast to the temporary nature of data analysis in a streaming application, for example that detects anomalies in real time.
+
+\subsubsection{Lambda vs Kappa architecture.}
+Lambda architecture is more prevalent and has been around for longer time than the kappa architecture.
+Hence the know how for implementing it is more readily available over the Kappa architecture.
+Because of its maturity almost all machine learning frameworks support the lambda architecture.
+After all, you will be training models with the data that is available in a data lake house or a data lake, which is something all ML frameworks tend to support.
+
+The disadvantage of adopting the Lambda framework is that one has to read and transfer data from the Kafka topics to the Data Lake House in order to train the models.
+This can lead to some delays in the making the training data available to the models.
+This does not fall in line with the expectations, in some of the cases where customers would like to train models almost in real time.
+Such needs are quite rare though and hence the lambda architecture servers quite well for most use cases.
+The Kappa architecture has the advantage in that it caters to both batch and real time use cases.
+Though it does require that you stream all your data to a streaming data platform like Kafka, making Kafka the central data fabric of your data architecture.
+
+The disadvantage of adopting the Kappa architecture is also that not all frameworks support direct integration with Kafka.
+At the time of recording, only TensorFlow has support for such an integration.
+Additional support will be added over time.
+This means that you have additional overhead in developing and maintaining such applications.
+The belief is that we shall see more and more of this architecture being adopted.
+Expect to come across lambda architectures more often.
+
+%    \subsection{Word of caution and Resources} --- TODO find my own
+
+

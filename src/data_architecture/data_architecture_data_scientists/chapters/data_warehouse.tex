@@ -1,0 +1,99 @@
+%    TODO add additional notes from video
+
+\subsection{Introduction to Data Warehousing}
+
+\begin{note}
+    A data warehouse is the single source of truth for the entire organisation.
+\end{note}
+
+A data warehouse is generally used to store information from structured data sources.
+An organisation collects data from its operational databases and organises it inside a data warehouse, in a format you can perform analytics on.
+An operational database is one that holds transactions or data that is written by applications.
+
+\paragraph{Examples to consider}
+Examples to consider.
+\begin{item}
+    \item Could have a web shop which collects its transactions in a sales database.
+    \item CRM which stores all information in a customer database.
+\end{item}
+
+Could perform analytics directly on these operational databases.
+However, this will impact the performance of your applications.
+It will be detrimental to your business if you web shop is running slow, just because some data scientist was querying the data to explore the available features.
+It's also the case that operational databases are designed to store transactions and are not easy to query for analytical purposes. (Pretty key point)
+Operational databases are designed to be written to, whereas analytical databases need to provide more read performance.
+Analytical databases perform better when the data is stored in a columnar format, whereas operational databases are designed for storing transactions in rows.
+
+\begin{note}
+    Very key point.
+    Makes a lot of sense for any organisation to extract data from all its operational databases and store it in a data warehouse,
+    and store it in a way that makes it easy for querying by analysts and data scientists alike.
+\end{note}
+
+Companies also enrich their data warehouse with data from external sources.
+An example could be combining real time data from the internet with operational data.
+
+\subsection{Datawarehousing for data scientists}
+
+A data warehouse should have an almost perfect view of the entire organisations structured data estate.
+It can be a good place to find data to train you machine learning models.
+\begin{note}
+    If you are struggling to improve the accuracy of your model due to lack of features, it is worth looking into the data warehouse to find additional data.
+    Generally speaking users only get read access to the data warehouse.
+\end{note}
+Also, it is common to impose restrictions on the visibility of data, don't expect all access from day one.
+
+\paragraph{Data Catalog}
+Most organisations implement a \textit{data catalog} to provide you with a preview of the data products available in your organisation.
+A modern enterprise will not let the data scientists query the data directly but instead ask them to query the data directly, but instead ask them to explore the data sets via the data catalog.
+The reality is that most enterprises are not there yet so, data warehouse skills could be in demand.
+
+Once the data scientist finds the data needed for training models, he or she will request data engineering team to transfer it to a data mart or even to a feature store.
+This could be a one time transfer ot a transfer set on a schedule.
+
+\paragraph{Example}
+A data scientist might request the data engineer to schedule the transfer every week so that fresh data is available on a weekly basis for model training.
+The data scientists then use a data science platform or his/her own development environment to engineer new features or pre-process the data for the purposes of model training.
+
+From a data architecture perspective, its important to note that all these tasks are carried out inside the \textit{data mart} or a \textit{feature store} as opposed to inside a \textit{data warehouse}.
+Once a model is trained, the inference or predictions are also carried out against the \textit{data mart} or a feature store and not the data warehouse directly.
+
+Data is extracted on a set schedule, which is then sent to the model for predictions.
+The predictions are also stored in a data mart which then serves dashboards or applications that utilise the predictive capabilities.
+Over of what data warehousing typically means and also how data scientists would typically interact with it.?????
+
+\subsection{Cloud datawarehousing}
+
+\subsubsection{Old way. Data centres. Hardware bundled with proprietary software.}
+Old way. Data centres. Hardware bundled with proprietary software.
+Data centres were previously filled with these expensive stacks.
+On premise data warehouses did perform very well, and they did help organisations derive massive value.
+However companies need to make heavy upfront investments to buy, install configure and to maintain these systems and to maintain these systems.
+There is also no flexibility either.
+They would have to size the data warehouse for your heavy \quote{month end} or quarterly reporting jobs.
+This meant that hardware was unused for the rest of the time.
+
+\subsubsection{Cloud data warehousing}
+Can trace back the origin of cloud data warehousing.
+Cloud data warehouses are hosted natively on public cloud infrastructure as opposed to hardware hosted on premise.
+By this it is meant that compute memory and storage managed by the cloud providers.
+Moreover, they are usually fully managed and hence you don't need staff to manage this infrastructure or perform software updates for that matter.
+All this is managed for you as a bundled service.
+This means you can focus on the more important takes, such as loading the data warehouse and extracting the data out of it.
+
+\subsubsection{What differentiates cloud data warehousing from traditional data warehousing}
+What differentiates cloud data warehousing from traditional data warehousing is:
+Number one, the decoupling of compute and storage, which makes it flexible to have different sizes of data warehouses for different needs and that too is on demand.
+Is you have to run a monthly reporting on your data, you can spin up a large data warehouse.
+Once that report is done, you can terminate the instance or scale it down to a smaller instance for your day-to-day needs.
+
+\subsubsection{Example: Snowflake}
+Snowflake is a popular cloud data warehousing technology.
+Uses t-shirt sizing for its sizing in order to make it easier for users to choose the appropriate size for the appropriate time.
+Modern cloud data warehousing also supports semi-structured data natively.
+Software vendors are trying to support more and more data types making it easy for customers to have just one technology for all data types.
+Technology like Snowflake, also strives to cater to multiple use cases.
+Instead of using a separate technology for configuring a data mart, feature store and a data warehouse.
+The flexibility Snowflake provides allows you to use it for all three purposes.
+
+While specialised feature stores do have an edge, snowflake offers to integrate with them and thus offers the best of both worlds.

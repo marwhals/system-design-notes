@@ -1,0 +1,223 @@
+%    TODO add additional notes
+
+\subsection{Intoduction to Data Mesh}
+Establishing the right amount of data governance can be tricky.
+If you enforce no governance, your entire data lake or data warehouse will turn into a big mess and discovering useful data sets might become impossible.
+
+\begin{note}
+    There are also regulatory concerns, which obliges you do delete someone's data if you are requested to do so.
+    Without data governance you organisation could end up paying millions in fines and face prosecution.
+\end{note}
+The other extreme is having everyone and every project get approvals from a central data team prior to providing access to data.
+It also involves constant audits with a burden on the business orientated technology teams to provides evidence of their controls.
+While this keeps your data team in control of every decision being made with respect to data governance; it makes innovation impossible.
+Primarily due to the delays in accessing data and the data infrastructure and not just for new project but for existing projects.
+
+The idea of a \textit{data mesh} is therefore to strike a balance between the amount of control and the pace required to keep up with innovation and business requirements in side an organisation.
+
+Data mesh is an evolving concept.
+At its core.
+The goal of domain ownership is to reduce the hops between the data producers and the data consumers, by decentralising certain aspects of data governance.
+It's important to start promoting \textit{data as a product thinking} across you entire organisation.
+
+\subsubsection{Data as a product thinking}
+\begin{itemize}
+    \item A data product is a data set that is discoverable, trustworthy and most importantly valuable on its own.
+    \item If all technology decisions need to go through a lengthy approval process, this would make building data products incredibly slow.
+    \item It's important to create a self serve platform which has pre-approved architecture and is provisioned automatically.
+\end{itemize}
+
+\subsubsection{Decentralised data governance policies.}
+Make sure that noone is awaiting the data team's approvals for accessing data or even publishing data products in the data catalog.
+Data should be checked automatically based on predefined policies and compliance checks need to be done with the help of automation.
+Technology is available to implement such automation such that it facilitates establishing all the four principles that have been described without the need for human intervention.
+What is actually needed is the organisation will change the culture to make it happen.????
+
+\subsection{Data mesh principles: Domain ownership and data as a product}
+If you do not have a data mesh implemented in an organisation then the situation might resemble the illustration (add diagram)
+All the responsibility of extracting, processing and governing the data therefore lies solely in the hands of the central data team.
+All the stakeholders who would benefit from having access to data need to consult the central data team.
+
+\begin{note}
+    Be aware of how long it take for access to the data in such an organisational structure.
+\end{note}
+
+\subsubsection{Data mesh}
+The data mesh on the other hand relies on the principle of \textit{domain ownership} of the data.
+You have the \textit{source domain}, which is the organisation that produces the data.
+This could be a product team that has created some microservices.
+
+Essentially, these are the people running the operating systems and maintaining the operational databases.
+Followed by the source domain is the \textit{consumer domain}.
+This is the organisation that consumes the data for analytical purposes.
+
+\subsubsection{Example}
+Data is produced by the web shop is consumed by the marketing analytics team, would in turn created data products that will be consumed by the data consuming applications.
+By that it is meant dashboards and business KPIs.
+The ownership of maintaining the source data lies with the source domain and the ownership of the analytics data.
+Product lies with the consumer domain.
+The reason for not combining the two domains is that the folks in the source domain area already burdened with work relating to keeping the applications running 24-7.
+It's also a fact that these people are no experts in analytics.
+In essence we are getting rid of the need for a central data team to make decisions and act on them.
+If the source domain makes changes to their application and starts producing data in a different format, the consumer domain can directly communicate with them and decide on the course of action.
+Empowering this entire structure is the \textit{domain agnostic data platform}, which offers self-service tools to all the domain and data consuming applications.
+There ism thus still a need to have a central team whose responsibility now is to create automation and standard practices that empower the domain teams.
+By doing so the central team now acts as a facilitator and not as an inhibitor.
+
+\subsubsection{Promoting data as product thinking}
+Promoting data as product thinking
+To understand this, we need to outline the role of a data product owner.
+A data product owner has end to end ownership of maintaining the value of the data product.
+
+Product owners therefore need to be incentives to maintain and also augment the value of the product they are responsible for.
+They are also responsible for improving the discoverability or their assets.
+Future trend. Data product owners. (Author opinion)
+
+\subsection{Data mesh principles: Self service and federated governance}
+There is a some amount of centralisation, even in a decentralised approach like a data method.
+The data platform team now has the responsibility of creating self-service tools as part of the domain agnostic data platform.
+These tools will help domain teams create and maintain their data products independently.
+The data platform team creates a self provisioning unit of the platform, which has the essential storage and computer technologies needed for storing and processing the data.
+There also come with automated polices which will ensure that the infrastructure is used as per the security guidelines of the organisations.
+
+\subsubsection{Example}
+The self provisioning unit will contain a policy which prevents you form making the contents of your cloud storage bucket public.
+What this essentially means is that it will inhibit the domain teams from accidentally or intentionally making the data visible on the internet, and thus preventing it from landing in the hands of hackers and other malicious elements.
+
+\subsubsection{Federated computational governance}
+What is essentially means is that the data mesh does not rely on manual checks and audits to enforce governance because if you had manual checks and audits it would again slow down the innovation that relies on data.
+Instead, the data mesh relies on technology to detect and enforce the relevant policies and prevent the misuse of data.
+It also makes sure that the data products have the necessary metadata so that they are easily discoverable.
+
+\paragraph{Examples}
+Your data platform team might create a policy which check for personal data prior to authorising permission for use of this data in machine learning projects.
+Using personal data in machine learning projects makes them subject to additional compliance requirements and hence it's best to use features that don't contain personal information to train machine learning models.
+
+Another example would be to enforce mandatory information to the metadata of a dataset.
+\begin{itemize}
+    \item This helps you to better discover the dataset when it's published in the data catalog.
+    \item This helps you to better discover the dataset when it's published in the data catalog.
+    \item This information should help you decide if an organisation is in need of a data mesh or not.
+\end{itemize}
+
+\subsection{Data Catalog}
+The data catalog is ideally the only place you need to visit to find, understand and govern data.
+
+\subsubsection{How would you know if some data exists?}
+In the traditional approach, you would ask your colleagues or search for some documentation on your intranet to seek such information.
+Could give your employees full access to their data infrastructure for them to find such information.
+This can be quite risky approach from the perspective of data governance.
+A better approach is to establish a data catalog.
+Publish your data in a catalog.
+
+\subsubsection{The top three features a data catalog is expected to fulfil are}
+\begin{itemize}
+    \item Data search and discovery.\ It should aid users to simply search for information and find data products that might contain the data they need. Once the user finds the data product, the data catalog usually provides a preview of the data set with some sample data that helps the user understand if this is useful for their next project.
+    \item Next up, data catalogs can display the metadata of the data set, for example the freshness, the frequency of updates and sometimes the metrics on data quality. This means you can ensure that your project is accessing the best and the most trusted data source that your organisation has access to.
+    \item You could also enforce data governance via the data catalog. The data catalog could detect if the data set has personal data and tag it as not fit for machine learning projects.
+\end{itemize}
+
+Ultimately, the data catalog facilitates collaboration.
+The best data catalog software out there provides the capability of adding wiki like pages to your data products.
+You could also leave comments next to the product page to build tribal knowledge about the data set, which might prove useful to the entire company and not just your team.
+See google big query.
+
+\begin{note}
+    Data catalogs are a big topic.
+\end{note}
+
+\subsection{Data Contract}
+Revisit the principles of a data mesh within a data mesh frameworks.
+The source domain, or the creator of the data provides data to the consumer domain.
+The relationship necessitates that the consumer domain relies on the source domain to maintain the data schema or format.
+Consequently, the consumer domain in turn serves as a source for applications that consume data from the domain, establishing a provider-consumer relationship between entities within an organisation.
+Now, this structure facilitates the creation of data products that are both independent and autonomous.
+However, it also introduces the risk of changes that occur in one domain adversely affecting another.
+
+\subsubsection{Example}
+If the source domain decides to delete a column from the data set it was maintaining, applications or data pipelines in the consumer domain will fail due to their reliance on that columns' presence.
+To mitigate such risks while preserving autonomy, the concept of a \textit{data contract} has been introduced.
+Data contracts act as intermediaries between domains to ensure that no breaking changes are made by one domain that could negatively impact another.
+Data contracts are a set of rules designed to maintain harmony between the domains.
+Verbal contracts involve agreements on data creation and maintenance to prevent pipeline disruptions.
+However, the reliability of verbal agreement is questionable in today's context.
+Written contracts offer a more tangible solution by documenting the agreed upon schema and data types.
+Written contracts are simply some data documents that are written rules that are maintained on a wiki page or confluence.
+Though without enforcement, the risk of non-compliance remains.
+
+Automated contracts therefore emerge as the optimal solution.
+They act as checks and balances, verifying alignment with agreed upon formats as data is created, written, read and thus preventing unplanned outages and ensuring integrity of data products.
+
+\subsubsection{Sample data contract}
+Uses YAML like syntax.
+INSERT EXAMPLE
+Can use regular expressions to enhance the robustness of these verifications.
+Goal: to consider is target data cleaning and enhance the quality of the data set.
+Scrutiny is very important for the analysis of data that is relies on stability and consistency of relationship over time.
+Data contracts can span from a few lines to extensive documents, pointing a future where advancements might enable large language models to autonomously generate data contracts based on data set observations.
+Enforcing these automated data contracts is a critical step in the process.
+When the source domain contributes data to a data lake or data lake house, it must pass through these automated validations to ensure compliance with the desired formate.
+Similarly, when the target domain retrieves data, it undergoes a verification process via the data contracts; guaranteeing that the extraction aligns with pre-established agreements.
+
+Used data contacts to enforce quality of data (check)
+
+\subsection{Data Fabric}
+Architectural framework that has emerged from the data mesh. \textbf{Data fabric}.
+Helps implement the ideals of the data mesh.
+When implementing a data mesh in an organisation, the goal is to democratize data and analytics, which allows for the extraction of value from data.
+This approach lets business units choose the tech stack they are most comfortable with.
+Ideally there should be a standardized tech stack within the organisation, but in reality organisations often have diverse tech stacks.
+
+\subsubsection{Tech stack diversity challenges}
+This diversity leads to various challenges.
+
+\begin{itemize}
+    \item First challenge is data silos. Each team may have its own infrastructure creating data silos. Works fine in a department, but hinders collaboration and creation of cross departmental data products.
+    \item The second challenge is data duplication. Creating data products from different departments often requires copying data into new infrastructure leading to multiple data copies. This duplication increases costs and governance overhead. Different departments might store data in various formats, requiring extra efforts to unify these formats for analysis.
+    \item User experience is another challenge. Diverse technologies mean users must learn new tools and languages to access different data sets. This slows down analysis and reduced efficiency. Additionally, each department has its own authentication framework and this complicates access control for integrated data products.
+    \item Security and governance is also a challenge. Different technologies have a unique security and governance implementation and unifying these controls across an organisation can be extremely challenging.
+    \item Monitoring and managing audit logs can be complicated due to the requirement to gather them from diverse technologies.
+    \item Billing and licensing across a diverse data landscape can make it hard to visualise the costs and keep control on it.
+\end{itemize}
+
+To address these challenges, technology providers have developed the concept of a \textit{data fabric}.
+This framework overlays existing environments, whether they are on premise, cloud or hybrid without requiring data migration.
+It aims to make the governance more sustainable.
+
+In the Data Fabric architecture, data can be hosted in various environments such as data lakes, data warehouse, databases and big data infrastructure.
+The first step is the automated collection of metadata from all the data sources.
+Building a semantic layer on top of this metadata is crucial.
+This layer creates business specific data models, allowing for, e.g.\ sales and marketing teams to create different data models using the same data set.
+A knowledge graph connects data across data sets, creating a graph of entities and their relationships.
+Data catalog and profiling tools help managed and organisation the data.
+The semantic inference layer, powered by AI and ML allows users to query the data using natural language, making it easy to interact with the data.
+Data virtualization unifies access to data across, different technologies enabling users to run queries without learning new languages.
+The semantic query layer simplifies data queries with interfaces similar to ChatGPT\@.
+
+These are the benefits of the data fabric and they are very significant.
+
+It enables effective data governance processes and reduces the effort needed for data integration, since data is not moved between silos.
+Now business users can easily discover and access data; improving business processes while data scientists can use data across silos to create recommendations and machine learning applications.
+
+Overall the data fabric framework enhances the ability ot manage and utilise data across the organisation.
+
+\subsubsection{Summary}
+The data fabric addresses the challenges of implementing a data mesh by providing a unified layer for data governance, access and integration.
+This ensures that data remains accessible and useful across the organisation regardless of the underlying technology stack.
+
+Azure Fabric.
+Admin users can access a view of all data assets.
+One data lake can abstract everything and provide you with a universal way of accessing that data.
+
+You have monitoring.
+Here you can see the audit logs which are gathered from all the users actions that happen on the platform.
+You have the real time hub where you can actually integrate real time data streams into your databases or into your data lakes.
+You have workspaces that allow you to collaborate on your data sets with other departments etc.
+
+Semantic data models.
+Basically create a business view form a business perspective. The view can be shared with others.
+
+There also generative AI components. Can be used to create the charts automatically.
+
+TODO - checkout microsoft fabric
+

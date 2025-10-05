@@ -1,0 +1,42 @@
+\subsection{Motivation - Why learn data architecture}
+\begin{itemize}
+    \item Create models that have the potential to deliver high impact on an organisations performance
+    \item Many of these models fail to make an impact because you are unable to connect them to the right sources.
+    \item Connecting to the right data source is important so that the models train on the right data sets, that represent the business problem and thereby improving their accuracy and also removing any bias they might display in production.
+    \item Data engineers and Data architects are actually responsible for ensuring models get access to the right data.
+    \item The reality though is that they require advice and guidance from the Data scientists to ensure this does become a reality.
+    \item Knowing data architecture will also help plan projects in such a way.
+\end{itemize}
+%\bigskip ---add if I need the space
+Important to plan ahead.
+Allows for notebook dreams to become highly impactful applications.
+
+\begin{note}
+    Data architecture is outside the core competency of a Data scientist’s roles and responsibility.
+\end{note}
+
+\begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[
+        node distance=2cm,
+        box/.style={rectangle, draw, rounded corners, minimum width=3cm, minimum height=1cm, align=center},
+        arrow/.style={-Latex}
+    ]
+
+        \node[box] (data) {Raw Data};
+        \node[box, below=of data] (integration) {Data Integration};
+        \node[box, below=of integration] (lake) {Data Lake};
+        \node[box, right=of lake] (warehouse) {Data Warehouse};
+        \node[box, below=of lake] (analytics) {Analytics};
+
+        \draw[arrow] (data) -- (integration);
+        \draw[arrow] (integration) -- (lake);
+        \draw[arrow] (lake) -- (warehouse);
+        \draw[arrow] (lake) -- (analytics);
+
+    \end{tikzpicture}
+    \caption{Simplified Data Flow Diagram}
+    \label{fig:dataflow}
+\end{figure}
+
+

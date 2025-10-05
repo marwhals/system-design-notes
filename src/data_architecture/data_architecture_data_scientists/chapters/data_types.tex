@@ -1,0 +1,125 @@
+\subsection{Structured data}
+
+Structured data typically constitutes only 20\% of the total data volume an organisation produces or has access to.
+Many organisations have reached a reasonable level of maturity in dealing with structured data.
+It is important to understand how structured data is managed by your data engineering team.
+
+Structured data can be found in database tables, CSV files and Excel spreadsheets.
+It is typically organised into rows and columns.
+The columns contain the features you need to train your model and the rows contain the observations.
+The ultimate goal of a data architect or a data engineering team is to extract structured data from the different sources and load it into the \textit{data warehouse}.
+Since a data warehouse is supposed to have very accurate information, it is not permitted to load data that is unclean or incomplete.
+Hence structured data is first loaded into staging tables where data engineers perform cleansing operations, an example of such an operations is replacing null values in all the columns.
+Staging tables may also be used to join data from different sources and unify them into a single table.
+They may be used to also enrich existing data with information from an external data source or multiple external data sources.
+
+All in all the staging tables serve as a playground for the data engineer to transform the data and make it ready for loading the data into the warehouse.
+The data engineer may choose to retain teh staging tables permanently or just generate them dynamically as needed.
+
+Generally speaking, the data scientists will not have access to the staging tables.
+Once the data is clean unified and enriched, it is read to be loaded into a data warehouse.
+
+\begin{note}
+    \textbf{Very important}: A data warehouse represents the single source of truth for the entire organisation.
+\end{note}
+
+\paragraph{Example}
+The Management of a company wants to know total sales for a month.
+They expect that business analysts can make a query to the data warehouse and get the answer.
+The data scientist generally has just read access to the data warehouse and is allowed just conditional access to certain tables, for exploring the possibility of finding features for data science use cases.
+Once the features are found the data engineer and not the data scientist transfers the required data into what is called a \textit{data mart}.
+The data mart contains a copy of the data that is available in the data warehouse and is refreshed either on request or as per a predefined schedule.
+
+Now, the data scientists usually has full access to the data mart and allowed to do further pre-precessing and manipulation of the contents.
+Once the data scientist trains the models.
+Data marts are again used to store the data that is used for making predictions and the predictions themselves are also stored inside the data mart, from where it's picked up by applications or just the dashboard tools.
+
+\subsection{Unstructured data}
+Most organisations are still learning to extract and derive business value form this type of data.
+The most common types of unstructured data are images, video, audio and text.
+Organisations are starting to find a lot of value in analysing text.
+There is also computer vision
+There is text to speech or speech to text which can transcribe conversations into text for further analysis.
+
+\begin{note}
+    Natural language processing is trendy.........ChatGPT etc....
+\end{note}
+
+Unstructured data is more than 80\% of the data your organisation produces or has access to it needs a storage medium which iis economical easy to write to.
+This is where the concept of a \textit{data lake} comes into prominence.
+Unstructured data typically lands into a data lake.
+Once data lands in a data lake, it's available for pre-processing and processing by big data frameworks.
+
+Unstructured data needs a lot of processing prior to being useful for data science projects.
+Since the volume of this data is huge specialised processing frameworks have evolved over time to manage this challenge.
+The typical processing activity includes the scaling of images to allow machine learning algorithms to viably learn from them or extraction if text from audio.
+For video footage, video annotation is necessary prior to training models to learn from others.
+\textit{For NLP use cases then tokenization of text is necessary to produce useful models.}
+
+To perform all these processing tasks, big data frameworks such as Hadoop, Spark and Apache Beam are commonly used.
+All these frameworks are capable of reading data from the data lake, processing it and then writing the results back to the data lake.
+It is important to know that they are capable or reading and writing to the data lake.
+
+\subsubsection{NoSQL}
+NoSQL databases are designed to handle a variety of data models and not just tables and rows with columns.
+They can be used to store unstructured data.
+This can become very expensive since data has to be stored on expensive disks for performance reasons.
+
+\begin{note}
+    Best Practice: is to keep unstructured data in a data lake and store the metadata in a NoSQL database.
+    This makes it faster to analyse the properties of the images and fetch only those images that fit the criteria.
+\end{note}
+
+\subsection{Semi-structured data}
+This data has some structure but is not confined to just rows and columns.
+You can define the hierarchy and structure using tags and markers.
+HTML is also a form of semi-structured data where various elements are separated by tags such as title and body.
+Weblogs are generally produced in the JSON format where JSON stands for JavaScript object notation.
+Data from sensors is also generally produced in JSON and sometimes in the XML format.
+Both these formats have implemented tags or markers which help define a structure and this makes it possible to read them.
+No two datasets will have the exact same structure or even the same hierarchy.
+This makes it easy to write such datasets as developers do not need to confine themselves to a specific structure.
+Becomes challenging for those who read such files most of the time, since the structure needs to be inferred from the files by the reader.
+
+\begin{note}
+    Key Note: Since storing and processing semi structured data from plain text files makes it compute intensive to process, specialised file formats such as ORC, Parquet and Avro have evolved.
+    These file formats are designed to store data in a columnar format which makes it easier and faster to perform analytics on.
+\end{note}
+
+\subsubsection{Example}
+If you with to calculate the total temperature from data generated by a sensor it would be easier if the entire temperature was stored in the same file.
+
+\begin{note}
+    Important: If you are dealing with semi structured data in large volumes its best to store them in on of the big data formats.
+\end{note}
+
+Semi-structured data can be stored in the data lake or in a NoSQL database.
+Both are suitable for storing semi-structured data.
+
+\paragraph{Typical Flow}
+Typical flow:
+\begin{itemize}
+    \item First store the semi-structured data in the data lake and then process it using big data frameworks and then store the data in a NoSQL database.
+    \item Once the big data frameworks have cleaned and formatted the data from the data lake, it could then be stored in the NoSQL database.
+    \item Storing semi-structured data in a NoSQL database makes it easily accessible by applications and users a like.
+    \item Hence, the NoSQL database serves as a good serving layer for the semi strcutured data.
+\end{itemize}
+
+\subsection{Short explaination of JSON and XML structures}
+JSON - Key value pairs.
+XML - Like HTML but not pretty.
+
+\subsection{Semi-Structured data in machine learninig}
+No machine learning framework accepts data in a semi structured format (see ChatGPT)
+Semi-structured data is usually flattened into a structured format prior to being used in model training.
+Flattening is the process of inferring the schema of the dataset and then presenting the required fields in a structured format that is in rows and columns.
+Once the data set is flattened you can use the dataset for training models.
+It is not essentially a flattened dataset.
+
+\subsubsection{Inference - Do predictions on a deployed model}
+
+Most of the model serving frameworks accept JSON as an input and also generally output the predictions in the JSON format.
+Hence no flattening is needed on the inference side of the machine learning workflow.
+
+%    TODO see example of data being flattened in python
+

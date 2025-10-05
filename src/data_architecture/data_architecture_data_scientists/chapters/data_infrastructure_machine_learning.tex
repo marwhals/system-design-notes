@@ -1,0 +1,59 @@
+
+\subsection{Feature Store}
+Several tools have emerged to improve the efficiency of machine learning workflows.
+
+TODO see diagram
+Will observe that for each use case, the features have to be extracted and engineered separately.
+Not only that, engineered features cannot be reused in multiple use cases.
+Instead, its common practice that each data scientist or data scientists within a team perform feature discovery and feature engineering every time they embark on developing a use case.
+That can be a colossal waste of time and effort.
+This is when it makes sense to implement a \text{feature store}.
+A Data scientist could request to the data engineering team to extract the required features form the data warehouse or the data lake and the perform feature engineering inside the feature store.
+This speeds up the machine learning life cycle considerably.
+First it reduces the dependency on the data engineering team to repeatedly extract a feature for you.
+Once you have identified the features, you could request the data engineering team to setup a pipeline to extract and load the features into a feature store on a set schedule.
+Once the features are available in the feature store, you as a data scientist could engineer new features independently of the data engineering team.
+Having a feature store, also aids in collaboration with other data scientists in your organisation.
+The effort you have put into engineering features can be reused by your colleagues and vice versa.
+You could find and reuse feature engineered by your peers and save a ton of effort while still improving the accuracy of your model considerably .
+Now the feature stores are not just useful in speeding up use-case development or model training but also sometimes or even imperative on the inference side.
+
+When I say the inference side, I mean the phase where you have deployed the model and where it is making predictions.
+
+\subsubsection{Example: Payments fraud detection is a common use case in the banking and finance domain}
+Whenever a transaction is made it is sent to the model that is deployed to classify your transaction as either safe or as fraudulent.
+To make this classification, it is not enough to just give the model details of the transaction.
+If the model were to make the decisions based on just the transaction information, it will very likely classify it as a false positive or false negative.
+If you provide the model additional features such as a location, engagement data device mapping etc you could get better classifications.
+Without a feature store, the inference pipeline would have to gather and compare all these features form different data sources.
+It would be an impossible task.
+Rather, what is generally recommended is to gather and compute all the necessary features at least on a daily basis.
+Each night data pipelines will extract and engineers the features for each customer record and the store is in the feature store.
+Then when the transaction is actually made all that has to be done to combine the information with the ready made features inside the feature store.
+Having the feature store is also important because the prediction for such a use-case needs to be made in a few milliseconds.
+I.e that is in real time.
+Without the features being present in the feature store, it would be nearly impossible to make all these computations in a few seconds or even a few minutes.
+
+\subsection{Vector Databases}
+Vector databases are designed to store the embeddings of different types of data like text, audio and images.
+You could also create vector embeddings of videos as well.
+Not only that, vector databases allow you to perform a \textit{vector similarity} search to find similar vectors.
+To understand vector databases, we need to understand what a vector embedding is.
+Simply put, a vector is a special way of showing information about something using numbers.
+Essentially, they are a set of numbers that capture the meaning and relationships between different items.
+
+The resulting vector embeddings can be used in a variety of natural language processing tasks such as sentiment analysis, machine translation and text classification.
+There are other neural networks, each specialised in creating embeddings for different types of data.
+
+Once content is vectorised, you can perform a vector similarity search on a database of vectors.
+There are various types of vector search techniques, not just one.\ One example.......cosine similarity.\ Use an angle to measure how similar things are.
+
+\begin{note}
+    That most text embeddings will be at least a few hundred dimensions instead of just two.
+\end{note}
+
+\subsubsection{Useful Examples}
+Can use it for finding similar images based on their vector embeddings.
+Same with text.
+Can also be done with semantic content in documents.
+Can be used in law enforcement etc.
