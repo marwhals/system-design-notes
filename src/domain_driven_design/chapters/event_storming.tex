@@ -1,0 +1,268 @@
+Events occur naturally in domains.
+What that means is that to understand the domain, you must understand the events consumed in the domain.
+Event storming is a collaborative exercise that is carried out by the stakeholders to identify the events, producers and consumers in a given scope.
+The objective is to create a shared understanding of the domain.
+The outcome of the exercise is a knowledge model for the domain.
+Event storming is carried out in the workshop format.
+There is a facilitator who works with the stakeholders from different parts of the organisation or different parts of the domain.
+
+This workshop may be carried out in person or online using collaboration tools in one of the lectures.
+
+
+\section{Introduction to Event Storming}
+
+Knowledge crunching is a way by which teams process the knowledge received from the domain experts into a domain model.
+
+How do receive the knowledge from the domain experts?
+- Interviews
+- Design thinking (from domain driven design)
+
+Common technique called event storming. (Just examples)
+
+Other ways in which you can receive knowledge from the domain experts in a structured manner.
+My focus here is on event storming.
+A formal definition of event storming is a collaborative, workshop based technique for creating a shared understanding of complex business domains and processes.
+Key to realises that this is creating a shared understanding.
+
+The intent is not to design and model the system but to just create a shared understanding among the stakeholders within the domain, and the stakeholders are the business experts as well as the technology experts.
+Event storming may be used for creating this shared understanding from the overall perspective or the big picture perspective as well as it can be used for creating the shared knowledge from a business process perspective.
+The technique for this is quite flexible in terms of what it can be used for.
+The central theme is business events.
+
+The participants in the workshop identify and understand the business events.
+They look for the cause of the business events as well as the effect of those business events.
+- Technique was created by Alberto Brandolini in 2012 %popular amongst the practitioners.%
+\textbf{Biggest benefit of this technique is that it accelerates the development process for complex applications}
+One important think to keep in mind is that the knowledge created by way of event storming is used as an input for creating the models.
+In other words, you will not be replacing modelling with event storming as an input for creating your UML diagrams. See book about event storming.
+
+\subsubsection{The workshop}
+The most important thing about the event storming workshop is that you must invite the right set of domain experts.
+There is a dedicated facilitator who works with the participants.
+This dedicated facilitator should have some prior experience with event storming.
+The number of participants in the workshop is dedicated by the scope.
+If you are carrying out the event storming workshop for understanding the business process then you should expect have between 4 and 8 participants in the workshop.
+The duration of the workshop depends on the scope of the domain and the experience of the participants.
+It may vary anywhere from a couple of hours to a couple of days.
+In-person workshop is preferred over online workshops and the reasons is that event storming involves a lot of interactions when the participants are in the same room.
+
+Recently online workshops have also become commonplace and are becoming more acceptable.
+Good tools to carry these out online.
+
+An in-person workshop is conducted in a spacious room with a lot of walking area.
+This room must offer enough free space on walls to hang the plot of paper so that the participants have unlimited modelling space.
+I.e they will not have to stop throwing their ideas on the plot of paper due to running out of the space for it.
+Participants will be using a lot of different colored stickies.
+At the end of the workshop, the walls will have plotter paper hanging of the walls and there will be a lot of stickies on it.
+The stickies on the plotter paper, are color coded.
+
+For an online workshop, participants join over a video call and use a collaboration platform for carrying out the event Storming activities.
+
+All the participants can make changes to a common virtual board and these changes are visible to other participants in real time.
+There are many collaboration platforms that allow the participants to do exactly that.
+
+The expected output form the workshop is the creation of a shared understanding of the business process.
+The shared understanding is then used for the modelling of the domain.
+
+The objective is not to design to the system.
+The objective is not to be able to answer all the questions.
+It is not to produce the domain driven design models.
+
+Event storming is a collaborative process for creating share understanding of the domain or the business process.
+
+Event storming is carried out in a facilitated workshop format and it may conducted in person or online.
+
+
+\section{Elements of Event Storming}
+
+Read the book by alberto....
+
+Business events are natural in all domains.
+They are the starting point of the conversation in an event storming workshop.
+An important point to note is that all business events are referred to is that all business events are referred to as the domain events in the context of event storming.
+The objective of the event Storming workshop is to understand the causation.
+What this means is that the participants discuss the domain events to understand the cause of those events and then they also discuss the effect of those events.
+
+This cause and effect is depicted as teh knowledge of the domain by using the six basic elements.
+
+There are six building blocks or elements which are used for depicting the knowledge or flow in an event storming workshop.
+Color coded stickies are used to represent each of the six elements.
+There is a suggested standard for the colors of these stickies or the elements, specific colors are not required.
+
+You can decide on a standard for the colors of these stickies or the elements but you don't have to follow it as long as you are consistent through out the workshop.
+- A domain actor causes a state change in the domain and this state change is initiated by way of a command invoked by the actor.
+- This state change is initiated by way of a command invoked by the actor.
+- Command is represented by a blue sticky on the workspace.
+- This command leads to the raising of domain events, a domain event is a representation of some fact that has already happened.
+- A domain event is represented in the workspace as an orange sticky.
+- When the domain event is raised, it may lead to a reaction, and this reaction is carried out by way of component that is referred to as the policy.
+- This policy is represented by way of a purple sticky..
+-- Since domain events represent something that has happened in the past, they should always be named in past tense.
+
+Important to understand that a command is abstract.
+That is , it does not represent an active component within the domain.
+It simply represents the intent of an actor that must be carried out by the domain.
+
+Business logic execution is carrier out in the command processes in the context of event storming.
+The element that carries out the processing of the command is referred to as the aggregate.
+
+The element that carries out the processing of the command is referred to as the aggregate.
+An aggregate is represented by way of a yellow sticky.
+Apart from the command, an external system or service can also be a source of an event.
+
+Think of the external service as something outside the domain under consideration.
+Such external services are represented by a pink sticky.
+
+An event is directly or indirectly associated within a domain.
+A state change represents some kind of change in data within that domain.
+This data may be of interest to the stakeholder, so the way it works within event storming is that event has some data which is represented by a read model.
+This read model is the response to queries for the domain data.
+The read model is used by the user interface that the stakeholders can use.
+- This user can be an email
+- Doesn't have to be a pane of glass showing the data.
+- It can be a dashboard for the executor or it can definitely be a browser based application during the event Storming workshop.
+The read model is presented by way of a green sticky.
+It is also referred to as the.
+It is also referred to as the event data model or query model.
+They key point to keep in mind is that event has some data which is of value to the stakeholders and this read model repsents that data.
+
+\subsubsection{Summary}
+Central idea is the domain event.
+The domain event is caused by a command which is processed by the aggregate domain.
+Event may also be caused by a command which is processed by the aggregate domain.
+Event may also be caused by a command being processed by an external service.
+The effect of the domain event is realised by way of a policy that is triggered by the domain event.
+This policy may further invoke commands that may lead to other domain events.
+Domain event has some data of value to the stakeholder.
+The data of value is represented by way of a read model.
+This read model may drive a user interface.
+
+
+\section{Preparing for the ES workshop}
+
+Common for large organisations to hire outside consultants to carry out the facilitation.
+(Author says you don't need them.....)
+
+Existing team members such as project managers and Scrum masters can easily be trained to become event storming workshop facilitators.
+Bottom line is anyone can learn to become a facilitator by observing experienced facilitators and by practicing.
+
+Make the assumption here that the facilitator is identified and the participants have been invited.
+What does the facilitator have to do next?
+Prepare the room for the in-person workshop, or if it is a remote workshop then they need to ensure that all the tools are ready to go.
+Second thing they need to do is on the day of the workshop, educate the participant on what is the event storming workshop.
+
+Define the scope of the workshop. Make sure all the participants are on the same page in terms of which business process or processes are in the scope of the worksop.
+Then level set the expectation by discussing the expected outcome.
+Once these tasks have been completed by the facilitator, its time for the facilitator to dive in.
+
+Details of each task.
+To set the stage for an in-person workshop, you need to make sure that the room that you're using is spacious.
+Move all tables and chairs out of the way.
+Reasons for this is to provide space for the participants to move around and hang the plot of paper on the walls with masking take and then draw a timeline from left to right.
+The number of plotter papers that you will hang on the wall will depend on the scope of the exercise.
+Don't have to hang the plot of paper all around the room, you can do it as you go along.
+Idea is to be prepared to set up the stage for a remote workshop, ensure that all the tools are ready to go at least two days prior to the workshop.
+Ensure that all the tools are ready to go at least two days prior to the workshop.
+I.e have the video conferencing setup.
+Must have the tools for the collaboration setup, create a board and make sure all teh participants are able to connect to the video conference and they are able to use the collaboration tools as well.
+--> Avoid addressing technical challenges faced by the participants. This can be a dampener.
+---> make sure everything is working from day one before the workshop starts.
+
+May have a group of participants who are already experienced with the event storming, but there is no harm in spending a few minutes reminding everyone as to what is involved in the workshop and as part of this education do not use any technical terms.
+Specifically do not talk about domain driven design.
+Keep it business focused.
+Note, participants are no necessarily technologists.
+Discuss, the purpose of colored stickies and the workspace, but you don't have to spend too much time on these aspects as participants will learn as you processed through the workshop.
+Something that really helps is put all the colored stickies and what they represent somewhere in the workspace so that it is visible to anyone who has a question about what color to use, which is an extremely common question.
+
+In the beginning of the wrokshop, after the general overview of event storming, it is time for the facilitator to define the workshop, after the general overview of event storming, it is time for the facilitator to define the scope of the workshop.
+The scope of the workshop may be a big picture from the domain perspective, or it may be a single business process.
+Irrespective of what the scope is.
+It is important for all participants in the room to be on the sme page and ensure that everyone stays on track.
+Place the high level objective for the workshop in the workspace so that it is visible at all times.
+
+Another thing that is important is that as you will start going through the workshop, it is very much possible that there may be discussions around aspects which are out of scope from the workshop perspective, but they may be valuable from the domain perspective.
+As a result, you don't want to lose out those aspects, so create a dedicated space to list out all of these out of scope elements.
+You can follow up on these items after the workshop.
+
+Facilitator, before the workshop is set the expectations and this is best done by way of sharing real experienced from the past workshops and if possible, sharing pictures form those workshops.
+These expectations should be realistic.
+
+Engage the participants and ask them what their thoughts are on the event storming workshop a swell as on what they expect.
+Idea is to get everyone excited so that they become active participants in the workshop and they should all be looking forward to learning and teaching.
+Use this part of the workshop for ice breaking activities.
+At this time, the facilitator is ready to dive in.
+One of the important roles for the facilitator is to make sure that everyone is having fun and is energised because low energy will lead to an outcome which is going to be of bad quality.
+Participants must feel engaged.
+Participants must be active throughout the workshop, so a facilitator must keep those aspects in mind.
+
+
+\section{Conducting the ES Workshop}
+
+Facilitators must keep in mind that event storming doesn't require the participants to use all of the elements to create the knowledge model.
+It is the facilitators job to help the participants pick up the relevant elements to design the knowledge model.
+A lot of flexibility in how the event storming workshop is conducted.
+
+Facilitator may adjust the steps, the flow and the pace as needed.
+These adjustments depend on multiple facts such as the facilitators and participants, past experiences, complexity of the domain and granularity of the knowledge model.
+Whether it is going to be high level or whether it's going to be detailed.
+There may be other factors as well.
+
+General steps.
+The first step involved in the workshop prioritises the participants to identify the domain events.
+Once the domain events have been identified
+
+as a next step, participants discuss the ordering of the events across the timeline.
+In this step, duplicate events are also revealed and removed.
+
+In the third step participants are asked to identify the cause and effects of events.
+Here commands, policies and external services get added to the knowledge model.
+
+In the fourth step, the commands are associated with the aggregates.
+
+---------
+
+First step in the knowledge gathering exercise.
+The facilitator asks the participants to brainstorm and hang as many events as possible in the workspace.
+Initially participants may be hesitant.
+This is common so it is suggested that the facilitator be the first one to place an event lol.
+At this point, all participants should be encouraged to hang events once all the participants have placed the events that they could come up with.
+
+Exercise moves to the next step.
+In this step, the participants discuss when each of the events occur and order the events across the timeline from left to right.
+
+One important tip for the facilitator is that facilitators should always remember that their role is to facilitate and they need to let the participants do the modelling.
+Once the participants have ordered the events look for duplicates.
+
+Step number three.
+Participants need to think about commands policies and actors to identify the cause and the effect of events.
+
+These concepts are a little tricky compared to the domain events, so the point the facilitator is encouraged to ask questions to help the participants make some progress.
+
+In step number four, the facilitator asks the participants to think about the business.
+This is the logic that responsible for creating the domain events.
+At the same time it is important for the facilitator to keep track of time.
+Every 30 minutes it is suggested that the facilitator review the progress and adjust the pace and the direction as needed.
+
+Facilitator may ask the participants to focus, put people in flow.
+Focus may shift to the next event for which we don't have the domain logic information.
+
+Post workshop activities carried out by the facilitator.
+Facilitator takes pictures of the workspace before taking down all of the poltter pare from the walls.
+It will be much more easier for the facilitator to go through the pictures rather than rolling out the long sheets of paper.
+
+At the end of the workshop the facilitator asks the participants for their feedback.
+What worked well?
+What needs to be changed?
+
+The expectation is that the facilitator will incorporate this feedback in their next workshop.
+Within 2 to 3 days.
+
+The facilitator consolidates the knowledge and shares knowledge model with all of the participants.
+Facilitator requests the participants to go over the knowledge model to ensure its accuracy.
+
+Facilitator decides on the next steps and ensures that all of the parking lot items are addressed.
+
+%TODO excercise
+
+

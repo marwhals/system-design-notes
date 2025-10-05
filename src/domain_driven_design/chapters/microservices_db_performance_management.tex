@@ -1,0 +1,481 @@
+%TODO consider hands on and examples
+
+
+\section{Need for more Data Patterns}
+One common technique used for addressing the database bottleneck is to separate the database instance into write optimised and read optimised and read optimised database instances.
+It is very common to see multiple read instances in large scale applications.
+Clarity: This separation the databases is different from separate databases for the microservices.
+This mechanism of separating the databases into read and write optimised instances will work as long as the data integrity is maintained across the multiple instances of the databases.
+In other words, when the data gets written to the write optimised database, that data is consistently reflected across all the copies of the read optimised database.
+To achieve this, there is a need for additional patterns.
+
+Patterns to ensure data integrity across multiple databases.
+Command query separation, command query responsibility segregation pattern (CQRS), Event Sourcing.
+Potential tools: RabbitMQ, PostgreSQL and MongoDB
+
+
+\section{Commands Query Separation (CQS)}
+An operation is either a command or a query.
+An operation refers to a message that tells the application or system to do something.
+If this message leads to the change in state of a domain object then this message is referred to as a command.
+If the intent behind the message it o get the state of the domain object, then that message is referred to as a query.
+A query message does not change the state of a domain model.
+
+The command Query Separation principle also known as the command query separation pattern suggests that the designer of the domain object shoudl demarcate the methods as either commands or as queries.
+In other words, same method cannot be used for both command and queries.
+Idea was suggested by Burton Myers in early 2000
+
+Since this principle leads to the simplification of the domain model, it has been very well received by the practitioners.
+
+Refresher - Command as part of the lectures on an event.
+Storming a command is an action initiated by user system service or is triggered by some mechanism in time.
+A command is imperative, meaning that the action or the intent in the command must be carried out in the domain.
+
+Commands are always named as verbs.
+Similarly, read models also referred to as the query models are used for projecting domain data on the user interface.
+The reasons behind the command query separation is the fact that there is a different set of concerns to be kept in mind when you are implementing the command and the query operations.
+When executed these command should not lead to any kind of data integrity issues.
+Last but not the least these functions also have to deal with the challenges of scalability.
+
+At this point, you must be clear that commands are the ones that write to a database and the queries are the ones that read from the databases.
+
+Typically, the commands and queries are part of the same component and they are built and managed by a common team.
+
+Key points from this lesson.
+Commands represent the key points from this lesson.
+Commands represent actions or intent.
+
+Queries service domain data and the command query separation pattern suggests that operation exposed by the domain object should either be a command query.
+%Hands on SQL
+
+
+\section{Realisation of Commands and Queries}
+
+The commands and queries may be exposed by way of synchronous as well asynchronous protocols.
+In this microservice there may be a domain aggregate that is exposing the commands and the queries which may be invoked by way of a HTTP or gRPC API
+Some of these commands and commands and queries may also be executed by way of a messaging protocol.
+The format of the reqeust and responses for commands and queries is flexible.
+It may be JSON, CSV or XML protocol, buffer format or any other format that the designer of the microservice format that the designer of the microservice finds to be suitable for the requirement.
+A command writes to the database and the query reads from the database and the query reads from the database before the command writes to the database.
+It needs to translate from the command domain model object to the language that database understands in the context of the commands.
+The common model is referred to as the right model or sometimes just right side.
+Similarly, when the query is read, the data from the database it converts from database representation to the common domain model object representation.
+In the context of queries, the domain model is referred to as the read model or just the read side.
+
+Pseudocode for the command and they query processor actor invokes the command, which is received by the command processor.
+The first thing the command processor does is it converts the reqeust data to domain model as a next step.
+It executes the business logic and then converts the model to the database representation and then writes the data to the database.
+
+On the query side, the query processor receives the request and converts the and converts the received request to domain model.
+Then it gets the data from the database, converts the response data to domain model and then sends its back to the caller of the query.
+
+One point to note is that in a typical system a common read write model and a common write database is used for both commands and queries.
+It is commonly seen that there are more query requirements that the write requirements.
+
+It is more commonly seen that there are more query requirements that then write requirements.
+
+Typically you would find that systems provide multiple queries that serves up the same data in multiple formats or multiple views.
+The challenge with this is that there is a need for the common model to be changed for meeting all of these requirements.
+To achieve an optimal performance level for the various read requirements or the query requirements, the microservices designer needs to think about the indexes they need to create in the database.
+The challenge with indexing is that it leads to negative impact on the performance of the writes.
+
+Now for most systems ther performance hit on the writes may be acceptable but for internet scale systems or high volume systems.
+The performance hit on the writes may be acceptable, in which case alternate designs may need to be considered.
+
+Term collaborative domain.
+A collaborative domain is a domain in which multiple actors invoke commands in parallel on the same data.
+Collaborative domains have low tolerance for performance degradation.
+Commands in such systems have complex business logic and the commands are implemented with finer level of granularity.
+Also, the business logic and the change frequently in collaborative domains.
+
+Key points
+Common model is used for commands and queries.
+It is common for most systems to have multiple query requirements and these multiple query requirements may need to a change in the common model.
+Indexes are commonly used for making the queries performant but that impacts the performance of the write collaborative domains have little tolerance for performance degradation and so for collaborative domains, alternate designs need to be considered for implementing commands and queries.
+
+%TODO Hands on.
+
+
+\section{CQRS - Command Query Responsibiltiy Segragation}
+Applies the CQS idea to Domain Model rather than operations.
+Here instead of splitting the operations in to command and query, the suggestion is to split the domain model into the command and query models.
+The command model is also referred to as the right model and the query model is referred to as the read model.
+Idea was suggested by Greg Young.
+
+A more formal definition of CQRS suggests the use of separate read and write models for the realisation of collaborative domains.
+The typical characteristics required form the command model are finer granularity and support for ever changing business rules.
+Similarly the desired characteristics for the read model are that it should be able to meet different read requirements and provides very high levels of query performance.
+The read and write models may use the common instance of the data store.
+This may lead to the loss of ability to optimise the database for reads and writes.
+Note: If you create too many indexes on a database then the performance on the write side will degrade.
+----- If you remove indexes from the database if will impact the query performance.
+----- Balancing/ Optimisation act for use case.
+
+What if you need both?
+One solution to both would be to use independent data store for the read and the write side.
+Not only that, depending on the use cases for the read and the write side, different database technologies may be used.
+Use of different database technologies within the same domain is sometimes referred to as the polyglot persistence.
+
+Example of why it may make sense to go with different database technologies.
+- Say requirements for the write side is to have ACID properties for the transactions and the desire is that no indexes should be created on the database tables to achieve high throughput for the writes.
+- On the read side, say the requirement is to have highly performant relationship queries.
+In this scenario, the developers may decide to go with a RDBMS database on the right side and a graph database on the read side.
+With this setup the developers will be able to achieve the requirements for both the read and write models.
+Another advantage of using independent data stores on the read and write side is that each side may scale independently.
+- Example, developers are dealing with a read heavy application.
+--- In that scenario they have the choice of horizontally scaling the read side or if that does not suffice then they can consider the read replicas for the read database or use sharding.
+--- Since the two sides are independent, actions performed on one side would not impact the other side.
+
+Read performance considerations.
+Typically there are more reads than writes in applications.
+Authors Experience: 85\% reads to 15\% writes as a result.
+Application developers are always looking for options to achieve highest read performance.
+Common ways by which it is achieved is by way of caching or by they way of materialised views that would not require model translation or use complex joins as the data is already persisted in the format in which it will be served to the requester.
+Sometimes this may not suffice.
+Example:
+There may be multiple different types of queries that need to be fulfilled by the read side.
+For example, there may be multiple different types of queries that need to fulfilled by the read side.
+-- Example of such queries are free text queries and reports form multiple data sources.
+In this scenario, the same type of database on the read side will not be able to efficiently handle all different types of queries.
+-- In such cases we may need to further break the read model into independent models and use different data stores.
+
+In certain scenarios involving collaborative and dynamic applications, there may be a need to frequently make changes to the read and the write models for such applications.
+Firstly consider leveraging different teams for managing the read and write models independently.
+With this kind of a setup, the teams can manage their own code base.
+They do not need to collaborate with other teams to make changes to the code bases that they're managing and all other deployments can be independently carried out by the owner team.
+
+This is an extreme case of an application that may have some stringent requirements in terms of availability, speed to market and performance.
+
+Common misconception
+- The common misconception is that in domain driven design CQRS must always be used. This is not correct.
+--- Depends on the use-case and yor objectives.
+
+Certain consideration that you need to keep in mind when deciding between using or not using CQRS.
+
+The first one is that you must be able to define the advantages of using CQRS.
+Bear in mind that using CQRS would mean a higher cost solution with more moving parts and components would need to be managed over the lifetime of the application.
+
+Key points
+May consider using CQRS for collaborative domains with
+- The write side and the read side may independently managed form the performance scalability and changes perspective.
+
+
+\section{Data Replication between WRITE-READ sides}
+Needed for independent READ and WRITE data stores
+
+This data replication may be synchronous or it be asynchronous.
+In the case of synchronous replication, there may be some technical challenges as synchronous replication may not be available natively for the database tha you are using.
+Or if you are using different database technologies, it may not be possible.
+Event with natively available synchronous replication technology there may be impact on write performance.
+
+Example: AWS DB that supports read replicas in the same AZ with synchronous replication.
+This kind of mechanism is supported for multiple databases such PostgreSQL, MySQL and SQL Server and Oracle.
+
+Asynchronous replication.
+- The write side writes to its data store and then some kind of asynchronous replication mechanism kick in, picks up the data from the write side and updates it on the read side.
+As a result there may be some lags and the data is eventually consistent.
+The implication of eventual consistency is that the read side may not reflect the current state of data.
+There are multiple data replication options available and the decision on which on to use will depend on the use can and the non-functional requirements such as the consistency of the data.
+- Some applications may not fulfill the requirement if they have eventual consistency from the read end.
+In that case you would have to go with some kind of synchronous replication technology.
+
+Data replication options.
+Capture changes in one data store and store in the other data store.
+Can use native replication such as Amazon RDS, MySQL replicas.
+Third party tools: Such as AWS data migration services.
+There is messaging streaming based replication in which the write side emits the data updates as events and the read side recieves these events to update its own data store. (EDA)
+
+Summary
+Data replication between read and write data store is needed when you segregate the command and the query and use different data stores.
+This application may be synchronous or asynchronous.
+Would need to look at specific requirements and supporting technologies to decide which replication technology which would make most sense for a use case.
+
+%TODO excercise and Hands on.
+
+
+\section{Event Sourcing and Event Store consideration}
+
+State Management
+- State-Orientate persistence system maintains only the current state
+- Event sources persistence systems persist all state changes.
+--- Domain events are stores as they are received
+
+Event Sourcing
+- Event Sourcing suggests persisting the domain events in an Event store and using it for recreating the state of the domain objects at any point in time.
+- Event store is an append only event log used for persisting the received events
+
+Performance consideration - Recreating the state from events will lead to bad performance
+Can be fixed by storing the state in a separate data store
+Multiple data views may be created for optimising queries
+
+Benefits
+- Event replay to create "point in time state"
+- Multiple read models views
+- Accurate out of the box auditing
+- Simplified Reconciliation
+- Temporal and Complex historical queries
+
+CQRS and Event Sourcing
+- Commonly used together
+- Purpose built data store can be added for specific requirements
+
+When to use Event Sourcing?
+- Evaluate use case from the event sourcing benefits perspective
+--- Event replay to create "point in time state"
+--- Multiple read models | views
+--- Accurate out of the box auditing
+--- Simplified reconciliation
+--- Temporal and Complex historical queries
+
+Realization of Event Store
+- Traditional datastore's may be used.
+--- RDBMS - PostgreSQL
+--- NoSQL Database - MonogoDB
+--- Specialised databases - EventStore - http://eventstore.com
+
+Quick Review
+- Event-Sourced persistence systems persist all state changes
+---- Current state managed in a separate data store for performance
+---- Out of the box Audit, Reconciliation, Temporal Queries
+
+Events are stored in Event Stores that my be traditional DBs
+
+
+\chapter{Microservices Managing the Data integrity}
+Using messaging there is potential loss of the message if the MQ or the messaging broker is unavailable.
+The write side, writes the data to its database but is unable to put the message on the queue.
+Now the read side will never recieve the message.
+
+As a result the data across the two database instances is now in an inconsistent state.
+This kind of data loss may be prevented by using a reliable messaging pattern.
+In this pattern, the message is guaranteed to be delivered.
+The idea is that when the right side encounters a failure on the message sent, it continues to retry until it is successful in sending the message.
+
+These retries may cause a delay in getting to a consistent state of data across the databases instances, but the data will eventually be consistent across the database instances.
+
+Another scenario that my lead to inconsistent state.
+In this scenario the right side sends duplicate messages and the read side processes the same message, more than once and that may lead to inconsistent state.
+
+
+\section{Designing for failure}
+The concept of design for failure suggests that you should always anticipate that there will be failure.
+As a designer of the software, you should identify the failure points in your architecture.
+
+Consider where are the failure points?
+Data base may go down or even the network may not be available to a microservice inorder to connect with the message bus etc.
+Even if the network is available, the external service may not be available.
+So the suggestion is that once you have identified the failure points in your architecture, proactively address the failure poitns.
+
+Note:
+The best way to find out all the failure points in an architecture are to assume that there will be failures in all interfaces and components.
+Database may go down. Run out of resources, command object may not be able to push a message to the MQ due to the failure of the MQ server.
+May be failures on the read side.
+
+As a designer, once you have identified the failure points you need to think about the impact of those failure points.
+
+Example solutions:
+Write to the database and publish a message to the MQ in a single unit of work or transaction.
+Two phase commit is a mechanism that can be used for carrying out the write and publish in a single unit of work or transaction.
+Popular for the last three decades.
+In two phase commit a distributed algorithm is used for coordinating all processes involved in the distributed transaction.
+It is also referred to as the extended architecture or just ECS for short.
+
+In the two phase commit, there is a transaction manager that coordinates the transaction across all of the involved resources.
+
+The challenge with two phase commit is that it is quite complex to implement.
+A bigger issue is that a lot of distributed technologies do not support it.
+
+Due to these challenges the two phase commit is not very popular with the designers of distributed systems.
+
+
+An alternative would be to break the database write and publish steps into steps and use local database transactions.
+In this courses it is called the "reliable mesagin pattern". In this pattern, the right side writes the domain objet data and the event data in the database tables with a local transaction.
+Then the evens are replayed against querying system in a separate step.
+
+Key points.
+You must identify failure points in your architecture and you must proactively address those failure points.
+This is the concept of designing for failure.
+
+Two phase commit can be used for executing distributed transaction across multiple resources.
+Keeping in mind there are multiple challenges in using two phase commit for preventing the loss of messages or events.
+
+You may use reliable messaging patterns.
+
+%%TODO -- Address --- CQRS - Write side failures
+%%TODO -- Address --- CQRS - Read side failures
+%%TODO -- Handling duplicate messages
+
+
+\chapter{Microservices and Kafka}
+
+%TODO do hands on.
+
+
+\section{Use of Kafka in Microservices}
+
+Kafka is a streaming platform, which is extremely propular with microservices designers and developers.
+Many of the Kafka's features overlap with the capabilities offered by other messaging platforms such as RabbitMQ and ActiveMQ.
+
+A microservices designer needs to make a decision on whether to use kafka streaming or to use a messaging broker like RabbitMQ or ActiveMQ for their microservices.
+To answer this question, the microservices designer must understand the capabilities of Kafka streaming versus the capabilities offered by these message brokers.
+
+
+\section{Kafka Overview}
+
+Kafka is a high performance, open source distributed open source event streaming platform.
+Kafka can ingest up to 2 million messages per second. (Hmmmmm)
+Kafka can ingest consists of multiple nodes or machines that are spread across a wide network.
+Event streaming here refers to the PubSub messaging model.
+At a high level the Kafka cluster exposes pubsub messaging model.
+At a high level the Kafka cluster exposes PubSub messaging capability to the producers and the consumers.
+
+Looks very similar to a typical messaging platform and you're right but this is where the similarities end.
+Kafka cluster may consist of thousands of topics.
+The message data in the topic is spread across multiple partitions.
+Think a partition as a shard.
+The data in the partition is replicated across multiple machines in the Kafka cluster.
+As a result the Kafka cluster is highly fault tolerant.
+Kafka was developed at LinkedIn (noice) and open sourced in 2011
+Kafka was built for scale from the ground up. (Do research on numbers when required)
+
+Capabilities of kafka
+It provides high messaging throughput with latencies as low as two milliseconds
+Its highly scalable
+Can easily add more machines or broker nodes to the cluster to scale it as per your requirements.
+Can handle trillions of messages per day and it can handle petabytes of data.
+Kafka cluster stores all the messaging data in persistent storage so messages are not lost due to server failure.
+Its highly available.
+Data is replicated and failure of broker nodes does not impact the producers and the consumers.
+Visit kafka at Apache to read up more on aspects of Kafka and see industry usage (standard approach lol)
+
+
+\section{Kafka Concepts}
+To be combined with over Kafka stuff.
+
+A Kafka cluster consists of one or more broker nodes in production.
+A minimum of three broker nodes are recommended when a topic is defined on the cluster.
+That topic is replicated across all of the brokers.
+The topic data is partitioned into multiple partitions which are replicated across the broker nodes.
+Producer connects to the cluster and publishes a message.
+Consumers connect to the cluster and get the data pushed into the partitions for specific topic that they have subscribed to.
+Let's dive deeper into the details of how the Kafka cluster works.
+When a message is published by the producer that message gets added to the partition and the partition is then replicated across multiple brokers.
+
+Example:
+Topic has three partitions and all of these three partitions are replicated across the three brokers.
+Since the partition is replicated across three brokers the replication factor is set to be three.
+If we had configured this cluster to replicated the partition only across let's say two brokers then the replication factor will be set to be to the benefit of this replication is that if there is a failure of one of the brokers the data in the topic will still be available and the consumers will not be impacted due to this failure.
+So the idea is the higher the replication factor, the more fault tolerant is your cluster.
+but obviously you will need to allocate more resources to your cluster at any point in time.
+Each partition has one broker node assigned as a leader and this leader broker node is responsible for all of the reads and writes to that partition.
+
+%TODO add diagram --- do hands on
+So in this illustration for Partition one, let's say the leader node is broker one.
+In that case, whenever a message will be published to topic A, and if the data gets added to partition one then the broker node will be responsible for replicating
+the data for partition one to other broker nodes in the cluster.
+In case of failure of the leader node one of the other available broker nodes take up the role of the leader for the partition.
+
+All of this happens behind the scenes and is transparent to the producers and the consumers of the messages.
+Message data is partitioned on the message key.
+This message key is provided by the producer as part of the publishing of the messagee.
+The message key is optional.
+
+Scenario in which the producer provides a message key.
+Lets say the producer publishes a message key.
+Producer publishes a message for and ID - 1,2,3 as the key.
+In that case the broker calculates the hash value for the key provided by the producer and then the broker uses the hash value to determine which partition the message data will go to.
+In this case broker pushed the message data into partition one.
+Broker will calculate the hash value and may decide to push this message.
+TLDR - every time the same key is used the message will be pushed to the same partition.
+Say another message is published by the producer with key equal to customer ID one, two, three then that new message will end up in partition one.
+
+Scenario in which the producer does not provide the key.
+The broker carries out the partition assignment in a round robin fashion.
+That means is that the first message will end up in partition number one, two will end up in partition two, third will end up in partition number three etc.
+Typical messaging systems do not retain the order in which the messages are sent but in the case of Kafka messages are ordered within a partition.
+---- Key here is to realise that this ordering is only guaranteed within a partition.
+The other way of saying this is that messages ARE NOT ordered across a partition.
+Ordering guarantee is one reason fro picking up Kafka over a typical messaging platform.
+Each message in a partition is assigned an offset within the partition. Array numbering within a partition.
+A kafka cluster allows maximum of one active consumer per partition.
+
+The reason for this is that with a single consumer the order of the messages is guaranteed.
+Kafka cluster maintains the current offset of the message that has been read by consumer.
+As new messages arrive, the current offset changes for consumer A and consumer B by maintaining the current offset on per consumer basis.
+Kafka is able to avoid sending duplicate messages to the consumer.
+Message reads in Kafka are non-destructive.
+That is when the consumer reads the message from the topic, the message is not deleted. Only the offset gets updated and consumer can at any time reset the offset.
+What this means is that by resetting the offset, the consumer can replay the log messages from any offset.
+Messages on the kafka topic are not retained indefinitely.
+There is a retention period which is associated with the topic that basically defines the time to live for the message after the retention period has expired.
+For the message, the message is automatically deleted from the topic.
+
+Although Kafka maintains the current offset on per consumer basis.
+Consumer also has the option of managing the offset on its own outside of the Kafka cluster.
+In messaging systems, it is common for multiple instances of the consumers to read messages of a common queue.
+This is done for high performance and high through put in Kafka.
+It can be done by way of grouping the consumers and the idea is that each message in the topics is received by only one of the consumers in the group.
+This grouping of consumers is carried out by way of groupID.
+
+Kafka allows only one consumer per partition the maximum number of consumers in a group is equal to the number of partitions.
+We have three consumers so we can only have three partitions.
+If a fourth consumer is added then it will go into a wait state which means it will not receive any messages until one of the consumers die or stop listening to messages.
+
+Key points.
+The message is retained in the Kafka topic Partition for the retention period define on the topic.
+Topics are split into partitions.
+Producer can specify the message key, which determines the partition to which the message data gets added.
+Kafka maintains the offset of the last read message on per consumer basis.
+Consumer can reset this offset.
+The consumer can maintain the offset on its own.
+Consumers can read the messages from a topic as a group by way of groupID
+
+%TODO hands on and example ----
+
+
+\section{Kafka vs AMQ (Rabbit MQ)}
+Consider this question. Which should be used for microservices.
+When a message is sent to a Kafka topic it is always persisted in the long term.
+Storage message expires after the set duration on the Kafka topic.
+Messages are not removed on read.
+What that means is that the consumer of the message can reread the message now comparing AMQ.
+Once the message is read from a queue on RabbitQM or ActiveMQ the message is deleted from the queue.
+Kafka uses a custom binary over TCP
+--- Important to not that it is custom.
+What that means is that it is not a standard protocol which is in use my multiple products (Think FIX)
+This particular protocol is in use only by Kafka
+On the other hand AMQ is a standard protocol that is implemented by multiple messaging platforms such ActiveMQ and RabbitMQ.
+Although kafka is a messaging platform, it does not have a concept of a queue.
+It supports only publish subscribe messaging pattern whereas AMQ based messaging platforms such RabbitMQ support bot point to point and publish subscribe messaging patterns.
+Kafka does not support routing.
+You may use dynamic routing but it is not available outside of the box.
+On the other hand AMQ has a very flexible routing mechanism.
+Refresh - in the case of RabbitMQ we could create exchanges of different types and then associate queues with the exchanges with bindings.
+This kind of a mechanism is no available on Kafka.
+
+In other words kafka has no concept of exchanges, queues, binding or message priority.
+Kafka consumers always pull messages from the broker by way of polling.
+Consumers subscribe for the messages and pull for specific duration and receive messages in batches.
+
+On the other hand in AMQP based platforms there is support for both push and pull models for receiving the messages.
+Kafka by default guarantees message ordering within a partition.
+
+Guaranteed message ordering implies that consumer A will receive all messages in the order they were published.
+THis is an extremely important feature of Kafka as it will allow you to build systems that require message ordering.
+Important thing to keep in mind is that AMQP based messaging platforms do not support message ordering.
+In the case of RabbitMQ, message in a queue may be read by multiple consumers.
+Each of these consumers process the recieved message independent of the other consumers.
+As a result, the order in which these messages get processed is not guaranteed, wheres in the case of kafka there is only one consumer per partition.
+As a result the order in which the messages get processed is the same as the order in which the message were published.
+
+Key points
+When the messages are read by the consumer from a topic the messages are not deleted from the kafka topic. They are retained.
+Kafka does not support the AWQP concepts such as queues, exchanges, routing priorities etc.
+Kafka uses a custom binary TCP protocol.
+What that means is that there is not other platform that is using the kafka protocol.
+Kafka supports only pub sub and pull based message receive.
+Kafka guarantees message order within a partition.
+
+%TODO - excercise - scenario based questions ------ maybe use Cat Jipitee.
+
+

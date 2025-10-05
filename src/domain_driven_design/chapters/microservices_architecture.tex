@@ -1,0 +1,264 @@
+
+
+\section{Pre-Introduction}
+At present these notes are taken from a Udemy course named Domain Driven Design for Architects.
+
+
+\section{Business and Digital Transformation}
+Business transformation is an umbrella term that is used for referring to fundamental changes in how an organisation conducts its business.
+See examples.
+
+\subsection{Why do businesses need to transform}
+\begin{itemize}
+    Environmental changes - new regulations may force the organisation to change how they do business.
+    Competitive pressure - think of an organisation that is dealing with a competitor that is rolling out innovative products at a very rapid pace.
+\end{itemize}
+
+What is the choice for these organisations?
+They must transform.
+They have to think of new products.
+They have to think about the speed at which they can roll out these new products.
+
+- New opportunities - Organisations may have to transform themselves to integrate with new technology.
+This often requires serious transformation initiatives.
+- Customer demands - expectations are continuously changing in order to maintain and expand their customer base.
+Organisations need to adjust their business to meet their customers demands and expectations.
+Businesses that ignore their customers expectations tend to loose out to the competitors.
+
+\subsection{Digital Transformation}
+The process of using digital technologies to meet the needs of transformed business processes and to create innovative customer engagement mechanisms.
+The relationship between digital transformation and business transformation is that the digital transformation supports the business transformation initiatives (ahem)
+%    TODO insert examples ---- potentially with critique
+The value in this is that it allows for organisations to change at a very rapid pace.
+Businesses that fail to transform fail to survive.
+Netflix vs Blockbuster
+
+Transformation is not a one time initiative.
+Businesses need to change on a continuous basis and this requires rapid changes to their systems and applications.
+Organisations must keep up with the pace of new and evolving technologies.
+
+\subsection{Common problems}
+A common challenge that businesses face in their transformation journey is that the old ways of building software hinders or makes it difficult for organisations to transform.
+It is slow to build software using the older technologies and architectural paradigms.
+Older technologies and older ways of building applications to integrate with newer digital technologies
+This is where microservices architecture can help.
+Microservices architecture addresses these challenges and helps the organisations move at a faster pace to achieve their transformational objectives.
+Transformation is about rapid changes, and in the case of microservices, changes are isolated to a set of microservices.
+Changes to a small microservices will be much faster than changes to a monolith where there are a lot of interdependencies between multiple modules realising the different business funtionalities.
+
+\subsection{Summary}
+Organisations need to continuously transform.
+The requires IT systems to change at a rapid pace.
+There is a need for rapid adoption of new digital technologies and speed to market is key.
+Microservices architecture helps the organisations meet these requirements from IT perspective.
+
+
+\section{A Business Perspective of Microservices}
+
+Once the microservices have been identified in a microservice application, each of the microservices is assigned to a small team.
+These small teams build and operate that microservice.
+The members in these teams bring different skills to the table, and these teams build different skills to the table and these teams are supported by the domain experts.
+
+Common question: what should the size of a microservices team be? Two pizza team. (some people need to get some salt with their pizza lol)
+The idea is that there is better collaboration among smaller teams, which leads to frequent software releases.
+This in turn helps the organisation respond faster to changes in business.
+Overall, this will lead to the technology becoming a competitive edge for an organisation. (Worked for amazon apparently)
+
+\subsection{Benefits of microservices}
+The first benefit of organizing microservices around business capabilities is that each service can evolve independently.
+
+\subsection{Business perspectives of changes in a monolith}
+Means that this coordination between the various teams will slow down the process of making changes to different parts of the application from the business perspective.
+Slow to release new products in the market.
+This problem is addressed with microservices.
+This monolithic architecture, when replaced with microservices architecture will look something like this, wherein each of the capability will be realised in an independent microservice.
+So what this means is that changes can be performed each of these services independently and that translate into a business benefit wherein faster responses can be achieved to changes in business environment.
+
+Microservices architecture allows the business to make radical changes to how it operates.
+As long as new microservices maintaining the same contracts as the old microservice, there will be no change required in other microservices.
+
+The next benefit is that it makes it easier for the IT teams to understand the business.
+Overall IT teams don't need to dive deep into all business capabilities.
+They can focus on the business capability that they are building in their microservices with microservices built around the business capability.
+The IT teams are able to achieve higher alignment with business priorities.
+What this boils down to is that since each of the microservices team is operating independently, they do not spend time on managing the conflicting business priorities.
+This will lead to faster speed to value for the business.
+
+\subsection{Summary}
+Summarise discussion.
+Businesses need to stay competitive by way of rapid transformations and this rapid transformations require support from the IT teams to deliver value to the market at a faster pace.
+Microservices architecture is an enabler or a catalyst for continuous business transformation as it helps the IT teams to move at the same speed as the business.
+One important thing to keep in mind is that to get the most benefit from the microservices architecture,
+it is critical for the microservices teams to carve out of an appropriate business scope for each of the microservices.
+If not done correctly, it will lead to teams being interdependent and that will lead to loss of advantages of microservices architecture.
+This is where domain driven design comes into picture.
+The domain driven design bounded context is a representation of the business scope for the microservice.
+
+\subsubsection{Key points}
+\begin{note}
+    \item Smaller teams translate to faster speed to market
+    \item Microservices are organised around business capabilities and the benefit of this approach is that enables the IT teams to operate independently.
+\end{note}
+
+
+\section{A Technical Perspective of Microservices}
+
+Microservices architecture suggests creation of loosely coupled set of services for building applications.
+These services interact with each other over a network by way of a lightweight protocol such as HTTP\@.
+Each of these services have an independent code base, i.e that means that they can be independently deployed.
+Teams owning these services are empowered to make decisions and what that means is that there is no centralised governance.
+Teams can make their own decisions on what works best for the services they own.
+Each of the services have a very defined scope from the business perspective.
+
+Loose coupling in the context of microservices.
+Loose coupling means that there is minimal dependency between the microservices.
+A consumer microservice invokes an interface on the provider microservice, the consumer microservice has knowledge only about the external interfaces exposed by the provider microservice.
+Microservice has no knowledge of the internal implementation of the provider.
+Microservices are over the network protocol.
+As a result, there is code level dependencies between microservices.
+Microservices expose there external APIs.
+
+These APIs are commonly implemented as RESTful Services or GraphQL APIs which are made available to other microservices over the HTTP protocol.
+Apart from HTTP, asynchronous messaging mechanism is also used for building the interactions between microservices.
+It is common for the microservices to interact with other microservices using request reply pattern as well as publish subscribe messaging pattern.
+
+Kafka, RabbitMQ and ActiveMQ are some of the commonly used technologies for building these messaging based interactions.
+
+\subsection{Advantages of microservices architecture compare to monolithic applications}
+\begin{itemize}
+    - It is easier to manage changes in a microservice when there is a change in one services.
+    - There is no impact on other services within the application since the codebases for each of the microservices is independent, little or no coordination is needed between the teams and the refression.
+    - Testing needs to be carried out only for the microservice case that is getting changed.
+    - Other microservices need not be tested.
+    - Deployment for each of the microservices may be carried out independently.
+    - Each team decides on the frequency of deployments, depending on their requirements and other constraints. I.e teams do not follow a common deployment plan, which is very common in the case of monolithic applications.
+    - This independent deployments lead to higher productivity and faster delivery of software.
+\end{itemize}
+- Talk about polyglot microservices.
+--- The idea behind polyglot microservices is that the team owning the microservice may decide on the technology stack for their service.
+
+Experts caution against the use of multiple languages, as this may lead to challenges.
+One of the biggest differentiators of microservice architecture is the fact that there is failure isolation.
+-- What this means is that failure in one service will not bring down the entire system, which a common scenario in the case of a failure of a component in a monolithic application.
+
+Another benefit of microservices is that each of the services may be scaled independently.
+
+\subsection{Disadvantages of microservices.}
+Since microservices interact with each other over a network protocol, an application built with microservices architecture may exhibit poor performance compare to the same application implemented with a monolithic architecture.
+In a microservices application, each microservice manages its own database.
+This leads to complexity in managing the data integrity.
+- The reason for that is that in the case of monolithic application, you may use a common database and you may use local transactions to manage the data integrity.
+- In the case of a distributed architecture like a microservices architecture, traditional transactional mechanisms may not work and this leads to higher complexity.
+- At runtime, microservices are launched as independent processes.
+- These independent processes need to be monitored.
+- If you have an architecture where you will need tens of hundreds of instances of the same microservices, it may become challenging to monitor these microservices and to debug the microservices in case of issues.
+
+Another common concern for microservices is that since microservices exposes interfaces in the form of APIs that lead to an expanded attack surface for the microservices based application (hmmmmmmmm hide behind auth/load balancer)
+To address these disadvantages organisations planning to adopt microservices need to invest in new technologies in terms of infrastructure tools, and then they also need to invest in skills development.
+- This means that the organisations may need to make upfront investments for an application that will be built with microservices architecture.
+
+
+Summary - Microservices from the technology perspective
+Pros
+- Architecture change management becomes easier and deployments can be carried out independently, this means that features can be released much faster.
+-- Speed to market is increased, failures are isolated and services may be scaled independently, what this means is that it leads to a better quality of experience for the consumers of the application.
+
+Cons
+- From the cons perspective, poor network performance is a concern. (containers vs pods)
+- There are challenges related to monitoring data management and security.
+-- Some of these challenges may be addressed by way of investment in tools, infrastructure and skill development.
+
+
+\section{Adoption of Microservices Architecture}
+
+Two terms green field microservices and brownfield microservices.
+
+Adoption of Microservices architecture requires an organisation to acquire resources with new technology skills.
+They need to invest in technologies such as cloud containers and a number of tools for building and operating microservices.
+Organisations need to change their processes.
+
+Example: They need to build their DevOps practices.
+- Older ways of managing IT resources and applications does not work for microservices applications.
+- An organisation may need to change its culture, for example faster decision making.
+---- This won't happen overnight.
+
+Successful adoption of microservices architecture requires commitment from the business and IT leaders.
+The role of an architect is to guide and educate the business and IT teams in terms of cost and benefit of adoption of microservices architecture.
+
+It is important for the architect to not just talk about the technical benefits of microservices but spend time building a business case for microservices adoptions for their specific organisation.
+The idea is that it will be easier for the architect to get the support from the IT and business leaders if there are benefits of adopting microservices.
+
+The business case
+To bulid a business case one has to think about the business impact and the technology.
+As an architect thing about the specific business for your organisation.
+--- It is going to improve the customer experience at a rapid pace.
+--- Is it going to lower the cost of IT operations.
+--- Is it going to generate new revenue streams.
+--- Is it going to give your organisation a competitive advantage
+
+Specific business advantage will depend on your organisations business.
+As an architect you must understand your organisations business to be able to map the benefits of microservices architecture to your organisations.
+
+Tech focused architect
+-- Can release software every 6 weeks vs every 3 months
+-- Monolithic applications are difficult to change hence adopting new technologies will be slow
+--- Invest in microservices in order to move faster
+Business focused architect
+-- Can help the business cut down product development process to six weeks which is 50\% faster than out competitor.
+-- Adoption of new digital technologies can help the business achieve the goal of increasing the lifetime value of our customer.
+------- As microservices architecture provides a foundation for faster adoptions of these new digital technologies.
+
+The second one will appeal more to the business stakeholders.
+The idea is to resonate with the business and IT leaders by projecting the business benefits of microservices rather than just describing the technical benefits of microservices.
+
+5 to 7 slides vs 50 pages long formal document..for business stakeholders.
+
+Author example of building a business case.
+- Make clear message about business value
+- If possible it needs to be quantified
+---- Need to use the right numbers to be able to create an impactful statement from the business value perspective.
+- Put together a roadmap on how you expect the organisation to adopt microservices.
+--- Important to indicate time to value.
+--- Would it take you three months to deliver value or would it take 18 months to get there?
+--- It is important for it to be conveyed clearly, to set the right expectations. Need to describe what you need to be successful.
+---- Looking to get commitment from your IT and business leadership.
+---- They can't commit to you unless what they are getting into and depending on where you are in your microservices journey. Do a POC.
+--- Demonstrating the value with something live is always helpful.
+
+Consider what works for an organisation and the put together your business case becasue that will have a higher change of success that using a generic format.
+
+
+There are two types of microservices projects.
+Brownfield microservices projects are where the existing monolithic application needs to be converted into microservices.
+Greenfield microservices projects whereas a new application needs to be built from the ground up.
+
+A brownfield project team has to deal with legacy technologies and tech debt. They have two options.
+- First options is to refactor the application. That is to convert the monolithich application into microservices.
+-- This can be carried out by way of a big bang approach where all the microservices are built in parallel or the organisation can take an evolutionary approach where they build the microservices by peeling off parts of the existing monolith application.
+-- The other options is to completely rebuild the brownfield application from the ground up.
+
+The greenfield project team has two options for building their application.
+The first one is they can build their application as a microservice application from the get go.
+A couple of considerations that the greenfield project team needs to keep in mind.
+
+First one is that they need to ensure that there are tools and technologies available to the for building these microservices adn the organisation.
+Readiness also play an important role.
+-- Does the organisation have mature DevOps practices and processes.
+-- This options is suggested for teams tha tare experienced with microservices and are working for organisations that have already adopted microservices.
+
+Second approach is to use the monolith first approach.
+The monolith first approach suggests that hte greenfield application team create a well-designed monolith application.
+- Gain some experience with the application an then peel off parts of the Monolith application to create appropriate microservices.
+
+Key points
+- As an architect working on microservices applications you must think about the specific business benefit of microservices to your organisations.
+- There are two types of microservices projects.
+-- In a brownfield microservices project an existing monolithic application needs to be converted to microservices.
+--- Two options for this kind of project.
+--- First one is to refactor the existing Monolith application to microservices application
+--- The second type is the greenfield project in which the project team does not have any kind of legacy debt to deal with.
+
+There are two options for greenfield projects.
+- Greenfield projects may be implemented with microservices architecture from the ground up
+- Or the project team may take the monolith first approach, wherein they first create a monolith application and then convert it to microservices.
+

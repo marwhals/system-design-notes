@@ -1,0 +1,168 @@
+\section{Introduction to Microservices Data Persistence}
+Microservices can independently make changes to their own database without impacting the other microservices.
+Conversion of a monolithic application to microservices requires the designer to not only think about the refactoring of the business logic and the components of the monolithic application,
+they also need to think about the refactoring of the database.
+Refactoring the database would mean breaking the common database instance to multiple database instances
+
+This breaking of common database instance into multiple database instance is not straightforward.
+There are multiple challenges.
+
+Pattern that are covered here
+- The shared database pattern
+- Separate database pattern
+- Strangler pattern
+
+\section{Monolithic Apps - Shared Persistence Storage}
+The persistence of data is achieve by way of writing to the file systems or by more commonly writing the data to databases.
+There are multiple types of databases available today, but the most commonly used databases are the relational databases and NoSQL databases
+
+Legacy applications typically use RDBMS or relational databases for all types of data and this is because NoSQL databases were not available until the early 2000s.
+
+A typical client server application development pattern used by these legacy applications involved multiple enterprise applications, sharing a common instance of the database,
+and the enterprise application would manage the data by way of SQL statements against this shared database.
+
+Buy todays standard this architecture will no be acceptable.
+
+There are good things.
+First thing is that it will lead to simplified data management process.
+Second is that since the database engine is shared by multiple applications, the cost of the solution will go down.
+The third is that a single team of database administrators can manage the database for all applications.
+
+Challenges with the shared database pattern.
+The first challenge is that database challenges need to be managed very carefully.
+
+Consider the change of database schema.
+Very complicated coordination between multiple applications.
+Overall this will lead to high cost of changes.
+Will lead to higher risk because making a change to the database may lead to breaking of other applications.
+This will lead to longer time to value.
+
+Second challenge is that on may negatively impact all other applications, and this can happen if the application intentionally or unintentionally start to use up a lot resources on the database.
+Hard to diagnose since each application will only be looking at their own application logs.
+
+The third challenge is that the shared database acts as a single point of failure.
+Failure of the database will lead to the failure of all of the applications.
+
+Could argue that a single point of failure may be removed by way of some kind of availability technology, by those high availability solutions are quite complex and they will lead to higher costs.
+Other challenges are that it is complex to carry out capacity planning for the shared database as the teams need to coordinate on forcasting the needs that they have from the database perspective.
+Application teams will need to be aware of the structure of the data, so onboarding new developers in the teams will be a challenge.
+
+Shared database is an anti-pattern (Reaaak?) but some enterprises are still using it.
+
+SOA originated as a solution but it was very temporary.
+
+
+\section{Service Orientated Architecure (SOA)}
+Data is exposed by way of CRUD services.
+CRUD.........
+Hide the details of the structure of the database from the applications........
+Apart from providing these low level data operations.
+So as services may also be built by encapsulating the business logic to provide high level services.
+The services layer is placed between the applications and the database.
+These services provide the CRUD and high level business operations.
+
+Applications do not need to use SQL to carry out the data manipulation.
+They connect with these services over some kind of network protocols that is decided by the service provider.
+
+The server services layer provided multiple advantages since it hit the structure of the database.
+
+The applications became much more simpler to code and manage.
+Led to the reuse of code by way of reusable services and the change to the database will become more manageable with the services layer.
+Unfortunately it does not address many of the other shared database challenges, such as single point of failure, uncontrolled use of resources and impact on other applications and capacity estimations.
+
+Common misconception.
+A small service is not a microservice.
+
+A set of SOA services are part of the same bounded context, whereas a micro service represents a bounded context.
+
+Summary
+- Services insulated the applications from database changes, but SOA services did not address all of the challenges associated with shared databases.
+
+
+\section{Separate Database Pattern}
+Recommended for Greenfield microservices initiative.
+Greenfield - New application with no constraints from technical debt perspective
+Brownfield - Existing monolithic app to be converted to Microservices architecture
+
+Microservices from the ground up.
+Microservices teams assigned the bounded context
+No interdependency between teams
+Each team decide on their tech stack
+Service interactions via defined interfaces
+No direct access to data
+
+Separate database pattern
+Each microservice team owns and manages their database
+Benefits - Simpler change management
+Reduced blast radius on database failure
+Capacity planning - scaling at DB level becomes simpler
+Each team can decide on Database - doesnt have to be a RDBMS
+
+Review
+- Separate database pattern is recommended
+
+
+\section{Brownfield Microservices - Database patterns , options}
+Share database pattern is considered an anti-pattern in the context of microservices.
+Strangler pattern is used for converting brownfield applications to microservices.
+
+in a brownfield project, a monolithic applications is targeted to be refactored into microservices.
+The monolithic application will more that likely be a database instance.
+The designer of the microservice will have three options from the database perspective.
+
+They can go with the separate database pattern wherein each microservice will have its own instance of the database, or they can retain the common database and do database refactoring to carryout logical separate of the database.
+In the last two options the shared database is retained.
+
+Very commonly seen that legacy applications implement business logic as stored procedures.
+The idea here is that the databased has a lot of complexities and breaking the database into multiple databases may not be a straightforward task.
+
+A common strategy that a lot of folks take for converting the brown field applications to microservice sis to simpley keep the database in place and convert the application to microservices.
+- This will lead to a set of microservices sharing the database and hence they will suffer the same challenges.
+Sharing an instance of the database, the shared database pattern in the context of microserviceS is considered an anti-pattern.
+The reason for it is that with the shared database, teams lose their independence and not they are interdependent.
+
+Now any change they they will make will need to be coordinated.
+Changes would need increased testing effort and overall this will lead to the slow down of delivery of value and on independent scaling will be possible.
+The instance of the database may be the choke point, although a shared database is an anti-pattern from the microservices perspective, it is still okay to use shared database pattern for transition state architecture.
+
+....
+Start with a monolithic application
+Focus only on the application part of it and keep the database as is.
+You arrive at this transition state architecture where all the microservices are using a shared database.
+Gradually each of these microservices will be refactored to use their own database instance.
+This way the shared database is used only as a transition state, not a target state.
+
+One important point ot note about the shared database pattern for microservices, is that the microservices should not have any SQL statement in the code.
+The reason is that having the SQL statement in the code will require more effort for switching the database.
+
+Instead, the microservice designer should consider using the strangler strategy.
+
+A collection of services is created for providing the database access to the microservice.
+Each of these microservices depicted here will have their own set of services.
+These services are just referred to as the strangler services or just stranglers.
+The idea behind the services is that switching off the database will have no impact on the microservices, as all of the changes will be confined to the strangler services.
+The microservice teams can decide on their priorities and switch databases at their own pace.
+Over a period of time, all of the microservices will have their own instances of the databases.
+As a result the target state architecture will be achieved.
+The strangler pattern is a generic pattern
+Can be used of modernisation of any legacy services.
+
+A big benefit of this approach is that microservice code will be insulated from all backend changes as these changes will be confined to the services layer.
+
+Key points
+- The shared database pattern is considered an anti-pattern from the microservices perspective.
+- Strangler pattern may be used for transitioning from the shared database implementation of the microservices to separate database implementation of microservices.
+
+
+\section{Shared Database Pattern}
+Two options for considering when building microservices against shared databases.
+
+First one is the database refactoring and the logical database separation.
+Although shared database pattern is considered as an anti-pattern in the context of microservices, there may be times when the microservices teams will not have the flexibility to use the separate database pattern.
+There may be multiple reasons for it.
+- Time constraints, budget constraints, lack of skilled resources (hmmm) and the complexity of the database are some of the most common reasons.
+In this scenario teams have to consider the shared database pattern.
+When using the shared database, the objective of the microservice designer is to achieve maximum isolation of data within the same database instance such tha teach microservices owns part of the data in the database and each microservice ice has access to only the data it owns.
+
+If possible the microservices designer should use the database features to achieve the highest level of isolation between the microservices own data within the database instances.
+
