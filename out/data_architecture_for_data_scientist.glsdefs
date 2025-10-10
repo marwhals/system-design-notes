@@ -1,0 +1,84 @@
+\glsdefs@newdocentry{eventstorming}%
+{%
+name={Event Storming},%
+sort={Event Storming},%
+type={main},%
+first={Event Storming},%
+firstplural={Event Stormings},%
+text={Event Storming},%
+plural={Event Stormings},%
+description={A workshop-based method for quickly exploring complex business domains},%
+descriptionplural={A workshop-based method for quickly exploring complex business domains},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{domain}%
+{%
+name={Domain},%
+sort={Domain},%
+type={main},%
+first={Domain},%
+firstplural={Domains},%
+text={Domain},%
+plural={Domains},%
+description={A specific area of knowledge or activity},%
+descriptionplural={A specific area of knowledge or activity},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{ddd}%
+{%
+name={\acronymfont {\glsentryshort {ddd}}},%
+sort={DDD},%
+type={main},%
+first={DDD},%
+firstplural={DDDs},%
+text={DDD},%
+plural={DDDs},%
+description={Domain-Driven Design},%
+descriptionplural={Domain-Driven Design},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Domain-Driven Design},%
+longplural={Domain-Driven Designs},%
+short={DDD},%
+shortplural={DDDs},%
+counter={page},%
+parent={},%
+%
+}%
+

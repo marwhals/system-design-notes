@@ -17,7 +17,17 @@ TODO - explore what is available from Apache
 
 ## ML Tools
 
-- Python - see ML libraries and source code.....
+- Python
+  - Caffe / Caffe2
+  - CNTK
+  - DL4J
+  - Keras
+  - Lasagne
+  - mxnet
+  - PaddlePaddle
+  - TensorFlow
+  - Theano
+  - Torch
 
 ---
 
