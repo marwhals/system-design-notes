@@ -1,5 +1,7 @@
 name: Build Multiple LaTeX PDFs
 
+# TODO upload PDFs only
+
 on:
   push:
     tags:
