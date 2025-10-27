@@ -1,7 +1,9 @@
 name: Build Multiple LaTeX PDFs
 
 on:
-  push:  # Trigger on every push
+  push:
+    tags:
+      - '*'  # Trigger workflow only on tag pushes, e.g., v1.0.0
 
 permissions:
   contents: write
@@ -53,7 +55,6 @@ jobs:
           mv src/domain_driven_design/domain_driven_design.pdf out/Domain_Driven_Design.pdf
           mv src/data_architecture/data_architecture_data_scientists/data_architecture_for_data_scientist.pdf out/Data_Architecture.pdf
 
-
       - name: Upload PDFs as artifacts for this run
         uses: actions/upload-artifact@v4
         with:
@@ -62,3 +63,10 @@ jobs:
             out/System_Design.pdf
             out/Domain_Driven_Design.pdf
             out/Data_Architecture.pdf
+
+      - name: Create or update GitHub release and upload PDFs
+        uses: softprops/action-gh-release@v1
+        with:
+          files: out/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
