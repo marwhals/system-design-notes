@@ -1,0 +1,60 @@
+name: Build Multiple LaTeX PDFs
+
+on:
+  push:  # Trigger on every push
+
+permissions:
+  contents: write
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clean previous build files
+        run: |
+          rm -rf out/*
+          rm -f src/**/*.aux src/**/*.log src/**/*.toc src/**/*.out
+
+      - name: Build system design notes
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: src/application_system_design/system_design_notes.tex
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+          args: -f
+
+      - name: Build domain driven design notes
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: src/domain_driven_design/domain_driven_design.tex
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+          args: -f
+
+      - name: Build data architecture notes
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: src/data_architecture/data_scientists/data_architecture_for_data_scientist.tex
+          latexmk_use_lualatex: true
+          latexmk_shell_escape: true
+          args: -f
+
+      - name: Rename PDFs into out/ folder
+        run: |
+          mkdir -p out
+          mv src/application_system_design/system_design_notes.pdf out/System_Design.pdf
+          mv src/domain_driven_design/domain_driven_design.pdf out/Domain_Driven_Design.pdf
+          mv src/data_architecture/data_scientists/data_architecture_for_data_scientist.pdf out/Data_Architecture.pdf
+
+      - name: Upload PDFs as artifact for this run
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-pdfs
+          path: |
+            out/System_Design.pdf
+            out/Domain_Driven_Design.pdf
+            out/Data_Architecture.pdf
