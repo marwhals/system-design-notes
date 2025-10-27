@@ -23,6 +23,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: src/application_system_design/system_design_notes.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           args: -f
@@ -31,6 +32,7 @@ jobs:
         uses: xu-cheng/latex-action@v2
         with:
           root_file: src/domain_driven_design/domain_driven_design.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           args: -f
@@ -38,19 +40,21 @@ jobs:
       - name: Build data architecture notes
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: src/data_architecture/data_scientists/data_architecture_for_data_scientist.tex
+          root_file: src/data_architecture/data_architecture_data_scientists/data_architecture_for_data_scientist.tex
+          work_in_root_file_dir: true
           latexmk_use_lualatex: true
           latexmk_shell_escape: true
           args: -f
 
-      - name: Rename PDFs into out/ folder
+      - name: Gather and rename PDFs into out/ folder
         run: |
           mkdir -p out
           mv src/application_system_design/system_design_notes.pdf out/System_Design.pdf
           mv src/domain_driven_design/domain_driven_design.pdf out/Domain_Driven_Design.pdf
-          mv src/data_architecture/data_scientists/data_architecture_for_data_scientist.pdf out/Data_Architecture.pdf
+          mv src/data_architecture/data_architecture_data_scientists/data_architecture_for_data_scientist.pdf out/Data_Architecture.pdf
 
-      - name: Upload PDFs as artifact for this run
+
+      - name: Upload PDFs as artifacts for this run
         uses: actions/upload-artifact@v4
         with:
           name: generated-pdfs

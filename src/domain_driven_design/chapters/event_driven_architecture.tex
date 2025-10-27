@@ -41,11 +41,11 @@ It will look synchronous but the underlying protocol is asynchronous
 
 In a one to many communication pattern, there are multiple components that are interested in receiving messages from the sender.
 This is commonly achieved by way of a pub sub messaging pattern.
-\begin{list}
-    \list A message is published by a publisher to a topic
-    \list Other components will subscribe to the topic and receive messages.
-    \list Each of these components will carry out a specific task assigned to it.
-\end{list}
+\begin{itemize}
+    \item A message is published by a publisher to a topic
+    \item Other components will subscribe to the topic and receive messages.
+    \item Each of these components will carry out a specific task assigned to it.
+\end{itemize}
 
 Common protocols for this kind of communications is REST over HTTP for these microservices.
 
