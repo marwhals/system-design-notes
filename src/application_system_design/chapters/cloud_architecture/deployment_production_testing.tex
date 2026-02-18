@@ -1,0 +1,166 @@
+\section{Deployment and Production Testing Patterns}
+
+\subsection{Rolling Deployment Pattern}
+When upgrading a server we typically rely on some kind of downtime window.
+During tht window we can shut down the existing application instances and replace them with the new versions
+However if something goes wrong and the new version cant start up or has some other issues we would need to shut down those instances and bring back the old version
+
+This works fine if we can find some time window when we either don't get any traffic or very little traffic
+So the impact on customers is very minimal
+
+If we get a large amount of traffic all the time or if we need to make an emergency release during a busy time or season, making our service unavailable in order to perform this upgrade is not an option.
+For these situation we can use the \textit{Rolling Deployment pattern} instead of taking down all the servers and deploying a new version on them.
+
+We can use the load balancing service to stop sending traffic to the application servers one at a time.
+Once no more traffic is going to a particular service we can stop out application instance on it and deploy a new instance with the new version of our software, before adding it back tot he rotations.
+Could also run tests if we wanted to.
+
+After everything is done, we add that server back to the load balancers group of backend servers and then we repeat the same process on all the servers until all of the are on the latest version
+
+If we see any errors via dashboards or otherwise we can roll back the release by following the same steps but in revers.
+
+One benefit to the strategy is that we have no downtime for out system and we can gradually release a new version which is a lot safer than a big bang approach.
+Its also check and very fast to release a new version as we don't need to provision any additional hardware.
+
+One downside of this pattern is there is no isolation between the servers running the new version of our application and the old version of our application
+So there is a risk of the new deployed instances starting a cascade of failures that may actually bring the entire service down.
+
+Another downside to this is that throughout the entire duration of the release rollout we have two software versions running side by side.
+-- If the new version of the change we introduced is fully compatible with the old version then it is not an issue
+-- If the API has drastically changed then having two versions of the same service may cause some issues.
+
+Despite downside this is a very simple deployment strategy.
+
+Using this pattern we can avoid having down time and do not need to pay for additional hardware.
+If something goes wrong we can roll back without effecting users.
+- However cascading failures, and running two versions of the same app may be an issue.
+
+\subsection{Blue Green Deployment Pattern}
+In this deployment pattern we keep the old version of our application instances running through out the entire duration of their release
+- The old version is referred to as the blue environment
+- At the same time we add a new set of servers called the green environment and deployed the new version of our application to those servers
+- After we verified that the new instances startup just fine, we can run tests one them
+- We use the load balancer to shift traffic for the blue environment to the green environment
+
+If during this transition we start seeing issue in the logs or in out monitoring dashboards, we can easily stop the release and shift the traffic back to the blue environment running the old version of our software.
+Otherwise we fully transfer to the new version, wait for a bit to make sure everything is okay, and then we either shut down the old environment completely or keep it available for the next release cycle.
+- If we make very frequent release, the advantage of this pattern is that we have an equal number of servers for both the blue environment and the green environment
+--- Is the green environment suddenly fails we can switch back to the blue environment that can take a full load of traffic right away.
+Second advantage over rolling deployment is that we can only use one version of the software at any given moment.
+This give all the customers the same experience except for maybe a very short period of transition that should generally unnoticeable.
+
+Downsides and limitations
+- During the deployment of the new release we may need to run as many as twice as many servers in the cloud environment.
+- That means we need to wait until all those new servers start up and get ready
+- And then we ned to pay for that additional hardware, which may be worth it to guarantee a safe release, it is still an additional cost however.
+---- If we use those additional servers during our release only, this cost may not be that high.
+
+This is another popular pattern for releasing new versions to production.
+
+\subsection{Canary Release and A/B Testing Deployment Patterns}
+Canary release borrows some elements from the rolling deployment pattern and some from the blue/green deployment pattern.
+
+Instead of deploying the application to a new set of servers we dedicate a small subset of the existing group of servers and update them with the new version of our software straight away.
+Once the canary version sis deployed we can continue sending normal traffic to it just like the rest of the servers.
+Or we can start directing only specific users such as internal users or beta tester to those servers.
+
+THis can easily be achieve by configuring the load balancing service to inspect the origin of the reqeust and send it to a different set of servers.
+During this time we monitor the performance of the canary versions and compare it in real time to the performance of the rest of the servers that run the old version.
+Once we gain enough confidence with the new version and we can see no degradation in functionality or performance, we can proceed with the release and update the rest of the servers with the new version using the rolling release pattern for example.
+
+\paragraph{Note} The canary deployment pattern is considered to be the safest and most risk free deployment patterns.
+The reason for that is after we deployed the new release to the Canary servers, we usually wait and monitor it performance for hours or even days before rolling out the new version to the rest of the servers.
+This allow us to gain confidence that we won't have cascading failure or other major issues once we roll out the release to all of our customers.
+
+Also the ability to chose the type of users with direct traffic to Canary version minimised the damage if something does goes wrong in the release.
+-- That because typical internal users or beta testers have a much higher tolerance to production issues, have better knowledge of how to properly report those issues accurately.
+
+\paragraph{Challenges}
+The challenge of doing Canary deployment effectively is setting clea success criteria for the release so we can automate the monitoring.
+-- Otherwise an engineer will have to look at a lot of graphs on a lot of dashboards for hours to decide whether we should rol out the release globally or roll back.
+
+\subsubsection{A/B Testing or A/B Deployment}
+Very similar to canary deployment but the purpose is different to when doing a canary release.
+The goal is to safely release a new version of our application, eventually to the entire group of servers with canary release
+With AB testing the goal is to test a new feature on a portion of our users in production.
+The information we gather from the comparison can inform out product or business development teams towards future work or feature.
+Unlike Canary release, after the AB testing is finished, the experimental version of our software is typically removed and replaced with the previous software version
+The important thing here is that users do not know that they are a part of an experimental release.
+This way we get genuine data from the experiment.
+
+The Duration of the experiment is entirely up the developers and depends on the use case.
+Then when we conclude the experiment we diver traffic away form those experimental instances, deploy the main version fo our recommendation service bac to those servers and add the back to the load balancing rotation.
+Later a group of engineers, business analyst or data scientists can look at all the metrics gathered and access if that change should be release as part of a future version or if the strategy could be rethought.
+
+\subsubsection{Summary}
+Canary release allows us to dedicate a small portion of our servers to use a different version of our software.
+During the Canary release, we monitor those servers closely and make sure there is no degradation in performance or functionality before we proceed and deploy the new version of our software to the rest of the servers.
+To make the process even safer, we can limit the users that send requests to the canary instance to either internal users or beta testers.
+On the other hand, during a \textquotesingle{B} deployment, we actually prefer to get the traffic from real users so we can get reliable information.
+And by the end of the AB deployment, we roll the experimental version back tot he origin software version.
+
+\subsection{Chaos Engineering Production Testing Pattern}
+Chaos engineering - a testing technique.
+In distributed systems running on the cloud, failures are inevitable in the development cycle.
+We can put huge effort into testing a system however when we deploy out system to production, many things can happen that we cannot test before hand.
+\begin{itemize}
+    \item The infrastructure can break at any time.
+    \item Servers can lose power, network switches can break down, databases storage devices can become unusable due to their age and natural disasters can hit a data centre.
+    \item Additionally natural third party API dependencies can break and there is nothing we can do about it.
+    \item As much as we hope that we can deal with this, we won't know until it actually happens.
+\end{itemize}
+
+\paragraph{Examples here ???????}
+%TODO add examples here
+
+\paragraph{Note}
+We don't know how a system behaves until those events happen.
+A big difficulty is that those events are very rare.
+However when they do happen, if our assumption was incorrect and they system does not response to that sudden event as we expected the result may be catastrophic.
+
+The philosophy of chaos engineering as a production testing pattern is embracing the inherent chaos present in a typical cloud based distributed system.
+
+The strategy of the engineering pattern is to deliberately and systematically inject random but controlled failures into our own production system.
+Then we monitor how our system response to those failures and analyse the results.
+If we find that out system did not respond the way we expected we create a plan to fix it and then continue testing.
+An added benefit to making those typically rare failures artificially more frequent is that we also force our engineers to think about those daily development.
+We also test the ability of the development team to monitor, recognise outages, analyse logs and discover those production issues.
+So in general, over time our system becomes more resilient and reliable and the development team is more proficient in monitoring and fixing production issues quickly.
+
+\subsubsection{Injecting failures into systems}
+Firstly, take the biased human factor out of the equation
+We need to either build or use automated tools to randomly cause those failures.
+An example: Netflix Chaos Monkey
+
+Another failure that can be introduced is latency injection either between multiple services or between a service and its database.
+We can temporarily restrict access to a database, instance and test if our system can gracefully fail over to another of its replicas in another cloud zone or region.
+
+Another failure we can inject is called resource exhaustion.
+Could deliberately fill up the disk space on a particular service instance or even a database and see how our system behaves.
+
+Could go as far as disabling traffic to an entire zone or region and make sure that out system fails over to the other zone or region gracefully and transparently to the user.
+
+\subsubsection{General test steps for chaos engineering}
+Firstly, before a failure injection, we need to measure the baseline.
+Then we need to construct the hypothesis which basically formalising the desired correct behaviour we expect from the system.
+After that, we inject the failure and monitor it for a predefined period of time.
+The we document all of our findings during the test and finally restore the system to its original state before the failure.
+
+After all those steps are complete, we identify the issues we found in our system and act upon them to improve the resiliency of our system.
+But even after we fixed all the issues, the key in chaos engineering is to keep performing those tests continuously.
+Only the continuous testing will ensure that new changes don't introduce single points of failure or performance bottlenecks
+
+Also by running those production tests periodically, we make sure the development team has enough tools, dashboards and sufficient logging to discover and fix those issues.
+
+Now, an important consideration when running those tests is minimising the blast radius of the failures we create.
+In other words, we also want to make sure that while continuously injecting those failures we stay well within our error budget.
+
+\paragraph{Important Note}
+This is why we should never promise 100\% availability or something close to that for our users.
+Even if we think that this is achievable.
+
+This leaves room for both unexpected and deliberate errors failures as a part of production testing.
+
+\subsubsection{Summary of Chaos Engineering}
+Chaos Engineering is a pattern that allows us to increase confidence and protect out production system against critical failures by injecting failures deliberately in a controlled way.
+We can find single points of failure, scalability issues and make sure when a real traffic spike or hardware failure happens we have the logic in place to handle the situation gracefully.

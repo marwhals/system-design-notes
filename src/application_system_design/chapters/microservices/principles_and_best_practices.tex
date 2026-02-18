@@ -1,0 +1,325 @@
+\section{Principles and Best Practices}
+
+\subsection{Databases in microservice architecture - Database per microservice principle}
+Principle - database per microservice. Otherwise tight coupling between services can occur
+In this principle, each microservice team fully owns it data and does not expose it directly to any other service, \textit{even at the cost of additional latency}.
+Whenever a given service requires data from another service, the reqeust has to go through the target service API.
+Additionally each service needs to abstract the actual database technology or structure at the API level.
+This way the team owning that microservice decides to change the database, technology or scheme, that change will be completely transparent to the consumers of that API
+Additionally if the changes also require some changes in its API, ew can always offer two versions of the API for few weeks or even months.
+This allows other teams enough time to make their changes and update to the new API without the need for any coordination.
+
+\subsection{Downsides}
+
+\subsubsection{Added latency}
+Added latency.
+Sending a network request to another service, parsing the reqeust, querying the database, sending it back and parsing it back
+adds a performance overhead compared to a simple query against the database directly.
+- When this performance overhead becomes and issue it is okay to cache or even store some of the data that belong to another microservice in the database that belongs to the microservice that needs that data.
+- However it is important to ensure that the source of truth remains in only once microservice, if we do cache or store data that belongs to a different microservice, we lose strict consistency and have to settle for eventual consistency.
+---- And that's because the data we store locally may be stale until we get the new data from the source of truth.
+
+\subsubsection{Inability to join data}
+The next downside is the loss of the ability to join data from multiple tables when all the data was represented as tables within the same database.
+- We could easily perform the join operations based on a common key or column
+- When we split that data across different databases, some which may not even be relational databases
+- No longer can we perform those join operations
+- The only way to achieve the same functionality would be to pull data from two different databases, then transform the data so both objects are represented in the same format and the perform that join programmatically.
+
+\subsubsection{Loss of transaciton guarantees}
+The next downside is the loss of transaction guarantees.
+- Going back to single database, we could modify rows in multiple tables as part of a single transaction and guarantee that the change to all those tables would be atomic.
+- Performing a distributed transaction across multiple services is very hard, even though it is theoretically possible in practice it is almost never used.
+
+\subsection{Summary - Motivations for a single database per microservice}
+Sharing databases causes tight coupling between services, code bases and teams causing a lot of coordination overhead.
+This overhead is eliminated when each microservice owns its own data and exposes it only through an abstraction API.
+
+\subsubsection{Challenges and drawbacks}
+\begin{itemize}
+    \item Worse performance i.e latency
+    \item More complex join operations
+    \item The loss of transaction guarantees
+\end{itemize}
+
+\subsection{The DRY principle in micrservices and shared libraries}
+The DRY principle doesn't always hold true in microservices, particularly in regards to shared libraries.
+
+\subsection{Why are shared libraries a problem in microservices?}
+
+\subsubsection{Tight coupling}
+First problem is tight coupling.
+When multiple microservices depend on the same library, those changes need to communicated to other teams that own those microservices.
+Those teams will have to make the appropriate chances in their codebase so they can continue using that library.
+Even if they API doesn't change, the microservices will still need to be built, retested and redeployed with every change in the shared library.
+Additionally a bug or a vulnerability in that shared library can potentially impact all the service that use it, which defeats the purpose of isolating those microservices as separate runtime units in the first \textbf{place}
+
+\subsubsection{Dependency Hell}
+Another issue when using a shared library is commonly referred to as dependency hell.
+Depending on the programming language or the runtime we may not be able to depend on two different versions of the same library.
+Additionally if we can we are breaking the DRY principle.
+Since our microservice, now has to load two version of the same library where most of the code is identical.
+
+\subsubsection{Application and binary size}
+Another downside is that it also increases the size of our binary and the time to build and test it.
+
+\subsection{Alternatives}
+
+\subsubsection{First scenario is when business logic is shared across multiple microservices.}
+First scenario is when business logic is shared across multiple microservices.
+This situation may indicate that we incorrectly set the boundaries between those two microservices.
+A core principle of microservices is the single responsibility principle.
+If we followed the decomposition by business capability or subdomain, it would be unlikely that we would end up in this situation.
+If we don we may want to consider re-evaluating those boundaries.
+One option would be to adjust the boundaries of those two microservices, so only one of them contains that business logic and the other doesn't.
+
+Another option is that business logic is complex enough is that we can separate it into its own microservice.
+
+\subsubsection{Sharing common data models between microservices}
+Another situation is when we need to share common data models from communication between two microservices.
+In this situation having shared libraries is actually a good practice.
+The reason for that is when it comes to communication between two microservices, we actually want the two teams and codebases to be codependent.
+If the APi or data model of once microservice changes to the point that they cannot communicate, we actually do want to break the tests as soon as possible.
+Otherwise if we don't share but duplicate that code, the tests each may pass successfully and no detect the change in the other microservice.
+So those two services may not be able to communicate at runtime and we'll only find out about it only in production
+
+\paragraph{}
+Another approach to this problem is using code generation tools based on data model or \textbf{schemas}
+In this case, we have a shared scheme representing the common data model between the two microservices.
+Depending on the type of the API language or technology we can use the appropriate tool to generate the corresponding data models and boilerplate code for the communication between the microservices.
+So long as the code is generated based on a shared interface definition and that generation is performed as part of the build and test process, its a very common and safe approach when it comes to other code, such as itility methods that frequently change.
+Its better to duplicate it across different microservices instead of trying to reuse it in a share library.
+This way, each microservice can have it own more specific implementation of that logic optimised for its own use case.
+This also makes it easier to migration the entire code base of a microservice to another programming language if we want to.
+
+\subsection{Avoiding code duplication}
+If we absolutely don't want to duplicate a particular piece of code, there are two options.
+
+\subsubsection{Sidecar pattern}
+Use a sidecar pattern
+In this pattern, we package and deploy the shared functionality as a separate process.
+Instead of running it as a separate service, we run this process on the same hosts as the microservice instances.
+This way we can share the same functionality across multiple instance of the same microservice and across multiple instances of different microservices.
+The microservice instance can communicate with its co-located sidecar process using standard,well known network protocols.
+Since the sidecar process and the microservice process are running on the same host, the performance overhead of this communication is relatively smaller that if we ran processing on different hosts.
+On the other hand this overhead is still higher than if we ran that logic as a shared library inside the microservice process.
+
+So as the second option, in the rare cases when we have very generic ans table code that rarely changes, such as logging, retrying and pattern matching its okay to use shared libraries as long as they don't lead to dependency hell.
+These libraries should be as self-contained and independent of on another as much as possible, but this should be a last resort.
+
+\begin{note}
+    Inside the code base of each individual microservice we should still follow the DRY principle as usual.
+    So code duplication within a microservice is unacceptable and we should always extract common logic into a single method class or modules.
+\end{note}
+
+\subsubsection{Data duplication}
+Duplicate microservice data can seem like a waste of space but sometimes it is necessary to improve performance, if we don't want to pay the price of sending a request to another service for data, then we can store a cache of that data inside of our microservices.
+In microservice architecture, this approach is acceptable as long as two things are considered.
+
+\paragraph{}
+The first is only one of the microservices need to be clear owner and source of truth for that data.
+That means that only one microservice can get, write, update or delete operations to that data and the other microservice containing a copy of that data get only read operations.
+
+\paragraph{}
+The second thing to understand, when we duplicate microservices data across microservices we can only guarantee \textit{eventual} consistency.
+
+\begin{note}
+    This is very important for situations where strict consistency is important, data duplicates should be avoided.
+\end{note}
+
+\subsubsection{Summary}
+DRY doesn't always apply to microservices
+Shared libraries can lead to tight coupling i.e share rebuilding, retesting and redeploying in unison as well as dependency hell.
+Alternatives to shared libraries, separating complex business logic into a new microservice using the side care pattern, code generation and duplicating code across microservices.
+Duplicating data and code across microservices can be inevitable, and acceptable for performance reasons, but it should be noted that data consistency will be impacted.
+Also each microservice it needs to remain clear for the owner for each piece of data.
+
+\subsection{Structured autonomy for development teams}
+The myth.
+Each team has full autonomy in choosing their technology stack, tools, databases, APIs and frameworks.
+This is a major pitfall
+The first reasons is the upfront cost of infrastructure
+Consider after a monolith to microservices migration each team has to pay that cost again and duplicate that same effort for their code base and ecosystem.
+To make things worse maintaining all the infrastructure is an ongoing effort.
+
+So if we have a dedicated DevOps, QA, etc those engineers will have to migrate all the infrastructure of hundreds of microservices where each on is entirely different.
+Those teams will quickly get overwhelmed and have to hire more people to keep up with the jungle of technologies.
+Besides setup and maintenance cost there is also a cost associated with learning and becoming productive using all those tools.
+Any new developer on a given team, needs to read through the documentation, learn and memorise all their best practices and get used to following them in their daily work.
+What if they need to work on another teams code base to make a small change, see how they setup a particular integration tests or what their configuration looks like.
+It would be a huge learning curve and would not scale in a large organisation.
+
+\subsubsection{Non uniform APIs}
+There is also the problem of non uniform APIs
+In the end all these microservices need to come together as one system and communicate with each other to accomplish a common goal in an easy and performance way.
+Code what would happen if every team that owns a microservice could define their own API in their own style, following their own best practices.
+Frontend engineer would need to learn the API of each team and integrate with it.
+Call different endpoints with different styles, naming conventions etc.
+This will lead to a huge hard to maintain mess.
+
+Basically, this free reign will make an engineer have to read a bunch of documentation to ensure that their work adheres to best practices.
+
+By allowing each team full autonomy we are actually making things a lot worse and introducing a lost of overhead.
+We should really aim for structured autonomy.
+Each team is autonomous but only within certain boundaries which can be grouped into three tiers.
+
+\subsubsection{Tier one - most restructure and describes areas that should not be under each teams jurisdiction.}
+Instead those areas should uniform across the entire company.
+That includes infrastructure monitoring and alerting, as well as continuous integration and continuous deliver technologies and scripts.
+This way we can invest a lot of effort into adopting or building this infrastructure from scratch.
+That effort is going to be amortized across the entire organisation making this investment cost effective.
+
+Another reason that should be uniform across the company is guidelines and best practices for defining public and internal APIs
+This should be obvious because external clients don't care that they're sending requests that end up in different microservices inside our system and also internally.
+It makes integration and communication between different microservices belonging to different teams very easy.
+
+The final area that should be standard and uniform across all the microservices is security and data compliance processes.
+If one microservice becomes hacked then the entire system becomes vulnerable.
+If one of our microservices violates some local privacy or data retention policy our entire organisation will be held accountable.
+Nobody will care that it was the fault of a single small microservice.
+
+\subsubsection{The second tier - allows some freedom, but within some boundaries.}
+This includes choosing a programming language and database technologies.
+Each runtime and data storage solution is optimal for a different use case.
+However the set of approved programming languages and database technologies should be restricted.
+This is to prevent a complete jungle of technologies which can happen if every team *can choose the latest and most fashionable programming language for their microservice*
+It also takes a lot of time for each company to develop expertise in managing configuring and running each type of runtime and database in production.
+
+Most big companies use no more that a handful of programming languages across hundreds of microservices.
+
+\subsubsection{The last tier - give each team complete autonomy.}
+This includes, the release process, schedule and frequency.
+This way each team can work entirely independently from other teams and release new feature based on their workload priorities and requirements and develop their own custom script and tools specifically for their need to make their local development and testing more efficient.
+
+Also each team should fully own its own documentation and onboarding process for new developers.
+Its important to callouts, that those are general guidelines and best practices and the actual boundaries of those three tiers differ slightly in different companies.
+
+One factor is ths size and influence of DevOps or SRE teams.
+Typically companies with more dominant DevOps or SRE teams lean more towards common standards, which make their life managing the system easier.
+Another factor is the seniority of the developers hired in the company.
+Generally, the more senior developers are the more freedom they prefer in setting up or building their own infrastructure.
+
+Another factor is the companies culture.
+Some companies stick to one langauge, perk of this is they can hire developers once and move them between different teams with very little overhead.
+
+\subsection{Micro frontends architecture pattern}
+The monolithic frontend.
+One team maintains a single frontend while the backend uses microservices.
+A single team is currently looking after the frontend.
+This can create a dependency on the frontend team when just one of the microservices wants to make a change causing the frontend team to become a bottleneck in the organisation.
+The frontend team can also end up developing expertise that belongs to other teams.
+This leads to tight coupling to the back end team and the already constrained front end team.
+
+The monolithic front end code base has another problem.
+As a business grows so does the front end.
+So the single code base becomes very large and hard to maintain and reasons about.
+It also takes longer to test.
+IF we want to release a new UI feature the entire front end needs to be rebuilt, retested and redeployed.
+These are similar problems to a monolithic backend but now in the frontend.
+
+To solve this problem we can use the pattern.
+Micro-Frontends.
+
+\subsubsection{Microfrontends}
+In this pattern we split the monolithic web applicaiton into multiple front end modules an libraries that act as an independent single page applications.
+The splitting can be done by business capability or domain, just like in the back end.
+In most cases each page in the web application becomes a micro-frontend, by we can also have several micro-frontends visible on the same page.
+Each Micro-frontend is completely decoupled from the other micro-frontends and should know how to mount and unmount itself from the DOM in the browser.
+Each Micro-frontend can also be loading in the browser as a standalone web application for testing purposes.
+
+More importantly it is owned by a separate team with full stack capabilities and the domain knowledge to develop and maintain this Micro-frontend.
+All those micro frontends are then assembled together at run time by a container web application.
+When the user loads our site on their browser, the role of the container application is to render common elements like page headers and footers and take care of common functionality such as authentication and shared libraries and tell each micro-frontend when a where they need to be rendered on the page.
+
+Micro-frontend is an architectural pattern not a web framework or library.
+Many frameworks support it but it is not required.
+
+\subsubsection{Shared web components vs micro frontends}
+A micro-frontend is basically a single page application with very limited business functionality,
+Different micro-frontends may reuse common UI elements but the two concepts are unrelated.
+
+\subsubsection{Benefits}
+Replace the big complex monolith with a few small, more manageable code basses.
+Each for a different Micro-frotnend.
+Now each team fully owns its domain and technical stack end to end.
+Each micro front end is much easier and faster to test in isolation since its scope is a lot smaller
+Each micro-frontend has its own CI pipeline an deployment process and each team can release new features on its own schedule.
+
+\subsubsection{Best practices}
+First - Ensure that hte Mirco-frontends are loaded atr runtime and are not express as compile or build time dependencies of the container application
+Otherwise all we did is just separate the code base logically, but at run time we would still have a monolithic frontend requiring complete redeployment for every new features.
+Next best practice is to make sure that Micro-frontends don't share state and the browser sharing state would be the equivalent of different microservices sharing a data base which is generally a bad approach.
+
+If different microservices need to communicate with each other they can do it using on e of the following ways. Using cusotm ervents, passing callbacks or using the browsers address bar.
+
+\subsection{Summary}
+
+\subsection{API management for microservices architecture}
+Problems we are trying to solve.
+
+We have dozens of APIs endpoints exposed by different microservice that are hard coded across many frontend and client SDKs
+This tightly couples the client side code to the internal implementation of our system.
+Another problem is that different microservices may expose their API to different customers.
+
+While internally we may do our best to follow specific guidelines, it is not always possible to do this with external APIs
+For instance, in the same service we may have to expose one type of API for a partner company that only supports some old API technology but then we have to expose the same API functionality to two other companies that support newer but different API technologies.
+Additionally we may have different versions of the same PAI for different tiers fo clients with different capabilities based on their subscriptions level.
+
+This Jungle of APIs can become hard to manage and reason about.
+Another problem is controlling and monitoring how each client or device interacts with out system.
+Finally a lot of boiler plate code such as authorisation, rate limiting etc has to be implemented in each microservice.
+
+This can lead to a lot of effort, duplication and wastes a lot of time for each team that could instead focus on something else.
+
+So to decouple out client side from the internal architecture and make API management easier we can use the API gateway pattern.
+
+The API gateway pattern is particularly useful for microservices architecture and is ued by many companies.
+This pattern places a component called API gateway at the entry to our system and is responsible for all the API management.
+
+In the simplest scenario, the API gateway simply routes request for given API endpoint to the relevant microservice that handles it.
+In a lot of cases it can do more than just routing requests.
+Can also perform translation between data formats when that receiver and sender microservices can support.
+This can make the API definition and management much easier and cleaner for each microservice because they don't have to care about the different clients an their specific limitations.
+They can all follow one standard and utilise the same infrastructure in addition to routing the reqeust to the corresponding microservice.
+The API gateway can also perform traffic management and throttling.
+Can also delegate authorization and TLS termination to the API gateway.
+So microservice don't have to worry about it and can focus on business logic implementation.
+Also since all the traffic from our front ends is going through the API gateway, we can easily monitor it.
+This enable use to detect issues in particular APis or analyse the behaviour of our clients and partner companies.
+
+Finally, certain implementations of an API gateway can even allow fanning out a given request to multiple services and aggregating the result before sending it back to the client.
+This is a critical feature for multiple reasons.
+First reason is that it even further decouples the clients from out internal implementations.
+Example, internally we can refactor those service sby either combining several microservice into one or splitting an existing microservice into multiple microservices.
+And all of those implementation details will remain completely transparent to the suer.
+
+\begin{note}
+    This feature is also very important for mobile devices and IOT since each network reqeust of their end directly affects their battery life.
+\end{note}
+
+\subsubsection{Load Balancer vs API Gateway in microservices}
+
+Both route incoming network requests from a client to a single destination.
+Similarities end \textbf{there}
+
+Main difference is the purpose.
+The role of a load balancer to balancer traffic on a group of servers.
+Those servers usually run identical copies of the same application in the context of microservices.
+We typically have a load balancer in front of each microservice where each microservice is deployed as a group of identical instances.
+
+ON the other hand, the purpose of the API gateway is to be out systems public facing interface.
+Its role is to route requests, not to servers, but to services based on different criteria.
+
+Besides the difference in their purpose there is also a difference in their functionality.
+
+The load balancer aims to be as simple as possible to to reduce the performance overhead.
+It also usually performs health checks on its backend servers to ensure it doesn't route requests to unresponsive servers.
+Also offered different load balancing algorithms for different workload.
+
+On the other hand, the API gateway is expected to provide many other features such as throttling, monitoring, API versioning and management protocol and data from translation and so one.
+Since those components have different purposes, they're usually used together in microservices architecture.
+
+\subsubsection{Managing APIs in Microservices}
+Using the API gateway service at the entry point to ours system allows for the routing of requests to different microservices.
+Additionally, it provides us with many features like throttling clients that send us to many requests, handling authorization and TLS termination protocol and data translation monitoring in additional to other.
+Not the same thing as a load balancer incase I forget or they serve different purposes.

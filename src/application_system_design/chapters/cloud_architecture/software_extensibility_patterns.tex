@@ -1,0 +1,161 @@
+\section{Software Extensibility Architecure Patterns}
+
+These patterns allow for the extension of the functionality and the capabilities of a system.
+The problem we are trying to solve here is that each service has a core function.
+Basically the reason for its existence.
+In addition to this the service may need to do other things, typically collect metric about performance and send them to a monitoring service.
+Periodically,it also needs ot log events and send them to a distributed login service.
+Also to communicate with other service , it typically need to connect o service registry where it gets the most upto date address of all the services.
+May need to pull configuration files and parse them so it can adapt its business logic on the fly without having to be restarted.
+Just few examples of functions required beyond the core business logic.
+
+These functionalities are needed by multiple services and not just one.
+Following code reusability principles, one solution can be implemented those functionalities as libraries or multiple libraries.
+Can import and reuse inside each service code base.
+However one major problem with this approach, in a typical microservice architecture or any multi service architecture, we may want to utilised different programming languages for different problems.
+Its not uncommon to have one service in Java and another in Python etc etc
+Can't really use the same library here, would require re-implementation and they may be incompatible or inconsistent.
+This can be due to different language specific differences, data types, or bugs in the implementations.
+Otherwise, deploying those shared functionalities as separate service feels like an overkill and has its own problems.
+
+\subsection{Sidecar and Ambassador Pattern}
+In this pattern we take the additional functionality required by the application and run it as a separate process or a separate container on the same server as the main application.
+So we get the benefit of isolation between the main service instance in the sidecar process, but at the same time they are still sharing the same host.
+So the communication between them is very fast and reliable.
+In addition since the sidecar and the core application are running together they have access to the same resources, like the file system, CPU or memory.
+
+This way the sidecar can do things like monitor the hots CPU or memory and report it on the main applications behalf.
+
+Can also read the application log files and update its configuration files easily witholut the need for any network communication.
+Also the isolation we get from running the sidecar as a separate process allows us to implement the sidecar in one language once and reuse it in any other that needs it.
+If we need to make an update all we need to do is upgrade the side car code and deploy it all to the service instances at the same time.
+Sidecar changes don't happen very often.
+
+Every time there is a change in the core service functionality, the team that own that service need to test only the changes they made in the business logic and not the functionality of the side car.
+This makes testing and deploying new business feature must faster and easier.
+
+\subsubsection{Ambassador pattern}
+A special side car that is responsible for sending older network reqeust on behalf of the service.
+It is basically like a proxy but runs on the same host as the core application.
+The main benefit of using this pattern is that we offload all the complex network communication logic outside of the service responsibility.
+This way the code base of the core service becomes a lot simple as it containers all the relevant business logic and nothing more.
+
+On the other hand the ambassador implementation can take all the heavy lifting of handling, retries and disconnections, authentication, routing and the specifics of different communication protocol and versions.
+Now additionally, since all the communication from all the service is done through it co-located ambassador sidecar using this pattern, we can also easily instrument out network communication and perform distributed tracing across multiple services.
+
+Ultimately this will help us isolate the use to a particular service.
+
+\subsubsection{Summary}
+Side car is a good way to extend the functionality of a service without having to re-implement the additional functionality to every programming language and also without having to provision additional hardware for a separate service by running the sidecar on the same host.
+With the main application instance, we get the benefit sof the isolation between the sidecar and the core service, but also we get the benefits of running them close together in terms of access to the same resource and the low overhead of inter process communication.
+
+Ambassador pattern.
+Using that pattern, we don't just extend the functionality of the core service instance but offload all the complexities of the network communication and security to the ambassador instance.
+
+\subsection{Anti Corruption Adapter Pattern}
+Applied when dealing with migration problems.
+Scenario
+Monolith is outdated, may be using old technologies or a very complex database scheme and its API is also very outdated.
+The development team became too big and the code base became too complex so we decided to start breaking this monolithic application into microservices.
+Also want to modernise the entire system and end up with a new modern technology stack.
+Can't just stop and focus on architecting a completely new system build with microservice, architecture and the latest technologies.
+Usually take a small isolated part of the monolithic application and create a brand new service with its own database for that functionality and run it together with the original monolith.
+Repeat this process over and over again until the original monolith is gone and we end up with a modern set of microservices with a brand new technology stack.
+
+Until then we still rely on the old monolithic application for some functionality and data.
+So the problem here is we have new part of our system them needs to support old protocols APIs and data models of the old part of the system.
+
+This leads to so called corruption of the new and clean services that now have carry this legacy stuff around its code base until the migration is complete.
+
+This is the use case of the anit corruption pattern.
+
+In this pattern we deploy a new service between the old system and the new system that acts as an adapter between them.
+The new part of our system talks to the anit corruption adopter service using only new data models, APIs and technologies as if the old system is just a part of a new system
+The anti corruption adopter service performance all the translation and forwards the reqeust ot the old monolithic applications.
+Similar, if the old monolithic application need to talk to any of the new microservices, it talks only to the anit corruption adopter service, which translate the communication to the new APIs and data models of the relevant microservices.
+
+This anti corruption adapter service exists for as as the old part of the system exists.
+Once the migration is done, we can get rid of the adopter service.
+In realise, we are often stuck with some part of the old system, which is referred to as legacy code.
+
+In many cases, we can't or don't want ot fully migrate it but we can't really get rid of it.
+
+\paragraph{Example}
+%TODO examples here
+
+\subsubsection{Challenges and overheads}
+Has the same needs as any other service in out system.
+\begin{itemize}
+    \item Needs to be developed, tested and deployed just like any other service.
+    \item Needs to be scalable so it doesn't become a bottleneck.
+    \item Even if we make effort to make this performant service, it will still add a layer of latency due to the translation between APIs
+    \item Also in a cloud environment where we pay for every resource, having the anti-corruption adopter service permanently will cost us money.
+\end{itemize}
+
+One way to mitigate this is to use a function as a service
+So if the anti corruption adopter service is not used very often, then we will pay only for the time and resources it uses when it actually runs.
+If it used very often then we will need to make peace with the cost of having that service for as long as we need it.
+
+\subsubsection{Summary}
+Using this pattern we can isolate two parts of our system and prevent one from polluting or corrupting the other.
+Two scenarios
+- Have two systems run side by side
+- A data migration
+
+Challenges
+-- Extra service with overhead, cost, development resources as well as extra latency.
+
+\subsection{Backends for Frontends Pattern}
+When a company becomes more successful the large scale systems problem come in.
+
+Monolithic backend is very big and has loads of different feature for different frontends....mobile/desktop etc etc
+
+Organic solution is to have extra teams of engineers to maintain the backend and then teams for maintain the different frontends.
+May work initially, but this organisation separation introduces other challenges.
+
+Every feature that a front end team want to introduce needs to be coordinated with and approved by the backend team.
+Then they need to work out the API details, prioritise and coordinate the work so they can deliver that feature simultaneously.
+
+Backend engineers who prefer code and API reusability will often try to create as much shared functionality between all of the frontends.
+Trying to create a unified experience can result in being able to take advantage of all the capabilities of each front end or will end up with a sub optimal experience for one or even all of device users.
+
+Solution here is to use a pattern called backends for front ends.
+
+Using this pattern we break the monolithic backend service into separate backends, once for each type of frontend we support.
+Each of those backend services contains only the functionalities of the relevant front end, which make its code base a lot smaller and its runtime lighter as well as less resource intensive.
+More importantly, its code is fully dedicated to providing the best and most optimal experience for that particular front end only, which will ultimately give out customers the best and most optimal experience.
+
+On the organisational side, because the backend code is now a lot smaller and similar we can have a dedicated team of full stack developers dedicated to each pair of front end and backends.
+
+This way if a developer wants to deliver a new feature to the iOS version of an app for example they don't have to depend on another team.
+These developers can do all the API design and implementation work on both the front end and the back end without any friction.
+
+\subsubsection{Challenges}
+Need a way to avoid duplication shared functionality across multiple backends.
+May be tempting to organise all the shared logic and APIs as a shared library and reuse it across multiple backend services.
+This can work if the logic doesn't change often.
+
+As a general rule, having shared code across multiple code basses in the form of a library is a point of tight coupling and friction between those teams.
+The reasons for that is that nay change in the shared library can affect all the backends that use it.
+Once again this requires coordination, meetings an through testing of all the microservices.
+Theres is also the lack of ownership when it comes to shared libraries.
+I.e hard to decide who owns what when it comes to code quality, consistency, release schedule etc.
+
+Another approach is to have the shared functionality as a separate service with a clean and well-defined scope API and ownership by a team.
+The second consideration or question is how granular should we be when applying the backend for frontends pattern.
+One for Android, iOS and desktop etc. One for mobile on for backend.
+
+It depends
+Main factor in making this decision is figuring out how different or unique the features and the code paths are.
+Important because we may not gain anything from additional granularity.
+
+\paragraph{Further example}
+%TODO further example
+
+\subsubsection{Application in a cloud environment}
+Since we can rent any kind of hardware an dpay accordingly, we can easily replace the original set of powerful virtual machines which we use for big back ends with multiple, more lightweight less powerful an cheaper virtual machines for the different backends.
+Can also choose the right hardware for each type of frontend if the resource demands turn out to be different
+I.e if we want to run more server side computations we may want more CPU etc.
+Can use load balancing using parameters or HTTP headers.
+Example we can use is the user agent header which can tell us what type of device or platform the request is coming from.
+Use of this pattern can help extend the functionality of our system to different front ends.

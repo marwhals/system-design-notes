@@ -1,0 +1,120 @@
+\section{Testing Microservices and Event-Driven Architecture}
+
+\paragraph{Motivation} Before deploying a system we to production we need to gain confidence through automated tests.
+
+\subsection{Monoliths}
+%TODO get testing pyramid picture
+Three categories - Unit, Integration and End to End tests
+
+\subsubsection{Unit tests}
+Unit tests - cheapest to maintain, they are small, easy to write and fast to execute because they are so cheap.
+Include a high number of them.
+Located at the bottom of the pyramid.
+Provide the least confidence about the overall system since they only test each unit in isolation.
+Once we run the application we have no idea if those units will work together or not
+
+\subsubsection{Integration tests}
+Integration tests
+Those tests verify that different units and systems we integrate with such as database or message broker actually work together.
+Those tests are bigger and slower so we should have fewer of the than unit tests.
+After running them we have more confidence in our tests
+
+\subsubsection{End to end tests}
+End to end tests-- at the top
+These tests run the entire system including UI and database and verify they work as expected
+From an end user perspective each such test should represent a particular user journey or business requirement and ensure it matches the specification for the application
+Heaviest and most expensive tests to run.
+Minimise the amount of these tests.
+These tests provide the highest confidence that our system will work as intended in production
+
+\subsection{Translating testing pyramid into microservices}
+Each team should follow the same steps as the monolith, i.e pyramid for each microservice.
+Then we treat each microservice as a small unit that is part of the larger system and put it in a larger testing pyramid.
+So just like in case of unit tests testing each microservice in isolation is essential but not enough to increase the confidence that all the microservice will work together
+
+\subsubsection{Microservice level integration tests}
+Need another layer of integration tests.
+Those integration tests verify that every pair of microservices can talk to each other using the agreed API while mocking the rest of our system.
+To complete this pyramid we need to add system level end to end tests at the very top
+Those tests in theory should run all of our microservices, databases, message brokers and frontends in a test environment.
+This should verify that all components work together as expected.
+
+\subsection{Challenges}
+
+\subsubsection{First challenge - end to end tests are hard to setup and maintain despite providing the most confidence}
+It unclear what team should own this environment and when one of the microservice teams breaks their build the entire test pipeline will be broken.
+This can result in teams being blocked and unable to make any releases to production.
+Alternatively, developers may just start ignoring end to end tests lol and release their microservices anyway which makes tests a liability with no benefit.
+Very costly to run what is essentially a duplicate environment of the production environment even if the scale is smaller.
+In practice some companies spend disproportionately too much effort building and maintaining those few tests while other companies decide to take the risk and simply don't bother investing in those tests at all.
+
+\subsubsection{The second challenge}
+The second challenge of hte new pyramid is that even running integration tests can be quite difficult and creates a point of tight coupling between teams.
+When the that owns MMicroservice A that consumes the API of microservice B wants to run integration tests it needs to build, configure and run both microservice while Team A knows how to build and run their own microservice.
+It may be unclear to them how to setup microservice B, its even more difficult if microservice has many dependencies like a database or another service that needs to run or mocked.
+The team that owns Microservice B has a problem, this microservice may have multiple microservices that consume its API.
+To ensure that the changes that make in their API did not break all those API consumers they need to build, configure and run all those consumers to execute those tests.
+This can easily get out of hand and slow down the development of our entire organisation.
+
+\subsubsection{Third Challenge}
+Third challenge is when using event driven architecture to decouple microservices.
+In this case we have a microservice that produces events to a message broker and it actually doesnt always know which microservice consume those events.
+This kind of decoupling is one of the benefits we want from event driven architecture
+However now we can't really run any integration tests with those microservices
+Also have the same problem when we are a team that owns a microservice, that consumes events from other microservices.
+Here again we, need to run those microservices and a message broker just to test that our microservice is able to consume those events and that the events did not change without out knowledge.
+
+\subsection{Contract Tests and Production Testing}
+Many companies invest disproportionally high efforts into end to end tests or abandon them altogether.
+Other challenges between the integration of microservices, which included their complexity and tight coupling between teams.
+
+\subsection{Testing challenges solutions}
+
+\subsubsection{Integration tests}
+Integration tests
+To deal with the complexity of integration tests, use light weight mocking.
+Mock the API layer of the microservice dependencies which we wish to integrate with and send it back a hard coded response if it receives the expected request.
+Similarly other microservices can run mock consumers rather than running real microservices.
+They can write tests that make those mock consumers, send us requests and test that out microservice returns the expected service.
+The strategy reduces the coupling between the different teams because if one team breaks their build the other team can continue running its tests.
+It also reduces the overhead of running real instances of the other microservices.
+
+\subsubsection{Integration tests: Major issue}
+This strategy on its own has one major issue
+The issue is that the contract between an API consumer and the API provider can get out of sync without those teams ever detecting \textbf{it}
+
+\paragraph{Example}
+The API provider team may change its API update, its mock consumer and its tests and all their tests will pass successfully,
+However the communication about those changes may be lost or misunderstood by microservice A which consumes that API, so that they either make incorrect changes and their tests will also pass.
+Once in production those microservices won't be able to communicate with each other and cause an outage.
+This motivates the existence of contract tests.
+Contract tests work by using a dedicated tool to keep the mock API provider and the mock API consumer in sync through a shared contract.
+When the API consumer team runs their tests, they are run against their mock API provider is recorded along with the expected response into a contract file.
+This contract file is the shared with the team that owns Microservice B, which provides that API using this contract.
+The team that owns Microservice B replays all those recorded requests to the real microservice B and verifies that the responses it gets are the same as recorded in the contract and if microservice B has many consumers, it will take all their recorded contracts, create those mock consumers and run each one against their actual API implementation
+
+\paragraph{End goal}
+End Goal of this: each team can run its own integration tests without dealing with the complexities of building, configuring and running other microservices.
+The contract test tools guarantee that each team tests against the most up to date and correct contract shared between those microservices.
+We can also extend the idea of contract tests to integration tests between microservices. ****Insert concrete example****
+Contract tests can simplify running integration tests for microservices that communicate synchronously and asynchronously but still give us high confidence that when we deploy those microservices to production, they can communicate with each other as we can expect.
+
+\subsection{End to end tests}
+Contract tests can be a substitute for integration tests but they are not a substitute for end to end tests.
+If setting up end to end tests is is not feasible, the alternative is testing in production
+
+One way is using a gradual release using blue/green deployment in combination with canary testing.
+
+\subsubsection{Blue green deployment}
+A blue green deployment is a safe way to release a new microservice version to production using two identical production using two identical production using two identical production environments without any downtime during the release.
+The blue environment is a set of servers or containers that run out old version, and the green environment is a set of servers or containers that run the new version we want to release.
+Once we deploy the new version to the green environment, no real user traffic is going to it.
+This is an opportunity to increase our confidence by running automated and even manual tests against those servers without impacting real users.
+After we run those tests we can shift a portion of the production traffic to the green environment and monitor the new version for performance and functional issues.
+This process is called canary testing.
+If we detect an issue, we immediately direct the traffic back from the green environment to the blue environment with minimal impact on users.
+On the other hand, if no issues are detected we direct all the production traffic from the blue environment to the green environment and gradually decommission the blue environment since it's no longer needed/
+
+\subsection{Summary}
+
+These alternatives should be used only if they are setting up real microservices in development stage for testing purposes is too complex or expensive.

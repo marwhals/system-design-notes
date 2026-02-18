@@ -1,0 +1,321 @@
+\section{Load Balancing Pattern}
+
+\subsection{Problem being solved}
+Simple web app with high traffic will eventually run out of CPU, memory or network capacity of single server will either crash or significantly degrade its performance.
+A situation we want to avoid and upgrading that server to a more powerful virtual machine will only delay this problem.
+
+\subsection{Pattern Description}
+The load balancing as a pattern places a dispatcher between the source of the data or network requests to out system and the workers that process that data and send back out response.
+In this pattern, the dispatcher routes each request from the client to one of the available workers.
+This was if the number of clients grows or the rate at which those clients send us requests increases, we can add more workers and spread the load among all of them.
+This allows for the scaling of our system very quickly without the need to make any significant changes to out system.
+
+A very common use case of load balancing is balancing HTTP requests from the front end to the backend.
+The front end can be either a mobile app installed on end users devices or run as a client side JavaScript on the user's web browsers,
+and the back end is a set of application instances we run on the cloud infrastructure
+
+Those applications instances typically run as identical copies of the same application on separate physical or virtual machines.
+This way, instead of the clients sending a reqeust from the front end directly to our backend servers, their requests all go to the load balancing dispatcher and this dispatcher routes each request to one of the application instances.
+
+Example, if service one and service two get a lot of requests, we can scale them up and place more workers behind their load balancing dispatchers, but if service three doesn't get that much traffic then we can scale it down, which will help us save money.
+
+\subsection{General Techniques}
+
+\subsubsection{First Technique - Use a cloud load balancing service}
+The first one is by using a cloud load balancing service.
+This is a special cloud managed service whose entire purpose si to accept a high load of network requests and root them to our backend servers
+The implementation details of the cloud load balancing service are hidden from us and are considered proprietary tech lock in.
+They may start with a single load balancer instance that takes all the incoming requests from the client and based on the configurable, the algorithm routes those requests to a group of out servers.
+
+However if we deploy our service instances in different isolation zones, then the load balancing service may also run as multiple instances, one in each zone and as the traffic grows that cloud load balancing service may scale itself up and run as a group of load balancer instances.
+Additionally each load balancer instance is monitored and is automatically restarted if something if something happens to it.
+This way we don't end up in a situation where there load balancer itself becomes a single point of failure or performance bottleneck.
+Now we can use the cloud load balancing service to route requests from external clients to out backend servers, but we can also use it between different services internally, just like we saw before.
+
+\subsubsection{Second Technique - Use a message queue or a distributed message broker}
+The second way to implement the load balancing pattern is using a message broker or a distributed message using the message broker.
+
+We can have one or multiple publishers sending messages to the message broker, and on the receiving end, we can have a group of consumer workers that read those messages similarly to the load balancer.
+Depending on the volume of messages, we can scale those messages similarly to the load balancer.
+Depending on the volume of messages we can scale those consumer instances up and down as we need to do so we can keep up with the rate of incoming messages.
+
+\begin{note}
+    Worth noting that message brokers should only be used internally between services, while a load balancer is perfectly suited for taking requests from external services.
+    And just like in the case of a cloud load balancing service.
+    Most modern message broker solutions are implemented as distributed systems that use replication, redundancy and run as a group of instances.
+    This way the message broker is scalable on its own and transient failures within the message broker do not impact our system.
+\end{note}
+
+\subsection{Software design and architecture considerations}
+The first consideration or decision we need to make is the algorithm the load balancer uses to route each incoming reqeust to a given worker.
+This routing algorithm heavily depends on the design of the backend we're routing traffic to.
+
+The first algorithm is round robin algorithm, the load balancer is routing each incoming reqeust sequentially to the next worker instance.
+This algorithm is very simple and is usually the default for evey load balancer implementation.
+
+\subsubsection{Important Note} This algorithm works well only under the assumption that our application is stateless.
+in other words the assumption is that each reqeust from a client can be handled in isolation by any on the target application servers.
+However, this isn't always possible and in many cases we need to maintain an active session between the particular client and the server its communicating with.
+
+Classic example of such a scenario is if after authenticating a suer we keep the users credentials on the server side to make every subsequent request faster.
+
+Now, if we use the round robin algorithm to route requests to such an application, the client would have to re authenticate every time for every single requests.
+Similarly, if a client is uploading a very broken down into multiple requests.
+We want to make sure that all those requests are going to the same server.
+
+And here again if we use the round robin algorithm, our system will just not work.
+In those cases, we can use a different algorithm which is called sticky session or session affinity.
+Using the algorithm, the load balancer tries its best to send traffic from a given client to the same server as long as that server is healthy.
+This can be achieve by placing a cookie on the clients devices, which will be sent with every request to the load balancer.
+
+Another way to do this is simply using the clients IP address as the identifying attribute in each request.
+From that point on, every reqeust that comes from that particular client can be tracked and routed to the same server for the duration of the session.
+However, this algorithm works great only for relatively short sessions, but if one particular server gets stuck with too many long sessions, then it will have a disproportionately larger number of requests to handle.
+
+For these situations, there is another algorithm which is called least connection.
+Using this algorithm, the load balancer will route new requests to servers that have the least number of already established connections.
+Open the least connections algorithm is particularly useful tasks associated with long term connections, such as in the case SQL, LDAP and other similar scenarios
+
+Another cloud computing feature that typically goes hand in hand with load balancing is a feature that is called \textit{Auto scaling}
+
+Typically, every cloud computing instance, such as a physical or virtual machine, runs a few big run processes called agents.
+Those agents collect data about the network traffic, memory consumption or CPU utilisation on each host.
+Using this real time data collected from each server, we can define out of scaling policies to increase or decrease the number of services based on those metrics
+Additionally, all cloud vendors allows us to tie those auto scaling policies to the load balancing service.
+It is always aware of the size and addresses of the backend servers at any given moment.
+
+This powerful combination between dynamic resizing and load balancing gives us the ability to automatically scale out system up when the traffic and demand is high and save costs by scaling it down when the traffic to out system is low.
+
+\subsection{Pipes and Filters Pattern}
+Follows the stream of water flowing through a series of pipes and getting filtered in multiple stages until it gets to the desired condition.
+Instead it is data and the filters are isolated components that process that data at different stages
+
+\begin{enumerate}
+    \item  A well designed filter performs only a single operation on the incoming data is completely unaware of the rest of the pipeline.
+    \item  The origin of the data is referred to as the data source and the final destination for that data after it gets through.
+    \item  All the desired processing stages is often called a data sink
+\end{enumerate}
+
+\subsubsection{An example}
+Data source - A backend service that receives network requests from the users or a lightweight service like a function as a service element that receives data samples from sensors or end devices.
+A few examples of data things can be anything from internal databases or a distributed file system to external services that listen to events from out system.
+The pipes that connect the filters in this pattern are typically distributed queues or message brokers.
+Its also worth pointing out that the entire data doesn't have to flow through those so called pipes.
+We can store data in a temporally location on the distributed files system or even a database and simply send notifications about the new data and where to find it
+
+\subsubsection{Examples and scenarios}
+Can start with a simple application that takes either a particular type of event or input request as a trigger.
+That event can carry some information that we need process through multiple stages before we make some kind of decision or get that data into a state that we can store in a database.
+If we take a monolithic approach and perform all the processing stages as part of a single application instance, running on some ype of hardware we may have a few problems.
+
+First problem is the tight coupling between all different processing components.
+For example, since they're part of the same application, they will need to be implemented in the same programming language
+
+What if we want to use some of Pythons machine learning libraries to implement one part of the processing pipeline
+While using Java or C\# to implement some complex business logic and C++ for example to performa some CPU intensive operations with all the components being part of a single application
+This can not be easily be done.
+
+Second problem is each processing type may require a completely different type of hardware to perform its processing most effectively.
+Hardware for machine learning, fast CPU cores etc, lots of memory, a high bandwidth network card
+
+If we have all the tasks implemented in a single application, we can't ever get to a point where each task is running on the most optimal hardware for its needs.
+
+Finally, each task may require a completely different number of instance to provide a good enough throughput and be able to handle the incoming data.
+If we split the processing pipeline into separate independently deployed software components, we can use the best programming language, or ecosystem for each type of operations.
+And since each such component can run on its own type of hardware we can guarantee that the entire pipeline runs optimally, not only from the performance perspective, but also in terms of the cost of infrastructure.
+Because in a cloud environment, each type of hardware is priced different based on its features and capabilities.
+We can easily scale the number of instances for each processing component as we need, while saving costs on more processing lightweight processing units for the others.
+
+Finally, we can also get higher throughput by executing independent tasks in parallel on separate computers.
+
+\subsection{Real life example}
+This pattern is extensively used for processing stream of data about user extensively for processing streams of data user activity, such as in the digital advertisement business.
+Its used to process data from end devices in the internet of things industry and its also popular in image and video processing pipelines.
+
+\subsubsection{Specific example - video sharing service}
+When a new video is uploaded, it needs to go through a few stages before it can be optimally streamed simultaneously to different devices in different geographical locations.
+
+\paragraph{First stage}
+The first stage may be splitting the original potentially large video file into smaller chunks.
+This allows downloading the video chunk by chunk when viewing it instead of waiting for the entire video to be downloaded
+Then once we have the individual chunks separated, we need to select a single frame form each chunk to be the thumbnail
+This way when user wants to jump to a different part of the video, they can have those thumbnails as guidelines.
+
+\paragraph{Second stage}
+In the next stage, we resize each chunk to different resolutions and bit rates
+This allows us to use a technique called adaptive streaming with the adaptive streaming technique
+We can change the resolution of the video dynamically while streaming the video to the user depending on their network conditions
+
+Example when they have a good connection we can send them high quality high resolution chunks of the video, and if their connection speed drops, all of a sudden we can seamlessly switch to the lower quality chunks to avoid buffering delays
+
+\paragraph{Final Stage}
+Finally at the last stage we encode each chunk in each of the different resolutions to different formats, so we can support multiple types of devices and video players.
+Audio parts, video needs to be resized frame by frame to different resolutions and bit rates.
+Audio doesnt need that , however we can pass the audio through a parallel pipeline of filters where we can use natural processing libraries and specialised hardware to transcribe any speech present in the audio into text at the next stage
+We can either provide caption to translate the text to different languages and then feed that to the captioning filter as well
+So at the end of this pipeline, we'll have the audio accompanied by text files that represent captions of that audio in different languages.
+Finally we can have another branch in out pipeline which can sample sections of the video or audio and run proprietary algorithms that detect whether this content is copyrighted or consider to be inappropriate for out target audience.
+
+In that case, it can either alert a special team of specialists to manually review it or simply reject the video altogether
+
+\subsubsection{Important considerations}
+Firstly, its important to note that there is quite a fair amount of overhead and complexity involved in maintaining this architecture, especially if the individual filters are too granular
+Its important to balance between that overhead and the benefits we get from having this clean separation
+The second thing is to keep in mind is making sure that each filter is stateless and is provided with enough information as part of its input to perform it tasks.
+The last important consideration si that this pattern is not a good fit for situation where all the operations within the pipeline need to be performed as part of a transaction
+The reasons for that is performing a distributed transaction across multiple independent components is extremely difficult and inefficient, especially if we need to abort and redo them frequently.
+
+\subsubsection{Summary}
+
+\subsection{Scatter Gather Pattern}
+%TODO fix this
+
+Similarly to the load balancing pattern in the scatter gather pattern, we also have the client or the requester who sends their request to out system.
+Then on the other hand, we have a group of workers that respond to those senders requests.
+In the middle we have the dispatcher, which dispatches the reqeust form the sender to the workers and aggregates their results.
+Unlike the load balancing pattern, where each reqeust from the sender is dispatched to only one worker, in the scatter gather pattern, the dispatch error allows the request to all the workers.
+Later the dispatcher gathers the response from all the workers, aggregates them into a single response and sends it back to the sender.
+Another difference between the load balancing pattern and the scatter getter pattern is that unlike in the load balancing pattern where the workers are actually different.
+Those workers can either be instances of the same application but have different data.
+They can be different service within our company that provide different functionality, or they can be external services owned by different companies that partner with us.
+The core principle of the scatter getter pattern is that each reqeust sent to a different worker is entirely independent of the other requests sent to the other workers
+Due to this process we can perform a large number of request completely in parallel, which has the potential to provide a large amount of information in a constant time that is independent of the number of workers.
+
+\paragraph{Examples}
+%TODO examples
+
+\subsubsection{Considerations}
+
+Each worker can become unreachable or unavailable at any given moment due to issues in the network or infrastructure.
+This can be an even greater issue if their workers were communicating outside of our organisation.
+
+The second thing to consider is decoupling out dispatcher from the workers.
+Use a message queue between the dispatcher and the workers to remove the dependency between knowing the existence anf the number of currently available workers.
+
+The final consideration is whether they expected the result from applying the scatter gather pattern is expected to be immediate or take a long time to accomplish.
+If the result is expected to be immediate, generally within a few millisecond or a hundreds of milliseconds then everything we describe should work just fine.
+However, if the service we're providing is some sort of deep analysis or reporting of big data which can take minutes or even hours to complete, then in this case, it may be beneficial to separate the dispatcher from the aggregator into separate services.
+
+\subsection{Execution Orchestrator Pattern for Microservices Architecture}
+Used primarily in microservices architecture
+
+In monolithic applications each operation can be described as a method or a function call.
+
+In large scale systems that run in the cloud, the monolithic approach is too restrictive and doesn't scale well.
+
+Many companies break the monolithic application logic into separately deployed and managed service where each service is responsible for a particular subdomain or business logic.
+
+In this pattern we have an extra service called the Execution Orchestrator.
+The service follows the analogy of a conductor of a symphony in an orchestrator in the sens that the conductor doesn't produce any song from an instrument themselves.
+
+The orchestrator pattern doesnt do any business logic.
+Instead, its job is to manage potentially complex or long flows by calling different service through different APIs in the right order
+
+Its also responsible for handling exceptions and retries and maintain the state of flow until it gets the final result.
+
+Can think of the orchestration pattern as an extension of the scatter getter patter, but in this case, we don't have one operation to perform in parallel but instead we have a sequence of operations.
+Certain stages of the sequence may be performed in parallel, if possible while others may be performed sequentially in a cloud environment.
+
+This pattern is used very frequently when we have a microservice arhitecture where each service is very limited in functionality to its domain by design and is typically unaware of other microservices to avoid coupling.
+In many cases, those microservice are even implemented as functions and deployed as a function as a service with the cloud vendor.
+THose functions dont run until triggered by an event and they stop running when they finish their job.
+This way we can save a lot of money if we have some microservice that don't need to run very frequently.
+
+\subsubsection{Microservices Benefits Reminder}
+A lot of benefits of this architecture
+Those benefits include faster deployment, smaller code base and more importantly higher scalability since each microservice can be scaled independently.
+
+However when we use this type of architecture, we need to have all the business logic spread out across many services.
+So having on centralised service that acts as the brain for this architecture is often the most natural approach.
+And this is why this pattern is used very frequently.
+
+This doesn't prevent the orchestrator from being deployed as multiple application instances on multiple computers behind a load balancer.
+So we don't have to compromise on scalability or reliability when using this pattern.
+
+On the other hand using this pattern, we can scala out architecture very easily by adding more services if we need to.
+
+The only place that needs to be modified if we make any API or architecture changes in the orchestrator service.
+
+\paragraph{Examples}
+%TODO examples
+
+\subsubsection{Failures and Recoveries}
+Since the orchestration service is the only service aware of the only service aware of the text and the execution steps.
+It is also responsible for dealing with errors or issues that may happen during the execution flow.
+Since the orchestrator is managing the entire flow, its also easy to trace and debug such failures.
+Reasons for this is that we always have the orchestrator logs as the reference which can easily point use to the faulty service or bug.
+
+What happens if the orchestration service itself dies in the process.
+The load balancer will reroute the request to another instance without any extra care.
+This new instance won't know that the registration with the user is already completed so it may attempt send another registration reqeust which will of course fail.
+So one way the orchestration service can track the progress in the registration process by maintain its own database inside the database?
+The orchestration service can persist the state of th eprocess for each user.
+This way a new instance of the orchestration service can always pick up the task at any stage.
+
+\subsubsection{Summary}
+There is one important consideration to keep in mind when using this software architecture pattern.
+its easy to make the mistake and start adding business logic into the orchestration service.
+Sometimes its inevitable because certain functionality may be too small for creating their own separate services.
+
+The resik here is that if the orchestration service becomes too smart and performs too much business logic it basically becomes this big monolithic application that also happens to talk to microservices.
+
+Its important to keep a pulse on every addition to the orchestration service and make sure that the scope of its work starts within the boundaries of orchestration.
+
+\subsection{Choreography Pattern for Microservices}
+Can be though of as a sibling of the orchestrator pattern.
+Problem - We have a collection of microservices where each microservice is responsible for a particular type of operations for specific domain.
+the microservices are completely decoupled from each other and are potentially not even away fo each other based on an external trigger such as an even or request from a user.
+
+We need a complete flow of transactions that span multiple microservice.
+
+One solution we offered was the execution orchestrator pattern, where we have a central service that executors a flow by communicating with the relevant services until the flow is complete.
+
+While the orchestration pattern is the most intuitive and easiest to implement it has a few drawbacks.
+
+\subsubsection{Orchestration pattern drawbacks}
+One of the drawbacks is the tight coupling to all the microservices in the system.
+Moving to microservices is done in order to speed up development by decoupling microservices from one another.
+Because the orchestrator pattern is tightly coupled teams will need to coordinate with one another via the orchestration service, and make sure they dont break any flow.
+This starts to share a lot of similarities with the monolithic application we moved away from.
+
+\begin{note}
+    This is more of a distributed monolith anti pattern.
+    In this anti pattern we get all the problems of the monolithic architecture and all the issues of the microservice architecture but without any of the benefits.
+\end{note}
+
+When we have frequent changes happening in multiple microservices, there is a better software architecture called choreography.
+In the choreography pattern we remove the smart orchestrator service and replace it with a dumb distributed message queue or message broker that stores all the invoking events at the same time.
+All the microservices in our system subscribe to relevant events form the message broker where they need to get involved.
+Once the microservice processes and incoming event, it emits a result as another event to a different channel or topic, which in turn triggers another servers to take an action and produce another event.
+
+This chain of events keeps going all the way until the completion of the flow of transactions.
+The analogy is a sequence of steps in a dance.
+
+\subsubsection{Advantages}
+The advantages of this pattern in microservice architecture are evident in terms of the loose coupling between services.
+Since the communication happens through asynchronous events, we can easily make changes and add or remove service completely independently from each other.
+This allows us to scale any flow to as many services as we want, and also we can scale out organisation much easily since we can have many teams operating autonomously with very little friction in the cloud environment.
+
+All or some of those microservices can be implemented as \textit{function as a service}, which means they don't consume any resources until an event.
+
+They're interested in in the triggers of and execution, and if they don't consume any resources, we don't have to pay for them which makes our system very cost effective.
+On the other hand if one service needs to handle frequent events it can scale automatically using our of scaling policies.
+
+\subsubsection{Downsides}
+Since we don't have a centralised orchestrator, it is a lot harder to troubleshoot things if they go wrong as part of the execution of a flow.
+Its also very hard to trace the flow of events since all of those events are asynchronous.
+Consider these things when planing in using that pattern.
+
+\begin{note}
+    Since the messages are done via a message broker the messages are not lost.
+    The messages can be processed when the service is back online in the event it is lost.
+\end{note}
+
+In an effort to catch issues before they go into production, we will need to write more complex integration tests when using the choreography pattern.
+This becomes an even bigger challenge as we add more services.
+
+\subsubsection{Summary}
+In this pattern all the microservices work together, following a sequence of steps to complete a certain flow.
+All the communication among the service sis typically done through asynchronous events.
+While this pattern is very scalable and cost effective, it may get a little challenging when things go wrong.
+Especially when we ned to pinpoint a problem with a particular service.

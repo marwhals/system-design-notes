@@ -1,0 +1,280 @@
+\section{Reliability, Error Handling and Recovery Software Architecture Patterns}
+
+\subsection{Throttling and Rate Limiting Pattern}
+Problems that this pattern helps us address.
+First problem is the potential overconsumption of one or multiple resources in our system.
+Think API being bombarded at a very high rate with requests.
+This can lead to one of two scenarios.
+One scenario is that our system just can't handle this rate of incoming requests pr data.
+The service instances run out of CPU or memory or both, and that results in extreme slowness in out entire system.
+This also puts us at risk of violating the SLA for all of our clients which may have financial implications.
+
+Another scenario we may end up in is we do respond quick to this traffic spike and scale out our system using auto scaling policies.
+This scale out could cost us more money then we anticipate.
+
+Regardless if that client had malicious intentions or legitimate need to call at a high rate we must protect ourselves from such a traffic spike.
+Another potential risk for overconsumption is if out system calls external APIs of other companies or of a cloud provider that accidentally may go over budget.
+
+An example of this is some sort of big data analysis as part of a batch processing job that we run on a fixed schedule.
+Basically want to avoid a huge bill from over consumption.
+
+In these scenarios we can use the throttling or rate limiting pattern.
+In this pattern we set a limit on the number of requests that can be made during a period of time.
+Similar in certain situations we can also impose limits on the bandwidth and set a maximum number of megabytes or gigabytes of data that can either be sent oread from out system at a given period of time.
+This limit, can be set for period of one second, one minute, one day and so on.
+
+Now the scenario where we are the service providers and need to protect out system from overconsumption is referred to as server side throttling.
+The other scenario is client side throttling.
+
+\paragraph{What should we do if the client exceeds the limit we set for them?}
+Few strategies.
+One is to simply drop requests.
+If we use this strategy it is a good practice send back a response with an error code that indicates ths reason why this reqeust was rejected.
+In HTTP this is 429 *Too many requests* --- this is communicated to the caller.
+
+\paragraph{Example}
+Some consumer asks for too much, we can just drop the requests on the server side while the client can still get what they need but not at the rate that exceeds the limit we set for them.
+
+Another strategy we can use is to queue up requests and process them later when we have capacity.
+%TODO Add online stock trading example........plenty of these lol
+Can simply queue the requests in a FIFO order and that execute those trades at a pace that does not exceed the limit we set for that client.
+So in this case, we simply slow down or degrade the service we provide to that client since they exceed the limit we set for them.
+
+We can combine these two strategies and set an upper limit.
+If that limit is exceeded then we start dropping those requests.
+
+This will prevent a situation where the client keeps sending us more and more trading requests which may in turn overload the capacity of the queue.
+
+In certain situation we can't drop or slow down the pace of handling reqeust but we can still degrade the service using other methods.
+---- Videos -- change the bitrate - avoid denying the service to the client.
+
+\subsubsection{Important considerations}
+First consideration is whether we throttle the requests on an API basis or a customer basis.
+==== API basis
+----- Can easily makesure our system doesn't go over the reqeust rate that we budgeted for
+----- Downside is that one client can send us a very high number of requests and therefor unfairly deprive the other clients of getting service.
+
+We can also implement throttling on a per customer basis.
+- This way we guarantee that each customer gets a fair share of our resources in an their level of service is isolated and independent from the other customers
+-- Downside of this approach is not its a lot harder for us to control the total reqeust rate form all the customers.
+-- Especially gets harder if we constantly get new customers signing up for out system.
+-- I can also get very complex if we have multiple tiers of customers where different customers get different quotas based on the level of subscription they are paying for
+
+Another consideration for implementing the throttling pattern is if our system has multiple services that may be used differently by different customers or API calls
+If we throttle externally on an API basis or customer basis, then we may end up overwhelming different parts of our system at different times depending on the workload.
+ON th other hand if we set separate limits on different services, then we need a much more complex throttling implementation that can track consumption across different services.
+
+\paragraph{Important note}
+The solution depends on the use case and the workload.
+
+\subsection{Retry Pattern}
+Note - If this pattern is not used correctly it can make things worse.
+
+The problem we are dealing with.
+System is calling another system through the network.
+In a cloud environment hardware or network errors can happen at any time and introduced delays, timeouts or failures that we don't have control over.
+
+Every time we make an external call to another resource, we always need to think about two scenarios.
+The first and easiest scenario is the successful response within the desired time frame.
+The second scenario is when we either get an explicit error with a message, an error code or our reqeust simply time sout.
+
+The successful scenario is great but what should we do in the unsuccessful scenario.
+
+First thing we need to do in this scenario is error categorisation.
+We need to decide if this error is user error or a system error.
+For example 403 user is not authorised to perform or access a particular resource
+- In this case, we should simply send the error back to the user with as much information as possible that will help the user correct it if applicable.
+- However for internal system errors, we need to try our best to hide the error from the user and attempt to recover from it if possible.
+- One way to recover from an internal system error is by using the retry pattern, we simply retry the same operation by sending the same reqeust to the remote server.
+-- Or we can retry the operation by resending the reqeust as many time as we want until we get out successful response
+-- If we do get a successful response in a reasonable amount of time, then we succeeded in hiding our internal issues from the user, which is what we wanted.
+
+\subsubsection{Caveats and considerations}
+
+First consideration is deciding which errors we want to retry.
+The only time we should retry is when we have reason to believe that the error we encountered is short temporary and recoverable.
+---- Example can be HTTP status code 503 is unavailable
+---- This is a server side error that is used to indicate the caller that the service is either busy or is done for maintenance temporarily.
+---- In that case, if after a short delay we resend the reqeust to the same service, out request may end up being routed by the load balancer to a different instance which is not busy.
+---- But even if the reqeust ends up in the same instance, there is a high chance that the instance has already recovered and is noe up and running.
+---- Another example can be request timeout to an internal service
+----- In this case, its possible that either the service instance we made the call to has crashed or the reqeust go lost in the network.
+
+Second consideration
+- the delay in back of strategy to use inbetween subsequent retries
+- CHosing the right delay and back off strategy is very important.
+If we aren't careful about it we may cause what's called a retry storm.
+---- This retry storm can cause an unrecoverable cascading failure in out system.
+- To make sure that we don't end uo in that situation we need to add a delay between subsequent retries.
+- This will allow the faulty servers to fully recover and get ready for the next requests when picking the delay between retries.
+
+\subsubsection{The approaches}
+There are three approaches
+
+Fixed delay.
+We pick a value, for example, 100 milliseconds and the wait the saem amount of time in between every subsequent retry.
+
+The second approach is an incremental delay.
+With this approach, we incrementally increase the delay with every failed retry.
+The idea behind this is if the service we're calling did not recover after the initial delay, the calling it again after the same delay make no sense and will likely just interfere with it while it's trying to get back up.
+
+The third approach is more extreme version of the incremental delay,is called exponential back off.
+We increase the delay between unsuccessful retries exponentially instead of linearly.
+
+It is important to point out that the approach you choose depends on your system, and there is no one size fits all for choosing those values and back off strategy.
+
+A third consideration is adding randomisation or whats called a jitter to the delay between retries.
+Why do we want that randomisation?
+Avoid sending retries in synchronisation.
+So even if we have a fixed incremental delay or even a exponential delay, if we send all of our retry requests from out service at the same time we can add a very high load on the remaining remote service instances.
+If delays are randomised, we are much more likely to distribute the retry traffic more.
+Even so, the remaining healthy servers do not get too many requests at the same time.
+
+The fourth consideration is how many time or for how long should we keep trying?
+--> Send a message back to the user to say try again later
+-->  At the same time need to alert the on call engineers, since now it is no longer a transient error we can hide from the user, but a long lasting error that impacts the users.
+--> The next consideration is the idempotency of the operation we're attempting to retry.
+-----> can retry the same operation twice etc safely.
+
+The last consideration is where to implement this retry logic in our services
+There are a few options.
+--- Implement this as a library or a shared module that multiple services can reuse.
+--- There are many different implementations of a retry pattern available for different programming languages.
+
+The other option is moving that logic entirely out of the service code and deploying it as a separate process running on the same server instance using the ambassador pattern.
+This way the application code is free from any trey logic, and all it sees is either successful response or a final failure.
+Seems deceptively simple.
+-- But we need to take all of those important considerations into account.
+
+\subsubsection{Summary}
+Using this pattern we can hide internal system errors by simply retrying and resending a reqeust to a remote service.
+Considerations
+- Firstly we retry only internal error that are short, temporary and recoverable.
+- Second consideration was introducing a delay between subsequent retry attempts to prevent a retry storm
+- Another consideration was to introduce randomisation or jitter to that delay to make the retry traffic to the healthy instances less spiky
+- Can also time box, and limit the number of retry attempts we allow
+- Consider idempotency when performing retries
+- Implementation details - shared libraries, ambassadors side car pattern.
+
+\subsection{Circuit Breaker}
+Not all failures are recoverable, short temporary and recoverable.
+Sending a reqeust again may not be the best solution.
+Retry patterns take the optimistic approach.
+The circuit breaker takes the pessimistic approach, since the error it handles are more server and long lasting.
+Its assumption is that if they first few requests failed, then the next reqeust will likely also fail.
+So there is not point in trying.
+Follows the electronic circuit breaker analogy etc.
+
+Just like the retry pattern, the circuit breaker wraps the remote calls we make from one service to another in its normal operation.
+When the circuit is closed, the circuit breaker keeps track of the number of successful requests and failed requests for any given period of time.
+As long as the failure rate stays low, the circuit remains close and every reqeust from out service to the external service is allowed to go through.
+However, if at some point the failure rate exceeds a certain threshold, then the circuit breaker trips and goes into an open state.
+In the open state, it stops any reqeust to go through and returns an error or throws an exception immediately to the caller.
+
+Next question we need to address is if we stop sending any requests to the faulty service how will we know its back and healthy.
+For that the circuit breaker has third state which is called half open after being in the open state for some time.
+The circuit breaker automatically transition to the half open state, where it allows a small percentage of requests to go through and be sent to the remote service.
+This small percentage of requests act as a sample to probe the state of the remote service.
+If the success rate of those reqeust that do go through is high enough, then the circuit breaker assumes that the remote service recovered and transition back to the closed stated.
+Otherwise, if the success rate of those sample requests is still low, then the circuit breaker assumes that the remote service is unhealthy and transition back to the open state.
+It will repeat this process until the success rate is high enough for the circuit to go into the closed state.
+
+\subsubsection{Important Considerations}
+Teh first consideration is what to do with the reqeust that isn't sent to the external servers when the circuit breaker is in an open state.
+In most cases the sensible thing to do is drop it, with proper logging, so we can later analyse the number of requests we lost because of those issues.
+
+An alternative approach when the reqeust cannot be ignored is log and replay.
+I.e we need to log this event in a special place where it can be manually or automatically replayed later by an engineer or another service.
+
+Another consideration is when the circuit breaker is open.
+What response should we provide to the caller.
+The first option is fail silently - provide a dummy response
+Another option is best effort - provide an out of date old response instead of and empty response.
+
+Third consideration may seem trivial but we need to make sure that we have separate circuit breaker for the calls to the inventory service, the billing service and the shipping service.
+If one of the services is done, that doesn't mean that we should stop sending requests to the other services.
+
+The fourth consideration is replacing the half open state form the circuit breaker with asynchronous pings to the external service.
+-- In this implementation, when the circuit breaker is open, our service can send asynchronous health check requests to the external service.
+--- IF the health checks success rate is high, then we can immediately close the circuit.
+--- This variation of the circuit breaker has a few benefits
+------ The first one is that we don't need to waste the users time sending real reqeust to the external service when the circuit breaker is in a half open state
+--- The second benefit is this ping
+------ Half check requests are very small and don't contain any payload, which isn't the case with the most real requests.
+------ BY sending those pings instead of real requests, we save on network bandwidth, CPU and memory resources.
+------ On the other hand, figuring out the number and the frequency of those pings is also not trivial, if we sent too many.
+------ We may overwhelm the remote service that is already in a bad state, and if we don't send enough then we are preventing out suers from using a healthy service for no reason.
+
+Basically both solutions have their pros and cons and we need to pick the best one for our use case.
+
+Final consideration - Where do we wan to implement the circuit breaker pattern.
+--- WE cna use a library which we can get off the shelf, or if we have many microservices implemented in different programming languages we may also simply delegate that functionality to the Ambassador Sidecar which runs along without service instance on the same host.
+
+\subsubsection{Summary}
+Circuit breaker pattern - used for handling long lasting errors in our system.
+- This pattern is primarily useful for handling errors that we have no point in retrying or the cost of retrying them in term of time and resources is not justified.
+Three states of the circuit breaker
+- The closed sate in which we allow all the requests to go to the external service
+- The open state in which we fail fast and don't send any outbound requests
+- The half open state in which we allow a small number of requests to go through to see if the remote service we are trying to call is already healthy or not
+
+Five important consideration when implementing circuit breaker
+- First one was deciding on what to do with the reqeust
+- The second consideration was deciding on the response that we provide to the caller when we don't send the reqeust through.
+- The third one was having a separate circuit breaker for each external service
+- The fourth one was replacing the half open state with asynchronous health checks, and the last one was deciding on whether to implement the circuit breaker as a library or as an ambassador or sidecar.
+
+\subsection{Dead Letter Queue (DLQ)}
+
+This pattern can help us a handle a variety of errors that involve publishing and consuming message through a message broker or a distributed message queue.
+
+Reminder
+A typical even driven architecture has three components
+WE have the event publishers or emitters that produce messages or events.
+On the other hand we have the consumers which read and process incoming message and act upon them.
+And int the middel we have a message broker which is typically deployed as a distributed system of computers that provide an abstraction of channels, topics or queues that the consumers can subscribe to.
+
+This even driven architecture has many benefits such as decoupling of producers from the consumers, greater scalability and asynchronous communication.
+
+However now we have a lot more points where things can fail in the process.
+
+\paragraph{Example}
+%TODO example here
+
+\subsubsection{What it is}
+The dead letter Q is a special Q in the message broker for message that cannot be delivered to their destination.
+There are two ways the message can get into that queue.
+One way is programmatic publishing
+--- If a service doesn't know which topic to publish to it can just go to the dead letter queue
+If the consumers don't know how to handle a message they can republish it back into the message broker into the dead letter queue and remote it from the original queue
+
+The second option is to configure the message broker to move the problematic messages from the origin queue to the dead letter queue automatically.
+-- Can move problematic messages into the dead letter queue
+-- Need to make sure the message broker supports this feature, many cloud and open source brokers do support this.
+
+Using this pattern we can keep the normal real time pipeline in a healthy state and avoid clogging the queue due to a few problematic message at the same time by placing those message into the dead letter queue so we don't lose them.
+
+More importantly, depending on the configuration we use for the Q, we can also somewhat preserve the order of those message which in some cases may be important.
+
+Regardless of how we move the problematic messages into the dead letter queue.
+-----Its important to add additional information about the reasons for the failure and why they were moved to the dead letter queue to begin with.
+A common way to do this is to add a header to the message with the relevant details such as error code, stock, trace or message that explains the error.
+
+THis way, when we inspect them later we know exactly what went wrong and hot to fix it.
+
+\subsubsection{What to do with dead letter queue messages}
+Need to have aggressive monitoring and alerting on this, this way we guarantee that they don't just stay there and get forgotten.
+But also the fact that messages do end up in this queue is an indication of bug or an issue we have in out system.
+
+The fact that we place them in the special queue buys us some time to address those issues.
+Since we have the details about the error attached to the message, we also have the information to fix the issue right away.
+Then once the issue is resolved we can use a tool to process and move those message from the dead letter queue back to the original queue for normal processing.
+Alternatively, if those message represent a very rare case that wil either go way soon or we don't have any plans to address, we can have support engineer just fix or process them manually if they use case permits it.
+
+\subsubsection{Summary}
+This pattern can be used to gracefully deal with any type of failure in a delivery of message to their destination in an event driven architecture.
+Two ways we can publish message to the dead letter queue.
+-- One is the programmatic way and the other is the automatic way via the message broker
+-- Two ways to process message in the dead letter queue
+--- First way is fix an republish those message back to the original queue
+--- The second way was to manually handle them on a case by case basis

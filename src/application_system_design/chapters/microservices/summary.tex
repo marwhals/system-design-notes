@@ -1,0 +1,218 @@
+\section{Summary}
+\begin{itemize}
+    \item Multi tenant VM deployment provides us with the best pricing but doesn't provide us with the most optimal security or performance
+    \item If we need additional security, we can rent a single tenant dedicated instance which are a bit more expensive, but guarantee that only VMs of our organisation can run on the same physical hardware
+    \item If we also need the most optimal performance and want to eliminate the possibility of a noise neighbor we can rent dedicated hosts,which is also the most expensive option.ó
+\end{itemize}
+
+\paragraph{Multi-Tenant Virtual Machine Cloud Service}
+\begin{itemize}
+    \item Amazon Elastic Computer Cloud (EC2) Instances
+    \item GCP computer engineer
+    \item Microsoft Azure Virtual Machines
+\end{itemize}
+
+\paragraph{Dedicated Hosts and Single Tenant Virtual Machine Cloud Services}
+\begin{itemize}
+    \item Amazon Dedicated EC2 Instances
+    \item Amazon EC2 Dedicated Hosts
+    \item GCP Sole-Tenant Node
+    \item Microsoft Azure Dedicated Hosts
+\end{itemize}
+
+\subsection{Serverless Deployment for Microservices using Function as a Service}
+
+\begin{itemize}
+    \item AWS Lambda
+    \item Cloud Functions
+    \item Azure Functions
+\end{itemize}
+
+More event driven that other deployments.
+
+\subsubsection{Use-cases}
+Used when the service is rarely used / low traffic most of the time.
+\begin{itemize}
+    \item If a cloud VM/ dedicated host is used we will be paying for rented hardware during the down time as well.
+    \item When the rarely used service is used there will be a traffic spike.
+    \item Need to configure and pay for a load balancer and maintain autoscaling policies for this microservice, which adds more to the infrastructure running costs
+    \item Running a service for events that rarely occur is not very cost efficient
+    \item There is also the cost of maintaining it
+    \item The team that owns the microservice in addition to eh business logic will also need to maintain a lot of boiler plate code that handles http requests or events from another source that triggers that logic.
+    \item Also need to maintain script to build, package and deploy our microservice binary with all its dependencies to a cloud server.
+    \item A lot of effort for events that rarely happen
+\end{itemize}
+
+\subsection{Function as a service - FAAS}
+A solution is use a serverless offering called \textit{function as a service}.
+
+A cloud solution that allows for the architecting of a system in a fully even driven model, not only from the software perspective but also from the infrastructure perspective
+We only need to provide cloud vendor with two things, the type of events we wanted to handle and the logic we wanted to execute when that event is triggered.
+Nothing else
+Only when the event is triggered will the cloud provider take out code, package it, deploy it to physical hardware and execute it
+If the traffic follows a seasonal pattern where there are a lot of requests coming in a very short period of time, in that case the cloud provider will also handle the horizontal scalability.
+This allows for handling the traffic spike without the need to maintain any autoscaling policies of configuring a load balancer.
+The pricing model is based on the number of requests our microservice receives as well as the memory, time to handle each request by running out logic.
+If a request or event doesn't arrive we don't pay anything.
+
+A Clear benefit is that a lot of money can be saved for events that happen very rarely.
+This can save a lot of money on infrastructure for seasonal workloads with rare but very high traffic spikes.
+Cloud provider also handles all the operational scaling of that service.
+
+Another benefit for both those types of workloads is that it allows us to save a lot of development cost and overhead as the cloud provider takes care of building, packaging and deploying out microservice.
+
+\paragraph{Trade offs}
+If the traffic pattern changes the costs of the service may increase significantly
+If the business logic becomes more complex each time we receive a request or event handling it will require a lot more time and memory.
+As a result it will become more expensive for us to use this offering than deploying it on a cloud VM or even a dedicated host.
+Another downside is the performance of a serverless deployment is much less predictable than deploying business logic as part of a microservice we fully control.
+Serverless deployments like function as a service are not the best option for latency sensitive workloads.
+This is also less secure type of deployment because not only does our code run in a multi-tenant environment, we also expose our source code to the cloud provider.
+
+\subsection{Summary - Function as a service}
+Function as a service for the correct workloads can be a very efficient way to deploy microservices.
+If used incorrectly, or not for the right workload it can also be the most expensive options.
+When it comes to security and performance this is also be the most expensive option.
+When it comes to security and performance this is also the least optimal option of all the deployment types.
+
+\subsection{Containers for Microservices using Dev, Testing and Production}
+
+\paragraph{The problem to be solved}
+Lack of parity between development environment, production environment.
+A.k.a - works on my machine but not in prod problem due to the differences between the configs in the two
+
+\subsubsection{Solution - Virtual machines}
+One solution is to develop and test the microservice in a production like Virtual Machine on our development computer.
+
+This leads to a new problem, the host operating system need to run another software layer called a hypervisor.
+A hypervisor runs just like any other program on our host operating system with its own kernel and operating system.
+This kernel manages all the guest operating system application processes, file system and security networking, memory and many other components.
+This also uses device drivers to interact with virtual hardware which is emulated by the hypervisor
+
+We can see that we have a lot of unnecessary overhead just to run a single microservice instance.
+If we want to run and test the integration of a few microservices, we need to run multiple virtual machines, each with its own operating system and it own kernel.
+This creates a lot of overhead and makes everything slow and inefficient, which makes the development and testing very hard.
+
+\subsubsection{Solution - Containers}
+Containers (docker etc) solve this problem by isolating what we want to isolate and sharing everything else.
+When we package our microservices into containers, each container image includes our microservice binary, the command to run it and all the dependencies it requires in complete isolation from any other microservice.
+When we create multiple instances of that image, each container has its own isolated file system, network interface and runtime.
+The OS kernel drivers and everything else that we don't need to isolate are shared among all the containers.
+The overhead of running a few dozen of containers on our machine is minimal, making it attractive for developing and testing microservices
+Benefits of containers go beyond this, they are useful in a CI/CD pipeline which may use a different OS and hardware that development computers.
+This does not matter since container images are completely decoupled from the OS and the hardware so we can create them once and run them on any hardware and operating system that supports containers and container runtime.
+
+\subsubsection{Disadvantages of using full VMs}
+If two microservice instances run on the same cloud server each VM runs and entirely separate copy of the same operating system.
+This duplication means we lose valuable memory CPU and storage resources to the operating system
+Deploying and starting each VM can take minutes before being ready to accept traffic.
+
+Another issue is cloud vendor lock in and lack of portability
+When we create a VM image for a microservice,  the formate of this image may be cloud vendor specific, also the configuration describes the type of VM we want to rent is also cloud vendor specific.
+If we get an attractive offer from another cloud vendor and we want to migrate completely, we will have to do a lot of work creating those new images and even this is an even bigger problem when we have a a multi cloud environment/ hybrid cloud environment.
+
+Uses of hybrid cloud
+Higher performance and greater security.
+In these situations cloud VMs will be challenging to manage.
+
+This is all solved by using containers.
+All we need to do is create those container images once and then deploy them on generic cloud VMs or even directly on dedicated hosts.
+In any environment the only requirement is to install the container runtime, which is the software that runs those containers and we're good to go.
+
+\subsection{Summary - Why containers}
+Why containers
+Better portability between environments since we can build a microservice image once and then use it in development, QA, staging and production on any cloud provider hardware or operating system.
+Also get faster startup time because containers usually take a few milliseconds to deploy and run
+We can also save a lot of money on infrastructure because the hardware utilisation is much better when we use containers.
+
+Instead of renting multiple smaller VMs where we lose part of the CPU and memory to the operating system, we can rent larger VMs or even dedicated hosts
+When we deploy the containers of different microservices on a single VM or host we can better utilise the hardware because they share the same operating system kernel.
+In many cases this means that we can run more intensive microservice instances for the same amount of hardware than when we use cloud VMs.
+
+\paragraph{}
+We now have another problem to solve before being able to take advantage of containers in production
+The problem is that we have two layers of abstractions that need to be glued together
+We have cloud infrastructure abstraction, VMs etc which need to be rented and autoscaled based on the traffic or load on out system as well as other cloud managed systems like databases, message brokers and distributed logging.
+Also have container abstraction, where there are numerous abstractions representing different microservices.
+Each microservice image needs to be deployed as a group of containers instances on that infrastructure.....
+Then we need a way to discover and connect all those microservice containers to each other and the managed services through the network.
+We also need to manage the scalability and availability of each group of the containers so we can add more instances if the traffic goes up and remove instances when the traffic goes down.
+Additionally we need to automatically replace containers that crash and a way to update all the containers of the same microservice when a new version of the microservice is released.
+Doing this manually for 100s/1000s of container instances potentially running in different cloud providers is an incredibly difficult task.
+
+\subsubsection{Summary}
+.....................
+
+\subsection{Container Orchestration and Kubernetes for Microservices Architecture}
+The big challenge - Managing, deploying and configuring thousands of containers, running hundreds of microservices potentially across different cloud providers.
+The solution is container orchestration (Kubernetes etc).
+
+\subsubsection{What is container orchestration?}
+A container orchestrator is a tool that managed the entire life cycle of all the microservice containers within our system.
+Can be thought of like an operating system.
+For microservices architecture deployed as a containers, the responsibilities of a container orchestrator include automation of deploying new microservices or new versions of microservices as containers.
+Managing resource allocation among existing containers to ensure each container gets the right amount of CPI memory and storage to work properly.
+
+Monitoring the health of containers self healing, which allows automatic deployment of new containers to maintain a healthy number of instances of each microservice.
+We have automatic bin packing which mean scheduling containers in an efficient way to provide optimal utilisation of existing hardware.
+Then we have load balancing between containers of the same microservice scaling service out or in by adding or removing containers based on the traffic and the resource utilisation.
+And finally managing the discovering and network connectivity between services, containers and the outside world.
+
+\subsection{Kubernetes as an example}
+Other tools exist.
+
+\subsubsection{Control Plane}
+A typical container orchestration cluster will have a control plane deployed on at least one machine.
+That machine is a controller node.
+
+The remaining VMs or servers that run out microservice containers are called the worker nodes.
+The controller node runs all the processes that orchestrate and manage our cluster.
+
+All the information about the cluster configuration and current state is stored by another process, which are key value store databases.
+If we need to add another container of a particular microservice, we have another process that monitors the worker node resource and decides where to schedule that new container.
+
+We can have another process that monitors the health of our worker nodes or state changes within those nodes.
+Another process can manage all the cloud provider specific logic, such as deleting unresponsive worker nodes by the cloud provider, adding cloud managed load balancers, routing them to our containers etc.
+In addition to the processes running in the control plane, each worker node also runs a set of agens to manage the containers running only on that node.
+
+That includes the container runtime, which is the software engine running the containers on each host
+
+The we have the agent that monitors and actually start the microservice containers when it receives the appropriate command from the control plan.
+We also have another process which acts as a proxy.
+This proxy maintains a set of network rules to route requests between containers of different microservice and balances, the load on containers of the same microservice.
+Additionally we may need to run each instance of our microservice with a sidecar process.
+
+This sidecar process can be a logging or monitoring agent or an in memory cache
+
+Typically putting more than one process inside a single container is not a good practice.
+
+\subsubsection{Pod}
+Kubernetes allows us to bundle several containers inside another logical unit which is called a pod.
+
+A pod is the small's runtime unit that kubernetes will manage for us even if that pod only contains a single microservice container
+The description of all microservices architecture, their configuration with container images they use and how much CPU memory and storage they need is described in a declarative human readable way.
+
+This configuration also contains all the information about the services our microservices connect to outside the container cluster.
+Those include cloud functions, databases, object stores, message brokers and so on.
+
+This configuration is stored and maintained in a version control system just like any other code.
+Once a change is made to that configuration, it will be sent to the control Planes APi server which triggers the relevant updates within the closet.
+
+In a typical microservices architecture, we'll have 100s/1000s of such worker nodes running 1000s of containers belonging to different microservices.
+
+For higher availability and to keep up with everything going on in the cluster, we'll also typically have multiple replicas of the controller nodes inside the control plane.
+Even for higher availability we can have multiple clusters with the same or different configurations running on different cloud regions or even cloud providers.
+
+We can route traffic using a global load balancer.
+This routing can be based on criteria such as physical proximity to the user, the load or health of each cluster and so on.
+
+Container orchestration architecture can be pretty complex to set up and manage.
+
+Requires expertise from DevOps or Site Reliability Engineers
+Requires dedicated resources just for orchestration purposes, like controller instances.
+
+This investment pays off because its cost is amortised across all the teams and microservices that are managed.
+
+\begin{note}
+    If our decision to migrate to microservices was correct the benefit of running microservices as containers managed by the container orchestrator will outweigh its cost and complexity.
+\end{note}

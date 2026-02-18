@@ -1,0 +1,355 @@
+\section{Performance Patterns for Data Intensive Systems}
+
+\subsection{Map Reduce Pattern for Big Data Processing}
+MapReduce is a simplified processing model that came from Jeff Dead and SJ Gigawatt via Google in 2004
+Describers the complexity involved in running computations on very large inputs.
+The challenge of processing large data sets is that in order for use to precess them in a reasonably short time we need to distributed bother computation and the data across hundreds or even thousands of machines.
+The issues of personalising and distributing the data, scheduling execution, aggregating the results, handling and recovering from failures become the dominant factor event for the most straight forward computations.
+Also the code we ned to write as well fas the infrastructure we need to build for each tasks becomes a major overhead.
+
+The MapReduce pattern offers the same programming model to implement every computations.
+We can take any task and run it on the MapReduce framework that manages the execution of the entire computation.
+The MapReduce framework takes care of parallelism and distributed the work, handling, failures and collecting the result.
+
+After the paper, there have been multiple open source and proprietary cloud implementations of this framework and its used by many different companies for big data processing, machine learning, distributed search, graph traversal etc.
+
+\subsubsection{Map reduce model}
+The programming model of MapReduce requires us to describe each computation we want in terms of two simple operations, map and reduce.
+If we can't describe the desired computation in one set of map and reduce functions we can break it into multiple MapReduce executions and simply chain them together.
+
+First thing we ned to do as users of MapReduce is to describe out input data as a set of key value pairs, which in most cases is very straight forward.
+Then the MapReduce framework bypasses all the input key value pairs through the map function with define, which produces a new set of intermediate key value pairs.
+After that, the MapReduce framework shuffles and group all those intermediate key value pairs by key and passes them to the reduced function which we also provide.
+The reduced function then merges all the values for each such intermediate key and produces a typically smaller result of either zero or one value.
+
+\paragraph{Examples}
+%TODO examples
+
+If we apply this programming model, we can define the general software architecture of the MapReduce using two main components.
+The first component is the master which is the computer that schedule and orchestrated the entire MapReduce computation.
+The second component is a large group of work machine which can be in the hundreds or even thousands.
+The master then breaks the entire set of key value pairs into chunks.
+This way we can splint the entire data set across different machines and run the developer supplied map function on those machines completely in parallel.
+
+Each map worker runs the map function on every key value pair that was assigned to it as part of its chunk and periodically stores the results on its local storage.
+However instead of storing all the intermediate key value pairs in one file, it partitions the output pairs into outr reftions.
+
+Across all the map workers, can be a simple hash function over output key modulo R at the same time.
+The master also picks another R workers, and when the result of the ide computers do stand by and be ready to execute the reduced function.
+
+When the master notifies a reduced worker that the data for it is ready, reduced workers takes the data from the map, workers, intermediate location groups all the same key value pairs together and also sorts it by key for consistency.
+That is called shuffling.
+
+Finally, the reduced workers invoke the developer supplied reduced function on each key and list of value and outputs the results to a globally accessible location.
+
+Notice that the reduced workers are also entirely independent of each other can can run entirely in parallel.
+Also notice that the reduced workers don't need to wait for all the map workers to finish.
+Each reduced worker can start processing data immediately as soon as at lead one map worker finished its work.
+This is why we made the effort to describe out original problem in terms of map and reduce functions.
+
+Because of this programming mode, we can use this very software architecture to scale processing tasks to run in parallel on as many worker machines as we'd like.
+This allows us to process massive amounts of data in a relatively short period of time.
+
+\subsubsection{Failures and Recovery}
+Since we have potentially 100s and 1000s of worker computers, the chances that one or even some of them break in the middle of processing out data is pretty significant.
+A few things we can do.
+First of all, after the master schedules a mpa or reduced task on a work, in can ping it periodically every certain amount of time.
+If the worker stops responding, the master can mark it as failed and reschedule the task to a different worker.
+If the failed worker is a map worker, then besides rescheduling the allocated chunk of data to a new worker, it also need to notify the reduced workers about the new location for the future, intermediate key value pairs.
+
+Now while the failure of the master is statistically less likely, since theres only one of the, its still a possibility.
+So there are few ways the MapReduce framework can deal with it.
+One option is to simply abort the entire MapReduce computation and start over again with a new master.
+If our MapReduce implementation is deterministic the only penalty we pay here is the loss of time.
+
+Another option is to make the master take frequent snapshots of the current scheduling and log them to some place of storage.
+Then if the master fails, we can run a new master which will start by replaying the log of events and quickly pick up from where the old master left off.
+If we can't afford to lose any time, we can have another backup worker following and be in sync with the master at all times.
+This way if the master fails, the backup worker can take the masters responsibility and continue orchestrating the entire execution.
+
+\subsubsection{Applying to a cloud environment}
+The good for a cloud environment because we have instant access to almost as many machine as we need.
+Cloud can handle the machine requirements, ie we need to process a large amount of data fast.
+
+Second reason, MapReduce is a batch processing pattern by design, meaning we run it on demand or on a schedule on huge data set as opposed to continuous real time processing of a stream of data.
+THis means that when we do run it on the cloud, we pay only for the resources we use during the processing onf the data, and we don't need to pay for maintaining thoughts of worker machines on a constant basis.
+Worth noting tha twe do need to pay for storing and accessing that data, but generally storage is much cheaper than computation resources.
+
+\subsubsection{Implementation}
+In practice this would never be implemented on its own.
+Instead, we either pick one of the available open source implementation of this pattern or use one that is provided to us by the cloud vendor.
+In either case, we still follow the same general process of modelling out data, writing the map and reduce functions and additionally deciding on the different parameters so we can get the best throughput for our money.
+
+\subsubsection{Summary}
+
+\subsection{The Saga Pattern}
+Important principle of microservices is a database per service.
+If this principle is not followed then service will become coupled.
+If one team want to change the schema for their service they will have to coordinate that work with other teams that maintain the other microservice which use \textbf{it}
+Two teams will need to have meeting to agree on changes.
+Then they have to coordinate the migration.
+Additionally those changes may have to be made for all the microservice at the same time which defeats the purpose of the microservice architecture
+This can lead back to the anti pattern of a distributed monolith which is a worst case scenario.
+If we have separate databases we will never have that problem.
+The database just becomes an implementation detail which is hidden behind the microservice API, if the team wants to make schema change or even replace the database entirely, it will not impact any other service.
+
+Since we have on database per microservice, we lose an important property, ACID transactions.
+
+A transaction is a sequence of operations that for an external observer should appear as a single operation.
+When we have one database, we could performa a sequence of operations potentially on different records or even tables as one transaction assuming that that database supports transactions to begin with.
+
+However, when we have a microservice architecture with a separate database for each microservice, we'll lose th ability to perform those operations as part of a single transaction.
+So how can we manage data consistency across microservice with a distributed transaction that spans multiple databases?
+
+This is the problem the Saga pattern solves.
+We perform the operations that are part of the transaction as a sequence of local transaction in each database.
+Each successful operation triggers the next operation in the sequence, and if a certain operation fails the pattern rolls back the previous operation or operations by applying compensating operations that have the opposite effect from the origin operation.
+After we roll back, we can either abort the transaction entirely or retry it multiple times until we succeed.
+The decision to try or retry depends on the context.
+
+\subsubsection{Implementation}
+The Saga pattern can be implemented using the orchestrator pattern or the choreography pattern.
+
+We have an orchestration service that managed the entire distributed transaction like flow by calling different service sin order and waiting for a response from all of them depending on the response from each service.
+The orchestrator service decides whether to proceed with the transaction and call the next service or roll back the transaction and call the previous service with a compensating operations.
+
+Similarly in a choreography implementation of the saga patter, we have a message broker in the middle and the service are subscribed to relevant events.
+But in the choreography pattern we don't have a centralised service to manage the transaction, so each service is responsible for either triggering the next event int hte transaction sequence or triggering a compensating event for the previous service in the sequence.
+
+In either of those implementation, we can successfully execute transaction that span multiple services without having a centralised database.
+
+\paragraph{Example}
+
+\subsubsection{Summary}
+
+\subsection{Transactional Outbox Pattern - Reliability in Event Driven Architecture}
+Statistically if we run a large scale system on commodity hardware in the cloud components can fail at any time.
+
+When we use the transactional outbox pattern in out database we add another table called the outbox table.
+Instead of sending an event to a message broker, we add the message to the outbox table as a new record.
+What is important is that we update the relevant table in the case the user stable and outbox table as part of a single database transaction.
+If the database we're using supports transactions then we are guaranteed that either both tables are update or none.
+But we will never be in a situation where only one of the tables was update and the other \textbf{wasn't}
+
+Now in addition, as apart ofd the transaction outbox pattern, we add another service which we call message sender or message relay.
+This service monitor the outbox table of the database and as soon as the new message appear in that table, it take that message and sends it to the message broker.
+Then marks it as sent and then deletes it.
+
+This way we solve the problem of losing data or not sending messages and we're guaranteed that for each database update, an appropriate event will be triggered.
+
+\subsubsection{Issues with this pattern}
+First issue is duplicate events.
+Consider \textit{At least once delivery semantics}
+Idempotent operations, where performing an operation once or multiple times do not make a difference.
+
+Another issue is lack of support for transactions in our database.
+-- Add additional field or attributes to an object.
+-- The addition of new object to a noSQL database is typically a atomic operation.
+
+Another issue, the ordering of events.
+-- Assign each message sequenceID that is always higher than the previous message in the outbox table
+-- This way the send service can always sort the message in the outbox table by that sequence ID
+
+\subsubsection{Summary}
+%TODO - summary and add example
+
+\subsection{Materialised View Pattern - Architecting High-Performance Systems}
+When we have a lot of data that we need to store about out business or its customers, usually the priority for us is to store that data most efficiently and cost effectively.
+This may mean storing different data in separate relation databases tables, or even storing some data in a separate database for higher efficiently.
+However very often the way we store the data doesn't reflect the type of workload we have on that data.
+When we send a query to read aggregate and transform that raw data into something we can analyse or even present to the user we may find some issues.
+
+The first issue is performance.
+When we perform a complex query across multiple tables or even multiple databases the query may take a very long time to complete.
+On the other hand, if we have a user on the receiving end of the result of that query it becomes a big problem because we have very little patience for high latency.
+
+The second problem is efficiently and cost.
+If we run the same complex query that reads aggregates or transforms large data sets repeatedly we pay an unnecessary price fo the resources to perform the query.
+Since we are in a cloud environment and we payu for every resource we use, including resource like CPU, memory and sometimes network.
+This issue can become a major financial problem for our company.
+
+The materialised view pattern solves those two problems.
+As part of this pattern, we create a new read only table and pre populated with the result of one particular query.
+We want to optimized so each time we need to get the full or partial result of that query we can read it from the materialised view directly instead of performing the enter query on the origin based tables.
+This saves a lot of latency and overhead, especially if the query involves complex aggregation functions, data transformation or table join.
+
+Now, whenever the raw data in the base tables changes, we can either regenerate the materialised view immediately or on a fixed schedule, depending the use case.
+
+\paragraph{Example}
+
+\subsubsection{Considerations for Materialised view patterns}
+Extra space for the materialised view table.
+In this pattern we effectively trade space for performance
+Pretty standard in computer science.
+
+In the cloud we need to consider this.
+We need to care about which queries we want to optimised and reserve these queries for the cases where the benefits outweighs the cost.
+
+Second consideration is where to store those materialised view tables.
+Essentially we can store the materialised view anywhere or in anyway way we want.
+However the easiest and preferred way is to store the materialised view for a query in a separate table in the same database we use for the original data.
+The benefit of going it in the same database is when that database supports materialised views as a feature out of the box.
+In that case, we can get automatically and efficient update to the materialised view every time the origin data in the base tables changes without the need to do it manually or programmatically.
+
+Most modern databases that support materialised views can efficiently make those update by applying only the deltas from the previous state without the need to regenerate the entire materialised view from scratch, every time there is an update to the base table.
+
+Sometimes, the base tables get update very frequently but we don't necessarily need the most up to date data in the materialised view at all times.
+In those cases, we can limit the frequency of those update as we want.
+The downside of putting the materialised view in the same database is that the database where we want to store the base tables may not be the most optimal for reading and querying data.
+As an alternative, we can also store the materialised view in a separate read optimised database, such as in an in memory cache, since we can always reconstruct that materialised view from the raw data.
+
+At any point, we don't have to worry about losing that data and that in-memory cache which saves us a lot trouble and costs of backups and redundancy.
+
+Do need to take extra care and effort to keep the materialised view up to date with the original data and with an external database.
+This needs to be done programmatically ourselves which has its own complexities.
+
+\subsubsection{Summary}
+This pattern, we pre computer and pre populate a separate table wit the results of a particular query.
+When applied to complex and frequent queries, we can significantly improve the performance of those queries in the cloud environment where we pay for resource that we reserve or use.
+We can also save alot of money by applying this pattern to large data sets that we query very frequently.
+
+\subsection{CQRS Pattern}
+In typical system that involves data store in a data base we can group the possible operation of that data into two types.
+The first type is a command.
+A command is an action we perform that results in a data mutation
+These actions involve insertions of new records, updates to existing records or deletions or existing records
+Adding new user, deleting user etc etc etc
+
+The second type of operation is a query
+The query only reads some data from the database and returns all of it or part of it to the caller.
+
+\subsubsection{CQRS Purposes}
+CQRS pattern has two purposes.
+
+With CQRS we completely separate or segregate the command of they system from the query part of the system into separate databases and service where each part is responsible only for one type of workload.
+This allows us to have all the complexities of the business logic, validations and permissions checks in the command service while keeping the query service clean, simple and highly performant.
+
+This separation of concerns on the service side allows us to easily evolve each part independently using optimal data model in our programming language for each workload.
+Also if one part is update with business logic the other part doesn't need to be retested or redeployed since it didn't change on the database side.
+We duplicate all the relevant data into two separate databases.
+
+All the command type operations that involve data mutations go to the right database through the query service to the read database.
+This way we can fully optimised the command database for write operations by picking the best database for this workload.
+We can also use the most optimal structure or schema for writing operations without working about the performance of queries.
+
+Similarly we can pick the most optimal database technology and ocndifurable queries without worrying about the command type operations.
+This way we can store our data in a way that makes all our queries faster and not just a few critical ones.
+
+Note - Basically we can optimised our system for both types of operation, which is otherwise impossible to to do if we have only one database for both workloads.
+This is particularly important when we hav a scenario that involves both frequent reads or frequent writes.
+As a single distributed database can be optimised only for one type of workload at the expense of the other.
+In terms of scalability, we also gain higher level of flexibility.
+We can adjust the number of instances for each service and also adjust the number of database instances for each distributed data.
+This all depending on the rate of requests we get for each type.
+
+Synchronisation.
+Since the command side of the system keeps getting data rights and update we need a way to propagate those update to keep the query side in sync.
+To keep the command and query databases in sync every time a data mutation request is receive by the command part we publish an event that the query site can consume and act accordingly in the cloud environment.
+
+We can implement this in a couple of ways.
+Once way is to place a message broker between the command service and the query service.
+Every time th command service gets a write or update reqeust, it will publish an event to a topic that the query service subscribes to.
+In addition to making the actual modification in its own database, when the query service revives that event, it know exactly how to read it and update its own database with that data.
+
+\paragraph{Note}
+how do we make sure that each command reqeust received by the command service ends up in teh database as well as in the message broker as a single transaction?
+We can achieve this using the transactional outbox pattern, since this message broker will not delete ethe event until the query service successfully consumes it and updates its database, we are guaranteed to not lose any update.
+
+Another way we can implement synchronisation in the cloud is by using function as a service.
+We cans create a function as a service to watch the command database for any data modifications.
+If no modifications happen, that function as a service never runs and therefor doesn't cost us anything.
+When some data does get modified,the function will run, read the new data from the command database and run out customer code which will update the relevant part of the query database.
+
+\subsubsection{Drawbacks}
+In either implementation of CQRS we can only guarantee eventual consistency
+In a lot of cases this is good enough.
+But is strict consistency is required that CQRS is not the best choice.
+Additionally CQRS adds overhead and complexity to out system.
+- Now we have two databases and two separate service with their own codebases to maintain, configure and deploy.
+In addition we have the synchronisation part which could be cloud, a message broker ; that will also require configuration, development and maintenance.
+
+Its important that the performance benefits we get from CQRS are well worth the overhead.
+Otherwise things should be kept simple and there should be one database and one service.
+
+\subsubsection{Example of CQRS}
+%TODO add example
+
+\subsubsection{Summary}
+THe separate service for commands and queries allows for each service to evolve differently.
+Leads to cleaner code and easier maintenance.
+Each database can be optimised for specific workloads.
+This comes with additional overheads
+We also have to compromise on consistency.
+This pattern only supports eventual consistency.
+
+\subsection{CQRS + Materialised View for Microservice Architecture}
+Combine CQRS with materialised view
+First create CQRS pattern and create a new microservice with a read optimised database sitting behind it.
+This microservice will receive only query request for that specific data we're trying to fetch to the user but this time we are going to create one materialised view of the data from bother microservice, that own the original data to keep the materialised view in sync.
+We either introduced a message broker and then each time Microservice A or Microservice B modifies its data, it published an even to particular topic.
+They query microservice subscribes to those events and makes the necessary updates to its own materialised view.
+The second approach is using a cloud function to watch either of those tables.
+Then whenever there is an update to those tables the function will run its custom code and update the materialised view in the query database.
+-- Like any CQRS implementation we only get eventual consistency between the base tables and the materialised view.
+
+\paragraph{Example}
+%TODO examples
+
+\subsubsection{Summary}
+Using a combination of the CQRS pattern and the materialised view patterns.
+We can join data from multiple microservices stored in completely separate databases sing the materialised view pattern.
+We place the joint data in a separate table or collection and using the CQRS pattern we are able to started that materialised view in a completely separate read opimtised database sitting behind its own microservice and using even driven architecture implemented by a message broker or cloud function as a service, we are easily able to keep that external materialized view up to date with the original data.
+
+\subsection{Event Sourcing Pattern}
+In certain situations, we need to know not just the current state, but also ever step that led to it.
+This is where the event sourcing pattern is useful.
+In this pattern instead of storing current state, we only have events.
+Each event describes either a change or a fact about a certain entity in out system.
+Most importantly events are immutable, meaning tha once we get an event into our system, it never changes.
+They only think we can do is append new events to the end of the log.
+
+Now to find the current state of an entity, we simply apply or replay all teh events that happen to that entity.
+A bit like version control, but for data where each event represent only the delta or the change from the previous state.
+
+Benefit of storing those transaction instead of the balance is not we have the complete history of how we got to that balancer which can be then used in report or audits.
+\begin{itemize}
+    \item Can detect accidents and fraudulent transactions that a client may not have been aware of.
+    \item Can provide advice or recommend products.
+\end{itemize}
+
+\subsubsection{Storage of events}
+Can simply store these events as a separate record in a database
+Could store these events in a message broker and publish them for any one to consume.
+Unlike databases, message brokers are particularly optimised for handling a lot of events and also make it way to maintain the order between different events at the same entity.
+--- On the other hand, performing complex queries on streams of events in a message broker is a bit harder and less intuitive.
+
+An added benefit to using event sourcing is write performance.
+Without event sourcing, if we have an intensive workload, we get high contention over the same entities in a database which typically result in poor performance.
+Using event sourcing each item becomes an append only event, which doesn't require database locking and is a lot more efficient.
+
+\subsubsection{Efficient ways of reconstructing}
+Take snapshots of certain points of the events log.
+We can replay transaction from the snapshot rather than from the beginning.
+
+Use CQRS\@.
+Can separate the part that appends events to our system and store them from the query part which store the current state in a read optimised database that could even be in memory database making reads even faster.
+Every time a new event comes in the query service pulls that event and updates its own state for that entity.
+If we store those events in a message broker then the query service can subscribe to that same topic or channel and pull the data straight from it and the command side doesn't need any special database.
+
+The combination between CQRS and event sourcing is very popular in the industry since we get the best of both worlds.
+We get the history and audrigin.
+We get fast and efficient writes and fast and efficient reads.
+
+With CQRS we only get eventual consistency as always which needs to be considered for the use case.
+
+\subsubsection{Summary}
+Using this pattern instead of storing the current state or an entity, we store changes or facts about this entity using events.
+This can be done using a data base or a message broker, where each approach comes with is advantages and disadvantages.
+Side benefit is better performance for write intensive workloads.
+
+Benefits of CQRS with Event sourcing
+\begin{itemize}
+    \item Auditing
+    \item Performant writes
+    \item Efficient Reads
+\end{itemize}

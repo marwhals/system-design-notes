@@ -1,0 +1,50 @@
+\section{Deployment of Microservices and Event-Driven Architecture in Production}
+
+\subsection{Microservices Deployments - Cloud Virtual Machine, Dedicated Hosts and Instances}
+First and most common way to deploy microservices in the cloud environment is by using cloud virtual machines.
+Virtual machine - an isolated environment, running on top of a real physical computer.
+Virtual machines act like a virtual computer with its own operating system and virtual resources like CPU memory network interface storage
+Those virtual resources are allocated, managed and mapped to real resources on the physical hardware by another layer called the hypervisor
+By using virtual machines, the cloud providers can split each physical server into multiple VMs depends on how we configure it and how much we pay for that VM
+
+In turn this allows for cloud providers to provide competitive prices, which makes cloud VMs a very attractive option for running microservices
+Main benefit of using cloud virtual machines for running microservices is the affordable and flexible pricing
+
+Typical pricing model is pay per use, we pay only for the cloud VMs that we're renting them, and the rate for each VM depends on the CPU memory and network bandwidth capabilities that we request
+
+Downside of this deployment is security risks due to multi tenancy
+Theoretically, when we run two VMs on the same server, those two VMs on the same server, those two VMs are completely isolated from each other
+If those two VMs are running two database instances and each instance belongs to completely different organisation, a security breach in one should not pose a risk to the other VM
+
+We need to consider that the hypervisor is a software that was written by human beings and all security configurations are managed and updated by human beings
+
+So in practice it is possible for a hacker to gain access to a VM that was poorly secured by the other software engineers / organisation and because the cloud vendor allocated out VM to run on the same host, that hacker may manage to hack into out system and steal our data
+
+Cloud vendors and the companies that own the hypervisor make great efforts to prevent this from happening,
+The probability of this happening is very small but it is still there.
+Due to compliance issues in certain industries, we may be unable to tolerate even that small risk.
+Example businesses: Banking, healthcare, government and national security related services.
+
+Second issue of running microservices in multi-tenant environments is potentially lower performance due to a \textit{Noisy Neighbor}
+Theoretically, the hypervisor should be able to completely isolate and allocate each hardware resource to each VM as configured ahead of time.
+However, in practice, not all resources can be accurately allocated.
+
+\paragraph{Example}
+A CPU has 16 cores, then the hypervisor could easily split those 16 cores evenly.
+However the network bandwidth of a network card or the access to an internal bus that transfers data to and from a storage device can't be easily rationed in an accurate way and many other physical resources.
+This is true for other aspects, this a physical server at the end of the day.
+Additionally, the hypervisor itself may consumer some CPU and memory for its own user.
+Not really a lot of data to suggest that running a very intensive workload on one VM can significantly impact the performance of the other VMs.
+
+In theory and in practice that impact is still there
+For very latency sensitive systems like high frequency trading systems, gaming or video streaming multitenant deployments with cloud VMs is not the best option
+
+\section{Single tenant}
+Dedicated hosts or instances, ask cloud provider to run VMs on servers that are dedicated to the account that belongs to our VMs on servers that are dedicated to the account that belongs.
+This means that the only tenants will have on the same host are instances of our microservices databases for our organisation only.
+More expensive alternative if we are in an industry that doesn't allow us to share infrastructure.
+They charge more because cloud providers can't allocate their hardware as efficiently as the multi tenant deployments.
+
+Some cloud providers, even allow us to rent or reserve and entire host just for our organisation
+This gives us direct access to the hosts hardware resources, which can eliminate the noisy neighbor effect and reduces the impact of virtualization by the hypervisor
+Main downside is that this is way more costly than multi tenant cloud VMs

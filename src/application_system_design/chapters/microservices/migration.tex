@@ -1,0 +1,281 @@
+\section{Migration to microservices architecture}
+
+\subsection{Microservice Boundaries - Core Principles}
+The scenario - A successful e-commerce company with a monolith.
+Just breaking from a large code base into an arbitrary set of microservices and handing each off to a separate team will not necessarily benefit the client.
+
+\subsubsection{Standard three tier}
+\begin{itemize}
+    \item Web application takes web requests form users running our front end code in their web browser and mobile apps -- Presentation tier
+    \item in the data tier we have an internal database storing all of the transactions, products, reviews and inventory information
+    \item Also have an external payment service that belongs to a third party which handles the billing
+\end{itemize}
+
+A monolith was good at the start but now the code base is large and complex.
+The application binary size is too big and the application requires very expensive hardware and the development team is passed the two pizza rule.
+This has lead to lots of inefficiencies.
+We could split this into microservices but unsure on how to do the splitting.
+
+\paragraph{Approaches}
+One approach could be to follow the internal logic layers that already exist in the application code base.
+We can take the front layer of our code base that handles user requests, security and permission, validation and also services the HTML JavaScript and CSS to the web browser and split that into its own service.
+This service can be maintained by a separate team, and is physically deployed as a separate runtime unit.
+We could similarly take all the business functionality that handles checkouts, discounts seasonal sales and microservices and do the same.
+We could do the same with the data tier and run that as a separate service as well
+
+\paragraph{False intuition}
+Intuitively it seems like a good idea.
+Take advantage of the already existing separation within our application so very little refactoring is required.
+
+However this doesn't work very well in practice and doesn't provide much benefit.
+The reason for that is now every new features we develop within the application will likely require an API change, a business change and a data change.
+This now means that every microservice in our system will be involved in every feature requiring careful planning and release coordination between the different \textbf{teams}
+So we will not gain any benefit to organisational scalability using this approach.
+
+Breaking the monolithic application into more tiers will not work.
+
+\subsubsection{First principle}
+Each microservice needs to be cohesive.
+Cohesion mean that elements that are tightly related to each other and change together should stay together
+If all the logic that changes together stays within the boundaries of the same microservice, each team can truly operate independently. This is a pretty key point.
+
+\subsubsection{Another approach}
+Another migration approach based on technology boundaries.
+Good performance improvements due to more specialised use of different programming languages, tech stacks etc.
+Problem now is that Support engineers, product managers etc don't know which sub-team needs to get tasks.
+Responsibilities are not clear.
+The terminology of each API is not very clear because we are mixing different contexts such as users, products, bank accounts and so on all in the same API
+The last microservice, which still has the most business logic has too much responsibility and is still too big.
+It has the potential to be another monolithic application.
+
+\subsubsection{Second Principle}
+The single responsibility principle.
+Every microservice should do one thing and do it exceptionally well.
+If each microservice follows this principle there is no ambiguity about where a new piece of functionality need to go and which team needs to own it.
+It also helps create a very clear an easy to follow API for each microservice because all the terminology entities or identifiers are bound to a particular context.
+
+\begin{note}
+    This can potentially lead to interdependencies between services when executing a task.
+\end{note}
+
+\subsubsection{Third Principle}
+Microservices should be loosely coupled.
+Loosely coupled microservice have very little to no interdependencies.
+This means that each microservice can performa its functionality with minimal communication with other microservices.
+Microservice size is generally unimportant
+
+As long as microservices are cohesive, follow the single responsibility principle and are loosely coupled with each other, the size doesn't matter.
+Naturally some services will be bigger and some will be smaller.
+
+\paragraph{Important Note}
+Those three principles are important pre-requisites for a successful microservices architecture.
+If they are not followed then we will encounter issues sooner or later.
+
+\subsection{Summary - Important principles}
+\begin{itemize}
+    \item Each microservice needs to be cohesive, which means all the elements that change together stay together within the boundaries of one microservice
+    \item Each microservice should follow the single responsibility principle
+    \item Each microservice should be loosely coupled from all other microservices to minimise runtime communication.
+    \item Also microservices don't have to be small, it depends on the functionality.
+\end{itemize}
+
+\subsection{Decomposition of a Monolithic Application To microservces}
+There are three methods for this
+
+\subsection{First Method - Using business capabilities}
+First method to decompose a system into microservices is by business capabilities.
+In this method we observe and analyse out system from a purely business perspective, a business capability is any core capability that provides value to the business or its customers.
+This can include things like revenue, marketing, customer experience and so on.
+Once we identify those business capabilities, we can dedicate a separate microservice and a team to fully own it.
+There are ways to identify those business capability.
+One way is to run a thought experiment where you describe the system to a non technical person and try to explain what the system does and what value each of the capabilities provides.
+
+%   TODO EXAMPLE? Online Store
+
+\subsubsection{How do we know that those services follow three core principles?}
+\begin{itemize}
+    \item Just by looking at the names of the services, we can see if this design follows the single responsibility principle and that's by design because each services is responsible for an entire business capability.
+    \item We can also easily check if each service is cohesive by considering the changes that need to happen to our system.
+    \item We can also verify that those services are not too independent and are loosely coupled by reviewing a few user journeys or use cases.
+\end{itemize}
+
+\subsection{De-composition by domain or sub domain}
+
+Decomposing a monolithic application into microservices.
+This technique is called the composition by domain or sub domain.
+Unlike the previous that looks at the system from the business side.
+This way we take the developers point of view of the system.
+In other words the criteria for setting the boundaries of sub domains is based on the engineers understanding of the system, which is generally more intuitive.
+In this method we decompose the system into small sub domains where each sub domain is, defined as a sphere of knowledge, influence or activity.
+Those subdomains can be of three types
+
+\begin{itemize}
+    \item A domain that represents a core business capability.
+    \item A domain which is supporting a business capability.
+    \item A generic subdomain.
+\end{itemize}
+
+\paragraph{A Core business capability}
+A core business capability is a key differentiator of our business from any other competitor in the field.
+Its a capability that cannot be bought off the shelf or outsourced
+Its where the best effort and investment is placed.
+Without it out business doesn't provide any value.
+
+\paragraph{Supporting sub domain}
+A supporting sub domain is still integral to our operation of our business and support the delivery of our core domains.
+But it is not something that differentiates us from out competitors.
+
+\paragraph{Generic sub domain}
+A generic sub domain is a capability that is not specific to any business.
+Many other companies use it and in many cases we could get that component of the shelf.
+
+This categorization of sub domains helps us prioritise the investment into each sub domain.
+Can also help us figure out where we want to allocate our top and most experienced engineers and where we can save time or costs and get off the shelf existing solutions.
+
+Once we identify those sub domains we, have a few options.
+We can dedicate a separate microservice to each sub domain or if we set that certain sub domains are too tightly coupled with on another ot aren't cohesive enough, we can group several sub domains into one microservice.
+
+\begin{note}
+    These two ways are not the only way to set boundaries of microservices.
+    Another method includes the composition by action on or entities.
+\end{note}
+
+However setting the boundaries by business capabilities or sub domains is the two of the most popular ways to do so.
+
+\subsubsection{Comparison of the two most popular methods}
+Generally speaking the first technique of decomposing by business capability usually produces more cohesive and loosely coupled service than the composition by the sub domain.
+On the other hand the microservices architecture we get from decomposing by business capability is usually more coarse grained, which mean larger microservices.
+
+When we decompose by subdomain we tend to get more fine grained microservices architecture which means smaller microservices.
+\begin{note}
+    The architecture we get from the decomposition by business capabilities is usually more stable.
+\end{note}
+The reason for that is because the core business is \textit{usually} much more stable than engineering and technology.
+
+On the flip side, the composing business capabilities requires much better understanding of the business.
+This means that this process will produce a less intuitive design for engineers that the composition by subdomain
+
+\subsection{Final Notes}
+There is no one right way to set the boundaries of the microservices.
+What works now may not work in the future.
+So the architecture keeps evolving as new features come in and new business capabilities are added.
+There is also no perfect decomposition to microservices and some friction or coupling is inevitable.
+The goal of setting the boundaries correctly is to minimise this friction and no completely eliminate it.
+
+These techniques are not "bullet proof".
+They are just guidelines/tools that helps arrive at a good architecture.
+It is not a substitute for good engineering judgment and intuition
+
+\subsection{Summary - Decomposing a monolith into microservices}
+To summarise there are two popular ways to decompose a monolithic application into microservices
+
+\begin{itemize}
+    \item The first is by business capabilities
+    \item The second is by sub domains
+\end{itemize}
+In the second type there are three types of subdomains
+\begin{itemize}
+    \item Core subdomains supporting
+    \item Supporting sub domains
+    \item Generic subdomains
+\end{itemize}
+
+Using either of those techniques helped us set the boundaries for microservices.
+
+These will not lead to a flawless migration to microservices, some engineering judgment will be needed for the final design.
+
+\subsection{Migration to microservces - steps tips and patterns}
+A common approach is big bang approach.
+
+\paragraph{}
+In this approach the team maps out the desired boundaries for the future microservices architecture.
+Then they try and get management on board to stop any development of new features and focus on the migration.
+In theory this is a good idea if the entire team fully focuses on the migration and doesn't get distracted by adding new features.
+They should be able to finish much faster.
+That is in theory.
+\begin{note}
+    This approach is actually the worst in terms of productivity and impact on the business.
+\end{note}
+
+\paragraph{Why?}
+First of all having too many developers working on the same project, which in this case is the refactoring of the monolith into microservices, is a bad idea.
+
+\begin{note}
+    We mainly want to migrate to microservices because our team already has productivity and communication issues, which is what we call organisational scalability.
+\end{note}
+
+Having too many cooks in the kitchen will create alot of friction.
+The second reason is estimating the effort for such big project is very hard.
+Just like in the case of many big and ambiguous projects, we often encounter technical problems we didn't forsee.
+If management was promised a project would be done in four months and its not finished five months later the management will start getting nervous.
+This puts the entire process in danger of abandonment
+To minimise additional time loss, finally stopping any development of new feature for many months, can be detrimental to the business.
+Product managers may get bored and have no way to get promoted, which in turn may cause them to leave the company.
+Salespeople have nothing to sell or pitch to clients and users who don't care about the internal architecture may start thinking that out business is in trouble or our company is unwilling to improve their experience.
+
+\paragraph{The better approach}
+The better approach is incremental and continuous.
+In this approach, we identify the components within our code base that can benefit the most from migrating to separate microservices.
+The best candidates for the migration ranked by the benefit we get from migrating them are the following areas with the most development and frequent changes.
+Components that have high scalability requirements that cannot be met as long as they are part of the big monolithic application.
+Lastly, the components with very little technical debt and good logical separation that fits the scope of a microservice.
+We prefer to migrate code with the most development because migrating code that nobody touches doesn't really provide that much value because it isn't the source of any problem.
+On the other hand, the logic that is constantly evolving is the biggest source of merge conflicts.
+It is also the biggest contributor to releases of our entire monolithic application, so if we separate it into a microservice, those changes will not require us to redeploy a new version of out code that didn't change.
+Separating those parts of the code into a separate microservice wil help us disentangle its business logic from the rest of the application, making it much easier to reason about and less likely to introduce a bug.
+Once we migrate that part of the code into a microservice, we identify the next candidate and we keep going continuous until we reach a point where the original monolith is gone, or whats left in the monolith never changes, so there is no point in touching it further.
+
+\paragraph{Benefits of the incremental approach}
+This incremental approach has several important benefits.
+First, we don't have to set hard deadlines to complete the migration, even if it take a year or longer to reach the final point.
+We are constantly making visible and measurable progress
+Our business is also not disrupted and even if the migration of one part of our code exceeds the estimates, it will be in the order of days ro weeks and not months or years.
+
+\subsubsection{How to prepare for a migration?}
+How to prepare for a migration
+After identifying the component or the components we want to migrate, \textbf{we must ensure that we have good test coverage}.
+This step is critical because with good code coverage we have the confidence that we did not break any functionality during our refactoring.
+Otherwise the entire migration may get delayed if things start breaking.
+Once we have good test coverage, its important to define a clear well thought out API for the component we plan to migrate and in the last step we also want to isolate the component by removing any interdependencies to the rest of the application.
+
+\subsubsection{How to perform the actual migration?}
+How to perform the actual migration
+Use the Strangler Fig pattern
+
+\paragraph{The Strangler Fig pattern}
+The strangler fig pattern introduced by Martin Fowler is inspired by a plant that starts as a small vine growing on top and alongside an existing old tree, and then over time, it spreads and grows, completely consuming the old tree, taking its place.
+The idea behind this pattern is first to introduce the proxy in front of the monolithic legacy application that simply allows requests to pass through.
+The proxy is commonly called the \textbf{Strangler facade} and is typically implemented using an \textbf{API gateway}
+
+\subsubsection{What is an API gateway?}
+API Gateway reminder: An off the shelf open source or cloud based component that routes requests based on the API they are intended for.
+Once the newly created microservices has been thoroughly tested and deployed we divert the traffic for that API from the monolithic application and send it to the newly created microservice instead.
+This change happens completely transparently to the suers and minimises the risk of issues during the migration.
+After monitoring the performance and the functionality of the new microservice for some time, we can remove the old component with the same functionality inside the monolithic application.
+Then we repeat the same steps with new microservice until we're either left with an empty old application or with a legacy application to support old clients.
+
+\subsubsection{Conclusion}
+Final tip for a smooth bug free migration whe migrating an old monolithic application to a new and modern microservice architecture.
+
+A typical dev would probably would like to try new languages and technologies immediately.
+However the best approach while migrating to a new architecture, is to \textit{keep the code and the tech stack unchanged as much as possible}.
+The reason for that is that every additional change we make is a potential source for a bug and the migration itself is already complex and risky enough.
+We do not want to add even more risk factors to the process.
+
+Once the migration is complete and the new microservice is running and stable, we can easily start refactoring it to use newer technologies if necessary.
+
+\subsection{Summary}
+
+\paragraph{}
+How to identify the components that can be the best candidates for migration
+Those candidates included areas that changed the most frequently, require the higher scalability or have the least amount of technical debt.
+
+\paragraph{}
+Preparing and executing the migration which involved:
+
+\begin{itemize}
+    \item Adding test coverage,
+    \item Defining the API,
+    \item Isolating the components from the rest of the application
+    \item Finally using the strangler fig pattern to chip out the different parts of the monolith and migrate them into separately deployed microservices and managed microservices.
+\end{itemize}

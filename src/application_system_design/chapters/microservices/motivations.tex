@@ -1,0 +1,125 @@
+\section{Motivations}
+In this style a system is organised as a collection of independent services.
+Each has a narrow scope or responsibility and is fully owned by a team of developers.
+Very popular with big, successful companies.
+When done correctly, this architecture allows organisations to build highly scalable systems that reach billions of users while keeping their operational costs low, staying efficient and inovative.
+
+Note this has to be done under, the right conditions with a company that is ready for the change otherwise we introduce a large amount of overhead with no benefits.
+
+Related but not a pre-requisite is Event Driven Architecture.
+- This combined with microservices is a very powerful design pattern.
+
+\section{The problem being solved}
+Problem --- Scaling a three tier architecture / Monolith
+-- Typically has presentation tier, business logic tier and a data tier.
+-- Still useful, easy to implement and use with a small team of developers.
+-- This is good enough for some companies.
+
+However as a company becomes more successful and the development team continues growing larger problems start appearing.
+
+\subsection{Issues with Scaaling}
+
+\subsubsection{Low organisational scalability}
+
+\paragraph{}
+First issue is low organisational scalability.
+Too many engineers on the same code base leads to merge conflicts, toe stepping and other dramas.
+Even a small feature can become slower and harder to deal with.
+This results in more planning and meetings and coordination.
+The more people we have in those meetings the longer and less productive they become.
+The number of engineers is not the only issue, as we add more feature to the application, our code base becomes larger and more complex.
+in turn this makes it harder to reason about, makes it take longer to load in an IDE, slower to build and test as well as making it riskier to deploy.
+As a result, our release schedule becomes less frequent, which makes things even worse.
+
+\paragraph{}
+Every new release contains even more features, increasing the chances of bugs and outages.
+Finally, onboarding new developers now takes more time as it is much harder for them to get familiar with the large code base.
+Also with every additional engineer in a team we start seeing diminishing returns until we hit a point where adding more people actually reduces everyone's productivity.
+Besides low organisational scalability, a large monolithic application can also have technical problems make the system less scalable.
+Each application instance which contains our entire business logic, requires a lot of CPU and memory.
+Instead of using cheap commodity hardware, we need to run each instance on a more high end and expensive computers.
+We are also constrained by technology choices that may have been made many years ago and we can't take advantage of newer technologies.
+Refactoring our code base, from one library to another can be a huge effort, let alone considering a new programing language or a framework.
+Another problem is that our application becomes less stable
+Even a small memory leak, performance issue or a bug can affect out entire system and may require us to perform a rollback
+Logically separating the monolithic application into layers, modules, or even libraries can help only so much.
+At the end of the day those modules are still tightly coupled together.
+We're still constrained to using the same technologies and programming languages and the application still needs to be deployed as a single run time unit.
+
+\paragraph{}
+This sets the stage for the problems that microservices address
+
+\subsection{Microservice Architecture - Benefits and Challenges}
+With this architecture we gain a much higher organisational scalability since each service contains only a subset of the overall functionality, each service's code base is much smaller.
+\begin{itemize}
+    \item Allows each developer to load their code up in their IDE much faster
+    \item Building each microservice also becomes much quicker because the size of each binary is greatly reduced.
+    \item Testing and reasoning about each service in isolation becomes much easier because there is much less logic to understand run and test.
+    \item The simplicity of the code in each microservice also speeds up the onboarding process of a new team, so a company can grow quickly and stay more efficient.
+    \item All this increases the development velocity of each team, which mean we can deliver more features and gain an advantage over our competitors
+    \item On system scalability, we also get a lot of benefits in the monolithic application
+    \begin{itemize}
+        \item Each instance had to run the entire code base which required very powerful and expensive hardware to run each instance.
+        \item When we break our code base into microservices each service is much smaller, so each instance of a microservice consumers less memory and CPU
+        \item As a result, it can run on cheap and widely available commodity hardware,
+        \item Each team can also make the best judgement on what technologies would benefit their service and they can also respond to technology changes much faster by refactoring their already small code base.
+        \item Could even rewrite the code base if necessary.
+    \end{itemize}
+    \item Finally we get much higher stability for the entire system since each microservice is deployed as a separate runtime unit.
+    \item The blast radius of a bug, memory leak or performance issue is much smaller.
+    \item In most cases a bug in one microservice will impact only that microservice or just the ones that depend on it on some level. The rest of the system can continue operating on it just fine.
+\end{itemize}
+
+Essentially, microservices break the scalability barrier that we will hit with a monolithic architecture. A Monolith is good to get started but for continued growth microservices are a good option.
+
+\subsection{Challenges}
+Now method calls that used to have predictable behaviours, success rates and latency have became network calls between two different applications that may be running on different computers.
+Those network requests are traversing an unreliable network where packets can be lost or delayed, causing unpredictable latency or even errors.
+Beside the network itself, the nature of distributed system is that each component is inherently unreliable
+
+For instance, a reqeust from one service instance can hit a process that either crashed because of a software or hardware failure or is being restart as a part of routing maintenance from a testing perspective.
+We also now have testing challenges.
+
+\subsubsection{Testing Challenges}
+Testing each microservice in isolation has became easier, faster.
+There is no guarantee that they will work when they have all been put together as a whole.
+When we make a change in one service, we have far less confidence that once the new version of our service is deployed in production, it won't break another service.
+This situation may lead to the creation of very complex and slow integration tests that can slow our productivity.
+Given that each service may belong to a different team, it's very hard to decide who owns those integration tests to begin with.
+
+\subsubsection{Debugging issues}
+Finally, with microservices, its much harder to troubleshoot performance issues and bugs.
+
+\subsubsection{Scalability Challenges}
+We may also experience challenges in organisational scalability.
+One of the biggest questions is how to set the scope of responsibility between microservices.
+If we set the boundaries incorrectly, we may actually have \textit{more} organisational overhead than benefits.
+
+Examples
+\begin{itemize}
+    \item If every change in a system requires careful coordination between different teams then we are not better off that what we were in a monolithic architecture
+    \item Similarly if every team uses a different tech stack.
+    \item Tools and practices we may have a lot of duplicated efforts and confusion when looking at code from other teams.
+\end{itemize}
+
+Without careful consideration we can end up with more challenges that what we would get with a monolith.
+This is some times referred to as a distributed monolith or a big ball of mud.
+
+\subsubsection{Use other companies experiences}
+Many companies share findings from actually implementing microservices, mistakes and successes.
+Following industry proven principles the benefits of microservices can outweigh the organisational complexity and overhead.
+
+\subsubsection{Summary}
+Benefits of microservices architecture
+
+\begin{itemize}
+    \item Higher organisational scalability due to the smaller code base of each microservice
+    \item Allows for high system scalability, which allows for the use of the best technology for each microservice and to run it on cheaper hardware.
+\end{itemize}
+
+Challenges
+\begin{itemize}
+    \item Additional complexities and overhead
+    \item Unpredictability of running a distributed system with unreliable components on an unreliable network.
+    \item The risk of decreased organisational scalability if we do not set appropriate boundaries between microservices and their teams.
+\end{itemize}
