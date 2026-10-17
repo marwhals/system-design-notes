@@ -1,16 +1,17 @@
-# 📚 **100 Best Books on Software and Data Architecture**
-
-###### *according to chatGPT* 🤔
+# 📚 Books on Software Architecture
 
 ---
 
-## ✅ **📖 Software Architecture Books**
+## 📖 Software Architecture Books
+
+Designing Data-Intensive Applications* – Martin Kleppmann
+Fundamentals of Software Architecture* – Mark Richards, Neal Ford
+Building Evolutionary Architectures* – Neal Ford, Rebecca Parsons, Patrick Kua
+Building Microservices* – Sam Newman
+
 1. *Software Architecture in Practice* – Len Bass, Paul Clements, Rick Kazman
 2. *Clean Architecture: A Craftsman’s Guide to Software Structure and Design* – Robert C. Martin
 3. *The Art of Software Architecture: Design Methods and Techniques* – Eric J. Braude
-4. *Designing Data-Intensive Applications* – Martin Kleppmann
-5. *Fundamentals of Software Architecture* – Mark Richards, Neal Ford
-6. *Building Evolutionary Architectures* – Neal Ford, Rebecca Parsons, Patrick Kua
 7. *Just Enough Software Architecture* – George Fairbanks
 8. *Software Systems Architecture: Working With Stakeholders Using Viewpoints and Perspectives* – Nick Rozanski, Eóin Woods
 9. *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions* – Gregor Hohpe, Bobby Woolf
@@ -28,7 +29,6 @@
 21. *Accelerate: The Science of Lean Software and DevOps* – Nicole Forsgren, Jez Humble, Gene Kim
 22. *The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win* – Gene Kim, Kevin Behr, George Spafford
 23. *The DevOps Handbook* – Gene Kim, Jez Humble, Patrick Debois, John Willis
-24. *Building Microservices* – Sam Newman
 25. *Software Architecture Metrics* – Christian Ciceri, Dave Farley, et al.
 26. *Cloud Architecture Patterns* – Bill Wilder
 27. *Design It!: From Programmer to Software Architect* – Michael Keeling
@@ -48,7 +48,7 @@
 
 ---
 
-## ✅ **📊 Data Architecture Books**
+## 📊 Data Architecture Books
 41. *The Data Warehouse Toolkit* – Ralph Kimball, Margy Ross
 42. *Data Architecture: A Primer for the Data Scientist* – W. H. Inmon
 43. *The Data Warehouse Lifecycle Toolkit* – Ralph Kimball, Margy Ross
@@ -92,7 +92,7 @@
 
 ---
 
-## ✅ **💻 Mixed Software + Data Architecture Books**
+## 💻 Mixed Software + Data Architecture Books ???
 81. *Building Event-Driven Microservices* – Adam Bellemare
 82. *Microservices and Data Modeling* – Steve Hoberman
 83. *The Architect Elevator* – Gregor Hohpe
