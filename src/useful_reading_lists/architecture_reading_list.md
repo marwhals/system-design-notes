@@ -1,21 +1,23 @@
-# 📚 Books on Software Architecture
+# GPT generated list - Books on Software Architecture
+
+## Software Architecture Books
+
+- Designing Data-Intensive Applications* – Martin Kleppmann
+- Fundamentals of Software Architecture* – Mark Richards, Neal Ford
+- Building Evolutionary Architectures* – Neal Ford, Rebecca Parsons, Patrick Kua
+- Building Microservices – Sam Newman
+- Architecting for Scale – Lee Atchison
 
 ---
 
-## 📖 Software Architecture Books
-
-Designing Data-Intensive Applications* – Martin Kleppmann
-Fundamentals of Software Architecture* – Mark Richards, Neal Ford
-Building Evolutionary Architectures* – Neal Ford, Rebecca Parsons, Patrick Kua
-Building Microservices* – Sam Newman
-
+38. *Agile Software Architecture* – Michael Stal
+7. *Just Enough Software Architecture* – George Fairbanks
+3. *The Art of Software Architecture: Design Methods and Techniques* – Eric J. Braude
+10. *Domain-Driven Design: Tackling Complexity in the Heart of Software* – Eric Evans
 1. *Software Architecture in Practice* – Len Bass, Paul Clements, Rick Kazman
 2. *Clean Architecture: A Craftsman’s Guide to Software Structure and Design* – Robert C. Martin
-3. *The Art of Software Architecture: Design Methods and Techniques* – Eric J. Braude
-7. *Just Enough Software Architecture* – George Fairbanks
 8. *Software Systems Architecture: Working With Stakeholders Using Viewpoints and Perspectives* – Nick Rozanski, Eóin Woods
 9. *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions* – Gregor Hohpe, Bobby Woolf
-10. *Domain-Driven Design: Tackling Complexity in the Heart of Software* – Eric Evans
 11. *The Pragmatic Programmer: Your Journey to Mastery* – Andrew Hunt, David Thomas
 12. *Refactoring: Improving the Design of Existing Code* – Martin Fowler
 13. *Release It!: Design and Deploy Production-Ready Software* – Michael Nygard
@@ -35,20 +37,27 @@ Building Microservices* – Sam Newman
 28. *Reactive Messaging Patterns with the Actor Model* – Vaughn Vernon
 29. *Software Architecture for Developers* – Simon Brown
 30. *Continuous Architecture: Sustainable Architecture in an Agile and Cloud-Centric World* – Murat Erder, Pierre Pureur
-31. *Architecting for Scale* – Lee Atchison
 32. *Serverless Architectures on AWS* – Peter Sbarski
 33. *Chaos Engineering* – Casey Rosenthal, Nora Jones
 34. *Cloud Native Transformation* – Pini Reznik, Jamie Dobson, Michelle Gienow
 35. *Design Patterns: Elements of Reusable Object-Oriented Software* – Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides
 36. *Head First Design Patterns* – Eric Freeman, Elisabeth Robson
 37. *Practical Cloud Native Java Development with MicroProfile* – Emily Jiang
-38. *Agile Software Architecture* – Michael Stal
 39. *Monolith to Microservices* – Sam Newman
 40. *Cloud Computing Design Patterns* – Thomas Erl
 
 ---
 
-## 📊 Data Architecture Books
+81. *Building Event-Driven Microservices* – Adam Bellemare
+82. *Microservices and Data Modeling* – Steve Hoberman
+84. *Software Architecture for Big Data and the Cloud* – Ivan Mistrik
+91. *Distributed Systems* – Andrew S. Tanenbaum
+
+
+---
+
+## 📊 Architecture Books Data systems
+
 41. *The Data Warehouse Toolkit* – Ralph Kimball, Margy Ross
 42. *Data Architecture: A Primer for the Data Scientist* – W. H. Inmon
 43. *The Data Warehouse Lifecycle Toolkit* – Ralph Kimball, Margy Ross
@@ -89,29 +98,16 @@ Building Microservices* – Sam Newman
 78. *Data Architecture Patterns* – Gareth Dwyer
 79. *The Data Warehouse Toolkit: The Definitive Guide to Dimensional Modeling* – Ralph Kimball, Margy Ross
 80. *The Self-Service Data Roadmap* – Paula Wiles Sigmon
-
----
-
-## 💻 Mixed Software + Data Architecture Books ???
-81. *Building Event-Driven Microservices* – Adam Bellemare
-82. *Microservices and Data Modeling* – Steve Hoberman
-83. *The Architect Elevator* – Gregor Hohpe
-84. *Software Architecture for Big Data and the Cloud* – Ivan Mistrik
 85. *Data Engineering with Python* – Paul Crickard
 86. *Practical DataOps* – Harvinder Atwal
 87. *Big Data Architect's Handbook* – Syed Muhammad Fahad Akhtar
 88. *Serverless Data Processing* – Robert S. King
 89. *Data Engineering on Azure* – Vlad Riscutia
-90. *The Data Warehouse Toolkit* – Ralph Kimball
-91. *Distributed Systems* – Andrew S. Tanenbaum
 92. *Cloud Data Lakes for Dummies* – Brett Rudenstein
 93. *Data Lakes* – Anne Laurent
 94. *Real-World Data Science* – Davy Cielen
 95. *Data Science for Business* – Foster Provost
-96. *Cloud Data Management* – Prem Malhotra
 97. *Azure Data Engineering* – Anshul Kumar
 98. *Serverless Data Processing* – Robert S. King
-99. *Data Architecture Patterns* – Gareth Dwyer
-100. *The Data Loom* – Stephen Few
 
 ---
