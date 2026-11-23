@@ -7,9 +7,19 @@
 - Building Evolutionary Architectures* – Neal Ford, Rebecca Parsons, Patrick Kua
 - Building Microservices – Sam Newman
 - Architecting for Scale – Lee Atchison
+- Machine Learning Design Patterns
+- Deciphering Data Architectures
+- Building Applications with AI Agents
+- AI Engineering
+- Creating Software with Modern Diagramming Techniques
+- Seven Databases in Seven Weeks
+- Reliable Machine Learning
+- Fundamentals of Data Engineering
+- Practical Statistics for Data Scientists
 
 ---
 
+13. *Release It!: Design and Deploy Production-Ready Software* – Michael Nygard
 38. *Agile Software Architecture* – Michael Stal
 7. *Just Enough Software Architecture* – George Fairbanks
 3. *The Art of Software Architecture: Design Methods and Techniques* – Eric J. Braude
@@ -20,7 +30,6 @@
 9. *Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions* – Gregor Hohpe, Bobby Woolf
 11. *The Pragmatic Programmer: Your Journey to Mastery* – Andrew Hunt, David Thomas
 12. *Refactoring: Improving the Design of Existing Code* – Martin Fowler
-13. *Release It!: Design and Deploy Production-Ready Software* – Michael Nygard
 14. *Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation* – Jez Humble, David Farley
 15. *Microservices Patterns* – Chris Richardson
 16. *The Software Architect Elevator* – Gregor Hohpe
@@ -53,7 +62,6 @@
 84. *Software Architecture for Big Data and the Cloud* – Ivan Mistrik
 91. *Distributed Systems* – Andrew S. Tanenbaum
 
-
 ---
 
 ## 📊 Architecture Books Data systems
@@ -84,8 +92,10 @@
 64. *Data Pipelines with Apache Airflow* – Bas P. Harenslak, Julian de Ruiter
 65. *Streaming Data* – Andrew G. Psaltis
 66. *Kafka: The Definitive Guide* – Gwen Shapira, Todd Palino
-67. *Data and Goliath: The Hidden Battles to Collect Your Data and Control Your World* – Bruce Schneier
-68. *The Data Science Handbook* – Field Cady
+
+[//]: # (67. *Data and Goliath: The Hidden Battles to Collect Your Data and Control Your World* – Bruce Schneier)
+
+69. *The Data Science Handbook* – Field Cady
 69. *Building a Data-Driven Organization* – Carl Anderson
 70. *Practical Data Science with R* – Nina Zumel, John Mount
 71. *Metadata Management with IBM InfoSphere Information Server* – IBM Redbooks

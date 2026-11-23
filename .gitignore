@@ -55,3 +55,4 @@ auxil/
 output-cache/
 
 # Custom additions (if needed)
+/src/diagrams/
